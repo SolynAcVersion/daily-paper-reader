@@ -1,9 +1,9 @@
 {
   "date": "20260722-20260820",
   "date_label": "2026-07-22 ~ 2026-08-20",
-  "generated_at": "2026-08-20 09:05:19 UTC",
+  "generated_at": "2026-08-20 16:25:13 UTC",
   "recommend_exists": true,
-  "run_count": 1,
+  "run_count": 2,
   "papers": [
     {
       "paper_id": "2607.27380v1",
@@ -17,9 +17,25 @@
         }
       ],
       "score": 10.0,
-      "evidence": "以可执行的Blender代码作为思维链，显式指定物理动力学，生成物理一致的视频",
+      "evidence": "利用可执行的Blender代码作为思维链来控制时空动态，实现物理一致的视频生成",
       "first_seen_at": "2026-08-20 09:05:19 UTC",
-      "updated_at": "2026-08-20 09:05:19 UTC"
+      "updated_at": "2026-08-20 16:25:13 UTC"
+    },
+    {
+      "paper_id": "2608.07981v1",
+      "route": "20260722-20260820/2608.07981v1-distilling-physical-priors-into-streaming-world-models",
+      "title": "Distilling Physical Priors into Streaming World Models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 10.0,
+      "evidence": "将物理先验蒸馏进流式世界模型以保证物理一致性，并构建真实世界物理交互数据集。",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 16:25:13 UTC"
     },
     {
       "paper_id": "2608.15555v1",
@@ -33,9 +49,57 @@
         }
       ],
       "score": 10.0,
-      "evidence": "专为视频生成模型刚体物理正确性设计的模拟器基准",
+      "evidence": "用于评估视频生成模型刚体物理正确性的基准",
       "first_seen_at": "2026-08-20 09:05:19 UTC",
-      "updated_at": "2026-08-20 09:05:19 UTC"
+      "updated_at": "2026-08-20 16:25:13 UTC"
+    },
+    {
+      "paper_id": "2607.23472v1",
+      "route": "20260722-20260820/2607.23472v1-viper-visual-in-context-physics-reasoning-for-physically-plausible-video-generation",
+      "title": "VIPER: Visual In-Context Physics Reasoning for Physically Plausible Video Generation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "基于参考视频的物理推理框架，用于生成物理合理的视频",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 16:25:13 UTC"
+    },
+    {
+      "paper_id": "2608.09594v1",
+      "route": "20260722-20260820/2608.09594v1-illusion-or-integrity-geometrical-consistency-metric-for-aigc-video-quality-evaluation",
+      "title": "Illusion or Integrity? Geometrical Consistency Metric for AIGC Video Quality Evaluation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "通过几何一致性量化AIGC视频物理规律符合度的基准与度量",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 16:25:13 UTC"
+    },
+    {
+      "paper_id": "2608.10500v1",
+      "route": "20260722-20260820/2608.10500v1-dsar-dual-stream-autoregressive-modeling-of-temporal-cloth-dynamics-for-photorealistic-animatable-avatars",
+      "title": "DSAR: Dual-Stream Autoregressive Modeling of Temporal Cloth Dynamics for Photorealistic Animatable Avatars",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "面向时间一致虚拟人生成的织物动力学物理感知时序建模",
+      "first_seen_at": "2026-08-20 16:25:13 UTC",
+      "updated_at": "2026-08-20 16:25:13 UTC"
     },
     {
       "paper_id": "2607.19876v1",
@@ -50,22 +114,6 @@
       ],
       "score": 9.0,
       "evidence": "评估生成视频物理一致性的基准",
-      "first_seen_at": "2026-08-20 09:05:19 UTC",
-      "updated_at": "2026-08-20 09:05:19 UTC"
-    },
-    {
-      "paper_id": "2607.23472v1",
-      "route": "20260722-20260820/2607.23472v1-viper-visual-in-context-physics-reasoning-for-physically-plausible-video-generation",
-      "title": "VIPER: Visual In-Context Physics Reasoning for Physically Plausible Video Generation",
-      "section": "deep",
-      "tags": [
-        {
-          "kind": "query",
-          "label": "phys-video"
-        }
-      ],
-      "score": 9.0,
-      "evidence": "通过参考视频进行视觉上下文物理推理，实现物理行为可控的合理视频生成",
       "first_seen_at": "2026-08-20 09:05:19 UTC",
       "updated_at": "2026-08-20 09:05:19 UTC"
     },
@@ -86,9 +134,9 @@
       "updated_at": "2026-08-20 09:05:19 UTC"
     },
     {
-      "paper_id": "2608.07981v1",
-      "route": "20260722-20260820/2608.07981v1-distilling-physical-priors-into-streaming-world-models",
-      "title": "Distilling Physical Priors into Streaming World Models",
+      "paper_id": "2607.26579v1",
+      "route": "20260722-20260820/2607.26579v1-contactflow-a-video-action-conditioning-that-transfers-across-embodiments",
+      "title": "ContactFlow: A video action conditioning that transfers across embodiments",
       "section": "deep",
       "tags": [
         {
@@ -96,26 +144,42 @@
           "label": "phys-video"
         }
       ],
-      "score": 9.0,
-      "evidence": "通过从真实物理交互视频蒸馏物理先验，提升流式世界模型滚动生成的物理一致性",
+      "score": 8.0,
+      "evidence": "通过接触轨迹条件化解决视频世界模型中的物理约束问题",
       "first_seen_at": "2026-08-20 09:05:19 UTC",
-      "updated_at": "2026-08-20 09:05:19 UTC"
+      "updated_at": "2026-08-20 16:25:13 UTC"
     },
     {
-      "paper_id": "2608.09594v1",
-      "route": "20260722-20260820/2608.09594v1-illusion-or-integrity-geometrical-consistency-metric-for-aigc-video-quality-evaluation",
-      "title": "Illusion or Integrity? Geometrical Consistency Metric for AIGC Video Quality Evaluation",
-      "section": "deep",
+      "paper_id": "2608.02150v1",
+      "route": "20260722-20260820/2608.02150v1-phycheck-fine-grained-evidence-grounded-dataset-for-physical-law-understanding-in-video-llms",
+      "title": "PhyCheck: Fine-Grained Evidence-Grounded Dataset for Physical Law Understanding in Video-LLMs",
+      "section": "quick",
       "tags": [
         {
           "kind": "query",
           "label": "phys-video"
         }
       ],
-      "score": 9.0,
-      "evidence": "通过几何一致性定量评估AIGC视频对物理规律的符合程度",
-      "first_seen_at": "2026-08-20 09:05:19 UTC",
-      "updated_at": "2026-08-20 09:05:19 UTC"
+      "score": 8.0,
+      "evidence": "用于评估视频物理定律理解的基准数据集",
+      "first_seen_at": "2026-08-20 16:25:13 UTC",
+      "updated_at": "2026-08-20 16:25:13 UTC"
+    },
+    {
+      "paper_id": "2608.10162v1",
+      "route": "20260722-20260820/2608.10162v1-mad-hoi-masked-autoregressive-diffusion-for-generating-articulated-hand-object-interactions-from-text",
+      "title": "MAD-HOI: Masked Autoregressive Diffusion for Generating Articulated Hand Object Interactions from Text",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "生成手-物体交互序列，强调物理上合理的轨迹与接触保持。",
+      "first_seen_at": "2026-08-20 16:25:13 UTC",
+      "updated_at": "2026-08-20 16:25:13 UTC"
     },
     {
       "paper_id": "2607.22241v1",
@@ -130,22 +194,6 @@
       ],
       "score": 8.0,
       "evidence": "人-物交互视频生成中的物理执行与交互逻辑",
-      "first_seen_at": "2026-08-20 09:05:19 UTC",
-      "updated_at": "2026-08-20 09:05:19 UTC"
-    },
-    {
-      "paper_id": "2607.26579v1",
-      "route": "20260722-20260820/2607.26579v1-contactflow-a-video-action-conditioning-that-transfers-across-embodiments",
-      "title": "ContactFlow: A video action conditioning that transfers across embodiments",
-      "section": "quick",
-      "tags": [
-        {
-          "kind": "query",
-          "label": "phys-video"
-        }
-      ],
-      "score": 8.0,
-      "evidence": "基于接触轨迹的条件表示，为视频世界模型注入物理约束",
       "first_seen_at": "2026-08-20 09:05:19 UTC",
       "updated_at": "2026-08-20 09:05:19 UTC"
     },
@@ -180,6 +228,70 @@
       "evidence": "WorldExam基准从内在反应性、空间一致性和物理后果等维度评测视频生成世界模型",
       "first_seen_at": "2026-08-20 09:05:19 UTC",
       "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2607.22241v2",
+      "route": "20260722-20260820/2607.22241v2-agenthoi-multi-agent-reasoning-for-human-object-interaction-video-generation-via-implicit-representation-alignment",
+      "title": "AgentHOI: Multi-Agent Reasoning for Human-Object-Interaction Video Generation via Implicit Representation Alignment",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "视频生成包含物理执行与交互规划",
+      "first_seen_at": "2026-08-20 16:25:13 UTC",
+      "updated_at": "2026-08-20 16:25:13 UTC"
+    },
+    {
+      "paper_id": "2608.13028v1",
+      "route": "20260722-20260820/2608.13028v1-rgb-d-video-generation-for-improving-human-to-robot-object-handover-prediction",
+      "title": "RGB-D Video Generation for Improving Human-to-Robot Object Handover Prediction",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "在生成的交接视频中确保手-物物理一致性；贡献真实世界RGB-D物理交互数据集。",
+      "first_seen_at": "2026-08-20 16:25:13 UTC",
+      "updated_at": "2026-08-20 16:25:13 UTC"
+    },
+    {
+      "paper_id": "2608.16324v1",
+      "route": "20260722-20260820/2608.16324v1-lagsplat-inferring-physics-governed-interactive-simulation-from-monocular-video-using-latent-lagrangian-gaussian-splatting",
+      "title": "LaGSplat: Inferring Physics-Governed Interactive Simulation from Monocular Video Using Latent Lagrangian Gaussian Splatting",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "从单目视频推断物理控制动力学并生成交互仿真帧",
+      "first_seen_at": "2026-08-20 16:25:13 UTC",
+      "updated_at": "2026-08-20 16:25:13 UTC"
+    },
+    {
+      "paper_id": "2608.18498v1",
+      "route": "20260722-20260820/2608.18498v1-dyg2t-modeling-object-dynamics-with-3d-gaussian-temporal-spatial-particle-graph-transformer",
+      "title": "DyG$^2$T: Modeling Object Dynamics with 3D Gaussian Temporal-Spatial Particle Graph Transformer",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "建模物体动力学与运动轨迹预测，是物理真实行为的核心",
+      "first_seen_at": "2026-08-20 16:25:13 UTC",
+      "updated_at": "2026-08-20 16:25:13 UTC"
     },
     {
       "paper_id": "2607.24159v1",
@@ -257,9 +369,57 @@
         }
       ],
       "score": 6.0,
-      "evidence": "大规模面向交互中心的数据集及关系标注，用于视频生成训练",
+      "evidence": "基于图条件视频生成和大规模交互中心数据集GraphVid-Bench",
       "first_seen_at": "2026-08-20 09:05:19 UTC",
-      "updated_at": "2026-08-20 09:05:19 UTC"
+      "updated_at": "2026-08-20 16:25:13 UTC"
+    },
+    {
+      "paper_id": "2607.21592v1",
+      "route": "20260722-20260820/2607.21592v1-unified-video-dense-prediction-from-disjoint-data",
+      "title": "Unified Video Dense Prediction from Disjoint Data",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "统一视频稠密预测可输出深度、法向、材质等物理场景属性，可用于评估生成视频的物理正确性。",
+      "first_seen_at": "2026-08-20 16:25:13 UTC",
+      "updated_at": "2026-08-20 16:25:13 UTC"
+    },
+    {
+      "paper_id": "2608.00094v2",
+      "route": "20260722-20260820/2608.00094v2-video-models-as-native-4d-renderers-world-grounded-conditioning-from-animated-mesh",
+      "title": "Video Models as Native 4D Renderers: World-Grounded Conditioning from Animated Mesh",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "利用动画网格条件使视频生成服从几何与动画约束",
+      "first_seen_at": "2026-08-20 16:25:13 UTC",
+      "updated_at": "2026-08-20 16:25:13 UTC"
+    },
+    {
+      "paper_id": "2608.18948v1",
+      "route": "20260722-20260820/2608.18948v1-roboedit-turning-human-manipulation-videos-into-scalable-robot-experience",
+      "title": "RoboEdit: Turning Human Manipulation Videos into Scalable Robot Experience",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "大规模物理合理的人-物交互视频数据集，可用于训练视频模型",
+      "first_seen_at": "2026-08-20 16:25:13 UTC",
+      "updated_at": "2026-08-20 16:25:13 UTC"
     },
     {
       "paper_id": "2607.21848v1",

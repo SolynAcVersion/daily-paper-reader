@@ -44,14 +44,14 @@
       <span class="dpr-home-dashboard-kicker">2026-07-22 ~ 2026-08-20</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 18 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 28 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
-    <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>7</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>11</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>2 次</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>9</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>19</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-20 09:05:19 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-20 16:25:13 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日聚焦视频生成物理一致性，精读两篇满分论文，覆盖生成模型与基准评测双线。最值得关注的是《VideoCoCo》以代码链驱动物理约束生成，以及《RigidBench》系统评估刚体物理表现。建议后续扩展速读中的交互动作与跨具身控制方向，快速获取多样视角。</p>
+<p>本月共扫描 28 篇论文，精读 9 篇，聚焦视频生成及其物理一致性前沿。</p>
+<p>最值得看两篇满分工作：VideoCoCo 与 Distilling Physical Priors，分别以代码链与物理先验蒸馏突破视频生成中的物理合理性问题。</p>
+<p>建议优先跟进物理感知视频生成及手物交互方向，后续可对比实际效果与基准差异。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -71,12 +73,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">7 篇</strong>
+    <strong class="dpr-home-dashboard-count">9 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System">VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System</span></li><li><span class="dpr-home-dashboard-paper-title" title="RigidBench: Evaluating Rigid-Body Physics in Video Generation Models">RigidBench: Evaluating Rigid-Body Physics in Video Generation Models</span></li><li><span class="dpr-home-dashboard-paper-title" title="KineBench: Benchmarking Embodied World Models via IDM-Free Kinematic Grounding">KineBench: Benchmarking Embodied World Models via IDM-Free Kinematic Grounding</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System">VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System</span></li><li><span class="dpr-home-dashboard-paper-title" title="Distilling Physical Priors into Streaming World Models">Distilling Physical Priors into Streaming World Models</span></li><li><span class="dpr-home-dashboard-paper-title" title="RigidBench: Evaluating Rigid-Body Physics in Video Generation Models">RigidBench: Evaluating Rigid-Body Physics in Video Generation Models</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>7</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>9</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -84,12 +86,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">11 篇</strong>
+    <strong class="dpr-home-dashboard-count">19 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="AgentHOI: Multi-Agent Reasoning for Human-Object-Interaction Video Generation via Implicit Representation Alignment">AgentHOI: Multi-Agent Reasoning for Human-Object-Interaction Video Generation via Implicit Representation Alignment</span></li><li><span class="dpr-home-dashboard-paper-title" title="ContactFlow: A video action conditioning that transfers across embodiments">ContactFlow: A video action conditioning that transfers across embodiments</span></li><li><span class="dpr-home-dashboard-paper-title" title="PhyCheck: Fine-Grained Evidence-Grounded Dataset for Physical Law Understanding in Video-LLMs">PhyCheck: Fine-Grained Evidence-Grounded Dataset for Physical Law Understanding in Video-LLMs</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="PhyCheck: Fine-Grained Evidence-Grounded Dataset for Physical Law Understanding in Video-LLMs">PhyCheck: Fine-Grained Evidence-Grounded Dataset for Physical Law Understanding in Video-LLMs</span></li><li><span class="dpr-home-dashboard-paper-title" title="MAD-HOI: Masked Autoregressive Diffusion for Generating Articulated Hand Object Interactions from Text">MAD-HOI: Masked Autoregressive Diffusion for Generating Articulated Hand Object Interactions from Text</span></li><li><span class="dpr-home-dashboard-paper-title" title="AgentHOI: Multi-Agent Reasoning for Human-Object-Interaction Video Generation via Implicit Representation Alignment">AgentHOI: Multi-Agent Reasoning for Human-Object-Interaction Video Generation via Implicit Representation Alignment</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>11</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>19</strong></span></div>
 </section>
 </div>
 
