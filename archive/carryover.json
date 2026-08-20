@@ -1,6 +1,140 @@
 {
-  "generated_at": "2026-03-06T19:11:18.471356+00:00",
-  "updated_date": "20260306",
+  "generated_at": "2026-08-20T08:51:34.161921+00:00",
+  "updated_date": "20260722-20260820",
   "carryover_days": 9,
-  "items": []
+  "tag_states": {
+    "phys-video": {
+      "updated_date": "20260722-20260820",
+      "carryover_days": 9,
+      "items": [
+        {
+          "id": "2608.10162v2",
+          "source": "arxiv",
+          "title": "MAD-HOI: Masked Autoregressive Diffusion for Generating Articulated Hand Object Interactions from Text",
+          "abstract": "Methods for text-based generation of hand-object interaction (HOI) sequences primarily focus on producing smooth, physically plausible trajectories. A truly utilitarian method should additionally support variable-length generation, composite motion sequences, motion completion and infilling, and reliable termination without compromising physical plausibility. Standard diffusion models for HOI generation are typically trained only for text-to-motion generation on atomic motions and require the motion length to be specified a-priori. Autoregressive (AR) methods provide greater sequence-level flexibility, but commonly depend on discrete motion codes, which can lose contact-sensitive motion detail. To address these key limitations, we present a model performing Masked Autoregression with Diffusion for HOI generation (MAD-HOI). Our method starts by encoding hand and object motions in a continuous latent space while keeping them disentangled to maintain stream-wise control. This is followed by a masked autoregressive transformer to predict context features that condition a flow-matching head. MAD-HOI is capable of motion generation for atomic and composite articulated sequences, conditioned motion completion and infilling, as well as EOM (End of Motion) prediction from a single training objective. We provide comprehensive evaluations for these capabilities and benchmark our method on the ARCTIC and GRAB datasets. Our experiments demonstrate that our method generates more diverse and physically plausible interactions compared to other open-sourced baseline methods.",
+          "authors": [
+            "Ananya Bal",
+            "Kartik Sharma",
+            "Ethan Lai",
+            "Samyak Tiwari",
+            "Liza Dahiya",
+            "Chaitanya Chawla",
+            "Laszlo A. Jeni"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV"
+          ],
+          "published": "2026-08-10T19:30:59+00:00",
+          "link": "https://arxiv.org/pdf/2608.10162v2",
+          "tags": [
+            "keyword:phys-video",
+            "query:phys-video"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "physically plausible hand-object interaction trajectory generation",
+          "llm_evidence_cn": "生成符合物理合理的手物交互运动序列",
+          "llm_evidence": "生成符合物理合理的手物交互运动序列",
+          "canonical_evidence": "生成符合物理合理的手物交互运动序列",
+          "llm_tldr_en": "MAD-HOI generates physically plausible hand-object interaction sequences from text using masked autoregressive diffusion, supporting variable-length, completion, and infilling while preserving contact detail.",
+          "llm_tldr_cn": "面向文本生成手物交互序列，现有扩散模型需要预知长度且缺乏灵活性，自回归方法又易丢失接触细节。MAD-HOI结合掩码自回归与扩散模型，在保持物理合理接触的前提下支持变长生成、动作补全和插值。实验验证其生成轨迹物理合理且时间一致，为交互式动作生成提供更通用的方案。",
+          "llm_tldr": "面向文本生成手物交互序列，现有扩散模型需要预知长度且缺乏灵活性，自回归方法又易丢失接触细节。MAD-HOI结合掩码自回归与扩散模型，在保持物理合理接触的前提下支持变长生成、动作补全和插值。实验验证其生成轨迹物理合理且时间一致，为交互式动作生成提供更通用的方案。",
+          "llm_tags": [
+            "query:phys-video"
+          ],
+          "matched_query_tag": "query:phys-video",
+          "matched_query_text": "videos depicting physically realistic behaviors and outcomes",
+          "matched_requirement_id": "req-4",
+          "selection_source": "carryover_cache",
+          "paper_id": "2608.10162v2",
+          "carry_days": 1
+        },
+        {
+          "id": "2608.07463v1",
+          "source": "arxiv",
+          "title": "MirrorWorld: Taming Video Diffusion Models for Mirror Reflection Generation",
+          "abstract": "Recent advances in video diffusion models (VDMs) have enabled high-fidelity video synthesis. However, generating mirror reflections remains challenging because the content within a mirror must remain consistent with the surrounding scene. Existing VDMs are not specifically designed to model scene-to-mirror relationships, which can lead to reflections with incorrect content or inconsistent spatial arrangements. We observe that mirror reflection generation involves two complementary challenges: determining what scene content should be reflected and how the reflected content should be spatially arranged within the mirror region. Motivated by this observation, we propose MirrorWorld, a reflection-aware video inpainting framework that models scene-to-mirror relationships during generation. Specifically, we introduce Semantic Relation Distillation (SRD), which transfers relational information from a frozen visual foundation model to encourage semantic associations between visible scene content and mirror regions. We further propose Geometric Transformation Alignment (GTA), which learns a transformation that guides the spatial arrangement of reflected content. The two components play complementary roles, with SRD modeling what should be reflected and GTA modeling how it should be arranged. To facilitate research on this problem, we construct a benchmark for video mirror reflection generation by repurposing four existing video mirror datasets into a unified reflection reconstruction task. Experimental results show that MirrorWorld achieves improved reflection reconstruction quality over representative image-based reflection generation methods and strong video inpainting baselines.",
+          "authors": [
+            "Youjun Zhao",
+            "Alex Warren",
+            "Gary K. L. Tam",
+            "Rynson W. H. Lau"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV",
+            "cs.LG"
+          ],
+          "published": "2026-08-07T17:58:10+00:00",
+          "link": "https://arxiv.org/pdf/2608.07463v1",
+          "tags": [
+            "keyword:phys-video",
+            "query:phys-video"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Explicitly models scene-to-mirror reflection consistency, a physical constraint in video generation",
+          "llm_evidence_cn": "显式建模场景与镜面的反射一致性，是视频生成中的物理约束",
+          "llm_evidence": "显式建模场景与镜面的反射一致性，是视频生成中的物理约束",
+          "canonical_evidence": "显式建模场景与镜面的反射一致性，是视频生成中的物理约束",
+          "llm_tldr_en": "Mirror reflections in generated videos are often inconsistent with the scene. MirrorWorld proposes a reflection-aware video inpainting framework that separately models what content should be reflected and how it is spatially arranged, ensuring scene-to-mirror consistency.",
+          "llm_tldr_cn": "视频扩散模型生成镜面反射时，镜中内容常与场景不一致。本文提出MirrorWorld，将反射生成分解为两个互补挑战：反射哪些场景内容，以及反射内容在镜面区域如何空间排布。通过反射感知的视频修补框架显式建模场景到镜面的关系，从而保证镜面内容与周围场景物理一致。实验证明该方法显著提升镜面反射的视觉真实感。",
+          "llm_tldr": "视频扩散模型生成镜面反射时，镜中内容常与场景不一致。本文提出MirrorWorld，将反射生成分解为两个互补挑战：反射哪些场景内容，以及反射内容在镜面区域如何空间排布。通过反射感知的视频修补框架显式建模场景到镜面的关系，从而保证镜面内容与周围场景物理一致。实验证明该方法显著提升镜面反射的视觉真实感。",
+          "llm_tags": [
+            "query:phys-video"
+          ],
+          "matched_query_tag": "query:phys-video",
+          "matched_query_text": "ensuring physical properties remain coherent across video frames",
+          "matched_requirement_id": "req-3",
+          "selection_source": "carryover_cache",
+          "paper_id": "2608.07463v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2608.18948v1",
+          "source": "arxiv",
+          "title": "RoboEdit: Turning Human Manipulation Videos into Scalable Robot Experience",
+          "abstract": "Collecting robot hand-object interaction data is costly and embodiment-specific, yet abundant human-object videos remain unusable for robot training. We present RoboEdit, a human-to-robot video editing suite that transforms human manipulation videos into action-consistent, physically plausible robot videos with aligned 3D hand states. To enable scalable supervision, we introduce RoboEdit-ADC, an automatic pipeline that reconstructs and retargets 3D interactions from RGB videos across embodiments. This pipeline generates RoboEdit-14M, a large-scale dataset of 174K aligned video pairs (14M frames) spanning seven robot embodiments, diverse scenes, and interaction types. The core editing engine, RoboEdit-Trans, employs cross-embodiment adaptation modules to preserve temporal coherence while adapting appearance and motion. It further integrates a 3D Robot-State Decoder to recover per-frame hand states for structured motion supervision. Experiments show that RoboEdit achieves state-of-the-art editing quality and supports downstream robot control policies in real-world manipulation tasks. Ultimately, the RoboEdit suite unlocks the vast potential of unlabeled human videos, providing scalable, high-fidelity visual and 3D motion supervision for generalizable robot learning.",
+          "authors": [
+            "Yaowei Guo",
+            "Zeng Tao",
+            "Yuxin Jiang",
+            "Yunuo Chen",
+            "Zhiyang Dou",
+            "Yuxiang Ma",
+            "Yin Yang",
+            "Demetri Terzopoulos",
+            "Ying Jiang",
+            "Chenfanfu Jiang"
+          ],
+          "primary_category": "cs.RO",
+          "categories": [
+            "cs.RO"
+          ],
+          "published": "2026-08-19T14:15:36+00:00",
+          "link": "https://arxiv.org/pdf/2608.18948v1",
+          "tags": [
+            "keyword:phys-video",
+            "query:phys-video"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Generates a large-scale dataset of 174K physically plausible robot videos from human manipulation videos, supporting training of video models",
+          "llm_evidence_cn": "从人类操作视频生成17.4万条物理合理的机器人视频数据集，可用于视频模型训练",
+          "llm_evidence": "从人类操作视频生成17.4万条物理合理的机器人视频数据集，可用于视频模型训练",
+          "canonical_evidence": "从人类操作视频生成17.4万条物理合理的机器人视频数据集，可用于视频模型训练",
+          "llm_tldr_en": "Robot hand-object data is costly to collect. RoboEdit transforms human manipulation videos into action-consistent, physically plausible robot videos via cross-embodiment adaptation, producing RoboEdit-14M, a large-scale dataset of 174K aligned video pairs across seven embodiments.",
+          "llm_tldr_cn": "采集机器人手物交互数据成本高且受限于具体本体。本文提出RoboEdit，将人类操作视频转换为动作一致、物理合理的机器人视频，并配准3D手部状态。其自动管线RoboEdit-ADC可从RGB视频重建并重定向跨本体交互，生成包含17.4万对齐视频对（1400万帧）的大规模数据集RoboEdit-14M。该数据集覆盖七种机器人本体与多样场景，为机器人视频生成与操作学习提供可扩展数据支撑。",
+          "llm_tldr": "采集机器人手物交互数据成本高且受限于具体本体。本文提出RoboEdit，将人类操作视频转换为动作一致、物理合理的机器人视频，并配准3D手部状态。其自动管线RoboEdit-ADC可从RGB视频重建并重定向跨本体交互，生成包含17.4万对齐视频对（1400万帧）的大规模数据集RoboEdit-14M。该数据集覆盖七种机器人本体与多样场景，为机器人视频生成与操作学习提供可扩展数据支撑。",
+          "llm_tags": [
+            "query:phys-video"
+          ],
+          "matched_query_tag": "query:phys-video",
+          "matched_query_text": "datasets containing physical interactions and dynamics for training video models",
+          "matched_requirement_id": "req-6",
+          "selection_source": "carryover_cache",
+          "paper_id": "2608.18948v1",
+          "carry_days": 1
+        }
+      ]
+    }
+  }
 }

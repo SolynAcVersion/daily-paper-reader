@@ -1,0 +1,297 @@
+{
+  "date": "20260722-20260820",
+  "date_label": "2026-07-22 ~ 2026-08-20",
+  "generated_at": "2026-08-20 09:05:19 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2607.27380v1",
+      "route": "20260722-20260820/2607.27380v1-videococo-code-as-cot-for-physically-consistent-video-generation-via-an-agentic-dual-engine-system",
+      "title": "VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 10.0,
+      "evidence": "以可执行的Blender代码作为思维链，显式指定物理动力学，生成物理一致的视频",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2608.15555v1",
+      "route": "20260722-20260820/2608.15555v1-rigidbench-evaluating-rigid-body-physics-in-video-generation-models",
+      "title": "RigidBench: Evaluating Rigid-Body Physics in Video Generation Models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 10.0,
+      "evidence": "专为视频生成模型刚体物理正确性设计的模拟器基准",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2607.19876v1",
+      "route": "20260722-20260820/2607.19876v1-kinebench-benchmarking-embodied-world-models-via-idm-free-kinematic-grounding",
+      "title": "KineBench: Benchmarking Embodied World Models via IDM-Free Kinematic Grounding",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "评估生成视频物理一致性的基准",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2607.23472v1",
+      "route": "20260722-20260820/2607.23472v1-viper-visual-in-context-physics-reasoning-for-physically-plausible-video-generation",
+      "title": "VIPER: Visual In-Context Physics Reasoning for Physically Plausible Video Generation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "通过参考视频进行视觉上下文物理推理，实现物理行为可控的合理视频生成",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2608.00617v1",
+      "route": "20260722-20260820/2608.00617v1-diagnosing-under-development-of-irreversible-processes-in-video-generation",
+      "title": "Diagnosing Under-Development of Irreversible Processes in Video Generation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "提出针对生成视频是否遵守不可逆物理过程的评估协议",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2608.07981v1",
+      "route": "20260722-20260820/2608.07981v1-distilling-physical-priors-into-streaming-world-models",
+      "title": "Distilling Physical Priors into Streaming World Models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "通过从真实物理交互视频蒸馏物理先验，提升流式世界模型滚动生成的物理一致性",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2608.09594v1",
+      "route": "20260722-20260820/2608.09594v1-illusion-or-integrity-geometrical-consistency-metric-for-aigc-video-quality-evaluation",
+      "title": "Illusion or Integrity? Geometrical Consistency Metric for AIGC Video Quality Evaluation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "通过几何一致性定量评估AIGC视频对物理规律的符合程度",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2607.22241v1",
+      "route": "20260722-20260820/2607.22241v1-agenthoi-multi-agent-reasoning-for-human-object-interaction-video-generation-via-implicit-representation-alignment",
+      "title": "AgentHOI: Multi-Agent Reasoning for Human-Object-Interaction Video Generation via Implicit Representation Alignment",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "人-物交互视频生成中的物理执行与交互逻辑",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2607.26579v1",
+      "route": "20260722-20260820/2607.26579v1-contactflow-a-video-action-conditioning-that-transfers-across-embodiments",
+      "title": "ContactFlow: A video action conditioning that transfers across embodiments",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "基于接触轨迹的条件表示，为视频世界模型注入物理约束",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2608.02150v3",
+      "route": "20260722-20260820/2608.02150v3-phycheck-fine-grained-evidence-grounded-dataset-for-physical-law-understanding-in-video-llms",
+      "title": "PhyCheck: Fine-Grained Evidence-Grounded Dataset for Physical Law Understanding in Video-LLMs",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "细粒度证据锚定的物理规律理解评测数据集",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2608.02603v1",
+      "route": "20260722-20260820/2608.02603v1-worldexam-benchmarking-world-models-from-apparent-appearance-to-inherent-reactivity",
+      "title": "WorldExam: Benchmarking World Models from Apparent Appearance to Inherent Reactivity",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "WorldExam基准从内在反应性、空间一致性和物理后果等维度评测视频生成世界模型",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2607.24159v1",
+      "route": "20260722-20260820/2607.24159v1-deva-decoupled-video-action-model-with-physical-guidance-for-robot-policy-learning",
+      "title": "DeVA: Decoupled Video-Action Model with physical guidance for robot policy learning",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "利用带物理引导的视频生成模型和时空先验来促进机器人策略学习",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2607.26903v1",
+      "route": "20260722-20260820/2607.26903v1-from-passive-video-to-editable-experience-physically-grounded-experience-synthesis-for-embodied-intelligence",
+      "title": "From Passive Video to Editable Experience: Physically Grounded Experience Synthesis for Embodied Intelligence",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "基于物理约束与可供性图的视频生成",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2608.00486v1",
+      "route": "20260722-20260820/2608.00486v1-dreamtraj-generating-6-dof-object-trajectories-by-reading-unrendered-video-diffusion-latents",
+      "title": "DreamTraj: Generating 6-DoF Object Trajectories by Reading Unrendered Video Diffusion Latents",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "MOVE数据集包含精细的物理操作轨迹，并通过视频扩散潜在特征预测6自由度轨迹",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2608.13014v1",
+      "route": "20260722-20260820/2608.13014v1-egophi-estimating-contact-and-force-from-egocentric-vision",
+      "title": "EgoPHI: Estimating Contact and Force from Egocentric Vision",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "结合物理仿真为手物交互数据增加稠密力标签，实现接触与三维力的联合估计",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2607.21580v1",
+      "route": "20260722-20260820/2607.21580v1-graphvid-interactive-graph-controllable-video-generation",
+      "title": "GraphVid: Interactive Graph-Controllable Video Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "大规模面向交互中心的数据集及关系标注，用于视频生成训练",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2607.21848v1",
+      "route": "20260722-20260820/2607.21848v1-closing-the-loop-training-free-revisit-consistency-for-autoregressive-generative-rendering",
+      "title": "Closing the Loop: Training-Free Revisit Consistency for Autoregressive Generative Rendering",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "在自回归渲染中保持跨帧外观与几何的一致性",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    },
+    {
+      "paper_id": "2608.06192v1",
+      "route": "20260722-20260820/2608.06192v1-hope-hand-object-pressure-estimation-from-monocular-videos",
+      "title": "HOPE: Hand-Object Pressure Estimation from Monocular Videos",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "从单目视频估计逐顶点压力与接触，可用于物理交互数据标注",
+      "first_seen_at": "2026-08-20 09:05:19 UTC",
+      "updated_at": "2026-08-20 09:05:19 UTC"
+    }
+  ]
+}

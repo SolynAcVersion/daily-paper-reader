@@ -1,0 +1,768 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-20T08:51:34.159872+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 14,
+    "deep_cap": 6,
+    "deep_selected": 7,
+    "quick_candidates": 19,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2607.27380v1",
+      "source": "arxiv",
+      "title": "VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System",
+      "abstract": "Text-to-video models have achieved remarkable visual quality, yet they still struggle to generate physically consistent dynamics because the temporal evolution of a scene must be inferred implicitly from a highly compressed text prompt. Existing chain-of-thought approaches introduce intermediate plans or visual states, but these representations are typically non-executable or temporally sparse, limiting their ability to instantiate and control the complete spatiotemporal process. To address this limitation, we introduce VideoCoCo, an agentic dual-engine framework in which executable Blender code serves as a process-level chain of thought. Given a text prompt, a coding agent synthesizes a Blender program that explicitly specifies the scene and its temporal evolution. The executable simulation engine runs the program to produce a deterministic spatiotemporal draft, which is subsequently transformed into a photorealistic video by a generative video engine through draft-conditioned editing. This decomposition separates process-level reasoning from high-fidelity visual realization. To adapt the video editor to simulated drafts, we construct VideoCoCo-3K, a curated dataset of draft-instruction-target triplets. VideoCoCo improves the OmniWeaving baseline from 0.475 to 0.558 on PhyGenBench and from 52.18 to 77.88 on VBench-2.0, achieving the best average score on both benchmarks. These results demonstrate that executable code provides an effective, controllable, and inspectable intermediate representation for physically consistent video generation.",
+      "authors": [
+        "Haodong Li",
+        "Tianfei Ren",
+        "Xiaoxiao Ma",
+        "Chunmei Qing",
+        "Zhen Fang",
+        "Sipeng He",
+        "Ziyu Guo",
+        "Haoyu Wu",
+        "Juanxi Tian",
+        "Yihang Zou",
+        "Ruichuan An",
+        "Dongzhi Jiang",
+        "Boxue Yang",
+        "Ji Xie",
+        "Xu Huang",
+        "Wenhao Yan",
+        "Jialv Zou",
+        "Zhengrong Yue",
+        "Yaxin Luo",
+        "Xiaotong Li",
+        "Yuzhu Wang",
+        "Junyan Ye",
+        "Jinjing Zhao",
+        "Zehui Chen",
+        "Lin Chen",
+        "Renye Yan",
+        "Feng Zhao",
+        "Pheng-Ann Heng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-29T18:38:23+00:00",
+      "link": "https://arxiv.org/pdf/2607.27380v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Uses executable Blender code as chain-of-thought to explicitly specify physical dynamics for physically-consistent video generation",
+      "llm_evidence_cn": "以可执行的Blender代码作为思维链，显式指定物理动力学，生成物理一致的视频",
+      "llm_evidence": "以可执行的Blender代码作为思维链，显式指定物理动力学，生成物理一致的视频",
+      "canonical_evidence": "以可执行的Blender代码作为思维链，显式指定物理动力学，生成物理一致的视频",
+      "llm_tldr_en": "Text-to-video models struggle with physical consistency; VideoCoCo uses an agentic dual-engine where a coding agent synthesizes executable Blender code as process-level chain-of-thought, explicitly controlling spatiotemporal physical dynamics.",
+      "llm_tldr_cn": "文生视频模型难以保证物理一致，因为场景的时间演变需从高度压缩的文本中隐式推断。本文提出VideoCoCo，采用智能体双引擎框架，让代码智能体生成可执行的Blender程序作为过程级思维链。该程序显式实例化并控制完整的时空物理过程，从而在视频中保持物理一致性。实验表明该方法能有效改善生成视频的物理合理性，为物理约束视频生成提供了新范式。",
+      "llm_tldr": "文生视频模型难以保证物理一致，因为场景的时间演变需从高度压缩的文本中隐式推断。本文提出VideoCoCo，采用智能体双引擎框架，让代码智能体生成可执行的Blender程序作为过程级思维链。该程序显式实例化并控制完整的时空物理过程，从而在视频中保持物理一致性。实验表明该方法能有效改善生成视频的物理合理性，为物理约束视频生成提供了新范式。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.15555v1",
+      "source": "arxiv",
+      "title": "RigidBench: Evaluating Rigid-Body Physics in Video Generation Models",
+      "abstract": "Video models are increasingly used to predict what happens next in a scene, yet the metrics commonly used to compare their outputs say little about whether the predicted objects move correctly. Motion, geometry, identity, background stability, and visual similarity can fail independently, but whole-frame scores often mix these errors together. We introduce RigidBench, a simulator-grounded benchmark that compares a generated continuation with a reference rollout from the same initial frame and motion description. Its five rigid-body tasks vary objects, materials, viewpoints, and indoor and outdoor scenes, with per-frame masks, depth, 6-DoF trajectories, and contacts available for scoring. We evaluate eight models on the same 100 examples with ten measurements that keep these aspects separate. The resulting rankings depend strongly on what is measured: no model leads on all ten, and across model means, higher SSIM accompanies larger 3D trajectory error (r = 0.89). RigidBench also includes 5,000 training videos with exact simulator state, which we use to fine-tune and analyze Wan 2.2 TI2V-5B. Full fine-tuning reduces 3D trajectory error by about 20% with almost no change in SSIM, while teacher-forced probes and targeted interventions show that object position is represented throughout Wan's diffusion transformer and used by its denoising computation.",
+      "authors": [
+        "Swarnim Jain",
+        "Shangzhe Wu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-08-16T06:05:20+00:00",
+      "link": "https://arxiv.org/pdf/2608.15555v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "simulator-grounded benchmark specifically for rigid-body physics in video generation",
+      "llm_evidence_cn": "专为视频生成模型刚体物理正确性设计的模拟器基准",
+      "llm_evidence": "专为视频生成模型刚体物理正确性设计的模拟器基准",
+      "canonical_evidence": "专为视频生成模型刚体物理正确性设计的模拟器基准",
+      "llm_tldr_en": "RigidBench is a simulator-grounded benchmark that evaluates whether generated video continuations obey rigid-body physics, with five tasks, per-frame masks, depth, 6-DoF trajectories and contacts; it measures eight models on 100 examples.",
+      "llm_tldr_cn": "当前视频生成模型的常用指标无法判断预测物体是否运动正确，运动、几何、身份和背景稳定性可能独立失效。为此提出RigidBench，一个基于仿真器的基准，从同一初始帧和运动描述出发，比较生成续帧与参考推演。基准包含五个刚体任务并覆盖多类场景，提供逐帧掩码、深度、六自由度轨迹和接触标注。对八个模型在100个样例上的评测表明该基准能清晰诊断视频模型的物理正确性缺陷。这项工作为物理合理性视频评价提供了标准化工具。",
+      "llm_tldr": "当前视频生成模型的常用指标无法判断预测物体是否运动正确，运动、几何、身份和背景稳定性可能独立失效。为此提出RigidBench，一个基于仿真器的基准，从同一初始帧和运动描述出发，比较生成续帧与参考推演。基准包含五个刚体任务并覆盖多类场景，提供逐帧掩码、深度、六自由度轨迹和接触标注。对八个模型在100个样例上的评测表明该基准能清晰诊断视频模型的物理正确性缺陷。这项工作为物理合理性视频评价提供了标准化工具。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.19876v1",
+      "source": "arxiv",
+      "title": "KineBench: Benchmarking Embodied World Models via IDM-Free Kinematic Grounding",
+      "abstract": "Evaluating the physical consistency of embodied world models(EWMs) is a critical open challenge. While closed-loop evaluation via simulator rollouts offers a more faithful assessment of physical plausibility than open-loop alternatives, existing frameworks almost exclusively rely on Inverse Dynamics Models(IDMs) for action extraction. Due to the intricate mapping from 2D pixel space to 3D kinematic space, the learned IDMs can be brittle to data outside their training distribution, resulting in unreliable action extraction from the generated videos with novel objects and scenarios. This creates an unavoidable attribution ambiguity between world model inaccuracies and extractor errors. To reduce this ambiguity, we present KineBench, an IDM-free closed-loop benchmark for EWMs, built upon an explicit kinematic grounding pipeline. Given a generated video, KineBench employs cascaded visual foundation models to directly extract 6D end-effector poses from individual frames, which are then executed in a physics simulator for closed-loop validation. Beyond execution-based task success, KineBench incorporates two classical 3D kinematic metrics--Spectral Arc Length (SPARC) and the Maruyama Manipulability Index--to characterize trajectory smoothness and kinematic feasibility from a robot-centric perspective. Built on 20 diverse manipulation tasks in ManiSkill3, KineBench evaluates EWMs across four progressive suites: basic execution, task transfer, visual out-of-distribution generalization, and complexity-conditioned scaling. Evaluation across frontier models reveals task-complexity-bounded nonlinear scaling in embodied video generation, providing empirical guidance for future data-scaling strategies.",
+      "authors": [
+        "Zeyu Liu",
+        "Zhangzhe Zhu",
+        "Yang Zhang",
+        "Chenyou Fan",
+        "Chenjia Bai",
+        "Xuelong Li"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-07-22T08:04:17+00:00",
+      "link": "https://arxiv.org/pdf/2607.19876v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "benchmark for evaluating physical consistency in generated videos",
+      "llm_evidence_cn": "评估生成视频物理一致性的基准",
+      "llm_evidence": "评估生成视频物理一致性的基准",
+      "canonical_evidence": "评估生成视频物理一致性的基准",
+      "llm_tldr_en": "KineBench is an IDM-free kinematic grounding benchmark for evaluating physical consistency of embodied world models, removing attribution ambiguity between world model inaccuracies and action extraction errors, enabling reliable physical plausibility assessment on novel objects and scenarios.",
+      "llm_tldr_cn": "评估具身世界模型的物理一致性仍是一个关键挑战，现有闭环评估依赖逆动力学模型（IDM）从生成视频中提取动作，容易因分布外数据而产生不可靠的动作提取。为此提出KineBench，一种无需IDM的运动学基准，直接利用运动学约束对生成视频进行物理合理性评估，从而消除世界模型误差与动作提取误差之间的归因混淆。实验表明KineBench能更可靠地评估模型在新物体和场景下的物理一致性。该基准为视频生成模型的物理正确性评价提供了重要工具。",
+      "llm_tldr": "评估具身世界模型的物理一致性仍是一个关键挑战，现有闭环评估依赖逆动力学模型（IDM）从生成视频中提取动作，容易因分布外数据而产生不可靠的动作提取。为此提出KineBench，一种无需IDM的运动学基准，直接利用运动学约束对生成视频进行物理合理性评估，从而消除世界模型误差与动作提取误差之间的归因混淆。实验表明KineBench能更可靠地评估模型在新物体和场景下的物理一致性。该基准为视频生成模型的物理正确性评价提供了重要工具。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.23472v1",
+      "source": "arxiv",
+      "title": "VIPER: Visual In-Context Physics Reasoning for Physically Plausible Video Generation",
+      "abstract": "Modern video generation models can synthesize visually compelling and temporally coherent clips, yet controlling their physical behavior remains difficult with standard text and image conditions. The core challenge is a conditioning bottleneck: material response, contact interaction, deformation, and motion trajectory are continuous and relational physical cues that are hard to specify exhaustively in language but can be demonstrated naturally by video. We propose VIPER, a Visual In-Context Physics Reasoning framework for reference-guided image-to-video generation. Given a target image, a brief target prompt, and a reference video, VIPER treats the reference as a dense visual demonstration of the desired physical process rather than an appearance template. It uses a Multimodal Large Language Model (MLLM) to extract reference-derived physical cues and guide a pretrained image-to-video generator through a hierarchical training strategy, enabling physical behavior transfer while preserving the visual prior of the base generator. To support this setting, we construct VIPER-19K, a curated dataset with material, trajectory, and physical-impact annotations, together with filtered reference-target pairs. Experiments on an unseen validation set show that VIPER achieves stronger reference-video physical similarity and higher human preference than representative video generation and video-as-prompt baselines, while maintaining competitive general video quality. Qualitative results further demonstrate that VIPER can transfer reference-derived physical behavior to new target scenes without requiring carefully engineered prompts.",
+      "authors": [
+        "Tianxiao Chen",
+        "Hanmo Chen",
+        "Huajin Chen",
+        "Bo Li",
+        "Qi Ye",
+        "Peng-Tao Jiang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-26T05:55:49+00:00",
+      "link": "https://arxiv.org/pdf/2607.23472v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Visual in-context physics reasoning for physically plausible video generation",
+      "llm_evidence_cn": "通过参考视频进行视觉上下文物理推理，实现物理行为可控的合理视频生成",
+      "llm_evidence": "通过参考视频进行视觉上下文物理推理，实现物理行为可控的合理视频生成",
+      "canonical_evidence": "通过参考视频进行视觉上下文物理推理，实现物理行为可控的合理视频生成",
+      "llm_tldr_en": "VIPER uses reference videos as dense visual demonstrations to control physical processes in image-to-video generation, addressing the conditioning bottleneck of text or image conditions.",
+      "llm_tldr_cn": "现有视频生成模型难以通过文本或图像条件精确控制物理行为，因为材料响应、接触交互、形变和运动轨迹等连续关系型物理线索难以用语言穷举。VIPER将参考视频视为所需物理过程的密集视觉示范，提出视觉上下文物理推理框架，用于参考引导的图像到视频生成。实验表明该方法能有效提升生成视频的物理合理性，并实现对接触、形变等物理交互的精细控制，为物理可控视频生成提供了新思路。",
+      "llm_tldr": "现有视频生成模型难以通过文本或图像条件精确控制物理行为，因为材料响应、接触交互、形变和运动轨迹等连续关系型物理线索难以用语言穷举。VIPER将参考视频视为所需物理过程的密集视觉示范，提出视觉上下文物理推理框架，用于参考引导的图像到视频生成。实验表明该方法能有效提升生成视频的物理合理性，并实现对接触、形变等物理交互的精细控制，为物理可控视频生成提供了新思路。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.00617v1",
+      "source": "arxiv",
+      "title": "Diagnosing Under-Development of Irreversible Processes in Video Generation",
+      "abstract": "Many physical attributes are \\emph{irreversible}: ice melts but does not re-freeze, paper chars but does not un-burn. Do video generators respect this? We show the question is hard to measure, and that what can be measured reliably is \\emph{development} rather than reversal. Metrics of local reversal are null-degenerate: a per-clip violation rate scores $0.50$ on pure noise, and a variance-normalized reversal residual sits at its noise ceiling. What survives null-testing is a two-part protocol: progress (a directional attribute correlation) and a stasis rate. Under this protocol, generated video separates cleanly from real footage, and the gap is human-validated. Across seven text-to-video models, real reference footage advances ($ρ{=}{+}0.40$, $35\\%$ static) while every generator shows near-zero progress and $92$--$100\\%$ stasis; nine annotators rate real footage far above generated ($2.75$ vs.\\ $0.99$ on a $0$--$4$ scale). The reliable finding is \\emph{under-development}: generators barely advance irreversible attributes rather than reversing them. As a complementary mechanism, we show that post-hoc readout guidance is gameable, whereas enforcing monotonicity by construction in a disentangled attribute latent removes the gameable readout, validated in controlled and semi-synthetic settings.",
+      "authors": [
+        "Jian Xu",
+        "Yanning Wu",
+        "Delu Zeng",
+        "John Paisley",
+        "Qibin Zhao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-01T12:16:22+00:00",
+      "link": "https://arxiv.org/pdf/2608.00617v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "evaluation protocol for physical correctness of generated videos focusing on irreversible physical processes",
+      "llm_evidence_cn": "提出针对生成视频是否遵守不可逆物理过程的评估协议",
+      "llm_evidence": "提出针对生成视频是否遵守不可逆物理过程的评估协议",
+      "canonical_evidence": "提出针对生成视频是否遵守不可逆物理过程的评估协议",
+      "llm_tldr_en": "This paper shows that standard reversal metrics are null-degenerate and proposes a null-testing-validated two-part protocol (progress and stasis rate) that cleanly separates generated video from real footage across seven T2V models.",
+      "llm_tldr_cn": "许多物理属性是不可逆的，例如冰融化后不会重新冻结，但视频生成模型是否尊重这一点难以衡量。作者证明局部反转指标在噪声上退化为零假设，并提出两部分的可靠诊断协议：方向属性相关（进展）和停滞率；该协议在七个文生视频模型上能清晰区分生成视频与真实视频，且经人类验证，为生成视频物理正确性评测提供了有效工具。",
+      "llm_tldr": "许多物理属性是不可逆的，例如冰融化后不会重新冻结，但视频生成模型是否尊重这一点难以衡量。作者证明局部反转指标在噪声上退化为零假设，并提出两部分的可靠诊断协议：方向属性相关（进展）和停滞率；该协议在七个文生视频模型上能清晰区分生成视频与真实视频，且经人类验证，为生成视频物理正确性评测提供了有效工具。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.07981v1",
+      "source": "arxiv",
+      "title": "Distilling Physical Priors into Streaming World Models",
+      "abstract": "Streaming world models predict future visual states online while maintaining physically coherent dynamics over long horizons. However, their rollouts often violate basic physical constraints. A common approach distills pretrained bidirectional DiTs into few-step causal generators. However, this paradigm suffers from two fundamental limitations: generic bidirectional teachers acquire limited physical priors from visually oriented pretraining, and the limited priors suffer further loss during bidirectional-to-causal distillation. We present PhyS, a three-stage framework for distilling physical priors into streaming world models. To acquire physical priors from real-world interactions, we construct PhyS-120K, a dataset of 120K real-world physical-interaction videos spanning rigid-body dynamics, soft-body deformation, fluid phenomena, and phase transitions. Each video is annotated with structured descriptions of object properties and causal state transitions. Physics-aware supervised fine-tuning injects the physical priors into a bidirectional 14B DiT teacher, which we then distill into a lightweight 1.3B causal DiT for few-step autoregressive streaming generation. Finally, we use online reinforcement learning to incentivize the distilled model to generate physically plausible rollouts and further propose Temporal Credit Routing (TCR) to address temporal credit assignment. TCR evaluates physical consistency over overlapping temporal windows and routes the resulting group-relative advantages to temporally aligned denoising actions. On PhysicsIQ, PhyS improves the Wan2.1-14B teacher by 18.2\\% and the Self Forcing, Rolling Forcing, and Causal Forcing by 23.7\\%, 14.8\\%, and 31.4\\%, respectively. Results also improve the physics-aware video benchmarks VideoPhy, VideoPhy2, and PhyGenBench. The dataset, code, and more sample videos are available on our Project Page.",
+      "authors": [
+        "Liangliang Zhao",
+        "Junying Wang",
+        "Danni Yang",
+        "Yifan Chang",
+        "Bin Fu",
+        "Yu Qiao",
+        "Bowen Zhou",
+        "Yihao Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-08T07:35:10+00:00",
+      "link": "https://arxiv.org/pdf/2608.07981v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "distills physical priors from real-world videos to make world model rollouts obey physical constraints",
+      "llm_evidence_cn": "通过从真实物理交互视频蒸馏物理先验，提升流式世界模型滚动生成的物理一致性",
+      "llm_evidence": "通过从真实物理交互视频蒸馏物理先验，提升流式世界模型滚动生成的物理一致性",
+      "canonical_evidence": "通过从真实物理交互视频蒸馏物理先验，提升流式世界模型滚动生成的物理一致性",
+      "llm_tldr_en": "PhyS distills physical priors from a 120K real-world physical-interaction video dataset into streaming world models, overcoming limitations of bidirectional-to-causal distillation and improving physically coherent long-horizon predictions.",
+      "llm_tldr_cn": "流式世界模型在长时程预测中经常违反基本物理约束，而现有从双向DiT蒸馏的方法受限于预训练物理先验不足以及蒸馏损失。本文提出PhyS三阶段框架，构建包含12万真实物理交互视频的PhyS-120K数据集，从中获取物理先验并蒸馏进流式因果世界模型，显著提升滚动的物理一致性与长程稳定性。",
+      "llm_tldr": "流式世界模型在长时程预测中经常违反基本物理约束，而现有从双向DiT蒸馏的方法受限于预训练物理先验不足以及蒸馏损失。本文提出PhyS三阶段框架，构建包含12万真实物理交互视频的PhyS-120K数据集，从中获取物理先验并蒸馏进流式因果世界模型，显著提升滚动的物理一致性与长程稳定性。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.09594v1",
+      "source": "arxiv",
+      "title": "Illusion or Integrity? Geometrical Consistency Metric for AIGC Video Quality Evaluation",
+      "abstract": "Recently, AI-driven video generation has attracted considerable attention. This surge increases the demand for reliable video quality assessment (VQA) metrics to evaluate AI-generated content (AIGC) videos and guide model optimization. Existing studies assess video quality through visual harmony, video-text consistency, and domain-specific alignment, yet lack quantitative metrics for measuring fidelity to physical laws. To address this limitation, we present a novel benchmark that evaluates the quality of AIGC videos based on their compliance with physical principles by quantitatively measuring geometric consistency across frames extracted from generated sequences. This serves as a proxy for estimating the extent to which generated videos conform to real-world physical rules. Specifically, GeoCon-Bench captures global motion through translation estimation, fits homography or fundamental matrix models using background correspondences, and reports complementary metrics, including inlier ratio and geometric error. We also release a dataset containing 20 scenes across six motion categories. Experiments on state-of-the-art AIGC models demonstrate the reliability of GeoCon-Bench as a video quality assessment metric.",
+      "authors": [
+        "Yifei Xue",
+        "Yuanchen Fei",
+        "Hao Zhang",
+        "Chenzhi Nie",
+        "Tie ji",
+        "Yizhen Lao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-10T13:28:07+00:00",
+      "link": "https://arxiv.org/pdf/2608.09594v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "quantitative metric and benchmark for physical law compliance in AIGC videos via geometric consistency",
+      "llm_evidence_cn": "通过几何一致性定量评估AIGC视频对物理规律的符合程度",
+      "llm_evidence": "通过几何一致性定量评估AIGC视频对物理规律的符合程度",
+      "canonical_evidence": "通过几何一致性定量评估AIGC视频对物理规律的符合程度",
+      "llm_tldr_en": "This paper proposes a geometric consistency metric and benchmark to measure AI-generated video fidelity to physical laws across frames, addressing the lack of quantitative physical correctness metrics.",
+      "llm_tldr_cn": "现有AI视频质量评估缺乏对物理规律遵奉度的定量指标。该工作提出一个基准，通过定量测量生成视频跨帧的几何一致性，作为物理原则依从性的代理，从而评估AIGC视频是否满足物理正确性。该度量能用于指导视频生成模型优化，弥补了视频质量评估在物理保真度上的缺失。",
+      "llm_tldr": "现有AI视频质量评估缺乏对物理规律遵奉度的定量指标。该工作提出一个基准，通过定量测量生成视频跨帧的几何一致性，作为物理原则依从性的代理，从而评估AIGC视频是否满足物理正确性。该度量能用于指导视频生成模型优化，弥补了视频质量评估在物理保真度上的缺失。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.22241v1",
+      "source": "arxiv",
+      "title": "AgentHOI: Multi-Agent Reasoning for Human-Object-Interaction Video Generation via Implicit Representation Alignment",
+      "abstract": "Recent advances in video diffusion models have spurred interest in human-object interaction (HOI) video generation, which demands fine-grained control over interaction logic beyond single-subject animation. However, existing HOI methods rely heavily on explicit motion control, limiting scalability and generalization across diverse objects and interactions. In this study, we propose AgentHOI, a text-driven HOI video generation following a thinking-before-generation framework that bridges the gap between high-level textual intent and physical execution through multi-agent reasoning over perception, interaction, and motion planning. Building upon the generated interaction plans, we further strengthen text-driven motion understanding. We introduce an implicit text-motion alignment strategy that distills text-to-motion priors into the video diffusion model, enabling robust HOI synthesis without explicit motion inputs at inference. Experiments show that AgentHOI significantly improves interaction naturalness, object appearance preservation, and adherence to complex textual instructions across challenging object-centric scenarios such as wearing and riding. The code is available at https://github.com/bone-11/agenthoi.",
+      "authors": [
+        "Ziyao Huang",
+        "Shunkai Li",
+        "Juan Cao",
+        "Chenyu Li",
+        "Youliang Zhang",
+        "Zixiang Zhou",
+        "Cong Wang",
+        "Yuan Zhou",
+        "Qinglin Lu",
+        "Fan Tang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-24T12:17:57+00:00",
+      "link": "https://arxiv.org/pdf/2607.22241v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "human-object interaction video generation with physical execution and interaction logic",
+      "llm_evidence_cn": "人-物交互视频生成中的物理执行与交互逻辑",
+      "llm_evidence": "人-物交互视频生成中的物理执行与交互逻辑",
+      "canonical_evidence": "人-物交互视频生成中的物理执行与交互逻辑",
+      "llm_tldr_en": "AgentHOI generates text-driven human-object interaction videos via multi-agent reasoning over perception, interaction, and motion planning, plus implicit representation alignment, bridging high-level intent and physical execution for physically plausible, generalizable interactions.",
+      "llm_tldr_cn": "现有的人-物交互（HOI）视频生成方法严重依赖显式运动控制，难以扩展到多样的物体和交互场景。为此提出AgentHOI，遵循'先思考后生成'框架，通过多智能体对感知、交互和运动规划进行推理，并结合隐式表示对齐增强文本驱动能力，从而弥合高层文本意图与物理执行之间的鸿沟。在各类HOI生成任务上验证了该方法能生成更加符合交互逻辑和物理合理性的视频，提升了交互控制的泛化性。该工作为物理合理的交互视频生成提供了新思路。",
+      "llm_tldr": "现有的人-物交互（HOI）视频生成方法严重依赖显式运动控制，难以扩展到多样的物体和交互场景。为此提出AgentHOI，遵循'先思考后生成'框架，通过多智能体对感知、交互和运动规划进行推理，并结合隐式表示对齐增强文本驱动能力，从而弥合高层文本意图与物理执行之间的鸿沟。在各类HOI生成任务上验证了该方法能生成更加符合交互逻辑和物理合理性的视频，提升了交互控制的泛化性。该工作为物理合理的交互视频生成提供了新思路。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "videos depicting physically realistic behaviors and outcomes",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.24159v1",
+      "source": "arxiv",
+      "title": "DeVA: Decoupled Video-Action Model with physical guidance for robot policy learning",
+      "abstract": "Generalizable robot manipulation requires policies that can anticipate how visual scenes evolve while executing language instructions. While recent Vision-Language-Action models benefit from large-scale pretraining, their predominantly static pretraining objectives provide limited supervision for physical dynamics and temporal causality, leaving control-relevant knowledge to be learned from downstream robot demonstrations. Video generative models offer a promising foundation by encoding rich spatiotemporal priors through future predictions. However, existing Video-Action Models either couple video and action prediction in a shared backbone, making policy adaptation harder to optimize, or under-utilize video information when guiding the action branch. In this work, we introduce DeVA, a Decoupled Video-Action model with specialized video and action experts, multi-level feature transfer, and physically salient guidance. DeVA transfers representations from multiple video layers to the action expert, enabling rich information exchange while making policy learning more tractable. It further supervises intermediate video features and the action stream with physically salient guidance (affordance/depth). Experiments on both simulation benchmarks and real-world deployment demonstrate strong performance with limited data, faster convergence than a unified architecture, and clear performance gains from physical guidance.",
+      "authors": [
+        "Mengqi Zhang",
+        "Sahil Khose",
+        "Simar Kareer",
+        "Yuchen Song",
+        "Unnat Jain",
+        "Judy Hoffman"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-07-27T08:37:35+00:00",
+      "link": "https://arxiv.org/pdf/2607.24159v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "uses video generative models with physical guidance and spatiotemporal priors for robot policy learning",
+      "llm_evidence_cn": "利用带物理引导的视频生成模型和时空先验来促进机器人策略学习",
+      "llm_evidence": "利用带物理引导的视频生成模型和时空先验来促进机器人策略学习",
+      "canonical_evidence": "利用带物理引导的视频生成模型和时空先验来促进机器人策略学习",
+      "llm_tldr_en": "DeVA decouples video and action prediction with a video-action model that leverages physical guidance from future-frame prediction, overcoming limited static pretraining and improving policy adaptation in robot manipulation.",
+      "llm_tldr_cn": "针对现有视觉-语言-动作模型静态预训练目标对物理动力学和时序因果监督不足的问题，提出解耦的视频-动作模型DeVA，利用视频生成模型预测未来场景以提供物理引导，并将视频信息与动作预测解耦，从而便于策略优化，提升机器人操作的泛化能力。",
+      "llm_tldr": "针对现有视觉-语言-动作模型静态预训练目标对物理动力学和时序因果监督不足的问题，提出解耦的视频-动作模型DeVA，利用视频生成模型预测未来场景以提供物理引导，并将视频信息与动作预测解耦，从而便于策略优化，提升机器人操作的泛化能力。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.21580v1",
+      "source": "arxiv",
+      "title": "GraphVid: Interactive Graph-Controllable Video Generation",
+      "abstract": "Controllable video generation remains challenging due to the difficulty of specifying precise multi-object interactions using text prompts or motion-control inputs that primarily constrain pixel movement. In practice, trajectory-based control often requires users to draw accurate tracks for multiple objects, which scales poorly with scene complexity and becomes ambiguous under occlusion or overlap. To enable flexible yet precise multi-subject control, we introduce $\\textbf{GraphVid}$, a graph-conditioned image-to-video generation model that enables interactive control through structured interaction graphs. We further curate $\\textbf{GraphVid-Bench}$, a large-scale interaction-centric video dataset with structured relational annotations to enable training of interaction-aware video generation models. Despite using substantially less training data and fewer trainable parameters than prior motion-control methods, GraphVid delivers strong controllability and video quality. Compared with Motion-I2V, GraphVid reduces FID by up to 39.9% and FVD by 37.6%, while improving PSNR (9.87=>15.98) and SSIM (0.38=>0.61). Our results highlight the potential of structured semantic interfaces as a powerful paradigm for controllable video generation.",
+      "authors": [
+        "Vedant Shah",
+        "Onkar Susladkar",
+        "Tushar Prakash",
+        "Kiet Nguyen",
+        "Tianjio Yu",
+        "Adheesh Juvekar",
+        "Muntasir Waheed",
+        "Ismini Lourentzou"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-23T17:56:30+00:00",
+      "link": "https://arxiv.org/pdf/2607.21580v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "interaction-centric video dataset with structured relational annotations for training video models",
+      "llm_evidence_cn": "大规模面向交互中心的数据集及关系标注，用于视频生成训练",
+      "llm_evidence": "大规模面向交互中心的数据集及关系标注，用于视频生成训练",
+      "canonical_evidence": "大规模面向交互中心的数据集及关系标注，用于视频生成训练",
+      "llm_tldr_en": "GraphVid enables interactive multi-subject video generation via structured interaction graphs, with GraphVid-Bench, a large-scale interaction-centric dataset with relational annotations for training.",
+      "llm_tldr_cn": "针对文本或轨迹难以精确描述多物体交互的问题，GraphVid提出以交互图作为条件进行图像到视频生成，支持用户灵活控制多个主体的交互关系。同时构建了大规模交互中心数据集GraphVid-Bench，提供结构化关系标注，用于训练和评估交互可控的视频生成模型。该工作为物理交互相关视频生成提供了可扩展的数据与方法基础。",
+      "llm_tldr": "针对文本或轨迹难以精确描述多物体交互的问题，GraphVid提出以交互图作为条件进行图像到视频生成，支持用户灵活控制多个主体的交互关系。同时构建了大规模交互中心数据集GraphVid-Bench，提供结构化关系标注，用于训练和评估交互可控的视频生成模型。该工作为物理交互相关视频生成提供了可扩展的数据与方法基础。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "collect and annotate physical interaction datasets for video generation training",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.26579v1",
+      "source": "arxiv",
+      "title": "ContactFlow: A video action conditioning that transfers across embodiments",
+      "abstract": "World models offer a promising route toward robot planning by enabling agents to imagine and verify the consequences of actions before execution. However, current video-based world models often struggle to capture the physical constraints that govern manipulation, particularly contact. Further, their action conditioning is often constrained to specific embodiments such as parallel grippers. We propose \\emph{Contact Flow}, an embodiment-agnostic action representation that encodes manipulation through the trajectory of 3D contact points between an actor and a target object. By discarding actor-specific appearance and kinematics, Contact Flow provides a shared conditioning signal for both human demonstrations and robotic execution. Therefore, we can train a large-scale video generative model on both human and robotic object interaction videos conditioned on Contact Flow, yielding a world model that predicts physically plausible manipulation outcomes. We integrate this model into a propose-imagine-verify-act pipeline, where generated rollouts are assessed by a vision-language model before execution. Experiments on the DROID dataset and real-world tabletop manipulation tasks demonstrate that Contact Flow enables transfer between human demonstrations and different robotic embodiments.",
+      "authors": [
+        "Sami Azirar",
+        "Enrico Pallotta",
+        "Jan Nogga",
+        "Jürgen Gall",
+        "Sven Behnke",
+        "Hermann Blum"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-07-29T07:59:47+00:00",
+      "link": "https://arxiv.org/pdf/2607.26579v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "contact-based conditioning for video world models to enforce physical constraints in manipulation",
+      "llm_evidence_cn": "基于接触轨迹的条件表示，为视频世界模型注入物理约束",
+      "llm_evidence": "基于接触轨迹的条件表示，为视频世界模型注入物理约束",
+      "canonical_evidence": "基于接触轨迹的条件表示，为视频世界模型注入物理约束",
+      "llm_tldr_en": "ContactFlow encodes manipulation via 3D contact point trajectories, providing an embodiment-agnostic conditioning signal for video world models, which helps capture physical contact constraints across human and robot demos.",
+      "llm_tldr_cn": "视频世界模型在机器人规划中常用于想象动作后果，但现有模型难以刻画接触等物理约束，且动作条件常局限于特定实体。ContactFlow提出与实体无关的动作表示，用演员与目标物体之间3D接触点的轨迹来编码操作，屏蔽外观与运动学差异。该表示可同时用于人类示范与机器人执行，使世界模型更好地满足接触物理约束。实验表明其可跨实体迁移并提升操作视频预测的物理一致性。这项工作为物理合理视频生成提供了有效的条件建模思路。",
+      "llm_tldr": "视频世界模型在机器人规划中常用于想象动作后果，但现有模型难以刻画接触等物理约束，且动作条件常局限于特定实体。ContactFlow提出与实体无关的动作表示，用演员与目标物体之间3D接触点的轨迹来编码操作，屏蔽外观与运动学差异。该表示可同时用于人类示范与机器人执行，使世界模型更好地满足接触物理约束。实验表明其可跨实体迁移并提升操作视频预测的物理一致性。这项工作为物理合理视频生成提供了有效的条件建模思路。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "how to ensure physical consistency in generated videos",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.26903v1",
+      "source": "arxiv",
+      "title": "From Passive Video to Editable Experience: Physically Grounded Experience Synthesis for Embodied Intelligence",
+      "abstract": "The key bottleneck in embodied AI is not model architecture but data. Although billions of human manipulation videos exist online, robots cannot directly learn from them due to the embodiment gap between human morphology and robot hardware. We introduce Pegasus, a low-resource framework that bridges this gap by translating human demonstrations into robot-learnable data through structured knowledge transfer. Instead of relying on raw video prompts, Pegasus constructs a graph-based intermediate representation: a Task Graph extracted from human videos is transformed through Affordance and Constraint Graphs into a Robot Planning Graph for robot-conditioned video generation. A hierarchical affordance latent space models the relationship between object states, affordances, and tasks, enabling generalization beyond object identities. A closed-loop physics verifier further filters invalid generations using kinematic feasibility, collision constraints, and joint limits. We evaluate Pegasus across a range of egocentric manipulation benchmarks, including GTEA Gaze+ and EPIC-KITCHENS-100, and diverse robot embodiments, assessing Task Correctness, Executability, State Consistency, and Learnability. Results demonstrate reliable cross-embodiment translation and show that robot data generation can be reframed from a hardware collection problem into a scalable, low-resource knowledge transfer problem.",
+      "authors": [
+        "Jia Luo"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.RO"
+      ],
+      "published": "2026-07-29T13:35:23+00:00",
+      "link": "https://arxiv.org/pdf/2607.26903v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "physically grounded video generation with affordance and constraint graphs",
+      "llm_evidence_cn": "基于物理约束与可供性图的视频生成",
+      "llm_evidence": "基于物理约束与可供性图的视频生成",
+      "canonical_evidence": "基于物理约束与可供性图的视频生成",
+      "llm_tldr_en": "Pegasus converts human manipulation videos into robot-learnable experiences by extracting a Task Graph and transforming it through Affordance and Constraint Graphs into a Robot Planning Graph for conditioned video generation, thus addressing physical grounding in generated videos.",
+      "llm_tldr_cn": "针对机器人与人类存在形态差异、难以直接利用海量人类视频的问题，提出Pegasus框架。该方法先用任务图提取人类示范的结构，再通过可供性与约束图转化为机器人规划图，用于生成机器人条件视频，实现低资源的跨形态知识迁移。实验表明该框架能生成符合物理约束的机器人操作视频。相关工作为物理合理性视频生成提供了可利用的约束建模思路。",
+      "llm_tldr": "针对机器人与人类存在形态差异、难以直接利用海量人类视频的问题，提出Pegasus框架。该方法先用任务图提取人类示范的结构，再通过可供性与约束图转化为机器人规划图，用于生成机器人条件视频，实现低资源的跨形态知识迁移。实验表明该框架能生成符合物理约束的机器人操作视频。相关工作为物理合理性视频生成提供了可利用的约束建模思路。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.21848v1",
+      "source": "arxiv",
+      "title": "Closing the Loop: Training-Free Revisit Consistency for Autoregressive Generative Rendering",
+      "abstract": "Recent conditional video generation models have shown promising potentials to transform 3D engine renderings, such as depth maps and untextured geometry, into photorealistic videos for gaming and immersive content creation. These applications require long-horizon auto-regressive generation that continuously synthesizes new frames while preserving a persistent 3D world. Auto-regressive generators synthesize video chunk by chunk with a bounded KV cache, so when the camera revisits a location after its context has been evicted, the model often regenerates inconsistent appearance, even though the conditioning renderings (e.g., depth) remain perfectly aligned with the underlying geometry.We address this revisit inconsistency without any post-training by exploiting correspondences the 3D engine already provides: temporal correspondence retrieves pose-matched historical latent chunks into the KV cache as loop-closure memory, while spatial correspondence from camera pose and depth reprojection biases token-level attention toward geometrically corresponding regions of the retrieved chunks. We demonstrate our method on loop-closure trajectories mined from TartanAir and TartanGround dataset to mirror complicate real-world application scenarios, where it outperforms existing training-free baselines on revisit consistency without losing overall video quality. Project Page: https://wenchao-m.github.io/ClosetheLoop.github.io/",
+      "authors": [
+        "Wenchao Ma",
+        "Changran Liu",
+        "Sharon X. Huang",
+        "Haomiao Jiang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-23T22:33:52+00:00",
+      "link": "https://arxiv.org/pdf/2607.21848v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "preserves consistent appearance and geometry across video frames in autoregressive rendering",
+      "llm_evidence_cn": "在自回归渲染中保持跨帧外观与几何的一致性",
+      "llm_evidence": "在自回归渲染中保持跨帧外观与几何的一致性",
+      "canonical_evidence": "在自回归渲染中保持跨帧外观与几何的一致性",
+      "llm_tldr_en": "Addresses revisit inconsistency in autoregressive generative rendering where regenerated appearance diverges after context eviction, proposing a training-free method to enforce appearance consistency with underlying 3D geometry.",
+      "llm_tldr_cn": "自回归生成模型在长范围渲染中，当相机重访某位置时，由于KV缓存限制，模型常重新生成不一致的外观，尽管深度等几何条件保持不变。论文提出训练无关的闭环一致性方法，通过利用底层3D几何信息约束重访帧的外观生成，无需重新训练。实验证明该方法在保持长期世界一致性的同时显著提升了生成视频的时空连贯性。该工作对于物理合理的视频生成具有重要的方法价值。",
+      "llm_tldr": "自回归生成模型在长范围渲染中，当相机重访某位置时，由于KV缓存限制，模型常重新生成不一致的外观，尽管深度等几何条件保持不变。论文提出训练无关的闭环一致性方法，通过利用底层3D几何信息约束重访帧的外观生成，无需重新训练。实验证明该方法在保持长期世界一致性的同时显著提升了生成视频的时空连贯性。该工作对于物理合理的视频生成具有重要的方法价值。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "ensuring physical properties remain coherent across video frames",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.02150v3",
+      "source": "arxiv",
+      "title": "PhyCheck: Fine-Grained Evidence-Grounded Dataset for Physical Law Understanding in Video-LLMs",
+      "abstract": "Embodied intelligence and world models require video understanding systems to go beyond recognizing objects and actions and develop an understanding of physical regularities. However, despite their strong performance on general video understanding tasks, current video-language models still struggle to reliably determine whether an observed event conforms to specific physical laws. Existing benchmarks primarily assess the physical quality of generated videos, providing limited support for systematically evaluating and improving the physical-law understanding of Video Large Language Models (VideoLLMs). To address this gap, we introduce PhyCheck, a video question answering dataset organized at two complementary levels of granularity. The coarse-grained subset asks models to determine whether the phenomenon shown in a video conforms to or violates physical laws, while the fine-grained subset further examines whether models can capture physical details responsible for the violation or compliance. We use these subsets as structured supervision to improve physical understanding. In addition, the dataset contains a diagnostic subset with external causal context that reveal hidden factors affecting physical plausibility, assessing whether models can recalibrate their judgments accordingly. Experiments with Fine-tune Qwen2.5-VL show that training with the proposed data substantially improves the understanding of physical-consistency, while evaluations in the diagnostic subset reveal that current models still have difficulty incorporating additional causal conditions into their decisions. These findings highlight the gap between recognizing surface-level inconsistencies and understanding underlying physical mechanisms, and provide a foundation for evaluating and improving physical understanding in Video-LLMs.",
+      "authors": [
+        "Zhongjie Ba",
+        "Shengwang Xu",
+        "Peng Cheng",
+        "Jinyang Zou",
+        "Ting Yu",
+        "Zhibo Wang",
+        "Zhan Qin"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-03T12:34:31+00:00",
+      "link": "https://arxiv.org/pdf/2608.02150v3",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "fine-grained evidence-grounded dataset for evaluating physical law understanding in videos",
+      "llm_evidence_cn": "细粒度证据锚定的物理规律理解评测数据集",
+      "llm_evidence": "细粒度证据锚定的物理规律理解评测数据集",
+      "canonical_evidence": "细粒度证据锚定的物理规律理解评测数据集",
+      "llm_tldr_en": "PhyCheck is a fine-grained evidence-grounded video QA benchmark to evaluate VideoLLMs' physical law understanding, providing two granularity levels to assess whether events conform to physical laws.",
+      "llm_tldr_cn": "现有多模态大模型在视频理解中缺乏对物理规律的可靠判断，已有基准多面向生成视频质量，难以系统评测物理理解。PhyCheck构建了细粒度的视频问答数据集，以证据支撑并分双粒度组织，用于评估和改进视频大语言模型对具体物理规律的遵从性。该基准可辅助校验生成视频物理正确性，推动物理感知理解研究。",
+      "llm_tldr": "现有多模态大模型在视频理解中缺乏对物理规律的可靠判断，已有基准多面向生成视频质量，难以系统评测物理理解。PhyCheck构建了细粒度的视频问答数据集，以证据支撑并分双粒度组织，用于评估和改进视频大语言模型对具体物理规律的遵从性。该基准可辅助校验生成视频物理正确性，推动物理感知理解研究。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2608.00486v1",
+      "source": "arxiv",
+      "title": "DreamTraj: Generating 6-DoF Object Trajectories by Reading Unrendered Video Diffusion Latents",
+      "abstract": "Accurate prediction of object trajectories during manipulation is essential for closing the perception-action loop. Progress is limited on two fronts: available datasets lack fine-grained language-to-motion annotations, and existing predictors either rely on privileged inputs such as video, depth, or CAD models, or recover motion from fully generated videos through costly, error-prone perception pipelines. We close the supervision gap with the MOVE dataset, 5,038 object-centric egocentric trajectories, each paired with a fine-grained natural-language instruction rather than a coarse verb-noun label. We further propose DreamTraj, which predicts a 6-DoF object trajectory from a single RGB image and a task instruction, requiring no video, depth, or CAD model at inference: rather than generating a video, it reads motion from the internal representations of a frozen image-to-video diffusion model at an early denoising step. A lightweight flow-matching Reader decodes query-key attention tracks and pooled hidden states into relative 6-DoF poses. To our knowledge, this is the first approach to directly decode object 6-DoF trajectories from intermediate video diffusion representations rather than generated pixels. DreamTraj sets a new state of the art on both translation and rotation against forecasters that consume multi-frame or privileged inputs, and runs 4.6x faster than generate-then-extract pipelines.",
+      "authors": [
+        "Tongsheng Ding",
+        "Zhen Luo",
+        "Yixuan Yang",
+        "Boyu Wang",
+        "Luyang Xie",
+        "Jinyu Yang",
+        "Feng Zheng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-01T07:24:41+00:00",
+      "link": "https://arxiv.org/pdf/2608.00486v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "MOVE dataset with physical manipulation trajectories; uses video diffusion latents for trajectory prediction",
+      "llm_evidence_cn": "MOVE数据集包含精细的物理操作轨迹，并通过视频扩散潜在特征预测6自由度轨迹",
+      "llm_evidence": "MOVE数据集包含精细的物理操作轨迹，并通过视频扩散潜在特征预测6自由度轨迹",
+      "canonical_evidence": "MOVE数据集包含精细的物理操作轨迹，并通过视频扩散潜在特征预测6自由度轨迹",
+      "llm_tldr_en": "DreamTraj predicts 6-DoF object trajectories from a single image and instruction by reading unrendered video diffusion latents, and introduces the MOVE dataset of 5,038 language-annotated manipulation trajectories.",
+      "llm_tldr_cn": "针对现有轨迹预测依赖特权输入且缺少细粒度语言-运动标注的问题，本文提出DreamTraj，通过读取视频扩散模型的未渲染潜在特征，从单张RGB图像和任务指令预测物体6自由度轨迹；同时构建MOVE数据集，包含5038条精细语言标注的操作轨迹。实验表明该方法无需生成完整视频即可利用扩散先验，为物理交互数据集的构建和视频模型物理一致性研究提供了新途径。",
+      "llm_tldr": "针对现有轨迹预测依赖特权输入且缺少细粒度语言-运动标注的问题，本文提出DreamTraj，通过读取视频扩散模型的未渲染潜在特征，从单张RGB图像和任务指令预测物体6自由度轨迹；同时构建MOVE数据集，包含5038条精细语言标注的操作轨迹。实验表明该方法无需生成完整视频即可利用扩散先验，为物理交互数据集的构建和视频模型物理一致性研究提供了新途径。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "datasets containing physical interactions and dynamics for training video models",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.06192v1",
+      "source": "arxiv",
+      "title": "HOPE: Hand-Object Pressure Estimation from Monocular Videos",
+      "abstract": "Estimating physical pressure from vision is essential for understanding contact-rich hand-object interaction. However, prior vision-based pressure estimation methods are largely limited to planar surfaces and single image input, making them difficult to apply to dynamic hand-object interaction with diverse objects. We instead formulate pressure estimation as a hand-centric video prediction problem with monocular video as input. This formulation predicts temporally evolving per-vertex normal pressure and contact directly on the hand mesh, yielding a unified output space independent of object shape and sensor layout. Building on this formulation, we propose \\textbf{HOPE}, a framework with two key components. First, we lift tactile-glove pressure, planar-sensor pressure, and distance-based hand-object contact annotations into a shared hand vertex space, allowing bare-hand contact data to regularize pressure learning where metric labels are unavailable. Second, we introduce a vertex-anchored video transformer that treats each vertex as a persistent token, aggregates visual features and hand pose over time, and uses a contact-gated pressure head to enforce that pressure vanishes without contact. Experiments on OpenTouch, PressureVisionDB, and hand-object contact benchmarks validate HOPE across object-pressure, surface-pressure, and contact-supervised HOI settings. Despite using metric pressure supervision primarily from gloved-hand videos, HOPE generalizes to bare-hand egocentric and in-the-wild videos, producing joint contact and pressure predictions beyond the scope of contact-only or planar-pressure baselines.",
+      "authors": [
+        "Subin Jeon",
+        "Byungjun Kim",
+        "Hanbyul Joo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-06T15:51:46+00:00",
+      "link": "https://arxiv.org/pdf/2608.06192v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "estimates per-vertex pressure and contact from monocular video, enabling physical interaction annotation",
+      "llm_evidence_cn": "从单目视频估计逐顶点压力与接触，可用于物理交互数据标注",
+      "llm_evidence": "从单目视频估计逐顶点压力与接触，可用于物理交互数据标注",
+      "canonical_evidence": "从单目视频估计逐顶点压力与接触，可用于物理交互数据标注",
+      "llm_tldr_en": "HOPE formulates hand-object pressure estimation as a hand-centric video prediction problem, predicting temporally evolving per-vertex normal pressure and contact from monocular video, providing physical annotations for manipulation understanding.",
+      "llm_tldr_cn": "接触丰富的双手物体交互需要从视觉估计物理压力，但此前方法多限于平面与单张图像。HOPE将压力估计重建为以手为中心的视频预测问题，输入单目视频输出随帧演化的逐顶点法向压力与接触图。该框架统一了不同物体形状与传感器布局的输出空间。实验表明其可适应动态手物交互并预测时变压力。这类物理量估计为视频生成模型理解或标注物理交互数据集提供了新工具。",
+      "llm_tldr": "接触丰富的双手物体交互需要从视觉估计物理压力，但此前方法多限于平面与单张图像。HOPE将压力估计重建为以手为中心的视频预测问题，输入单目视频输出随帧演化的逐顶点法向压力与接触图。该框架统一了不同物体形状与传感器布局的输出空间。实验表明其可适应动态手物交互并预测时变压力。这类物理量估计为视频生成模型理解或标注物理交互数据集提供了新工具。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "collect and annotate physical interaction datasets for video generation training",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.02603v1",
+      "source": "arxiv",
+      "title": "WorldExam: Benchmarking World Models from Apparent Appearance to Inherent Reactivity",
+      "abstract": "Controllable video generation models are increasingly being developed as world models. Accordingly, evaluating them in this role extends beyond the apparent appearance of generated videos to the inherent reactivity of the worlds they depict: the ability to infer from the scene state how the world should react and to generate plausible consequences not explicitly described in the input. Yet existing benchmarks mainly assess visual quality or explicit instruction fulfillment by checking whether requested actions and interaction outcomes are realized, leaving inherent reactivity underexamined. We introduce WorldExam, a hierarchical diagnostic benchmark spanning four levels: Visual Quality, Control Adherence, Spatial Consistency, and World Reactivity. It comprises 1,474 cases across eight dedicated tasks and supports unified evaluation of camera-, action-, and language-driven model paradigms. The World Reactivity level evaluates scene-conditioned reactions and goal-directed behaviors beyond what is explicitly specified in the input. Evaluation of 20 representative models reveals a clear capability split. Camera-driven models excel at camera control, but their interfaces do not support dynamic interaction; action-driven models control subjects more precisely but often leave the world unresponsive; and language-driven models perform better on interaction but follow complex controls less faithfully. No model combines broad task coverage with consistently strong performance, showing that high visual quality and explicit instruction fulfillment do not guarantee inherent reactivity.",
+      "authors": [
+        "Yuxue Yang",
+        "Shuyao Shang",
+        "Jiahe Wang",
+        "Zitong Zhou",
+        "Liang Tan",
+        "Junhan Zeng",
+        "Ruizhi Li",
+        "Junyan Li",
+        "Yu Liu",
+        "Xiao Yang",
+        "Yong Li",
+        "Jun Zhu",
+        "Hongsheng Li",
+        "Tieniu Tan",
+        "Lue Fan",
+        "Zhaoxiang Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-03T17:59:54+00:00",
+      "link": "https://arxiv.org/pdf/2608.02603v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "WorldExam benchmarks world models on inherent reactivity, spatial consistency, and plausible consequences beyond visual quality",
+      "llm_evidence_cn": "WorldExam基准从内在反应性、空间一致性和物理后果等维度评测视频生成世界模型",
+      "llm_evidence": "WorldExam基准从内在反应性、空间一致性和物理后果等维度评测视频生成世界模型",
+      "canonical_evidence": "WorldExam基准从内在反应性、空间一致性和物理后果等维度评测视频生成世界模型",
+      "llm_tldr_en": "WorldExam is a hierarchical benchmark evaluating video generation models as world models, from appearance to reactivity, covering visual quality, control adherence, spatial consistency, and world reactivity.",
+      "llm_tldr_cn": "现有视频生成模型评测多聚焦于视觉质量或显式指令遵循，忽略了世界模型应具备的内在反应性。WorldExam提出分层诊断基准，从视觉质量、控制遵从、空间一致性和世界反应性四个层级评测生成视频。该基准特别强调模型能否从场景状态推断世界应如何反应并生成合理的未明确后果，为物理正确的视频生成提供了系统化评测工具。",
+      "llm_tldr": "现有视频生成模型评测多聚焦于视觉质量或显式指令遵循，忽略了世界模型应具备的内在反应性。WorldExam提出分层诊断基准，从视觉质量、控制遵从、空间一致性和世界反应性四个层级评测生成视频。该基准特别强调模型能否从场景状态推断世界应如何反应并生成合理的未明确后果，为物理正确的视频生成提供了系统化评测工具。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2608.13014v1",
+      "source": "arxiv",
+      "title": "EgoPHI: Estimating Contact and Force from Egocentric Vision",
+      "abstract": "Understanding hand-object interaction from egocentric vision is essential for modeling how people physically engage with the surrounding world. Yet reasoning about physically grounded interaction requires estimating the forces acting on hands and objects, beyond localizing contact. We present EgoPHI, the first method that jointly estimates dense contact maps and 3D force distributions on hand and object meshes from a single monocular RGB image and object geometry. To address the lack of scalable ground-truth force annotations, we introduce a physics-based simulation pipeline that augments existing hand-object datasets with dense per-vertex force supervision. EgoPHI then learns dense 3D contact and force on interacting hand and articulated object meshes, extending vision-based force estimation beyond image-space or planar settings. Our evaluation on in-distribution and out-of-distribution benchmarks shows that EgoPHI improves force estimation over existing approaches while generalizing to unseen datasets. To evaluate sim-to-real transfer, we constructed two physical objects that capture dense object contact and force magnitude and used them to record a dataset of interactions from eight participants across diverse touch and grasp types. Our results demonstrate that EgoPHI recovers meaningful 3D contact and force distributions in simulated, out-of-distribution, and real-world settings, advancing egocentric hand-object understanding from contact localization toward physically grounded interaction reasoning.",
+      "authors": [
+        "Andela Ilic",
+        "Rachel Schuchert",
+        "Yijing Jiang",
+        "Christian Holz"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR",
+        "cs.HC",
+        "cs.RO"
+      ],
+      "published": "2026-08-13T09:34:08+00:00",
+      "link": "https://arxiv.org/pdf/2608.13014v1",
+      "tags": [
+        "keyword:phys-video",
+        "query:phys-video"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Jointly estimates contact and 3D force from egocentric vision, using physics-based simulation to augment datasets with dense force supervision for physical interaction",
+      "llm_evidence_cn": "结合物理仿真为手物交互数据增加稠密力标签，实现接触与三维力的联合估计",
+      "llm_evidence": "结合物理仿真为手物交互数据增加稠密力标签，实现接触与三维力的联合估计",
+      "canonical_evidence": "结合物理仿真为手物交互数据增加稠密力标签，实现接触与三维力的联合估计",
+      "llm_tldr_en": "Reasoning about physical interactions requires force estimation beyond contact. EgoPHI proposes a physics-based simulation pipeline to augment hand-object datasets with per-vertex force supervision, and learns dense 3D contact and force on meshes from monocular egocentric images.",
+      "llm_tldr_cn": "理解手物交互等物理过程需要估计力而不仅是接触定位。本文提出EgoPHI，利用基于物理的仿真管线为现有手物交互数据集补充稠密逐顶点力标注。模型从单目第一视角图像和物体几何联合估计手部与物体网格上的接触图和3D力分布。该方法在缺乏大规模真实力标注的情况下实现了密集物理量的学习，为物理交互理解与数据生产提供了新手段。",
+      "llm_tldr": "理解手物交互等物理过程需要估计力而不仅是接触定位。本文提出EgoPHI，利用基于物理的仿真管线为现有手物交互数据集补充稠密逐顶点力标注。模型从单目第一视角图像和物体几何联合估计手部与物体网格上的接触图和3D力分布。该方法在缺乏大规模真实力标注的情况下实现了密集物理量的学习，为物理交互理解与数据生产提供了新手段。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "collect and annotate physical interaction datasets for video generation training",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
