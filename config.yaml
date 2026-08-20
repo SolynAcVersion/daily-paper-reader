@@ -25,3 +25,65 @@ subscriptions:
     stage: A
     diff_threshold_pct: 15
   keyword_recall_mode: or
+  intent_profiles:
+    - tag: phys-video
+      description: 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。
+      enabled: true
+      paper_sources:
+        - arxiv
+      keywords:
+        - keyword: video generation
+          keyword_cn: 视频生成
+          query: v
+        - keyword: physics-based video generation
+          keyword_cn: 基于物理的视频生成
+          query: generating videos that obey physical laws and constraints
+        - keyword: physical consistency
+          keyword_cn: 物理一致性
+          query: ensuring physical properties remain coherent across video frames
+        - keyword: physical plausibility
+          keyword_cn: 物理合理性
+          query: videos depicting physically realistic behaviors and outcomes
+        - keyword: video generation benchmark
+          keyword_cn: 视频生成基准
+          query: evaluation benchmarks for measuring physical correctness in generated videos
+        - keyword: physics dataset
+          keyword_cn: 物理数据集
+          query: datasets containing physical interactions and dynamics for training video models
+      intent_queries:
+        - query: how to ensure physical consistency in generated videos
+          query_cn: 如何确保生成视频中的物理一致性
+          enabled: true
+          source: manual
+          note: ''
+        - query: improve physical plausibility of video generation using reinforcement learning
+          query_cn: 利用强化学习提高视频生成的物理合理性
+          enabled: true
+          source: manual
+          note: ''
+        - query: benchmark for evaluating physical correctness in video generation models
+          query_cn: 用于评估视频生成模型物理正确性的基准
+          enabled: true
+          source: manual
+          note: ''
+        - query: collect and annotate physical interaction datasets for video generation training
+          query_cn: 收集并标注用于视频生成训练的物理交互数据集
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-08-20T08:08:51.252Z'
+source_backends:
+  arxiv:
+    papers_table: arxiv_papers
+    use_vector_rpc: true
+    vector_rpc: match_arxiv_papers
+    vector_rpc_exact: match_arxiv_papers_exact
+    use_bm25_rpc: true
+    bm25_rpc: match_arxiv_papers_bm25
+    sync_table: arxiv_sync_status
+    sync_success_value: success
+    schema: public
+    kind: supabase
+    enabled: true
+    url: https://lyucdwgefyfbmaiopjbk.supabase.co
+    anon_key: sb_publishable_lX-oi64Uxyd7SIVv3_w2Uw_MTOojeKq
