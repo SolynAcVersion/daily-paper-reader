@@ -1,0 +1,89 @@
+{
+  "date": "20260822",
+  "date_label": "",
+  "generated_at": "2026-08-22 20:50:04 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.16829v1",
+      "route": "202608/22/2608.16829v1-calibench-are-the-stochastic-dynamics-of-video-world-models-physically-calibrated",
+      "title": "CaliBench: Are the Stochastic Dynamics of Video World Models Physically Calibrated?",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 10.0,
+      "evidence": "用于衡量视频世界模型随机动力学物理校准的基准",
+      "first_seen_at": "2026-08-22 20:50:04 UTC",
+      "updated_at": "2026-08-22 20:50:04 UTC"
+    },
+    {
+      "paper_id": "2608.19556v1",
+      "route": "202608/22/2608.19556v1-stream4d-4d-consistency-for-streaming-autoregressive-diffusion-video-models",
+      "title": "Stream4D: 4D-Consistency for Streaming Autoregressive Diffusion Video Models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "直接解决长视频生成中的几何漂移与非自然运动，确保跨帧物理属性一致",
+      "first_seen_at": "2026-08-22 20:50:04 UTC",
+      "updated_at": "2026-08-22 20:50:04 UTC"
+    },
+    {
+      "paper_id": "2608.20107v1",
+      "route": "202608/22/2608.20107v1-beyondmasks-evaluating-causal-and-physical-consistency-in-video-object-removal",
+      "title": "BeyondMasks: Evaluating Causal and Physical Consistency in Video Object Removal",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "构建含时间对齐的合成与真实视频对的配对基准，用于评估视频生成中的因果与物理一致性",
+      "first_seen_at": "2026-08-22 20:50:04 UTC",
+      "updated_at": "2026-08-22 20:50:04 UTC"
+    },
+    {
+      "paper_id": "2608.16513v1",
+      "route": "202608/22/2608.16513v1-mllm-guided-semantic-correction-for-text-to-video-generation",
+      "title": "MLLM-Guided Semantic Correction for Text-to-Video Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "将多模态大模型语义反馈注入扩散采样过程，实现训练自由的生成中纠正。",
+      "first_seen_at": "2026-08-22 20:50:04 UTC",
+      "updated_at": "2026-08-22 20:50:04 UTC"
+    },
+    {
+      "paper_id": "2608.13929v1",
+      "route": "202608/22/2608.13929v1-rgbx-next-towards-realistic-generative-rendering-from-g-buffers",
+      "title": "RGBX-Next: Towards Realistic Generative Rendering from G-Buffers",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于G-buffer的生成渲染为视频生成提供物理可控性",
+      "first_seen_at": "2026-08-22 20:50:04 UTC",
+      "updated_at": "2026-08-22 20:50:04 UTC"
+    }
+  ]
+}

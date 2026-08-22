@@ -1,0 +1,237 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-22T20:45:07.085849+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 3,
+    "deep_cap": 7,
+    "deep_selected": 3,
+    "quick_candidates": 2,
+    "quick_skim_target": 12,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2608.16829v1",
+      "source": "arxiv",
+      "title": "CaliBench: Are the Stochastic Dynamics of Video World Models Physically Calibrated?",
+      "abstract": "Video world models approximate the stochastic distribution of physical outcomes through generative sampling, but existing benchmarks score individual generations or compare distributions coarsely over a whole dataset, leaving the fine-grained aleatoric uncertainty of specific phenomena untested. We introduce CaliBench, which scores outcomes in a physically interpretable discrete space - a bin index, a die face, a suit, a colour - rather than a learned feature space such as in FID, so the distance from a known reference distribution is measured directly. We curate outcome spaces whose reference is known in closed form (binomial Galton boards, Bernoulli forks, uniform dice/cards/lottery, a skewed European-roulette colour), enabling an exact calibration test. We decompose performance into two orthogonal axes that a single accuracy metric conflates: scorability, the fraction of generations yielding a scoreable outcome, and calibration, the total variation distance from the reference on that sample. A chi-squared test assesses significance; as calibration is its null hypothesis it can evidence only miscalibration, and at N=32 per cell detects only large deviations. We apply it to nine scenes and six image-to-video models (WAN-2.7, SeeDance-2.0, HappyHorse-1.0, Veo 3.1, Runway Gen-4.5, Cosmos3-Super), 32 generations each. Models consistently concentrate probability mass on a few outcomes rather than reproducing the reference. Most scene-model combinations are significantly miscalibrated, in the extreme collapsing to one outcome, as Veo 3.1 does on dice. On roulette, generations often leave the ball ambiguously placed, giving several models low scorability. Performance varies by scene: no model dominates all nine. We release the protocol and a metric (mean normalised total variation, mnTV) for comparing new models against our results.",
+      "authors": [
+        "Jonathan Sadeghi",
+        "Jenny Seidenschwarz",
+        "Jesse Allardice",
+        "Sirish Srinivasan",
+        "Benjamin Graham",
+        "Jeffrey Hawke"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-08-17T17:14:50+00:00",
+      "link": "https://arxiv.org/pdf/2608.16829v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Benchmark for measuring physical calibration of stochastic dynamics in video world models",
+      "llm_evidence_cn": "用于衡量视频世界模型随机动力学物理校准的基准",
+      "llm_evidence": "用于衡量视频世界模型随机动力学物理校准的基准",
+      "canonical_evidence": "用于衡量视频世界模型随机动力学物理校准的基准",
+      "llm_tldr_en": "CaliBench evaluates whether video world models produce physically calibrated stochastic dynamics, scoring outputs in physically interpretable discrete spaces with known reference distributions.",
+      "llm_tldr_cn": "CaliBench针对现有视频世界模型基准只能粗粒度评估生成结果的问题，提出了在物理可解释的离散空间（如箱格、骰子面、花色等）中直接度量输出与已知参考分布距离的评测框架，从而检验随机动力学是否物理校准。通过构建参考分布已知的物理场景（如伽尔顿板、伯努利分叉等），该基准能精确评估生成模型的物理正确性，为视频生成模型在物理层面的评估提供了更严格的工具。",
+      "llm_tldr": "CaliBench针对现有视频世界模型基准只能粗粒度评估生成结果的问题，提出了在物理可解释的离散空间（如箱格、骰子面、花色等）中直接度量输出与已知参考分布距离的评测框架，从而检验随机动力学是否物理校准。通过构建参考分布已知的物理场景（如伽尔顿板、伯努利分叉等），该基准能精确评估生成模型的物理正确性，为视频生成模型在物理层面的评估提供了更严格的工具。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.19556v1",
+      "source": "arxiv",
+      "title": "Stream4D: 4D-Consistency for Streaming Autoregressive Diffusion Video Models",
+      "abstract": "Streaming autoregressive diffusion models enable real-time, long-horizon video generation, but their training objectives optimize local frame prediction rather than the geometry and dynamics of a coherent world: long rollouts accumulate geometric drift and degrade into static or unnatural motion. Recent bidirectional approaches address this problem using rewards signals built upon 3D Gaussian-Splatting reconstruction. However, a single rigid 3d reconstruction cannot model a dynamic scene, so this critic penalizes genuine object motion as reconstruction error and is maximized by freezing the video. This shortcut is especially detrimental in the AR setting, where each chunk can propagate an already-static configuration. In this work, we propose Stream4D, which replaces the static critic with a feed-forward 4D reconstruction reward that explicitly models scene dynamics, allowing coherent motion to receive high consistency rewards. To further guide motion magnitude and quality, we add a motion prior that rewards natural scene-flow magnitude while penalizing jitter and non-rigid artifacts. Our final recipe combines these two terms with a lightweight perceptual anchor. Across various autoregressive video backbones and various generation horizons, Stream4D improves 4D reconstruction quality, preserves motion more effectively, and achieves higher human-aligned preference. Project page: https://banyuanhao.github.io/Stream4D/",
+      "authors": [
+        "Yuanhao Ban",
+        "Jiaqi Feng",
+        "Hengguang Zhou",
+        "Xiaohuan Pei",
+        "Justin Cui",
+        "Cho-Jui Hsieh"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-20T01:54:26+00:00",
+      "link": "https://arxiv.org/pdf/2608.19556v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Directly addresses geometric drift and unnatural motion in long video generation, ensuring coherence of physical properties across frames",
+      "llm_evidence_cn": "直接解决长视频生成中的几何漂移与非自然运动，确保跨帧物理属性一致",
+      "llm_evidence": "直接解决长视频生成中的几何漂移与非自然运动，确保跨帧物理属性一致",
+      "canonical_evidence": "直接解决长视频生成中的几何漂移与非自然运动，确保跨帧物理属性一致",
+      "llm_tldr_en": "Proposes Stream4D to address geometric drift and unnatural motion in streaming autoregressive diffusion video models by enforcing 4D consistency, improving long-horizon video generation quality and physical coherence.",
+      "llm_tldr_cn": "针对流式自回归视频生成模型在长时生成中积累几何漂移、退化为静态或非自然运动的问题，提出Stream4D方法，通过强化四维一致性约束修正局部帧预测目标，有效减少长视频生成中的几何漂移并提升时空连贯性，为稳定生成符合物理规律的长时间视频提供了重要方案。",
+      "llm_tldr": "针对流式自回归视频生成模型在长时生成中积累几何漂移、退化为静态或非自然运动的问题，提出Stream4D方法，通过强化四维一致性约束修正局部帧预测目标，有效减少长视频生成中的几何漂移并提升时空连贯性，为稳定生成符合物理规律的长时间视频提供了重要方案。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "ensuring physical properties remain coherent across video frames",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.20107v1",
+      "source": "arxiv",
+      "title": "BeyondMasks: Evaluating Causal and Physical Consistency in Video Object Removal",
+      "abstract": "Recent advances in generative video models have significantly improved visual realism in video object removal, yet evaluation protocols still focus on masked region fidelity, treating removal as local inpainting. In real scenes, object removal is a causal intervention: eliminating an object also requires removing its induced physical effects, such as shadows, reflections, illumination changes, translucency, and dynamic traces. Existing benchmarks lack aligned clean references or remain limited to simplified synthetic settings, preventing systematic evaluation of causal consistency. We introduce BeyondMasks, a paired benchmark for causally consistent video object removal, consisting of temporally aligned synthetic and real world video pairs with clean background references. The dataset spans diverse photometric, geometric, volumetric, and dynamic interactions, and supports both mask based and instruction driven editing. We further propose CORE, a structured vision language model based evaluation protocol that jointly measures object disappearance and after effect consistency, aligning more closely with human judgments than existing metrics. Benchmarking state of the art methods reveals systematic failures in removing secondary physical effects despite high masked region fidelity, exposing a gap between visual plausibility and causal correctness. BeyondMasks reframes video object removal as causal scene consistency rather than local reconstruction and provides a unified framework for its evaluation.",
+      "authors": [
+        "Yigit Ekin",
+        "Enes Sanli",
+        "Aykut Erdem",
+        "Erkut Erdem",
+        "Aysegul Dundar"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-20T14:37:40+00:00",
+      "link": "https://arxiv.org/pdf/2608.20107v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Introduces a paired benchmark with aligned synthetic and real-world video pairs to evaluate causal and physical consistency in video generation tasks",
+      "llm_evidence_cn": "构建含时间对齐的合成与真实视频对的配对基准，用于评估视频生成中的因果与物理一致性",
+      "llm_evidence": "构建含时间对齐的合成与真实视频对的配对基准，用于评估视频生成中的因果与物理一致性",
+      "canonical_evidence": "构建含时间对齐的合成与真实视频对的配对基准，用于评估视频生成中的因果与物理一致性",
+      "llm_tldr_en": "Introduces BeyondMasks, a paired benchmark with aligned synthetic and real-world video pairs to evaluate causal and physical consistency in video object removal beyond masked region fidelity.",
+      "llm_tldr_cn": "针对视频对象去除评测仅关注掩码区域保真度而忽略阴影、反射等物理效应的问题，提出BeyondMasks配对基准，包含时间对齐的合成与真实世界视频对，系统评估去除操作的因果一致性与物理一致性，为生成式视频编辑提供了更全面的评测标准。",
+      "llm_tldr": "针对视频对象去除评测仅关注掩码区域保真度而忽略阴影、反射等物理效应的问题，提出BeyondMasks配对基准，包含时间对齐的合成与真实世界视频对，系统评估去除操作的因果一致性与物理一致性，为生成式视频编辑提供了更全面的评测标准。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.16513v1",
+      "source": "arxiv",
+      "title": "MLLM-Guided Semantic Correction for Text-to-Video Generation",
+      "abstract": "Recent advances in diffusion models and Transformer architectures have led to significant progress in text-to-video generation. However, these models often suffer from semantic errors such as missing objects, incorrect attributes, or mismatched actions. Although some semantic correction methods perform optimization before sampling or refinement after sampling, how to detect and correct semantic deviations during the video generation process remains underexplored. In this paper, we introduce a training-free, interpretable mid-generation correction framework that integrates multimodal large language model (MLLM) feedback directly into the diffusion sampling loop. Our framework achieves diffusion trajectory correction by injecting semantic evaluation signals during video synthesis, enabling the model to optimize the generated content through continuous self-reflection. We propose two key modules: a Semantic Assessment Supervisor that generates intermediate preview frames for semantic evaluations and deviation diagnostics, and a Semantic Modification Assistant that corrects semantic drift during inference via a controllable latent trajectory intervention. Our method improves semantic alignment, visual fidelity, and temporal consistency without modifying model parameters. We validate the effectiveness of our approach through extensive experiments across multiple benchmarks.",
+      "authors": [
+        "Junhao Chen",
+        "Zheqi Lv",
+        "Keting Yin",
+        "Shengyu Zhang",
+        "Zhou Zhao",
+        "Feiyang Chen",
+        "Xinyu Duan",
+        "Baoxing Huai",
+        "Fei Wu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-17T12:54:10+00:00",
+      "link": "https://arxiv.org/pdf/2608.16513v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Training-free mid-generation correction framework that injects MLLM semantic feedback into diffusion sampling loop for text-to-video generation.",
+      "llm_evidence_cn": "将多模态大模型语义反馈注入扩散采样过程，实现训练自由的生成中纠正。",
+      "llm_evidence": "将多模态大模型语义反馈注入扩散采样过程，实现训练自由的生成中纠正。",
+      "canonical_evidence": "将多模态大模型语义反馈注入扩散采样过程，实现训练自由的生成中纠正。",
+      "llm_tldr_en": "Proposes a training-free, interpretable mid-generation correction framework that integrates MLLM feedback into the diffusion sampling loop to detect and correct semantic deviations in text-to-video generation.",
+      "llm_tldr_cn": "文本生成视频扩散模型常出现物体缺失、属性错误或动作不匹配等语义偏差。本文提出一种训练自由、可解释的生成中纠正框架，将多模态大模型（MLLM）的语义评估信号直接注入扩散采样循环，从而在生成过程中修正轨迹。框架在采样过程中检测并纠正偏差，为提升视频语义一致性提供了新思路，也可扩展至物理一致性约束。",
+      "llm_tldr": "文本生成视频扩散模型常出现物体缺失、属性错误或动作不匹配等语义偏差。本文提出一种训练自由、可解释的生成中纠正框架，将多模态大模型（MLLM）的语义评估信号直接注入扩散采样循环，从而在生成过程中修正轨迹。框架在采样过程中检测并纠正偏差，为提升视频语义一致性提供了新思路，也可扩展至物理一致性约束。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "how to ensure physical consistency in generated videos",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.13929v1",
+      "source": "arxiv",
+      "title": "RGBX-Next: Towards Realistic Generative Rendering from G-Buffers",
+      "abstract": "Diffusion models have achieved impressive results in image, video, and streaming generation. However, compared to traditional 3D rendering, they still lack precise control over the generated output. We believe a viable path forward is to use generative models as learned renderers conditioned on traditionally rendered G-buffers. We introduce RGBX-Next, a unified generative framework for forward and inverse rendering, which allows estimating G-buffers from images, videos, and streams, and rendering realistic images, videos, and streams from G-buffers. Our key contribution is a general recipe for finetuning diffusion transformer (DiT) models into generative forward and inverse renderers. We show that the resulting models achieve high quality in both realistic generative rendering and intrinsic decomposition. We will make all our models publicly available. We believe that the design principles presented in this paper will benefit future research on controllable generative forward and inverse rendering.",
+      "authors": [
+        "Zheng Zeng",
+        "Marco Salvi",
+        "Lifan Wu",
+        "Jan Novák",
+        "Daqi Lin",
+        "Saeed Hadadan",
+        "Yichen Sheng",
+        "Robert Pottorff",
+        "Shiqiu Liu",
+        "Ravi Ramamoorthi",
+        "Ling-Qi Yan",
+        "Miloš Hašan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-08-14T03:57:52+00:00",
+      "link": "https://arxiv.org/pdf/2608.13929v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Generative rendering from G-buffers enables physically-grounded controllability for video generation",
+      "llm_evidence_cn": "基于G-buffer的生成渲染为视频生成提供物理可控性",
+      "llm_evidence": "基于G-buffer的生成渲染为视频生成提供物理可控性",
+      "canonical_evidence": "基于G-buffer的生成渲染为视频生成提供物理可控性",
+      "llm_tldr_en": "RGBX-Next unifies forward and inverse rendering by finetuning DiT models to estimate and render from G-buffers, achieving high-quality realistic image and video generation with precise scene control.",
+      "llm_tldr_cn": "现有扩散模型在图像与视频生成中缺乏对输出的精确控制。RGBX-Next提出一个统一的生成框架，通过微调扩散变压器（DiT）为生成式前向与逆向渲染器，使其能够从传统渲染的G-buffer估计场景属性，并从G-buffer渲染逼真的图像、视频和流。实验表明该模型在逼真生成与场景可控性方面均达到高质量。这项工作为将物理场景信息融入生成过程提供了一条通用路线。",
+      "llm_tldr": "现有扩散模型在图像与视频生成中缺乏对输出的精确控制。RGBX-Next提出一个统一的生成框架，通过微调扩散变压器（DiT）为生成式前向与逆向渲染器，使其能够从传统渲染的G-buffer估计场景属性，并从G-buffer渲染逼真的图像、视频和流。实验表明该模型在逼真生成与场景可控性方面均达到高质量。这项工作为将物理场景信息融入生成过程提供了一条通用路线。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
