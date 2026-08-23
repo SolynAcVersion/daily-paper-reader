@@ -1,0 +1,1669 @@
+{
+  "top_k": 200,
+  "generated_at": "2026-08-23T02:56:01.818179+00:00",
+  "papers": [
+    {
+      "id": "openreview-iclr-2026-8r4r7mxopo",
+      "source": "ICLR-2026-Rejected-Public",
+      "title": "CreAgentive: An Agent Workflow Driven Multi-Category Creative Generation Engine",
+      "abstract": "We present CreAgentive, an agent workflow driven multi-category creative generation engine that addresses four key limitations of contemporary large language models in writing stories, drama and other categories of creatives: restricted genre diversity, insufficient output length, weak narrative coherence, and inability to enforce complex structural constructs. At its core, CreAgentive employs a Story Prototype, which is a genre-agnostic, knowledge graph-based narrative representation that decouples story logic from stylistic realization by encoding characters, events, and environments as semantic triples. CreAgentive engages a three‑stage agent workflow that comprises: an Initialization Stage that constructs a user‑specified narrative skeleton; a Generation Stage in which long‑ and short‑term objectives guide multi‑agent dialogues to instantiate the Story Prototype; a Writing Stage that leverages this prototype to produce multi‑genre text with advanced structures such as retrospection and foreshadowing. This architecture reduces storage redundancy and overcomes the typical bottlenecks of long‑form generation. In extensive experiments, CreAgentive generates thousands of chapters with stable quality and low cost (less than \\$1 per 100 chapters) using a general-purpose backbone model. To evaluate performance, we define a two-dimensional framework with 10 narrative indicators measuring both quality and length. Results show that CreAgentive consistently outperforms strong baselines and achieves robust performance across diverse genres, approaching the quality of human-authored novels.",
+      "authors": [
+        "Yuyang Cheng",
+        "Linyue Cai",
+        "Changwei Peng",
+        "Yumiao xu",
+        "Rongfang Bie",
+        "Yong Zhao"
+      ],
+      "primary_category": "Multi-Agent Systems",
+      "categories": [
+        "Multi-Agent Systems",
+        "Knowledge Graphs",
+        "Story Generation"
+      ],
+      "published": "2025-09-19T12:02:06.969+00:00",
+      "link": "https://openreview.net/forum?id=8R4r7MXOpo",
+      "pdf_url": null,
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-zlnzbxqzic",
+      "source": "ICLR-2026-Accepted",
+      "title": "Captain Cinema: Towards Short Movie Generation",
+      "abstract": "We present **Captain Cinema**, a generation framework for short movie generation.\nGiven a detailed textual description of a movie storyline, our approach firstly generates a sequence of keyframes that outline the entire narrative, which ensures long-range coherence in both the storyline and visual appearance (e.g., scenes and characters). We refer to this step as top-down keyframe planning. These keyframes then serve as conditioning signals for a video synthesis model, which supports long context learning, to produce the spatio-temporal dynamics between them. This step is referred to as bottom-up video synthesis. To support stable and efficient generation of multi-scene long narrative cinematic works, we introduce an interleaved training strategy for Multimodal Diffusion Transformers (MM-DiT), specifically adapted for long-context video data. Our model is trained on a curated cinematic dataset consisting of interleaved samples for video generation. Our experiments demonstrate that Captain Cinema performs favorably in the automated creation of visually coherent and narratively consistent short films.",
+      "authors": [
+        "Junfei Xiao",
+        "Ceyuan Yang",
+        "Lvmin Zhang",
+        "Shengqu Cai",
+        "Yang Zhao",
+        "Yuwei Guo",
+        "Gordon Wetzstein",
+        "Maneesh Agrawala",
+        "Alan Yuille",
+        "Lu Jiang"
+      ],
+      "primary_category": "Video Generation",
+      "categories": [
+        "Video Generation",
+        "Diffusion Transformer"
+      ],
+      "published": "2026-01-26T14:00:53.136+00:00",
+      "link": "https://openreview.net/forum?id=zlNZBxQZIC",
+      "pdf_url": null,
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-c8r3lzyvts",
+      "source": "ICLR-2026-Accepted",
+      "title": "Video Scene Segmentation with Genre and Duration Signals",
+      "abstract": "Video scene segmentation aims to detect semantically coherent boundaries in long-form videos, bridging the gap between low-level visual signals and high-level narrative understanding.\nHowever, existing methods primarily rely on visual similarity between adjacent shots, which makes it difficult to accurately identify scene boundaries, especially when semantic transitions do not align with visual changes.\nIn this paper, we propose a novel approach that incorporates production-level metadata, specifically genre conventions and shot duration patterns, into video scene segmentation.\nOur main contributions are three-fold:\n(1) we leverage textual genre definitions as semantic priors to guide shot-level representation learning during self-supervised pretraining, enabling better capture of narrative coherence;\n(2) we introduce a duration-aware anchor selection strategy that prioritizes shorter shots based on empirical duration statistics, improving pseudo-boundary generation quality;\n(3) we propose a test-time shot splitting strategy that subdivides long shots into segments for improved temporal modeling.\nExperimental results demonstrate state-of-the-art performance on MovieNet-SSeg and BBC datasets.\nWe introduce MovieChat-SSeg, extending MovieChat-1K with manually annotated scene boundaries across 1,000 videos spanning movies, TV series, and documentaries.",
+      "authors": [
+        "Jungu Cho",
+        "Seong Jong Ha",
+        "Hae-Gon Jeon"
+      ],
+      "primary_category": "Video Scene Segmentation",
+      "categories": [
+        "Video Scene Segmentation",
+        "Movie Scene Boundary Detection",
+        "Video Temporal Segmentation"
+      ],
+      "published": "2026-01-26T14:01:22.616+00:00",
+      "link": "https://openreview.net/forum?id=c8r3lzyVTS",
+      "pdf_url": null,
+      "tags": [
+        "keyword:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-ctqgslykrl",
+      "source": "ICLR-2026-Rejected-Public",
+      "title": "VideoAgent: All-in-One Agentic Framework for Video Understanding and Editing",
+      "abstract": "Video editing has become essential in digital media creation, yet existing automated systems are restricted to short segment processing and domain-specific tasks. They face two critical limitations: i) inability to handle diverse video comprehension and editing operations, and ii) lack of long-video understanding for coherent narrative creation. We propose VideoAgent, an all-in-one agentic framework addressing these challenges through two key innovations. First, we develop automated video shot creation with shot planning agents for coherent narratives and cross-modal retrieval for aligned visual content. Second, we design a multi-agent orchestration framework integrating over thirty specialized editing agents. Intent parsing filters relevant tools while self-reflective graph orchestration assembles complex editing pipelines. Extensive experiments on our newly-proposed VideoEdit benchmark and public datasets demonstrate VideoAgent's superiority over existing multimodal LLMs and agentic systems. VideoAgent achieves 87-98% orchestration success rates while reducing API costs by 60%. Human evaluation across six video categories shows VideoAgent produces professional-quality content approaching human-level performance, with ratings only 4% below human-created videos.",
+      "authors": [
+        "Hengji Zhou",
+        "Lingxuan Huang",
+        "KunpengTan",
+        "Si Wu",
+        "Lianghao Xia",
+        "Chao Huang"
+      ],
+      "primary_category": "Multi-Agent Systems; Multimodal Content Editing; Agentic AI",
+      "categories": [
+        "Multi-Agent Systems; Multimodal Content Editing; Agentic AI"
+      ],
+      "published": "2025-09-16T03:36:34.473+00:00",
+      "link": "https://openreview.net/forum?id=cTqGsLYkRl",
+      "pdf_url": null,
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-icml-2026-fhmsceuzfs",
+      "source": "ICML-2026-Accepted",
+      "title": "Bridging Your Imagination with Audio-Video Generation via a Unified Director",
+      "abstract": "Existing AI-driven video creation systems typically treat script drafting and key-shot design as two disjoint tasks: the former relies on large language models, while the latter depends on image generation models. We argue that these two tasks should be unified within a single framework, as logical reasoning and imaginative thinking are both fundamental qualities of a film director. In this work, we propose **UniMAGE**, a unified director model that bridges user prompts with well-structured scripts, thereby empowering non-experts to produce long-context, multi-shot films by leveraging existing audio–video generation models. To achieve this, we employ the Mixture-of-Transformers architecture that unifies text and image generation. To further enhance narrative logic and keyframe consistency, we introduce a ``first interleaving, then disentangling\" training paradigm. Specifically, we first perform **Interleaved Concept Learning**, which utilizes interleaved text–image data to foster the model’s deeper understanding and imaginative interpretation of scripts. We then conduct **Disentangled Expert Learning**, which decouples script writing from keyframe generation, enabling greater flexibility and creativity in storytelling. Extensive experiments demonstrate that UniMAGE achieves state-of-the-art performance among open-source models, generating logically coherent scripts and visually consistent keyframe images.",
+      "authors": [
+        "Jiaxu Zhang",
+        "Tianshu Hu",
+        "Yuan Zhang",
+        "Zenan Li",
+        "Linjie Luo",
+        "Mingyuan Gao",
+        "Guosheng Lin",
+        "Xin Chen"
+      ],
+      "primary_category": "Image Generation",
+      "categories": [
+        "Image Generation",
+        "Director Model",
+        "Unified Multi-Modal Generation",
+        "Large Language Model"
+      ],
+      "published": "2026-04-30T19:16:21.985+00:00",
+      "link": "https://openreview.net/forum?id=FHMsceUzfS",
+      "pdf_url": "https://openreview.net/pdf/f9d8b0b486c87eaf70c11c7b44c4c40f10295db7.pdf",
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-ovsdneawky",
+      "source": "ICLR-2026-Accepted",
+      "title": "FilMaster: Bridging Cinematic Principles and Generative AI for Automated Film Generation",
+      "abstract": "Existing AI-based film generation systems can generate high-quality videos, but struggle to design expressive camera language and establish cinematic rhythm. This deficiency leads to templated visuals and unengaging narratives. To address these limitations, we introduce FilMaster, an end-to-end automated film generation system that integrates real-world cinematic principles to generate professional-grade, editable films. Inspired by professional filmmaking, FilMaster is built on two key cinematic principles: (1) camera language design by learning cinematography from extensive real-world film references, and (2) cinematic rhythm by emulating professional post-production workflows. For camera language, our Multi-shot Synergized Camera Language Design module introduces a novel scene-level Retrieval-Augmented Generation (RAG) framework. Unlike shot-level RAG which retrieves references independently and often leads to visual incoherence, our approach treats an entire scene, comprising multiple shots with a shared spatio-temporal context and narrative objective, as a single, unified query. This holistic query retrieves a consistent set of semantically similar shots with cinematic techniques from a large corpus of 440,000 real film clips. These references then guide an LLM to synergistically plan coherent and expressive camera language for all shots within that scene. To achieve cinematic rhythm, our Audience-Aware Cinematic Rhythm Control module emulates professional post-production, featuring a Rough Cut assembly followed by a Fine Cut process that uses simulated audience feedback to optimize the integration of video and sound for cinematic rhythm. Extensive experiments show superior performance in camera language and cinematic rhythm, paving the way for generative AI in professional filmmaking.",
+      "authors": [
+        "Kaiyi Huang",
+        "Yukun Huang",
+        "Xintao Wang",
+        "Zinan Lin",
+        "Xuefei Ning",
+        "Pengfei Wan",
+        "Di ZHANG",
+        "Yu Wang",
+        "Xihui Liu"
+      ],
+      "primary_category": "video generation",
+      "categories": [
+        "video generation",
+        "filmmaking"
+      ],
+      "published": "2026-01-26T13:53:58.91+00:00",
+      "link": "https://openreview.net/forum?id=ovSDneawKY",
+      "pdf_url": null,
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-sy78p0riyt",
+      "source": "ICLR-2026-Rejected-Public",
+      "title": "Automated Movie Generation via Multi-Agent CoT Planning",
+      "abstract": "Existing long-form video generation frameworks lack automated planning and often rely on manual intervention for storyline development, scene composition, cinematography design, and character interaction coordination, leading to high production costs and inefficiencies. To address these challenges, we present MovieAgent, an automated movie generation via multi-agent Chain of Thought (CoT) planning. MovieAgent offers two key advantages: 1) We firstly explore and define the paradigm of automated movie/long-video generation. Given a script and character bank, our MovieAgent can generates multi-scene, multi-shot long-form videos with a coherent narrative, while ensuring character consistency, synchronized subtitles, and stable audio throughout the film. 2) MovieAgent introduces a hierarchical CoT-based reasoning process to automatically structure scenes, camera settings, and cinematography, significantly reducing human effort. By employing multiple LLM agents to simulate the roles of a director, screenwriter, storyboard artist, and location manager, MovieAgent streamlines the production pipeline. Our framework represents a significant step toward fully automated movie production, bridging the gap between AI-driven video generation and high-quality, narrative-consistent filmmaking.",
+      "authors": [
+        "Weijia Wu",
+        "Zeyu Zhu",
+        "Mike Zheng Shou"
+      ],
+      "primary_category": "Multi-Agent; Video Generation;",
+      "categories": [
+        "Multi-Agent; Video Generation;"
+      ],
+      "published": "2025-09-16T13:08:13.154+00:00",
+      "link": "https://openreview.net/forum?id=SY78p0rIYt",
+      "pdf_url": null,
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-icml-2026-ajdgt8xdmy",
+      "source": "ICML-2026-Accepted",
+      "title": "AVGen-Bench: A Task-Driven Benchmark for Multi-Granular Evaluation of Text-to-Audio-Video Generation",
+      "abstract": "Text-to-Audio-Video (T2AV) generation is rapidly becoming a core interface for media creation, yet its evaluation remains fragmented.\nExisting benchmarks largely assess audio and video in isolation or rely on coarse embedding similarity, failing to capture fine-grained joint correctness required by realistic prompts.\nWe introduce AVGen-Bench, a task-driven benchmark for T2AV generation, featuring high-quality prompts across 11 real-world categories.\nTo support comprehensive assessment, we propose a multi-granular evaluation framework that combines lightweight specialist models with Multimodal Large Language Models (MLLMs), enabling evaluation from perceptual quality to fine-grained semantic controllability.\nOur evaluation reveals a pronounced gap between strong audio-visual aesthetics and weak semantic reliability, including persistent failures in text rendering, speech coherence, physical reasoning, and universal breakdown in musical pitch control.",
+      "authors": [
+        "Ziwei Zhou",
+        "Zeyuan Lai",
+        "Rui Wang",
+        "Yifan Yang",
+        "Yuqing Yang",
+        "Qi Dai",
+        "Lili Qiu",
+        "Chong Luo"
+      ],
+      "primary_category": "Video Audio Generation",
+      "categories": [
+        "Video Audio Generation"
+      ],
+      "published": "2026-04-30T19:13:15.908+00:00",
+      "link": "https://openreview.net/forum?id=aJdgt8xDMy",
+      "pdf_url": "https://openreview.net/pdf/57c4c9711ec3d7151dcc7e519fcaea8a003cf366.pdf",
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-yewsa0vfz5",
+      "source": "ICLR-2026-Rejected-Public",
+      "title": "LoCoT2V-Bench: A Benchmark for Long-Form and Complex Text-to-Video Generation",
+      "abstract": "Recently text-to-video generation has made impressive progress in producing short, high-quality clips, but evaluating long-form outputs remains a major challenge especially when processing complex prompts. Existing benchmarks mostly rely on simplified prompts and focus on low-level metrics, overlooking fine-grained alignment with prompts and abstract dimensions such as narrative coherence and thematic expression. To address these gaps, we propose LoCoT2V-Bench, a benchmark specifically designed for long video generation (LVG) under complex input conditions. Based on various real-world videos, LoCoT2V-Bench introduces a suite of realistic and complex prompts incorporating elements like scene transitions and event dynamics. Moreover, it constructs a multi-dimensional evaluation framework that includes our newly proposed metrics such as event-level alignment, fine-grained temporal consistency, content clarity, and the Human Expectation Realization Degree (HERD) that focuses on more abstract attributes like narrative flow, emotional response, and character development. Using this framework, we conduct a comprehensive evaluation of nine representative LVG models, finding that while current methods perform well on basic visual and temporal aspects, they struggle with inter-event consistency, fine-grained alignment, and high-level thematic adherence, etc. Overall, LoCoT2V-Bench provides a comprehensive and reliable platform for evaluating long-form complex text-to-video generation and highlights critical directions for future method improvement.",
+      "authors": [
+        "Xiangqing Zheng",
+        "Chengyue Wu",
+        "Kehai Chen",
+        "Min Zhang"
+      ],
+      "primary_category": "Video Generation Benchmark; Text-to-Video Generation; Long-Form Video Evaluation; Multi-Dimensional Assessment",
+      "categories": [
+        "Video Generation Benchmark; Text-to-Video Generation; Long-Form Video Evaluation; Multi-Dimensional Assessment"
+      ],
+      "published": "2025-09-20T09:59:38.08+00:00",
+      "link": "https://openreview.net/forum?id=YeWsA0VFZ5",
+      "pdf_url": null,
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-icml-2026-tl787dxmim",
+      "source": "ICML-2026-Accepted",
+      "title": "TimeChat-Captioner: Scripting Multi-Scene Videos with Time-Aware and Structural Audio-Visual Captions",
+      "abstract": "This paper proposes Omni Dense Captioning, a novel task designed to generate continuous, fine-grained, and structured audio-visual narratives with explicit timestamps. To ensure dense semantic coverage, we introduce a six-dimensional structural schema to create \"script-like\" captions, enabling readers to vividly imagine the video content scene by scene, akin to a cinematographic screenplay. To facilitate research, we construct OmniDCBench, a high-quality, human-annotated benchmark, and propose SodaM, a unified metric that evaluates time-aware detailed descriptions while mitigating scene boundary ambiguity. Furthermore, we construct a training dataset, TimeChatCap-42K, and present TimeChat-Captioner-7B, a strong baseline trained via SFT and GRPO with task-specific rewards. Extensive experiments demonstrate that TimeChat-Captioner achieves state-of-the-art performance, surpassing Gemini-2.5-Pro, while its generated dense descriptions significantly boost downstream capabilities in audio-visual reasoning (DailyOmni and WorldSense) and temporal grounding (Charades-STA). All datasets, models, and code are publicly available at https://github.com/yaolinli/TimeChat-Captioner.",
+      "authors": [
+        "Linli Yao",
+        "Yuancheng Wei",
+        "Yaojie Zhang",
+        "Lei Li",
+        "Xinlong Chen",
+        "Feifan Song",
+        "Ziyue Wang",
+        "Kun Ouyang",
+        "Yuanxin Liu",
+        "Lingpeng Kong",
+        "Qi Liu",
+        "Pengfei Wan",
+        "Kun Gai",
+        "Yuanxing Zhang",
+        "Xu Sun"
+      ],
+      "primary_category": "Omni-Video Understanding",
+      "categories": [
+        "Omni-Video Understanding",
+        "Audio-Visual Captioning",
+        "Structural Video Captioning",
+        "Detailed Video Captioning"
+      ],
+      "published": "2026-04-30T19:10:10.203+00:00",
+      "link": "https://openreview.net/forum?id=TL787dxmIM",
+      "pdf_url": "https://openreview.net/pdf/163efa63e293136bf17fe821ace93b8a8261298e.pdf",
+      "tags": [
+        "keyword:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-icml-2026-hj0jfzdwuo",
+      "source": "ICML-2026-Accepted",
+      "title": "Code2Video: A Code-centric Paradigm for Educational Video Creation",
+      "abstract": "While recent generative models can synthesize videos in pixel space, they often fail to produce educational videos with precise structures, domain knowledge, and coherent transitions. We argue that this setting is better served by operating in a renderable environment that is explicitly controlled by code. We propose **Code2Video**, a code-centric agent framework that generates educational videos by writing executable Python programs. Code2Video includes three agents: a *Planner* that converts lecture content into a temporal storyboard, a *Coder* that turns the storyboard into runnable code with scope-guided auto-fix, and a *Critic* that refines layout using a VLM guided by *visual anchor prompting*, *i.e.*, mappings from target visual outcomes to code edits. For evaluation, we build **MMMC**, a benchmark of professionally produced, discipline-specific educational videos. We assess Code2Video using aesthetic scores (VLM-as-a-Judge), code efficiency, and **TeachQuiz**, an end-to-end metric that measures how well an *unlearned* VLM can recover knowledge after watching generated videos. Code2Video improves performance by 40% over direct code generation and produces videos comparable to human-crafted tutorials. The code and datasets are available at [https://github.com/showlab/Code2Video](https://github.com/showlab/Code2Video).",
+      "authors": [
+        "Yanzhe Chen",
+        "Kevin Qinghong Lin",
+        "Mike Zheng Shou"
+      ],
+      "primary_category": "Multi-Agent",
+      "categories": [
+        "Multi-Agent",
+        "Coding",
+        "Video Synthesis"
+      ],
+      "published": "2026-04-30T19:09:01.965+00:00",
+      "link": "https://openreview.net/forum?id=HJ0JFzdwUo",
+      "pdf_url": "https://openreview.net/pdf/3338bb228c33fb79f153d11dd93d5f35d9a792c3.pdf",
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-955hvljdfp",
+      "source": "ICLR-2026-Accepted",
+      "title": "CineTrans: Learning to Generate Videos with Cinematic Transitions via Masked Diffusion Models",
+      "abstract": "Despite significant advances in video synthesis, research into multi-shot video generation remains in its infancy. Even with scaled-up models and massive datasets, the shot transition capabilities remain rudimentary and unstable, largely confining generated videos to single-shot sequences. In this work, we introduce CineTrans, a novel framework for generating coherent multi-shot videos with cinematic, film-style transitions. To facilitate insights into the film editing style, we construct a multi-shot video-text dataset Cine250K with detailed shot annotations. Furthermore, our analysis of existing video diffusion models uncovers a correspondence between attention maps in the diffusion model and shot boundaries, which we leverage to design a mask-based control mechanism that enables transitions at arbitrary positions and transfers effectively in a training-free setting. After fine-tuning on our dataset with the mask mechanism, CineTrans produces cinematic multi-shot sequences while adhering to the film editing style, avoiding unstable transitions or naive concatenations. Finally, we propose specialized evaluation metrics for transition control, temporal consistency and overall quality, and demonstrate through extensive experiments that CineTrans significantly outperforms existing baselines across all criteria.",
+      "authors": [
+        "Xiaoxue Wu",
+        "Bingjie Gao",
+        "Yu Qiao",
+        "Yaohui Wang",
+        "Xinyuan Chen"
+      ],
+      "primary_category": "multi-shot video generation",
+      "categories": [
+        "multi-shot video generation"
+      ],
+      "published": "2026-01-26T13:54:01.679+00:00",
+      "link": "https://openreview.net/forum?id=955hVLJdfP",
+      "pdf_url": null,
+      "tags": [
+        "keyword:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-zwi6deyyzs",
+      "source": "ICLR-2026-Rejected-Public",
+      "title": "Towards Human-Like Event Boundary Detection in Unstructured Videos through Scene-Action Transition",
+      "abstract": "Humans segment continuous experience into episodes by detecting perceptual novelties and retrospectively consolidating them into coherent memories. Drawing inspiration from these cognitive principles, we introduce a two-level, backward-only event segmentation framework designed to structure continuous sensory input into stable episodic units. The goal is to identify meaningful situational shifts (e.g., transitions between activities or environments) that lie between coarse scene-change detection and the dense, motion-driven micro-boundaries targeted in Generic Event Boundary Detection (GEBD). At Level1, an error-driven novelty detector with semi-supervised adaptive thresholding identifies candidate transitions robust to noise, viewpoint shifts, and repeated micro-actions. At Level2, a retrospective boundary consolidation mechanism validates and merges these candidates using multimodal cues (scene graphs, captions, audio), producing stable, semantically grounded episodes without relying on future frames. Unlike prior GEBD approaches that depend on motion cut-points or heavy task-specific supervision, our method uses sparse labels only for threshold calibration, making it label-efficient, cognitively inspired, and broadly applicable. Experiments on Ego4D show state-of-the-art performance, with our semi-supervised model surpassing heavily supervised baselines. This work introduces episodic segmentation for embodied perception, taking conceptual inspiration from human memory research while focusing on scalable machine perception.",
+      "authors": [
+        "Shweta Singh",
+        "Shraddha Seshadri"
+      ],
+      "primary_category": "event boundary detection",
+      "categories": [
+        "event boundary detection",
+        "video understanding",
+        "unsupervised learning",
+        "temporal modeling",
+        "egocentric vision"
+      ],
+      "published": "2025-09-19T10:08:41.816+00:00",
+      "link": "https://openreview.net/forum?id=Zwi6DEyYzS",
+      "pdf_url": null,
+      "tags": [
+        "keyword:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-bvsvbmi0qc",
+      "source": "ICLR-2026-Public",
+      "title": "Character-Driven Narrative Generation for Scene-Based Video Synthesis",
+      "abstract": "Recent advances in scene-based video generation have enabled systems to synthesize coherent visual narratives from structured prompts. However, a crucial dimension of storytelling—character-driven dialogue and speech—remains underexplored. In this paper, we present a modular pipeline that transforms action-level prompts into visually and auditorily grounded narrative dialogue, enriching visual storytelling with natural voice and character expression. Our method takes as input a pair of prompts per scene, where the first defines the setting and the second specifies a character’s behavior. While a story generation model such as Text2Story produces the corresponding visual scene, we focus on generating expressive, character-consistent utterances grounded in both the prompts and the scene image. A pretrained vision-language encoder extracts high-level semantic features from a representative frame, capturing salient visual context. These features are then integrated with structured prompts to guide a large language model in synthesizing natural dialogue. To ensure contextual and emotional consistency across scenes, we introduce a \\textit{Recursive Narrative Bank}—a speaker-aware, temporally structured memory that recursively accumulates each character’s dialogue history. Inspired by Script Theory in cognitive psychology, this design enables characters to speak in ways that reflect their evolving goals, social context, and narrative roles throughout the story. Finally, we render each utterance as expressive, character-conditioned speech, resulting in fully-voiced, multimodal video narratives. Our training-free framework generalizes across diverse story settings—from fantasy adventures to slice-of-life episodes—offering a scalable solution for coherent, character-grounded audiovisual storytelling.",
+      "authors": [
+        "Taewon Kang",
+        "Ming Lin"
+      ],
+      "primary_category": "Narrative Generation",
+      "categories": [
+        "Narrative Generation",
+        "Video Synthesis"
+      ],
+      "published": "2025-09-15T20:31:31.043+00:00",
+      "link": "https://openreview.net/forum?id=bVsVbmI0qC",
+      "pdf_url": null,
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-a3jmkjttdv",
+      "source": "ICLR-2026-Accepted",
+      "title": "StoryAlign: Evaluating and Training Reward Models for Story Generation",
+      "abstract": "Story generation aims to automatically produce coherent, structured, and engaging narratives. Although large language models (LLMs) have significantly advanced text generation, stories generated by LLMs still diverge from human-authored works regarding complex narrative structure and human-aligned preferences. A key reason is the absence of effective modeling of human story preferences, which are inherently subjective and under-explored. In this work, we systematically evaluate the modeling of human story preferences and introduce StoryRMB, the first benchmark for assessing reward models on story preferences. StoryRMB contains $1,133$ high-quality, human-verified instances, each consisting of a prompt, one chosen story, and three rejected stories. We find existing reward models struggle to select human-preferred stories, with the best model achieving only $66.3\\%$ accuracy. To address this limitation, we construct roughly $100,000$ high-quality story preference pairs across diverse domains and develop StoryReward, an advanced reward model for story preference trained on this dataset. StoryReward achieves state-of-the-art (SoTA) performance on StoryRMB, outperforming much larger models. We also adopt StoryReward in downstream test-time scaling applications for best-of-n (BoN) story selection and find that it generally chooses stories better aligned with human preferences. We will release our dataset, model, and code to facilitate future research.",
+      "authors": [
+        "Haotian Xia",
+        "Hao Peng",
+        "Yunjia Qi",
+        "Bin Xu",
+        "Lei Hou",
+        "Juanzi Li"
+      ],
+      "primary_category": "Story Generation",
+      "categories": [
+        "Story Generation",
+        "Story Reward",
+        "Reward Bench"
+      ],
+      "published": "2026-01-26T14:04:55.171+00:00",
+      "link": "https://openreview.net/forum?id=a3JmkJtTDV",
+      "pdf_url": null,
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-wfmewfarxn",
+      "source": "ICLR-2026-Public",
+      "title": "Frankentext: Stitching random text fragments into long-form narratives",
+      "abstract": "We introduce Frankentexts, a long-form narrative generation paradigm that treats a large language model (LLM) as a composer of existing texts rather than as an author. Given a writing prompt and thousands of randomly sampled human-written snippets, the model is asked to produce a narrative under the extreme constraint that most tokens (e.g., 90%) must be copied verbatim from the provided paragraphs. This task is effectively intractable for humans: selecting and ordering snippets yields a combinatorial search space that an LLM implicitly explores, before minimally editing and stitching together selected fragments into a coherent long-form story. Despite the extreme challenge, we observe through extensive automatic and human evaluation that Frankentexts significantly improve over vanilla LLM generations in terms of writing quality, diversity, and originality, while remaining coherent and relevant to the prompt. Furthermore, Frankentexts pose a fundamental challenge to detectors of AI-generated text: 72% of Frankentexts produced by our best Gemini 2.5 Pro configuration are misclassified as human-written by Pangram, a state-of-the-art detector. Human annotators praise Frankentexts for their inventive premises, vivid descriptions, and dry humor; on the other hand, they identify issues with abrupt tonal shifts and uneven grammar across segments, particularly in longer pieces. The emergence of high-quality Frankentexts raises serious questions about authorship and copyright: when humans provide the raw materials and LLMs orchestrate them into new narratives, who truly owns the result?",
+      "authors": [
+        "Chau Minh Pham",
+        "Jenna Russell",
+        "Dzung Pham",
+        "Mohit Iyyer"
+      ],
+      "primary_category": "LLMs",
+      "categories": [
+        "LLMs",
+        "narrative generation",
+        "machine-generated text detection",
+        "human-AI collaboration",
+        "long-form generation",
+        "creative writing"
+      ],
+      "published": "2025-09-20T00:42:38.156+00:00",
+      "link": "https://openreview.net/forum?id=wfmEwfaRxN",
+      "pdf_url": null,
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-p7ktwpdhrz",
+      "source": "ICLR-2026-Public",
+      "title": "Narrative Knowledge Weaver: A Multi-Agent Framework for Knowledge Graph Construction and Analysis from Complex Narratives",
+      "abstract": "Long-form narratives such as screenplays and novels require reasoning over evolving characters,\nmulti-stage events, and long-range temporal and causal structure.\nAlthough recent LLM-based methods can extract surface entities and relations, automatically\ninduced knowledge graphs often lack the coherence and interpretability needed for narrative\nunderstanding and downstream tasks such as continuity checking or character timeline analysis.\nWe introduce $\\textbf{Narrative Knowledge Weaver}$, a multi-agent framework for constructing\nhigh-quality, human-readable knowledge graphs from complex narratives.\nThe system combines adaptive schema induction, reflection-augmented extraction, and a\nnormalization-before-merge pipeline that performs type refinement, scope convergence, and\nLLM-guided disambiguation.\nA dedicated module conducts $\\textbf{adaptive attribute enrichment}$ for narrative entities, aggregating\nmulti-granular evidence and reflection-guided feedback to incrementally refine and expand\nschema-defined properties.\nAn $\\textbf{event-centric refinement}$ stage further transforms raw event mentions into structured event\ncards and causally organized Event Plot Graphs (EPGs).\nAll outputs are stored with fine-grained provenance and leveraged by a $\\textbf{tool-augmented reasoning\nagent}$ for temporal, causal, and structural queries.\nEvaluations on Re-DocRED, a NarrativeQA-derived benchmark, and a Practitioner Screenplay QA\ndataset show substantial improvements in entity normalization, relation accuracy, and event-level\nreasoning over strong baselines including EDC, Hybrid Retrieval, and GraphRAG.\nBeyond quantitative gains, the resulting graphs provide interpretable, application-ready\nrepresentations of story worlds, supporting detailed analyses of narrative dynamics—from\ncharacter states to causal chains and scene-level progression.",
+      "authors": [
+        "Qiuyu Tian",
+        "Fengyi Chen",
+        "Youyong Kong",
+        "Fan Guo",
+        "Xin Zhang",
+        "Zhijing Xie",
+        "Yuyao Li",
+        "Jinjing Shen"
+      ],
+      "primary_category": "Knowledge",
+      "categories": [
+        "Knowledge",
+        "Graph",
+        "LLM Agent",
+        "Retrieval-Augmented Generation",
+        "Multi-Agent Systems"
+      ],
+      "published": "2025-09-17T13:38:26.742+00:00",
+      "link": "https://openreview.net/forum?id=P7KtWPDhRz",
+      "pdf_url": null,
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-5oxvnx9lwh",
+      "source": "ICLR-2026-Rejected-Public",
+      "title": "CML-Bench: A Framework for Evaluating and Enhancing LLM-Powered Movie Scripts Generation",
+      "abstract": "Large Language Models (LLMs) have demonstrated remarkable proficiency in generating highly structured texts. However, while exhibiting a high degree of structural organization, movie scripts demand an additional layer of nuanced storytelling and emotional depth—the 'soul' of compelling cinema—that LLMs often fail to capture. To investigate this deficiency, we first curated CML-Dataset, a dataset comprising (summary, content) pairs for Cinematic Markup Language (CML), where 'content' consists of segments from esteemed, high-quality movie scripts and 'summary' is a concise description of the content. Through an in-depth analysis of the intrinsic multi-shot continuity and narrative structures within these authentic scripts, we identified three pivotal dimensions for quality assessment: Dialogue Coherence (DC), Character Consistency (CC), and Plot Reasonableness (PR). Informed by these findings, we propose the CML-Bench, featuring quantitative metrics across these dimensions. CML-Bench effectively assigns high scores to well-crafted, human-written scripts while concurrently pinpointing the weaknesses in screenplays generated by LLMs. To further validate our benchmark, we introduce CML-Instruction, a prompting strategy that provides detailed instructions on character dialogue and event logic to guide LLMs in generating more structured and cinematically sound scripts. Extensive experiments validate the effectiveness of our benchmark and demonstrate that LLMs guided by CML-Instruction generate higher-quality screenplays, with results aligned with human preferences. Our work offers a comprehensive framework for both evaluating and guiding LLMs in screenplay authoring.",
+      "authors": [
+        "Mingzhe Zheng",
+        "Dingjie Song",
+        "Guanyu Zhou",
+        "Jun You",
+        "Jiahao Zhan",
+        "Xuran Ma",
+        "Xinyuan Song",
+        "Ser-Nam Lim",
+        "Qifeng Chen",
+        "Harry Yang"
+      ],
+      "primary_category": "Creative Text Benchmarking",
+      "categories": [
+        "Creative Text Benchmarking",
+        "AI in Filmmaking",
+        "Large Language Models"
+      ],
+      "published": "2025-09-19T03:08:42.335+00:00",
+      "link": "https://openreview.net/forum?id=5OXvNX9LWh",
+      "pdf_url": null,
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-prcnppxwiq",
+      "source": "ICLR-2026-Public",
+      "title": "GenFlow: Constrained Long-Form Text Generation via Adaptive Workflow Optimization",
+      "abstract": "Large Language Models (LLMs) exhibit strong abilities in generating coherent human-like text, yet producing long-form content that satisfies complex constraints remains challenging. Existing approaches either extend generation length through large curated datasets, as in LongWriter, or structure outputs via cognitive-inspired hierarchical planning, as in CogWriter, but often struggle to balance coherence, semantic fidelity, and explicit requirements. In this work, we propose GenFlow, an adaptive framework for constrained long-form text generation. It decomposes writing objectives into constraint-aware sub-plans, uses adaptive decision-making and reward filtering to retain high-quality plans, and optimizes both local and global generation. By embedding constraints directly into the workflow, GenFlow ensures consistency while adapting to evolving requirements. Experimental results on the Qwen2.5 series demonstrate that GenFlow outperforms GPT-4o-mini and CogWriter baselines in constraint satisfaction, coherence, and overall quality.",
+      "authors": [
+        "Yifan Zhu",
+        "Guanting Chen",
+        "Haoran Luo"
+      ],
+      "primary_category": "LLM",
+      "categories": [
+        "LLM",
+        "Constrained Long-Form Text Generation",
+        "Agentic WorkFlow"
+      ],
+      "published": "2025-09-17T15:38:44.036+00:00",
+      "link": "https://openreview.net/forum?id=PrcNpPxWIQ",
+      "pdf_url": null,
+      "tags": [
+        "keyword:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-mkww04uhw1",
+      "source": "ICLR-2026-Accepted",
+      "title": "HAMLET: A Hierarchical and Adaptive Multi-Agent Framework for Live Embodied Theatrics",
+      "abstract": "Creating an immersive and interactive theatrical experience is a long-term goal in the field of interactive narrative. The emergence of large language models (LLMs) provides a new path to achieve this goal. However, existing LLM-based drama generation methods often produce models that lack initiative and cannot interact with the physical scene, while typically requiring detailed user input that diminishes the immersion of live performance. To address these challenges, we propose HAMLET, a hierarchical adaptive multi-agent framework focused on drama creation and real-time online performance. Given a simple topic, the framework first generates a narrative blueprint to guide the subsequent improvisational performance. In the online performance phase, each actor is equipped with an adaptive reasoning module that enables decision-making based on their personas, memories, goals, and emotional states during complex group chat scenarios. Beyond dialogue, actor agents engage in embodied interactions by changing the state of scene props through actions such as opening a letter or picking up a weapon, which are broadcast to update the global environmental context. To objectively assess the quality of live embodied theatrics, we establish a comprehensive evaluation method and introduce HAMLETJudge, a specialized critic model for automated evaluation. Experimental results demonstrate that HAMLET excels in creating expressive, coherent, and physically interactive theatrical experiences in an autonomous manner.",
+      "authors": [
+        "Shufan Jiang",
+        "Sizhou Chen",
+        "Chi Zhang",
+        "Xiao-Lei Zhang",
+        "Xuelong Li"
+      ],
+      "primary_category": "Drama",
+      "categories": [
+        "Drama",
+        "Role-Playing",
+        "Multi-Agent System",
+        "Autonomous Workflow",
+        "LLM",
+        "Adaptive Reasoning"
+      ],
+      "published": "2026-01-26T13:57:36.195+00:00",
+      "link": "https://openreview.net/forum?id=MKwW04UHW1",
+      "pdf_url": null,
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-smc4u2adzw",
+      "source": "ICLR-2026-Public",
+      "title": "Omniagent: Long-Video Generation via Cross-Modal Multi-Agent Orchestration",
+      "abstract": "Recent advancements in multi-agent systems have demonstrated significant potential for enhancing creative task performance, such as long video generation. This study introduces three innovations to improve multi-agent collaboration. First, we propose OmniAgent, a hierarchical, graph-based multi-agent framework for long video generation that leverages a film-production-inspired architecture to enable modular specialization and scalable inter-agent collaboration. Second, inspired by context engineering, we propose hypergraph nodes that enable temporary group discussions among agents lacking sufficient context, reducing individual memory requirements while ensuring adequate contextual information. Third, we transition from directed acyclic graphs (DAGs) to directed cyclic graphs with limited retries, allowing agents to reflect and refine outputs iteratively, thereby improving earlier stages through feedback from subsequent nodes. These contributions lay the groundwork for developing more robust multi-agent systems in creative tasks.",
+      "authors": [
+        "Zheng WEI",
+        "Mingchen Li",
+        "Zeqian Zhang",
+        "Ruibin Yuan",
+        "Pan Hui",
+        "Huamin Qu",
+        "James Evans",
+        "Maneesh Agrawala",
+        "Anyi Rao"
+      ],
+      "primary_category": "Multi-agent systems; Cross-modal generation; Short-video generation; Centralized / decentralized orchestration; Script-to-storyboard grounding;  Autonomous video editing;",
+      "categories": [
+        "Multi-agent systems; Cross-modal generation; Short-video generation; Centralized / decentralized orchestration; Script-to-storyboard grounding;  Autonomous video editing;"
+      ],
+      "published": "2025-09-12T17:00:32.477+00:00",
+      "link": "https://openreview.net/forum?id=Smc4U2aDzW",
+      "pdf_url": null,
+      "tags": [
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-icml-2026-0vxbywtvr8",
+      "source": "ICML-2026-Accepted",
+      "title": "AudioChat: Unified Audio Storytelling, Editing, and Understanding with Transfusion Forcing",
+      "abstract": "Despite recent breakthroughs, audio foundation models struggle in processing complex multi-source acoustic scenes. We refer to this challenging domain as audio stories, which can have multiple speakers and background/foreground sound effects. Compared to traditional audio processing tasks, audio stories introduce new layers of semantic, temporal, and physical complexity. To address this challenge, we propose AudioChat, a framework for developing audio foundation models that can generate, edit, and understand audio stories. AudioChat introduces a new paradigm in which LLM-based toolcalling agents simulate interactions between users and the system, and these simulated dialogues are used as training data. We also introduce a novel Audio Transfusion Forcing objective to train the AudioChat model, allowing it to simultaneously decompose high-level instructions via structured chain-of-thought reasoning and perform interactive multi-turn audio understanding/generation. To evaluate generation and editing performance, we develop three new metrics that directly measure task performance instead of relying upon distribution-based scoring. We highly encourage readers to visit our demo to better understand the capabilities of AudioChat: https://audiochat-icml-2026.github.io/.",
+      "authors": [
+        "William Chen",
+        "Prem Seetharaman",
+        "Rithesh Kumar",
+        "Oriol Nieto",
+        "Shinji Watanabe",
+        "Justin Salamon",
+        "Zeyu Jin"
+      ],
+      "primary_category": "Audio",
+      "categories": [
+        "Audio",
+        "Speech",
+        "Multi-modal",
+        "Language Model"
+      ],
+      "published": "2026-04-30T19:13:55.846+00:00",
+      "link": "https://openreview.net/forum?id=0VXbYwtvR8",
+      "pdf_url": "https://openreview.net/pdf/ed67262e8f56128e324f28433319c023b0d461df.pdf",
+      "tags": [
+        "query:manga-drama"
+      ]
+    },
+    {
+      "id": "openreview-iclr-2026-tdn42gtv4s",
+      "source": "ICLR-2026-Accepted",
+      "title": "PerfGuard: A Performance-Aware Agent for Visual Content Generation",
+      "abstract": "The advancement of Large Language Model (LLM)-powered agents has enabled automated task processing through reasoning and tool invocation capabilities. However, existing frameworks often operate under the idealized assumption that tool executions are invariably successful, relying solely on textual descriptions that fail to distinguish precise performance boundaries and cannot adapt to iterative tool updates. This gap introduces uncertainty in planning and execution, particularly in domains like visual content generation (AIGC), where nuanced tool performance significantly impacts outcomes. To address this, we propose PerfGuard, a performance-aware agent framework for visual content generation that systematically models tool performance boundaries and integrates them into task planning and scheduling. Our framework introduces three core mechanisms:  (1) Performance-Aware Selection Modeling (PASM), which replaces generic tool descriptions with a multi-dimensional scoring system based on fine-grained performance evaluations; (2) Adaptive Preference Update (APU), which dynamically optimizes tool selection by comparing theoretical rankings with actual execution rankings; and (3) Capability-Aligned Planning Optimization (CAPO), which guides the planner to generate subtasks aligned with performance-aware strategies. Experimental comparisons against state-of-the-art methods demonstrate PerfGuard’s advantages in tool selection accuracy, execution reliability, and alignment with user intent, validating its robustness and practical utility for complex AIGC tasks.",
+      "authors": [
+        "Zhipeng Chen",
+        "zhongrui zhang",
+        "Chao Zhang",
+        "Yifan Xu",
+        "LAN YANG",
+        "Jun Liu",
+        "Ke Li",
+        "Yi-Zhe Song"
+      ],
+      "primary_category": "Agent",
+      "categories": [
+        "Agent",
+        "Large Language Model",
+        "Image Generation",
+        "Image Editing"
+      ],
+      "published": "2026-01-26T14:06:15.718+00:00",
+      "link": "https://openreview.net/forum?id=tdN42GTv4S",
+      "pdf_url": null,
+      "tags": [
+        "query:manga-drama"
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "type": "intent_query",
+      "tag": "manga-drama",
+      "paper_tag": "query:manga-drama",
+      "query_text": "find the best tools for micro drama creation",
+      "sim_scores": {
+        "openreview-iclr-2026-8r4r7mxopo": {
+          "score": 0.01639344262295082,
+          "rank": 1
+        },
+        "openreview-icml-2026-fhmsceuzfs": {
+          "score": 0.016129032258064516,
+          "rank": 2
+        },
+        "openreview-iclr-2026-a3jmkjttdv": {
+          "score": 0.015873015873015872,
+          "rank": 3
+        },
+        "openreview-iclr-2026-mkww04uhw1": {
+          "score": 0.014925373134328358,
+          "rank": 7
+        },
+        "openreview-iclr-2026-wfmewfarxn": {
+          "score": 0.014705882352941176,
+          "rank": 8
+        },
+        "openreview-iclr-2026-sy78p0riyt": {
+          "score": 0.014084507042253521,
+          "rank": 11
+        },
+        "openreview-iclr-2026-bvsvbmi0qc": {
+          "score": 0.013888888888888888,
+          "rank": 12
+        },
+        "openreview-iclr-2026-5oxvnx9lwh": {
+          "score": 0.0136986301369863,
+          "rank": 13
+        },
+        "openreview-iclr-2026-zlnzbxqzic": {
+          "score": 0.013333333333333334,
+          "rank": 15
+        },
+        "openreview-icml-2026-ajdgt8xdmy": {
+          "score": 0.013157894736842105,
+          "rank": 16
+        },
+        "openreview-iclr-2026-ctqgslykrl": {
+          "score": 0.01282051282051282,
+          "rank": 18
+        },
+        "openreview-iclr-2026-ovsdneawky": {
+          "score": 0.012658227848101266,
+          "rank": 19
+        },
+        "openreview-iclr-2026-p7ktwpdhrz": {
+          "score": 0.011363636363636364,
+          "rank": 28
+        },
+        "openreview-iclr-2026-smc4u2adzw": {
+          "score": 0.010416666666666666,
+          "rank": 36
+        },
+        "openreview-iclr-2026-yewsa0vfz5": {
+          "score": 0.010309278350515464,
+          "rank": 37
+        },
+        "openreview-icml-2026-0vxbywtvr8": {
+          "score": 0.01,
+          "rank": 40
+        },
+        "openreview-iclr-2026-tdn42gtv4s": {
+          "score": 0.009900990099009901,
+          "rank": 41
+        },
+        "openreview-icml-2026-hj0jfzdwuo": {
+          "score": 0.00980392156862745,
+          "rank": 42
+        }
+      },
+      "ranked": [
+        {
+          "paper_id": "openreview-iclr-2026-mkww04uhw1",
+          "score": 1.0,
+          "star_rating": 5
+        },
+        {
+          "paper_id": "openreview-iclr-2026-ctqgslykrl",
+          "score": 1.0,
+          "star_rating": 5
+        },
+        {
+          "paper_id": "openreview-iclr-2026-8r4r7mxopo",
+          "score": 0.9586435070306036,
+          "star_rating": 5
+        },
+        {
+          "paper_id": "openreview-icml-2026-fhmsceuzfs",
+          "score": 0.9185999185999183,
+          "star_rating": 5
+        },
+        {
+          "paper_id": "openreview-iclr-2026-sy78p0riyt",
+          "score": 0.9185999185999183,
+          "star_rating": 5
+        },
+        {
+          "paper_id": "openreview-iclr-2026-zlnzbxqzic",
+          "score": 0.8798076923076922,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-iclr-2026-5oxvnx9lwh",
+          "score": 0.8798076923076922,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-iclr-2026-bvsvbmi0qc",
+          "score": 0.8422090729783037,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-icml-2026-tl787dxmim",
+          "score": 0.8422090729783037,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-icml-2026-hj0jfzdwuo",
+          "score": 0.8057498057498057,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-iclr-2026-a3jmkjttdv",
+          "score": 0.8057498057498057,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-iclr-2026-zwi6deyyzs",
+          "score": 0.7703788748564866,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-icml-2026-0vxbywtvr8",
+          "score": 0.7703788748564866,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-icml-2026-ajdgt8xdmy",
+          "score": 0.73604826546003,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-iclr-2026-yewsa0vfz5",
+          "score": 0.73604826546003,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-iclr-2026-p7ktwpdhrz",
+          "score": 0.702712746191007,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-iclr-2026-ovsdneawky",
+          "score": 0.6703296703296702,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-iclr-2026-wfmewfarxn",
+          "score": 0.6703296703296702,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-iclr-2026-tdn42gtv4s",
+          "score": 0.6388587937883712,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-iclr-2026-955hvljdfp",
+          "score": 0.6388587937883712,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-iclr-2026-smc4u2adzw",
+          "score": 0.608262108262108,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-iclr-2026-prcnppxwiq",
+          "score": 0.578503688092729,
+          "star_rating": 4
+        },
+        {
+          "paper_id": "openreview-iclr-2026-c8r3lzyvts",
+          "score": 0.578503688092729,
+          "star_rating": 4
+        }
+      ]
+    },
+    {
+      "type": "keyword",
+      "tag": "manga-drama",
+      "paper_tag": "keyword:manga-drama",
+      "query_text": "automated creation of short drama videos",
+      "sim_scores": {
+        "openreview-iclr-2026-zlnzbxqzic": {
+          "score": 0.015384615384615385,
+          "rank": 5
+        },
+        "openreview-iclr-2026-c8r3lzyvts": {
+          "score": 0.015151515151515152,
+          "rank": 6
+        },
+        "openreview-iclr-2026-ctqgslykrl": {
+          "score": 0.014925373134328358,
+          "rank": 7
+        },
+        "openreview-icml-2026-fhmsceuzfs": {
+          "score": 0.013888888888888888,
+          "rank": 12
+        },
+        "openreview-iclr-2026-ovsdneawky": {
+          "score": 0.012987012987012988,
+          "rank": 17
+        },
+        "openreview-iclr-2026-sy78p0riyt": {
+          "score": 0.012658227848101266,
+          "rank": 19
+        },
+        "openreview-icml-2026-ajdgt8xdmy": {
+          "score": 0.0125,
+          "rank": 20
+        },
+        "openreview-iclr-2026-yewsa0vfz5": {
+          "score": 0.012195121951219513,
+          "rank": 22
+        },
+        "openreview-icml-2026-tl787dxmim": {
+          "score": 0.011904761904761904,
+          "rank": 24
+        },
+        "openreview-icml-2026-hj0jfzdwuo": {
+          "score": 0.009900990099009901,
+          "rank": 41
+        },
+        "openreview-iclr-2026-955hvljdfp": {
+          "score": 0.009708737864077669,
+          "rank": 43
+        },
+        "openreview-iclr-2026-zwi6deyyzs": {
+          "score": 0.009523809523809525,
+          "rank": 45
+        }
+      }
+    },
+    {
+      "type": "keyword",
+      "tag": "manga-drama",
+      "paper_tag": "keyword:manga-drama",
+      "query_text": "creating micro dramas with a duration of three to five minutes",
+      "sim_scores": {
+        "openreview-iclr-2026-zlnzbxqzic": {
+          "score": 0.015873015873015872,
+          "rank": 3
+        },
+        "openreview-icml-2026-tl787dxmim": {
+          "score": 0.015625,
+          "rank": 4
+        },
+        "openreview-iclr-2026-bvsvbmi0qc": {
+          "score": 0.015151515151515152,
+          "rank": 6
+        },
+        "openreview-iclr-2026-yewsa0vfz5": {
+          "score": 0.014925373134328358,
+          "rank": 7
+        },
+        "openreview-icml-2026-fhmsceuzfs": {
+          "score": 0.014492753623188406,
+          "rank": 9
+        },
+        "openreview-iclr-2026-mkww04uhw1": {
+          "score": 0.014285714285714285,
+          "rank": 10
+        },
+        "openreview-iclr-2026-c8r3lzyvts": {
+          "score": 0.013888888888888888,
+          "rank": 12
+        },
+        "openreview-iclr-2026-sy78p0riyt": {
+          "score": 0.0136986301369863,
+          "rank": 13
+        },
+        "openreview-iclr-2026-wfmewfarxn": {
+          "score": 0.013513513513513514,
+          "rank": 14
+        },
+        "openreview-iclr-2026-a3jmkjttdv": {
+          "score": 0.013157894736842105,
+          "rank": 16
+        },
+        "openreview-iclr-2026-5oxvnx9lwh": {
+          "score": 0.012048192771084338,
+          "rank": 23
+        },
+        "openreview-iclr-2026-8r4r7mxopo": {
+          "score": 0.011904761904761904,
+          "rank": 24
+        },
+        "openreview-iclr-2026-ovsdneawky": {
+          "score": 0.011363636363636364,
+          "rank": 28
+        },
+        "openreview-icml-2026-ajdgt8xdmy": {
+          "score": 0.01098901098901099,
+          "rank": 31
+        },
+        "openreview-icml-2026-hj0jfzdwuo": {
+          "score": 0.009345794392523364,
+          "rank": 47
+        }
+      }
+    },
+    {
+      "type": "keyword",
+      "tag": "manga-drama",
+      "paper_tag": "keyword:manga-drama",
+      "query_text": "drama content designed for short video platforms",
+      "sim_scores": {
+        "openreview-icml-2026-tl787dxmim": {
+          "score": 0.015151515151515152,
+          "rank": 6
+        },
+        "openreview-iclr-2026-yewsa0vfz5": {
+          "score": 0.014492753623188406,
+          "rank": 9
+        },
+        "openreview-iclr-2026-c8r3lzyvts": {
+          "score": 0.013888888888888888,
+          "rank": 12
+        },
+        "openreview-iclr-2026-zlnzbxqzic": {
+          "score": 0.013513513513513514,
+          "rank": 14
+        },
+        "openreview-iclr-2026-ctqgslykrl": {
+          "score": 0.013157894736842105,
+          "rank": 16
+        },
+        "openreview-icml-2026-ajdgt8xdmy": {
+          "score": 0.011235955056179775,
+          "rank": 29
+        },
+        "openreview-icml-2026-fhmsceuzfs": {
+          "score": 0.011111111111111112,
+          "rank": 30
+        },
+        "openreview-icml-2026-hj0jfzdwuo": {
+          "score": 0.010638297872340425,
+          "rank": 34
+        },
+        "openreview-iclr-2026-bvsvbmi0qc": {
+          "score": 0.009259259259259259,
+          "rank": 48
+        }
+      }
+    },
+    {
+      "type": "keyword",
+      "tag": "manga-drama",
+      "paper_tag": "keyword:manga-drama",
+      "query_text": "production process for manga-style short dramas",
+      "sim_scores": {
+        "openreview-iclr-2026-8r4r7mxopo": {
+          "score": 0.015873015873015872,
+          "rank": 3
+        },
+        "openreview-iclr-2026-bvsvbmi0qc": {
+          "score": 0.014925373134328358,
+          "rank": 7
+        },
+        "openreview-iclr-2026-a3jmkjttdv": {
+          "score": 0.014492753623188406,
+          "rank": 9
+        },
+        "openreview-iclr-2026-zlnzbxqzic": {
+          "score": 0.014084507042253521,
+          "rank": 11
+        },
+        "openreview-iclr-2026-wfmewfarxn": {
+          "score": 0.0136986301369863,
+          "rank": 13
+        },
+        "openreview-iclr-2026-p7ktwpdhrz": {
+          "score": 0.013513513513513514,
+          "rank": 14
+        },
+        "openreview-icml-2026-fhmsceuzfs": {
+          "score": 0.013157894736842105,
+          "rank": 16
+        },
+        "openreview-iclr-2026-5oxvnx9lwh": {
+          "score": 0.012987012987012988,
+          "rank": 17
+        },
+        "openreview-iclr-2026-yewsa0vfz5": {
+          "score": 0.01282051282051282,
+          "rank": 18
+        },
+        "openreview-iclr-2026-sy78p0riyt": {
+          "score": 0.012658227848101266,
+          "rank": 19
+        },
+        "openreview-icml-2026-tl787dxmim": {
+          "score": 0.012048192771084338,
+          "rank": 23
+        },
+        "openreview-iclr-2026-ovsdneawky": {
+          "score": 0.011764705882352941,
+          "rank": 25
+        },
+        "openreview-iclr-2026-prcnppxwiq": {
+          "score": 0.011363636363636364,
+          "rank": 28
+        },
+        "openreview-iclr-2026-ctqgslykrl": {
+          "score": 0.009433962264150943,
+          "rank": 46
+        }
+      }
+    },
+    {
+      "type": "keyword",
+      "tag": "manga-drama",
+      "paper_tag": "keyword:manga-drama",
+      "query_text": "short drama generation",
+      "sim_scores": {
+        "openreview-iclr-2026-8r4r7mxopo": {
+          "score": 0.01639344262295082,
+          "rank": 1
+        }
+      }
+    },
+    {
+      "type": "keyword",
+      "tag": "manga-drama",
+      "paper_tag": "keyword:manga-drama",
+      "query_text": "short video drama",
+      "sim_scores": {}
+    },
+    {
+      "type": "keyword",
+      "tag": "manga-drama",
+      "paper_tag": "keyword:manga-drama",
+      "query_text": "tool or system for generating short episodic dramas",
+      "sim_scores": {
+        "openreview-iclr-2026-bvsvbmi0qc": {
+          "score": 0.016129032258064516,
+          "rank": 2
+        },
+        "openreview-iclr-2026-zlnzbxqzic": {
+          "score": 0.015873015873015872,
+          "rank": 3
+        },
+        "openreview-iclr-2026-a3jmkjttdv": {
+          "score": 0.015625,
+          "rank": 4
+        },
+        "openreview-icml-2026-tl787dxmim": {
+          "score": 0.015384615384615385,
+          "rank": 5
+        },
+        "openreview-icml-2026-fhmsceuzfs": {
+          "score": 0.014705882352941176,
+          "rank": 8
+        },
+        "openreview-iclr-2026-p7ktwpdhrz": {
+          "score": 0.014492753623188406,
+          "rank": 9
+        },
+        "openreview-iclr-2026-c8r3lzyvts": {
+          "score": 0.014285714285714285,
+          "rank": 10
+        },
+        "openreview-iclr-2026-zwi6deyyzs": {
+          "score": 0.013513513513513514,
+          "rank": 14
+        },
+        "openreview-iclr-2026-8r4r7mxopo": {
+          "score": 0.013157894736842105,
+          "rank": 16
+        },
+        "openreview-iclr-2026-yewsa0vfz5": {
+          "score": 0.01282051282051282,
+          "rank": 18
+        },
+        "openreview-iclr-2026-wfmewfarxn": {
+          "score": 0.0125,
+          "rank": 20
+        },
+        "openreview-icml-2026-ajdgt8xdmy": {
+          "score": 0.011235955056179775,
+          "rank": 29
+        },
+        "openreview-iclr-2026-ovsdneawky": {
+          "score": 0.01098901098901099,
+          "rank": 31
+        },
+        "openreview-iclr-2026-sy78p0riyt": {
+          "score": 0.010309278350515464,
+          "rank": 37
+        },
+        "openreview-iclr-2026-mkww04uhw1": {
+          "score": 0.01020408163265306,
+          "rank": 38
+        },
+        "openreview-icml-2026-hj0jfzdwuo": {
+          "score": 0.009900990099009901,
+          "rank": 41
+        }
+      }
+    }
+  ],
+  "global_candidate_ids": [
+    "openreview-iclr-2026-8r4r7mxopo",
+    "openreview-icml-2026-fhmsceuzfs",
+    "openreview-iclr-2026-pswlegpxz0",
+    "openreview-iclr-2026-ug8nyyagow",
+    "openreview-iclr-2026-gr0z4kwudc",
+    "openreview-iclr-2026-laxc8rlgcm",
+    "openreview-iclr-2026-uylbfvaasv",
+    "openreview-iclr-2026-sq35ogr2d2",
+    "openreview-icml-2026-h3tlveukma",
+    "openreview-iclr-2026-bvsvbmi0qc",
+    "openreview-iclr-2026-zlnzbxqzic",
+    "openreview-iclr-2026-yewsa0vfz5",
+    "openreview-iclr-2026-qh3cqbtb1g",
+    "openreview-icml-2026-tl787dxmim",
+    "openreview-iclr-2026-84av9jbtrm",
+    "openreview-iclr-2026-sy78p0riyt",
+    "openreview-icml-2026-lhlgdoemej",
+    "openreview-iclr-2026-ovsdneawky",
+    "openreview-iclr-2026-a3jmkjttdv",
+    "openreview-icml-2026-ajdgt8xdmy",
+    "openreview-iclr-2026-c8r3lzyvts",
+    "openreview-iclr-2026-omek0fdkdd",
+    "openreview-iclr-2026-wfmewfarxn",
+    "openreview-iclr-2026-vu0wcqw51g",
+    "openreview-iclr-2026-jkoyts8x0o",
+    "openreview-iclr-2026-rmgsxzqbuk",
+    "openreview-iclr-2026-qcrwjbp4p0",
+    "openreview-iclr-2026-ctqgslykrl",
+    "openreview-icml-2026-t8usggifiw",
+    "openreview-icml-2026-hj0jfzdwuo",
+    "openreview-iclr-2026-xot51yzqz7",
+    "openreview-iclr-2026-hqv6a2sswo",
+    "openreview-iclr-2026-mkww04uhw1",
+    "openreview-iclr-2026-p7ktwpdhrz",
+    "openreview-iclr-2026-5oxvnx9lwh",
+    "openreview-icml-2026-iqb2svjtek",
+    "openreview-iclr-2026-jurmxdgqct",
+    "openreview-iclr-2026-fp2xnyv9wl",
+    "openreview-iclr-2026-szhezvoanb",
+    "openreview-iclr-2026-krxt7wcnig",
+    "openreview-iclr-2026-irgjvfkux2",
+    "openreview-iclr-2026-y6xjzlec2x",
+    "openreview-iclr-2026-jmkqfeuspi",
+    "openreview-iclr-2026-wyfmwx2ncn",
+    "openreview-iclr-2026-quwolwao20",
+    "openreview-iclr-2026-alqspnvnnk",
+    "openreview-iclr-2026-fjy2fkdqjm",
+    "openreview-iclr-2026-whrmlyqem7",
+    "openreview-iclr-2026-siynm21ifi",
+    "openreview-iclr-2026-og1jmhobku",
+    "openreview-icml-2026-exxfloptk4",
+    "openreview-iclr-2026-xwhqmnuszp",
+    "openreview-iclr-2026-8ws5ndwiwe",
+    "openreview-icml-2026-f22su0amh1",
+    "openreview-icml-2026-n7ta0yecgw",
+    "openreview-iclr-2026-zwi6deyyzs",
+    "openreview-iclr-2026-qixnhagz9t",
+    "openreview-iclr-2026-q3t0qbvfsg",
+    "openreview-iclr-2026-dl1s4evfwh",
+    "openreview-icml-2026-0rzfrufaru",
+    "openreview-iclr-2026-qwtdfujc3f",
+    "openreview-iclr-2026-sjidarwx84",
+    "openreview-iclr-2026-szarhpom4o",
+    "openreview-iclr-2026-viyrixwi5l",
+    "openreview-iclr-2026-kdt0kmfraa",
+    "openreview-iclr-2026-edcjtar9bk",
+    "openreview-iclr-2026-je3ezjx4ld",
+    "openreview-iclr-2026-vjel1puide",
+    "openreview-iclr-2026-dxoh7bx6ku",
+    "openreview-iclr-2026-28ve0xxyaa",
+    "openreview-iclr-2026-broajhywoq",
+    "openreview-iclr-2026-gqugc1j2kw",
+    "openreview-iclr-2026-hyjv4hycnw",
+    "openreview-iclr-2026-sabwalchnz",
+    "openreview-iclr-2026-aa6scnpy32",
+    "openreview-icml-2026-99z6n9kxr6",
+    "openreview-iclr-2026-8fihpljvwf",
+    "openreview-icml-2026-gmek95wqq4",
+    "openreview-iclr-2026-bjzvlxvlzw",
+    "openreview-iclr-2026-uh6adr1jlw",
+    "openreview-iclr-2026-pzfyu2u1pt",
+    "openreview-iclr-2026-a7qgaihdbs",
+    "openreview-iclr-2026-jdkm3tnc0a",
+    "openreview-iclr-2026-y5p4vorsbj",
+    "openreview-iclr-2026-wzn3wffv7w",
+    "openreview-iclr-2026-g4wxglr55b",
+    "openreview-iclr-2026-prcnppxwiq",
+    "openreview-iclr-2026-yslgxjkvgk",
+    "openreview-iclr-2026-ewdwr6lfvw",
+    "openreview-iclr-2026-nrwi7nrafd",
+    "openreview-iclr-2026-88sop0laig",
+    "openreview-iclr-2026-fbpulchgnx",
+    "openreview-iclr-2026-vzgindmle4",
+    "openreview-iclr-2026-xxypqm1qwz",
+    "openreview-iclr-2026-3kaicarmab",
+    "openreview-iclr-2026-ftdbdogbk3",
+    "openreview-iclr-2026-lqvvgdvkoc",
+    "openreview-iclr-2026-n0wvbcxcob",
+    "openreview-iclr-2026-zvuijqgrzx",
+    "openreview-iclr-2026-lvydipibw4",
+    "openreview-iclr-2026-yef9hrwesf",
+    "openreview-iclr-2026-0a4iqqwwlg",
+    "openreview-iclr-2026-hgbqrprfli",
+    "openreview-iclr-2026-f4tgvghxjc",
+    "openreview-iclr-2026-smc4u2adzw",
+    "openreview-iclr-2026-738hjjebml",
+    "openreview-iclr-2026-hqhqq6g3be",
+    "openreview-iclr-2026-ytjfpe5dbo",
+    "openreview-iclr-2026-bh5m0ts8y6",
+    "openreview-icml-2026-0bpwai78iq",
+    "openreview-iclr-2026-mujdncfnpv",
+    "openreview-iclr-2026-vb4ne3wwf5",
+    "openreview-icml-2026-0vxbywtvr8",
+    "openreview-iclr-2026-spg6fcsmyc",
+    "openreview-iclr-2026-tdn42gtv4s",
+    "openreview-iclr-2026-0cblhtthfx",
+    "openreview-iclr-2026-955hvljdfp",
+    "openreview-iclr-2026-bypslbk8h8",
+    "openreview-iclr-2026-ky6vpllzbv",
+    "openreview-iclr-2026-xknldpufux"
+  ],
+  "global_pool_lane_top_k": 30,
+  "global_pool_limit": 120,
+  "global_pool_guaranteed_per_lane": 2,
+  "global_pool_effective_size": 120,
+  "reranked_at": "2026-08-23T02:56:14.043402+00:00",
+  "llm_ranked": [
+    {
+      "paper_id": "openreview-iclr-2026-ovsdneawky",
+      "score": 10.0,
+      "evidence_en": "End-to-end automated film generation system integrating cinematic principles for camera language and rhythm, directly matches short drama video creation",
+      "evidence_cn": "端到端自动化电影生成系统，融合镜头语言与剪辑节奏的电影原则，直接匹配短剧视频自动创作",
+      "canonical_evidence": "端到端自动化电影生成系统，融合镜头语言与剪辑节奏的电影原则，直接匹配短剧视频自动创作",
+      "tldr_en": "FilMaster is an end-to-end automated film generation system that learns camera language from real-world film references and emulates professional post-production workflows to establish cinematic rhythm. It produces professional-grade, editable films, directly addressing the need for automated short drama production.",
+      "tldr_cn": "针对现有AI电影生成系统缺少表现力镜头语言和电影节奏的问题，该论文提出FilMaster，一个端到端的自动化电影生成系统。它通过学习真实电影的镜头设计原则和模拟专业后期工作流，生成具有专业水准且可编辑的电影内容。该系统在镜头语言与节奏上显著提升叙事表现力，可直接用于微短剧和漫剧的自动化创作，是相关工具与系统研究的关键参考。",
+      "title_zh": "FilMaster：融合电影原则与生成式AI的自动化电影生成",
+      "motivation_cn": "现有AI视频生成系统画面质量高但镜头语言和叙事节奏缺乏设计，导致视觉模板化和故事吸引力不足。",
+      "method_cn": "集成真实电影中的镜头语言学习与专业后期流程模拟，构建多镜头协同的端到端自动化电影生成系统。",
+      "result_cn": "能够生成专业级、可编辑的电影短片，在镜头表现力和剪辑节奏上优于现有系统。",
+      "conclusion_cn": "为自动化微短剧生产提供了具备电影级镜头与节奏控制能力的完整生成工具。",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation."
+    },
+    {
+      "paper_id": "openreview-iclr-2026-zlnzbxqzic",
+      "score": 9.0,
+      "evidence_en": "Directly generates short movies from text storylines via keyframe planning and video synthesis.",
+      "evidence_cn": "直接从文本剧情生成关键帧序列并进行视频合成，实现短电影生成。",
+      "canonical_evidence": "直接从文本剧情生成关键帧序列并进行视频合成，实现短电影生成。",
+      "tldr_en": "Captain Cinema generates short movies from text descriptions by top-down keyframe planning for long-range coherence and bottom-up video synthesis with Multimodal Diffusion Transformers, producing multi-scene cinematic works.",
+      "tldr_cn": "该文提出Captain Cinema短片生成框架，先在细粒度文本剧情描述上生成关键帧序列以规划完整叙事，确保场景与角色等视觉元素的长程一致性，再以关键帧为条件用支持长上下文的视频合成模型生成中间时空动态。通过多模态扩散Transformer的交错训练策略，框架能稳定高效地生成多场景长叙事电影短片，为短剧的自动化视觉化提供了直接路径。",
+      "title_zh": "Captain Cinema：面向短片生成",
+      "motivation_cn": "现有视频生成缺乏从剧情到多场景短片的长程一致性与规划机制。",
+      "method_cn": "采用自顶向下关键帧规划与自底向上视频合成，结合交错训练的多模态扩散Transformer。",
+      "result_cn": "在短片生成上实现了叙事与外观的长程一致性，并提高多场景生成的稳定性与效率。",
+      "conclusion_cn": "证明了关键帧规划对短片生成的有效性，为短剧自动化制作提供端到端方案。",
+      "matched_requirement_id": "req-1",
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "automated creation of short drama videos"
+    },
+    {
+      "paper_id": "openreview-iclr-2026-sy78p0riyt",
+      "score": 9.0,
+      "evidence_en": "Automated movie generation from a script and character bank with multi-agent CoT planning.",
+      "evidence_cn": "基于剧本和角色库，利用多智能体思维链规划自动生成长视频电影。",
+      "canonical_evidence": "基于剧本和角色库，利用多智能体思维链规划自动生成长视频电影。",
+      "tldr_en": "MovieAgent automates multi-scene, multi-shot long-form movie generation from a script and character bank using multi-agent Chain of Thought planning, ensuring character consistency, synchronized subtitles, and stable audio.",
+      "tldr_cn": "该文提出MovieAgent，通过多智能体思维链（CoT）规划实现电影/长视频的自动化生成范式。给定剧本与角色库，系统可生成多场景、多镜头且叙事连贯的长视频，并保持角色一致性、字幕同步和音频稳定，从而减少人工干预与制作成本。该工作为短剧的自动化制片流程提供了系统级解决方案。",
+      "title_zh": "基于多智能体思维链规划的自动化电影生成",
+      "motivation_cn": "现有长视频生成缺乏自动化规划，需大量人工介入导致成本高、效率低。",
+      "method_cn": "采用多智能体思维链规划，分工完成剧情、场景、摄影与角色协调并生成完整长视频。",
+      "result_cn": "实现了多场景多镜头的连贯长视频生成，验证了角色一致性与字幕音频同步。",
+      "conclusion_cn": "定义并探索了自动化电影生成范式，为短剧等长视频内容生产提供了可扩展框架。",
+      "matched_requirement_id": "req-1",
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "automated creation of short drama videos"
+    },
+    {
+      "paper_id": "openreview-iclr-2026-smc4u2adzw",
+      "score": 9.0,
+      "evidence_en": "Hierarchical graph-based multi-agent framework for long video generation inspired by film production.",
+      "evidence_cn": "受电影制作启发的层级图式多智能体框架，面向长视频生成。",
+      "canonical_evidence": "受电影制作启发的层级图式多智能体框架，面向长视频生成。",
+      "tldr_en": "OmniAgent is a hierarchical graph-based multi-agent framework for long video generation that uses film-production-inspired modular specialization, hypergraph nodes for temporary group discussions, and transitions from DAG to enhance collaboration.",
+      "tldr_cn": "该文提出OmniAgent，一种受电影制作启发的层级图式多智能体框架，用于长视频生成。框架通过模块化分工和可扩展的智能体间协作来提升创作效率，并引入超图节点实现临时小组讨论以降低记忆负担并补全上下文。相比有向无环图结构，新机制进一步提升了多智能体协作能力和长视频生成效果，为短剧的生产管线提供了参考。",
+      "title_zh": "OmniAgent：基于跨模态多智能体编排的长视频生成",
+      "motivation_cn": "多智能体长视频生成中，智能体上下文不足且协作结构缺乏可扩展性。",
+      "method_cn": "采用电影制作启发的分层图式框架、超图节点临时讨论与超越有向无环图的协作机制。",
+      "result_cn": "提升了模块化分工与上下文补全能力，增强了长视频生成效果。",
+      "conclusion_cn": "为长叙事视频的自动化生成提供了高效的多智能体编排方案。",
+      "matched_requirement_id": "req-1",
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "automated creation of short drama videos"
+    },
+    {
+      "paper_id": "openreview-iclr-2026-955hvljdfp",
+      "score": 9.0,
+      "evidence_en": "Directly generates coherent multi-shot videos with film-style transitions, a core capability for short drama video creation.",
+      "evidence_cn": "直接生成具有电影级转场的连贯多镜头视频，是短剧视频创作的核心能力。",
+      "canonical_evidence": "直接生成具有电影级转场的连贯多镜头视频，是短剧视频创作的核心能力。",
+      "tldr_en": "CineTrans introduces a masked diffusion framework for generating coherent multi-shot videos with cinematic transitions, using a new annotated dataset Cine250K and attention-map correspondence to shot boundaries.",
+      "tldr_cn": "本文提出CineTrans框架，解决视频生成中多镜头转场不稳定、缺乏电影级编辑风格的问题。作者构建了带详细镜头注释的多镜头视频文本数据集Cine250K，并发现了扩散模型注意力图与镜头边界之间的对应关系。基于此，CineTrans能生成连贯且具有电影风格转场的多镜头视频，实验验证其转场能力显著优于现有方法。该工作为自动化生成短剧、微剧等多镜头叙事视频提供了核心技术支撑。",
+      "title_zh": "CineTrans：通过掩码扩散模型学习生成具有电影级转场的多镜头视频",
+      "motivation_cn": "视频生成通常局限于单镜头，多镜头视频生成中镜头转场能力不稳定，缺乏电影级编辑风格。",
+      "method_cn": "提出CineTrans框架，构建带镜头标注的多镜头视频文本数据集Cine250K，利用扩散模型注意力图与镜头边界的对应关系生成连贯的多镜头视频。",
+      "result_cn": "实验表明CineTrans能够稳定生成具有电影级转场的多镜头视频，显著改善转场质量。",
+      "conclusion_cn": "为多镜头视频生成提供了新方法，有助于自动化的短剧/微剧等多镜头叙事视频制作。",
+      "matched_requirement_id": "req-4",
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "tool or system for generating short episodic dramas"
+    },
+    {
+      "paper_id": "openreview-icml-2026-fhmsceuzfs",
+      "score": 9.0,
+      "evidence_en": "Unified director model that bridges user prompts with structured scripts to produce long-context multi-shot films, directly supporting automated drama creation.",
+      "evidence_cn": "统一导演模型将用户提示与结构化剧本连接，生成多镜头长影片，直接支持自动化短剧创作。",
+      "canonical_evidence": "统一导演模型将用户提示与结构化剧本连接，生成多镜头长影片，直接支持自动化短剧创作。",
+      "tldr_en": "UniMAGE unifies script drafting and key-shot design in a Mixture-of-Transformers director model, enabling non-experts to produce long-context multi-shot films via existing audio-video generation models.",
+      "tldr_cn": "本文指出现有AI视频创作将剧本和关键镜头设计分离，导致流程割裂。提出UniMAGE统一导演模型，基于混合Transformer架构统一文本和图像生成，将用户提示转换为结构化脚本与镜头设计，并驱动现成的音视频生成模型。实验表明，非专业用户能够借助UniMAGE生成连贯的多镜头长影片，为自动化的短剧/微剧创作提供了统一的提示到成片的实现路径。",
+      "title_zh": "通过统一导演模型连接想象与音视频生成",
+      "motivation_cn": "现有AI视频创作把剧本起草和关键镜头设计分开处理，缺乏整体性，非专业用户难以制作多镜头长视频。",
+      "method_cn": "提出UniMAGE统一导演模型，使用混合Transformer架构统一文本与图像生成，从而将用户提示转化为结构化的脚本和关键镜头，供音视频生成模型使用。",
+      "result_cn": "实验表明UniMAGE能有效帮助非专业用户生成连贯的长镜头多镜头影片，桥接脚本与视频生成。",
+      "conclusion_cn": "为自动化短片/短剧创作提供了一个从提示到多镜头成片的统一解决方案。",
+      "matched_requirement_id": "req-4",
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "tool or system for generating short episodic dramas"
+    },
+    {
+      "paper_id": "openreview-iclr-2026-bvsvbmi0qc",
+      "score": 8.0,
+      "evidence_en": "Character-driven narrative dialogue generation for scene-based video synthesis directly supports automated manga-style drama creation",
+      "evidence_cn": "面向场景视频合成的角色驱动叙事对白生成直接支持漫剧自动化创作",
+      "canonical_evidence": "面向场景视频合成的角色驱动叙事对白生成直接支持漫剧自动化创作",
+      "tldr_en": "This paper presents a modular pipeline that generates expressive, character-consistent dialogue for scene-based video synthesis, enriching visual storytelling with natural voice. It takes action-level prompts and produces grounded narrative utterances, addressing key aspects of automated character-driven drama generation.",
+      "tldr_cn": "针对基于场景的视频合成缺乏角色驱动对白和语音表达的问题，该论文提出一个模块化流水线，将动作级提示转换为视觉和听觉上落地的人物对话，从而丰富视觉叙事的角色魅力。方法支持角色一致性表达，并可与现有故事生成模型搭配使用，为自动化漫剧和微短剧中的对白生成提供了关键模块，显著提升生成剧情的自然度和表现力。",
+      "title_zh": "面向基于场景的视频合成的角色驱动叙事生成",
+      "motivation_cn": "场景级视频生成缺乏角色驱动的对白和语音，导致角色表达不足和视觉叙事不够生动。",
+      "method_cn": "构建模块化流水线，将动作级提示转化为与场景视觉和听觉相一致的、具有角色一致性的对话语音。",
+      "result_cn": "生成的对白自然且角色一致，有效增强叙事视频中的角色表现力与内容吸引力。",
+      "conclusion_cn": "为自动化短剧和漫剧制作提供角色驱动对白生成方法，可集成到视频合成系统中。",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation."
+    },
+    {
+      "paper_id": "openreview-iclr-2026-8r4r7mxopo",
+      "score": 8.0,
+      "evidence_en": "Agent workflow for generating stories and drama with narrative coherence and structural constraints, core to script generation for short dramas.",
+      "evidence_cn": "用于故事与剧本生成的智能体工作流，能生成具备叙事连贯性和结构约束的戏剧内容，是短剧剧本生成的核心技术。",
+      "canonical_evidence": "用于故事与剧本生成的智能体工作流，能生成具备叙事连贯性和结构约束的戏剧内容，是短剧剧本生成的核心技术。",
+      "tldr_en": "CreAgentive uses a knowledge-graph Story Prototype and a three-stage agent workflow to generate long, coherent, genre-diverse stories and drama with complex structural constructs, addressing limitations of LLMs in creative writing.",
+      "tldr_cn": "该文提出由智能体工作流驱动的多类别创意生成引擎，利用基于知识图谱的故事原型将叙事逻辑与风格实现解耦，并通过初始化、构建、润色三阶段工作流生成故事与剧本。它能解决大模型在生成戏剧等长创意内容时类型多样性不足、长度受限、叙事连贯性弱及结构约束难以落实的问题。该工作为短剧自动化生产中的剧本生成与情节规划提供直接可用的技术方案。",
+      "title_zh": "CreAgentive：智能体工作流驱动的多类别创意生成引擎",
+      "motivation_cn": "现有大模型生成戏剧等长创意内容时存在类型单一、长度不足、叙事弱和结构约束难实现等问题。",
+      "method_cn": "基于知识图谱的故事原型解耦故事逻辑与风格，采用三阶段智能体工作流生成多类别创意文本。",
+      "result_cn": "提升了生成内容的类型多样性、长度、叙事连贯性与结构复杂度，适用于戏剧与故事创作。",
+      "conclusion_cn": "为短剧剧本的自动化创作提供了一套可复用的智能体工作流与叙事表示方法。",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation."
+    },
+    {
+      "paper_id": "openreview-iclr-2026-ctqgslykrl",
+      "score": 8.0,
+      "evidence_en": "All-in-one agentic framework for video understanding and editing with automated shot creation for coherent narratives, directly relevant to short drama production.",
+      "evidence_cn": "一体化视频理解与编辑智能体框架，具备自动镜头创建和连贯叙事能力，直接适用于短剧制作。",
+      "canonical_evidence": "一体化视频理解与编辑智能体框架，具备自动镜头创建和连贯叙事能力，直接适用于短剧制作。",
+      "tldr_en": "VideoAgent is an all-in-one agentic framework that integrates automated shot creation and over thirty specialized editing agents, enabling long-video coherent narrative editing.",
+      "tldr_cn": "本文指出现有自动化视频编辑只能处理短片段和特定任务，缺少长视频理解与连贯叙事支持。为此提出VideoAgent一体化智能体框架，利用镜头规划智能体进行自动镜头创建和跨模态检索，并编排三十余个专业编辑智能体。实验显示VideoAgent能够处理多样的视频理解与编辑操作，支持长视频的连贯叙事制作，为短剧等视频内容的自动剪辑与后期加工提供了通用基础。",
+      "title_zh": "VideoAgent：面向视频理解与编辑的一体化智能体框架",
+      "motivation_cn": "现有自动化视频编辑系统局限于短片段和特定任务，缺乏长视频理解和连贯叙事创作能力。",
+      "method_cn": "提出VideoAgent，通过自动镜头创建与镜头规划智能体生成连贯叙事，并设计融合三十多个专用编辑智能体的多智能体编排框架，意图解析过滤相关工具。",
+      "result_cn": "实验表明VideoAgent能够完成多种视频理解与编辑操作，支持长视频连贯叙事创作。",
+      "conclusion_cn": "提供了一体化的视频理解与编辑解决方案，可应用于短剧等视频内容的自动化后期制作和镜头编排。",
+      "matched_requirement_id": "req-4",
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "tool or system for generating short episodic dramas"
+    },
+    {
+      "paper_id": "openreview-iclr-2026-a3jmkjttdv",
+      "score": 7.0,
+      "evidence_en": "Reward models for story generation evaluate and align human preferences, directly applicable to improving narrative quality in automated drama creation",
+      "evidence_cn": "面向故事生成的奖励模型评估和对齐人类偏好，可直接用于提升自动化短剧创作中的叙事质量",
+      "canonical_evidence": "面向故事生成的奖励模型评估和对齐人类偏好，可直接用于提升自动化短剧创作中的叙事质量",
+      "tldr_en": "This paper introduces StoryRMB, the first benchmark for evaluating reward models on story generation preferences, and trains reward models to align with human stories. It systematically evaluates preference modeling, enabling better story generation for narrative applications such as micro drama scripts.",
+      "tldr_cn": "针对自动生成的故事在复杂叙事结构和人类偏好上仍有明显不足的问题，该论文提出StoryRMB，首个面向故事生成偏好的奖励模型评估基准，包含1133条人工验证的实例。系统评估了奖励模型对故事偏好的建模能力，并训练奖励模型以更好对齐人类所写故事。该方法可迁移到微短剧剧本生成中，通过偏好对齐提升故事质量，为自动化短剧创作提供关键技术支撑。",
+      "title_zh": "StoryAlign：用于故事生成的奖励模型评估与训练",
+      "motivation_cn": "大模型生成的故事在复杂结构和人类偏好方面与人工写作仍有差距，缺乏有效的偏好建模与评估。",
+      "method_cn": "构建了首个故事偏好奖励模型基准StoryRMB，包含人工验证的正负样例，并基于该基准训练奖励模型以对齐人类故事偏好。",
+      "result_cn": "实验表明StoryRMB可有效评估奖励模型，并训练出的奖励模型能够提升故事生成的偏好对齐效果。",
+      "conclusion_cn": "为故事生成提供偏好建模与评估基础设施，可直接支撑微短剧等自动化叙事生成任务。",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation."
+    },
+    {
+      "paper_id": "openreview-iclr-2026-mkww04uhw1",
+      "score": 7.0,
+      "evidence_en": "LLM-based drama creation and real-time performance framework, relevant to drama content generation.",
+      "evidence_cn": "基于LLM的戏剧创作与实时表演框架，适用于戏剧内容生成。",
+      "canonical_evidence": "基于LLM的戏剧创作与实时表演框架，适用于戏剧内容生成。",
+      "tldr_en": "HAMLET is a hierarchical adaptive multi-agent framework that, given a simple topic, generates a narrative blueprint and performs real-time improvised theatrical drama, enabling interactive and immersive live narrative experiences.",
+      "tldr_cn": "该文提出HAMLET，一个面向戏剧创作与实时线上表演的层次化自适应多智能体框架。给定简单主题，框架先生成叙事蓝图，再在在线表演阶段依此进行即兴演绎，让模型具备主动性与场景交互能力。相比需要详细用户输入的现有方法，该框架降低了使用门槛并提升临场沉浸感，对戏剧与短剧内容的自动化创排具有借鉴意义。",
+      "title_zh": "HAMLET：面向现场具身戏剧的层次化自适应多智能体框架",
+      "motivation_cn": "现有LLM戏剧生成缺乏主动性和物理场景交互，且需要详细用户输入。",
+      "method_cn": "层次化自适应多智能体框架先规划叙事蓝图，再引导现场即兴表演。",
+      "result_cn": "能根据简单主题实时生成具身戏剧表演，提升参与感和沉浸感。",
+      "conclusion_cn": "为短剧的自动化编排与交互式内容生成提供了新思路。",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation."
+    },
+    {
+      "paper_id": "openreview-iclr-2026-5oxvnx9lwh",
+      "score": 7.0,
+      "evidence_en": "Framework for evaluating and enhancing movie script generation, a key component of automated short drama video creation.",
+      "evidence_cn": "面向电影剧本生成的评估与增强框架，是短剧自动化创作中剧本环节的关键技术。",
+      "canonical_evidence": "面向电影剧本生成的评估与增强框架，是短剧自动化创作中剧本环节的关键技术。",
+      "tldr_en": "CML-Bench evaluates and enhances LLM-powered movie script generation using a curated cinematic markup language dataset, analyzing multi-shot continuity and narrative structure to address lack of emotional depth in generated scripts.",
+      "tldr_cn": "本文针对大语言模型生成电影剧本时缺乏叙事深度和情感的问题，提出了CML-Bench评估与增强框架，并构建了包含电影标记语言摘要-内容对的数据集。通过分析真实剧本中的多镜头连续性和叙事结构，该框架帮助识别LLM剧本的不足并加以改进。实验证明该方法能有效提升LLM生成剧本的结构与情感表达，为自动化短剧创作中的剧本环节提供了坚实支撑。",
+      "title_zh": "CML-Bench：用于评估和增强LLM驱动的电影剧本生成的框架",
+      "motivation_cn": "LLM生成电影剧本时缺乏叙事深度和情感表达，难以满足真正电影剧本的需求。",
+      "method_cn": "构建了CML-Dataset数据集，并基于其内部结构分析设计出评估与增强LLM剧本生成的框架CML-Bench。",
+      "result_cn": "通过实验验证，该框架能够有效识别和改善LLM剧本在连续性和叙事结构上的不足，提升生成质量。",
+      "conclusion_cn": "CML-Bench为电影剧本生成提供了新的评估标准与增强途径，可迁移到短剧自动化创作中。",
+      "matched_requirement_id": "req-1",
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "automated creation of short drama videos"
+    },
+    {
+      "paper_id": "openreview-iclr-2026-prcnppxwiq",
+      "score": 6.0,
+      "evidence_en": "Constrained long-form text generation with adaptive workflow optimization can be adapted to screenplay generation for micro dramas",
+      "evidence_cn": "带约束的长文本生成自适应工作流优化方法可适配微短剧剧本生成",
+      "canonical_evidence": "带约束的长文本生成自适应工作流优化方法可适配微短剧剧本生成",
+      "tldr_en": "GenFlow is an adaptive framework for constrained long-form text generation that decomposes objectives into constraint-aware sub-plans, uses reward filtering, and optimizes local and global generation. It balances coherence and explicit constraints, making it applicable to script generation for episodic micro dramas.",
+      "tldr_cn": "针对长文本生成在满足复杂约束时难以兼顾连贯性和语义保真度的问题，该论文提出GenFlow自适应框架。它将生成目标分解为感知约束的子计划，结合自适应决策和奖励筛选保留高质量计划，并优化局部与全局生成。实验表明该方法在保持长文连贯性的同时能有效满足复杂约束，可迁移至微短剧剧本等长叙事内容的自动化生成中。",
+      "title_zh": "GenFlow：基于自适应工作流优化的约束长文本生成",
+      "motivation_cn": "现有方法在生成长文本并满足复杂约束时难以平衡连贯性、语义保真度和明确要求。",
+      "method_cn": "提出GenFlow框架，将写作目标分解为约束感知子计划，采用自适应决策和奖励过滤优化局部与全局生成。",
+      "result_cn": "实验显示GenFlow在满足复杂约束和维持长文连贯性方面均有提升，优于现有长文本生成方法。",
+      "conclusion_cn": "为微短剧剧本等需要多约束控制的长叙事自动生成提供了可复用的流程优化方案。",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation."
+    },
+    {
+      "paper_id": "openreview-icml-2026-0vxbywtvr8",
+      "score": 6.0,
+      "evidence_en": "Unified audio storytelling framework for multi-source acoustic scenes supporting dialogue and effects generation for drama videos.",
+      "evidence_cn": "统一音频故事生成框架，支持多说话人与音效，可服务于短剧配音与音频制作。",
+      "canonical_evidence": "统一音频故事生成框架，支持多说话人与音效，可服务于短剧配音与音频制作。",
+      "tldr_en": "AudioChat introduces a framework for generating, editing and understanding audio stories with multiple speakers and sound effects, using LLM-based toolcalling agent dialogues as training data and a novel Transfusion Forcing paradigm.",
+      "tldr_cn": "该文提出AudioChat框架，面向多说话人、前景/背景音效等复杂音频故事，实现生成、编辑与理解三类任务的统一。核心思想是利用LLM工具调用智能体模拟用户与系统交互的对话作为训练数据，并引入新型Transfusion Forcing范式和音频分词方法。该方法为短剧视频的音轨创作提供了可复用的基础模型技术。",
+      "title_zh": "AudioChat：利用透射强制实现统一音频故事生成、编辑与理解",
+      "motivation_cn": "现有音频基础模型难以处理多音源叠加的复杂音频故事场景。",
+      "method_cn": "通过LLM工具调用智能体模拟交互对话生成训练数据，并采用Transfusion Forcing统一生成、编辑与理解。",
+      "result_cn": "在音频故事相关任务上验证了统一框架及模拟对话数据的有效性。",
+      "conclusion_cn": "为多说话人、多音效的音频生成提供新范式，可支持短剧配音与音效制作。",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation."
+    },
+    {
+      "paper_id": "openreview-iclr-2026-tdn42gtv4s",
+      "score": 6.0,
+      "evidence_en": "Performance-aware agent for visual content generation, applicable to tool selection for micro drama creation.",
+      "evidence_cn": "性能感知的视觉内容生成智能体，可用于微短剧创作的工具选择。",
+      "canonical_evidence": "性能感知的视觉内容生成智能体，可用于微短剧创作的工具选择。",
+      "tldr_en": "PerfGuard models tool performance boundaries in an agent framework for visual content generation, improving planning and execution for tasks like AIGC.",
+      "tldr_cn": "本文指出现有LLM智能体框架假设工具执行成功，忽视了工具性能差异和更新。为此提出PerfGuard，一种性能感知的视觉内容生成智能体框架，对工具性能边界进行系统建模，并融合到规划与执行过程中。实验表明，PerfGuard能有效提升视觉内容生成中的工具选择与执行稳定性，为微短剧创作中的视觉素材自动化生成提供了可靠的工具管理方案。",
+      "title_zh": "PerfGuard：性能感知的视觉内容生成智能体",
+      "motivation_cn": "现有LLM智能体在做视觉内容生成时假设工具执行无条件成功，无法应对工具性能差异和更新。",
+      "method_cn": "提出PerfGuard框架，系统建模工具性能边界，并将其整合到规划和执行中，提高视觉内容生成稳定性。",
+      "result_cn": "实验证明PerfGuard能更好地选择/调用工具，提升视觉内容生成的效果和稳健性。",
+      "conclusion_cn": "为视觉内容生成提供了性能感知的工具编排方法，可用于微短剧等视觉生成的流水线优化。",
+      "matched_requirement_id": "req-6",
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "find the best tools for micro drama creation"
+    },
+    {
+      "paper_id": "openreview-iclr-2026-yewsa0vfz5",
+      "score": 6.0,
+      "evidence_en": "Benchmark for long-form and complex text-to-video generation, supporting evaluation of narrative coherence and scene transitions relevant to short drama production.",
+      "evidence_cn": "面向长格式复杂文本到视频生成的基准，支持与短剧制作相关的叙事连贯性和场景转场评估。",
+      "canonical_evidence": "面向长格式复杂文本到视频生成的基准，支持与短剧制作相关的叙事连贯性和场景转场评估。",
+      "tldr_en": "LoCoT2V-Bench is a benchmark for long-form video generation with realistic complex prompts, focusing on narrative coherence, scene transitions, and event dynamics.",
+      "tldr_cn": "本文针对文本生成视频评估中只关注短片段和低层指标的问题，提出LoCoT2V-Bench基准。该基准基于真实世界视频构建了包含场景转场、事件动态等复杂提示的评测集，并引入对叙事连贯性和主题表达的细粒度评估。实验表明现有模型在此基准下能暴露更多长视频生成的短板，为微短剧等长叙事视频生成的质量评测和改进提供了有力工具。",
+      "title_zh": "LoCoT2V-Bench：面向长格式与复杂文本到视频生成的基准",
+      "motivation_cn": "文本到视频生成评估大多关注短片段和简单提示，忽视长视频生成中的叙事连贯性和主题表达。",
+      "method_cn": "构建LoCoT2V-Bench基准，基于真实世界视频设计复杂提示，包含场景转场和事件动态，并构建相应评估指标。",
+      "result_cn": "提供了更符合实际的长视频生成评测集，能评估模型在复杂条件下的表现。",
+      "conclusion_cn": "为长视频生成研究提供了高质量基准，有助于短剧等长叙事视频生成的评测和改进。",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation."
+    },
+    {
+      "paper_id": "openreview-iclr-2026-wfmewfarxn",
+      "score": 6.0,
+      "evidence_en": "Method for long-form narrative generation by stitching text snippets, applicable to script generation for short dramas as part of automated creation.",
+      "evidence_cn": "通过拼接文本片段生成长篇叙事的文本生成方法，可应用于短剧剧本生成作为自动化创作的一部分。",
+      "canonical_evidence": "通过拼接文本片段生成长篇叙事的文本生成方法，可应用于短剧剧本生成作为自动化创作的一部分。",
+      "tldr_en": "Frankentext proposes a long-form narrative generation paradigm where an LLM composes stories by selecting and stitching random human-written snippets, with most tokens copied verbatim, producing coherent long-form narratives under extreme constraints.",
+      "tldr_cn": "本文针对直接让LLM生成连贯长篇叙事的困难，提出Frankentext范式，将LLM视为文本片段的拼接者。给定提示和大量随机采样的片段，模型必须在复制约90%原文的前提下选择和编排片段，形成连贯故事。实验表明这一极端约束反而激发出有趣的长篇叙事能力，为自动化短剧中的剧本生成提供了新的可解释文本重组思路。",
+      "title_zh": "Frankentext：将随机文本片段拼接成长篇叙事",
+      "motivation_cn": "长文本叙事生成通常由LLM直接生成，但难以保证连贯性和特定约束。",
+      "method_cn": "提出Frankentexts范式，让LLM从随机人类文本片段中挑选并拼接成连贯长故事，大部分token必须复制原文。",
+      "result_cn": "实验表明LLM能在极端约束下生成连贯的长篇故事，并具有独特的创意。",
+      "conclusion_cn": "为长叙事生成提供了一种基于文本重组的可解释方法，可用于剧本等长文本创作。",
+      "matched_requirement_id": "req-1",
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "automated creation of short drama videos"
+    },
+    {
+      "paper_id": "openreview-iclr-2026-c8r3lzyvts",
+      "score": 5.0,
+      "evidence_en": "Scene segmentation using genre and duration signals helps structure narrative videos for drama production.",
+      "evidence_cn": "利用类型与时长信息进行场景分割，可为短剧视频的自动化结构分析提供支持。",
+      "canonical_evidence": "利用类型与时长信息进行场景分割，可为短剧视频的自动化结构分析提供支持。",
+      "tldr_en": "This paper proposes a video scene segmentation method that leverages genre conventions and shot duration patterns as semantic priors, improving boundary detection when visual similarity alone is insufficient.",
+      "tldr_cn": "该文针对仅依赖视觉相似性难以准确划分场景边界的问题，提出引入制作级元数据（类型惯例与镜头时长模式）作为语义先验的视频场景分割方法。通过自监督预训练利用文本类型定义指导镜头级表示学习，增强语义转换处的边界检测能力。该方法可用于短剧等长叙事视频的结构化分析与后期制作整理。",
+      "title_zh": "融合类型与时长信号的视频场景分割方法",
+      "motivation_cn": "仅靠视觉相似性难以在语义转换与视觉变化不一致时准确划分场景边界。",
+      "method_cn": "利用类型定义和镜头时长模式作为语义先验，指导自监督预训练与场景分割。",
+      "result_cn": "引入类型与时长信号提升了场景边界检测的准确性，优于仅依赖视觉相似性的方法。",
+      "conclusion_cn": "证明了制作级元数据对视频结构化理解的增益，适用于叙事视频的内容管理。",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation."
+    },
+    {
+      "paper_id": "openreview-icml-2026-ajdgt8xdmy",
+      "score": 5.0,
+      "evidence_en": "Task-driven benchmark for text-to-audio-video generation, evaluating fine-grained joint correctness, applicable to short video platform content.",
+      "evidence_cn": "文本到音视频生成的任务驱动基准，细粒度评估联合正确性，适用于短视频平台内容。",
+      "canonical_evidence": "文本到音视频生成的任务驱动基准，细粒度评估联合正确性，适用于短视频平台内容。",
+      "tldr_en": "AVGen-Bench is a task-driven benchmark for evaluating text-to-audio-video generation, combining specialist models and MLLMs for multi-granular assessment.",
+      "tldr_cn": "本文指出现有文本到音视频生成评测各自为政，无法反映真实场景中的联合正确性。为此提出AVGen-Bench，覆盖11类真实世界提示，并设计多粒度评估框架，结合轻量专家模型与多模态大模型，从感知质量到细粒度语义可控性全面评测。该基准为短剧等音视频内容的生成质量评估提供了更完备的参照体系。",
+      "title_zh": "AVGen-Bench：文本到音视频生成的多粒度任务驱动评测基准",
+      "motivation_cn": "文本到音视频生成的评测碎片化，音频和视频孤立评估，无法捕捉真实提示下的联合正确性。",
+      "method_cn": "构建AVGen-Bench基准，覆盖11类真实世界提示，提出多粒度评估框架，结合轻量专家模型和多模态大模型。",
+      "result_cn": "提供从感知质量到细粒度语义可控性的全面评估能力。",
+      "conclusion_cn": "为音视频生成提供统一评测基准，有助于短剧等多媒体内容生成质量评估。",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation."
+    },
+    {
+      "paper_id": "openreview-icml-2026-hj0jfzdwuo",
+      "score": 5.0,
+      "evidence_en": "Code-centric agent framework for generating structured videos, transferable to automated creation of short episodic videos for drama.",
+      "evidence_cn": "以代码为中心的智能体框架用于生成结构化视频，可迁移到短剧等短剧集视频的自动创作。",
+      "canonical_evidence": "以代码为中心的智能体框架用于生成结构化视频，可迁移到短剧等短剧集视频的自动创作。",
+      "tldr_en": "Code2Video generates educational videos by writing executable Python programs, using planner, coder, and critic agents with visual anchor prompting for precise structure and transitions.",
+      "tldr_cn": "本文针对生成式模型难以生成结构精确、领域知识丰富的教育视频的问题，提出Code2Video，一种以代码为中心的智能体框架。它通过编写可执行的Python程序来生成视频，包含规划故事板、代码生成与自动修复、以及基于视觉锚定提示的布局优化三个模块。实验表明其生成的视频具有精确结构和连贯转场。该范式可推广到短剧等需要强结构控制的结构化视频自动创作。",
+      "title_zh": "Code2Video：以代码为中心的教育视频创作范式",
+      "motivation_cn": "生成式模型难以生成具有精确结构、领域知识和连贯转场的教育视频。",
+      "method_cn": "提出Code2Video，一个以代码为中心的智能体框架，通过编写可执行Python程序生成视频，包含Planner、Coder和Critic三个智能体，利用视觉锚定提示进行布局优化。",
+      "result_cn": "实验证明Code2Video能生成结构精确、连贯的教育视频。",
+      "conclusion_cn": "提供了一种利用显式代码控制视频生成的途径，虽面向教育，但方法可迁移到其他结构化视频内容生成。",
+      "matched_requirement_id": "req-4",
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "tool or system for generating short episodic dramas"
+    },
+    {
+      "paper_id": "openreview-iclr-2026-p7ktwpdhrz",
+      "score": 4.0,
+      "evidence_en": "Knowledge graph construction from screenplays supports narrative consistency and continuity checking in long-form drama generation",
+      "evidence_cn": "从剧本构建知识图谱可支持长剧叙事一致性与连续性检查，对自动化短剧生成有辅助作用",
+      "canonical_evidence": "从剧本构建知识图谱可支持长剧叙事一致性与连续性检查，对自动化短剧生成有辅助作用",
+      "tldr_en": "This paper introduces Narrative Knowledge Weaver, a multi-agent framework for constructing coherent knowledge graphs from complex narratives like screenplays and novels. It combines schema induction, reflection-augmented extraction, and normalization to support tasks such as continuity checking and character timeline analysis, which can help maintain narrative consistency in automated drama production.",
+      "tldr_cn": "针对长剧情叙事中知识图谱缺乏连贯性和可解释性的问题，该论文提出多智能体框架Narrative Knowledge Weaver，结合自适应模式归纳、反思增强抽取和归一化技术，从剧本等复杂文本中构建高质量人类可读的知识图谱。该系统能够支持连续性检查与角色时间线分析，为自动化短剧生成中的剧情一致性与角色管理提供辅助工具，具有较好的跨场景应用潜力。",
+      "title_zh": "叙事知识编织者：面向复杂叙事的知识图谱构建与分析多智能体框架",
+      "motivation_cn": "基于LLM的叙事抽取生成的知识图谱缺乏连贯性和可解释性，难以支持连续性检查和角色时间线分析等下游任务。",
+      "method_cn": "提出多智能体框架，结合自适应模式归纳、反思增强抽取和归一化技术，从复杂叙事中构建高质量人类可读的知识图谱。",
+      "result_cn": "系统能够产出连贯且可解释的知识图谱，有效支持叙事理解相关的连续性检查和角色时间线分析任务。",
+      "conclusion_cn": "该框架为自动叙事分析和长剧生成中的剧情一致性维护提供了结构化知识支撑。",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation."
+    },
+    {
+      "paper_id": "openreview-icml-2026-tl787dxmim",
+      "score": 4.0,
+      "evidence_en": "Generates script-like dense captions for multi-scene videos, potentially supporting drama scripting.",
+      "evidence_cn": "为多场景视频生成类脚本的密集字幕，可能辅助短剧剧本制作。",
+      "canonical_evidence": "为多场景视频生成类脚本的密集字幕，可能辅助短剧剧本制作。",
+      "tldr_en": "TimeChat-Captioner introduces Omni Dense Captioning, generating fine-grained timestamped audio-visual narratives and a benchmark, enabling scene-by-scene script-like understanding of multi-scene videos.",
+      "tldr_cn": "该文提出全模态密集字幕任务，通过六维结构模式生成带时间戳的音频-视觉连续叙述，实现类似电影剧本的场景化视频描述。作者构建了OmniDCBench基准、SodaM评估指标以及TimeChatCap-42K训练集，并训练了TimeChat-Captioner-7B基线模型。该工作可用于多场景视频的脚本化理解与制作辅助，对短剧自动化生产中的内容策划有潜在价值。",
+      "title_zh": "时间聊天字幕器：基于时间感知与结构化视听字幕的多场景视频脚本编写",
+      "motivation_cn": "现有视频描述缺乏时间感知与结构化的连续叙述，难以支撑场景级脚本化理解。",
+      "method_cn": "提出六维结构模式生成带时间戳的视听字幕，构建基准与训练集并训练基线模型。",
+      "result_cn": "构建了OmniDCBench基准和TimeChatCap-42K数据集，SodaM指标验证了时间感知详细描述的有效性。",
+      "conclusion_cn": "该工作为多场景视频的脚本化描述提供了数据、指标和基线，可辅助短剧内容制作。",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation."
+    },
+    {
+      "paper_id": "openreview-iclr-2026-zwi6deyyzs",
+      "score": 4.0,
+      "evidence_en": "Event boundary segmentation could assist scene-level structuring in drama video production.",
+      "evidence_cn": "事件边界分割可辅助短剧视频的场景级结构组织。",
+      "canonical_evidence": "事件边界分割可辅助短剧视频的场景级结构组织。",
+      "tldr_en": "This paper presents a two-level backward-only event segmentation framework inspired by human cognition to detect meaningful situational shifts in unstructured videos, balancing between coarse scene changes and dense micro-boundaries.",
+      "tldr_cn": "该文借鉴人类认知的事件切分机制，提出两阶段仅后向的事件边界检测框架，在粗粒度场景变化与细粒度动作边界之间识别有意义的情境转换。通过误差驱动的新颖性检测与半监督自适应阈值，方法无需人工标注即可稳定发现候选边界。该技术可用于对长视频进行场景级结构划分，为短剧视频的自动化剪辑与编排提供支持。",
+      "title_zh": "面向非结构化视频中类人事件边界检测的场景-动作转换方法",
+      "motivation_cn": "现有事件边界检测难以在场景变化与动作边界之间找到合适粒度的语义转换。",
+      "method_cn": "提出两阶段仅后向的事件分割框架，利用误差驱动的新颖性检测与半监督自适应阈值识别转换点。",
+      "result_cn": "能够在无需精细标注的情况下发现稳定且有意义的候选事件边界。",
+      "conclusion_cn": "为长视频的场景级结构理解与自动化剪辑提供了一种类人的计算模型。",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation."
+    }
+  ],
+  "llm_ranked_at": "2026-08-23T02:58:53.293960+00:00",
+  "display_min_score": 4.0,
+  "pruned_at": "2026-08-23T02:58:53.327708+00:00"
+}
