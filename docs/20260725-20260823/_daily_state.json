@@ -1,0 +1,217 @@
+{
+  "date": "20260725-20260823",
+  "date_label": "2026-07-25 ~ 2026-08-23",
+  "generated_at": "2026-08-23 04:03:33 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.04956v1",
+      "route": "20260725-20260823/2608.04956v1-contextmaster-interactive-multi-shot-video-creation-via-fixed-budget-sparse-context-routing",
+      "title": "ContextMaster: Interactive Multi-Shot Video Creation via Fixed-Budget Sparse Context Routing",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "交互式多镜头视频生成模型，直接适用于短剧剧集生成",
+      "first_seen_at": "2026-08-23 04:03:33 UTC",
+      "updated_at": "2026-08-23 04:03:33 UTC"
+    },
+    {
+      "paper_id": "2608.08820v1",
+      "route": "20260725-20260823/2608.08820v1-logishot-logically-coherent-cross-shot-video-generation",
+      "title": "LogiShot: Logically Coherent Cross-Shot Video Generation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "面向短剧生产的跨镜头视频生成与逻辑一致性",
+      "first_seen_at": "2026-08-23 04:03:33 UTC",
+      "updated_at": "2026-08-23 04:03:33 UTC"
+    },
+    {
+      "paper_id": "2608.17468v1",
+      "route": "20260725-20260823/2608.17468v1-sage-self-evolving-storyboard-skills-via-attribution-guided-rule-evolution",
+      "title": "SAGE: Self-Evolving Storyboard Skills via Attribution-Guided Rule Evolution",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "面向自动化短剧生产的分镜技能自演化",
+      "first_seen_at": "2026-08-23 04:03:33 UTC",
+      "updated_at": "2026-08-23 04:03:33 UTC"
+    },
+    {
+      "paper_id": "2607.26529v1",
+      "route": "20260725-20260823/2607.26529v1-cineweaver-training-free-reference-controllable-multi-shot-long-video-generation-for-cinematic-storytelling",
+      "title": "CineWeaver: Training-Free Reference-Controllable Multi-Shot Long Video Generation for Cinematic Storytelling",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "多镜头长视频生成，支持角色与场景参考控制，可用于短剧和微短剧的自动化制作",
+      "first_seen_at": "2026-08-23 04:03:33 UTC",
+      "updated_at": "2026-08-23 04:03:33 UTC"
+    },
+    {
+      "paper_id": "2608.02023v1",
+      "route": "20260725-20260823/2608.02023v1-swantale-unified-multi-speaker-speech-and-audio-generation-for-instruct-and-zero-shot-tasks",
+      "title": "SwanTale: Unified Multi-Speaker Speech and Audio Generation for Instruct and Zero-Shot Tasks",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向动画配音、音频剧、短片与短视频制作的多说话人语音与音频生成，可直接服务短剧音效与配音",
+      "first_seen_at": "2026-08-23 04:03:33 UTC",
+      "updated_at": "2026-08-23 04:03:33 UTC"
+    },
+    {
+      "paper_id": "2608.05803v1",
+      "route": "20260725-20260823/2608.05803v1-vorch-omni-multi-task-orchestration-of-sight-and-sound",
+      "title": "Vorch-Omni: Multi-Task Orchestration of Sight and Sound",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "统一的音视频联合生成框架，可灵活以视频或音频为条件或目标，支持短视频和短剧的画面与声音协同生成",
+      "first_seen_at": "2026-08-23 04:03:33 UTC",
+      "updated_at": "2026-08-23 04:03:33 UTC"
+    },
+    {
+      "paper_id": "2608.16717v1",
+      "route": "20260725-20260823/2608.16717v1-personashot-benchmarking-person-centric-narrative-continuity-in-multi-shot-video-generation",
+      "title": "PersonaShot: Benchmarking Person-Centric Narrative Continuity in Multi-Shot Video Generation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "多镜头叙事视频连续性基准，有益于短剧生成",
+      "first_seen_at": "2026-08-23 04:03:33 UTC",
+      "updated_at": "2026-08-23 04:03:33 UTC"
+    },
+    {
+      "paper_id": "2607.23588v1",
+      "route": "20260725-20260823/2607.23588v1-jarvishub-an-open-harness-for-canvas-native-multimodal-creative-agents",
+      "title": "JarvisHub: An Open Harness for Canvas-Native Multimodal Creative Agents",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "支持视频和故事板等长周期多模态创作的工具架",
+      "first_seen_at": "2026-08-23 04:03:33 UTC",
+      "updated_at": "2026-08-23 04:03:33 UTC"
+    },
+    {
+      "paper_id": "2607.24241v2",
+      "route": "20260725-20260823/2607.24241v2-filmbench-a-film-grade-benchmark-for-cinematic-video-generation",
+      "title": "FilmBench: A Film-Grade Benchmark for Cinematic Video Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于专业电影语言的电影级视频生成基准",
+      "first_seen_at": "2026-08-23 04:03:33 UTC",
+      "updated_at": "2026-08-23 04:03:33 UTC"
+    },
+    {
+      "paper_id": "2607.25300v1",
+      "route": "20260725-20260823/2607.25300v1-medit-bench-a-dataset-for-evaluating-message-driven-narrative-video-editing",
+      "title": "MEDit-Bench: A Dataset for Evaluating Message-Driven Narrative Video Editing",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "消息驱动的叙事视频编辑基准，直接支持短剧自动剪辑评估",
+      "first_seen_at": "2026-08-23 04:03:33 UTC",
+      "updated_at": "2026-08-23 04:03:33 UTC"
+    },
+    {
+      "paper_id": "2607.26910v1",
+      "route": "20260725-20260823/2607.26910v1-cinematraj-composing-atomic-camera-trajectories-for-3d-scenes-with-llm-agents",
+      "title": "CinemaTraj: Composing Atomic Camera Trajectories for 3D Scenes with LLM Agents",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "使用大语言模型智能体从自然语言生成电影化相机轨迹",
+      "first_seen_at": "2026-08-23 04:03:33 UTC",
+      "updated_at": "2026-08-23 04:03:33 UTC"
+    },
+    {
+      "paper_id": "2608.10337v1",
+      "route": "20260725-20260823/2608.10337v1-narrative-keyframing-for-generative-creative-writing",
+      "title": "Narrative Keyframing for Generative Creative Writing",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向AI故事规划与生成式散文的叙事关键帧交互",
+      "first_seen_at": "2026-08-23 04:03:33 UTC",
+      "updated_at": "2026-08-23 04:03:33 UTC"
+    },
+    {
+      "paper_id": "2608.12313v2",
+      "route": "20260725-20260823/2608.12313v2-ava-encoder-towards-agent-native-video-representation-learning",
+      "title": "AVA-Encoder: Towards Agent-Native Video Representation Learning",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向视频创作智能体的电影知识图谱视频表征",
+      "first_seen_at": "2026-08-23 04:03:33 UTC",
+      "updated_at": "2026-08-23 04:03:33 UTC"
+    }
+  ]
+}

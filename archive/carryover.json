@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-22T20:45:07.086985+00:00",
-  "updated_date": "20260822",
+  "generated_at": "2026-08-23T03:51:51.445941+00:00",
+  "updated_date": "20260725-20260823",
   "carryover_days": 9,
   "tag_states": {
     "phys-video": {
@@ -10,6 +10,11 @@
     },
     "psd": {
       "updated_date": "20260822",
+      "carryover_days": 9,
+      "items": []
+    },
+    "manga-drama": {
+      "updated_date": "20260725-20260823",
       "carryover_days": 9,
       "items": []
     }

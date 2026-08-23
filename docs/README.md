@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-22</span>
+      <span class="dpr-home-dashboard-kicker">2026-07-25 ~ 2026-08-23</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 5 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 13 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>3</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>2</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>6</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>7</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-22 20:50:04 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-23 04:03:33 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,9 +62,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日精读聚焦视频世界模型物理校准与流式自回归扩散，速读跟进文本生成视频与G-Buffer渲染方向。</p>
-<p>最值得看的是《CaliBench》满分10分，验证视频世界模型随机动力学是否物理可信；《Stream4D》8分，解决流式扩散视频的4D一致性。</p>
-<p>建议优先精读这两篇，把握物理校准与时间一致性两大关键瓶颈，再延伸速读中的语义修正与渲染优化。</p>
+<p>近一个月13篇视频生成论文中，精读6篇、速读7篇，聚焦多镜头叙事与多模态编排。</p>
+<p>最值得看《ContextMaster》（9.0）与《LogiShot》（9.0）：前者用固定预算稀疏路由实现交互式多镜头创作，后者专攻跨镜头逻辑连贯性。</p>
+<p>普通读者可优先跟这两篇的Demo与代码，快速理解视频生成从“单段”走向“整片”的关键进展。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -73,12 +73,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">3 篇</strong>
+    <strong class="dpr-home-dashboard-count">6 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="CaliBench: Are the Stochastic Dynamics of Video World Models Physically Calibrated?">CaliBench: Are the Stochastic Dynamics of Video World Models Physically Calibrated?</span></li><li><span class="dpr-home-dashboard-paper-title" title="Stream4D: 4D-Consistency for Streaming Autoregressive Diffusion Video Models">Stream4D: 4D-Consistency for Streaming Autoregressive Diffusion Video Models</span></li><li><span class="dpr-home-dashboard-paper-title" title="BeyondMasks: Evaluating Causal and Physical Consistency in Video Object Removal">BeyondMasks: Evaluating Causal and Physical Consistency in Video Object Removal</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="ContextMaster: Interactive Multi-Shot Video Creation via Fixed-Budget Sparse Context Routing">ContextMaster: Interactive Multi-Shot Video Creation via Fixed-Budget Sparse Context Routing</span></li><li><span class="dpr-home-dashboard-paper-title" title="LogiShot: Logically Coherent Cross-Shot Video Generation">LogiShot: Logically Coherent Cross-Shot Video Generation</span></li><li><span class="dpr-home-dashboard-paper-title" title="SAGE: Self-Evolving Storyboard Skills via Attribution-Guided Rule Evolution">SAGE: Self-Evolving Storyboard Skills via Attribution-Guided Rule Evolution</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>3</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">manga-drama <strong>6</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -86,12 +86,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">2 篇</strong>
+    <strong class="dpr-home-dashboard-count">7 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="MLLM-Guided Semantic Correction for Text-to-Video Generation">MLLM-Guided Semantic Correction for Text-to-Video Generation</span></li><li><span class="dpr-home-dashboard-paper-title" title="RGBX-Next: Towards Realistic Generative Rendering from G-Buffers">RGBX-Next: Towards Realistic Generative Rendering from G-Buffers</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Vorch-Omni: Multi-Task Orchestration of Sight and Sound">Vorch-Omni: Multi-Task Orchestration of Sight and Sound</span></li><li><span class="dpr-home-dashboard-paper-title" title="JarvisHub: An Open Harness for Canvas-Native Multimodal Creative Agents">JarvisHub: An Open Harness for Canvas-Native Multimodal Creative Agents</span></li><li><span class="dpr-home-dashboard-paper-title" title="FilmBench: A Film-Grade Benchmark for Cinematic Video Generation">FilmBench: A Film-Grade Benchmark for Cinematic Video Generation</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>2</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">manga-drama <strong>7</strong></span></div>
 </section>
 </div>
 

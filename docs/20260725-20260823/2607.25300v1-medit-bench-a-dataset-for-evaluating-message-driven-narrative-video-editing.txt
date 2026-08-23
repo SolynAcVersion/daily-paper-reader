@@ -1,0 +1,715 @@
+Title: MEDit-Bench: A Dataset for Evaluating Message-Driven Narrative Video Editing
+
+URL Source: https://arxiv.org/pdf/2607.25300v1
+
+Published Time: Wed, 29 Jul 2026 00:37:32 GMT
+
+Number of Pages: 19
+
+Markdown Content:
+# MEDit-Bench: A Dataset for Evaluating Message-Driven Narrative Video Editing 
+
+## Katsuya Ogata 1 Zongshang Pang 1 Mayu Otani 2 Yuta Nakashima 11The University of Osaka 
+
+> 2
+
+## CyberAgent, Inc. 
+
+ogata@im.sanken.osaka-u.ac.jp pangzs@im.sanken.osaka-u.ac.jp otani mayu@cyberagent.co.jp n-yuta@im.sanken.osaka-u.ac.jp 
+
+## Abstract 
+
+Video editing is fundamentally message-driven: even from the same source footage, the selected shots change depend-ing on the narrative the editor wishes to convey. Bench-marks for a closely related task, video summarization, re-duce editorial intent to a single, message-agnostic notion of saliency and thus do not account for this diversity. For eval-uating message-driven video editing, we present MEDit-Bench , a dataset and benchmark, which pairs long-form videos with multiple editing messages and multiple profes-sionally produced edits per message, demonstrating that different messages yield substantially different edits from the same source. We define an automatic evaluation pro-tocol based on temporal alignment metrics, and find that an LLM-as-a-judge preference, a natural proxy for narrative quality, is unreliable for this task due to severe position bias. We additionally annotate each message with ambiguity and contextfulness scores, and show that both dimensions nega-tively correlate with model performance, establishing mes-sage difficulty as a meaningful stratification factor. Experi-ments with state-of-the-art MLLMs and reinforcement fine-tuned baselines show that while strong models approach hu-man temporal alignment at lenient thresholds, all models fall behind humans at stricter criteria. A human percep-tual study further confirms a large quality gap, with profes-sional human edits remaining consistently preferred over model outputs. The project page is available at https: //ogatakatsuya.github.io/medit-bench .
+
+## 1. Introduction 
+
+Online videos have become a primary medium for informa-tion, education, and entertainment. As a result, there is a growing demand for automating video editing, which trans-forms raw footage into watchable content. Video summa-rization has been extensively studied as a step toward au-One Source Video 
+
+> A girl’s adventure against a colossal evil Touching story of love and bonds beyond species Cruel truths and despair born from blind obsession
+> Multiple Editing Messages Edited Videos
+
+Figure 1. Overview of MEDit-Bench. Given a long-form source video, multiple editing messages specify different narratives. For each (video, message) pair, multiple professional editors indepen-dently produce a cut-only edit. The same source footage results in different cut sequences depending on the specified message, high-lighting the diversity that existing summarization benchmarks do not capture. 
+
+tomation, supported by datasets such as SumMe [16], TV-Sum [46], and VSUMM [7], tailored to evaluate models’ ability to find salient segments. Representative methods in-clude supervised importance prediction [2, 44, 50], vision-language approaches leveraging CLIP-like models [17, 25, 26, 33], and LLM-based frameworks [23]. However, video editing is not merely about selecting salient segments. Unlike saliency-based summarization, where the goal is to identify objectively important moments, professional editing is inherently purposeful: it requires deep comprehension of long-form video content and the creative judgment to compose shots into a sequence that tells a story. The resulting edit is therefore not a compres-1arXiv:2607.25300v1 [cs.CV] 28 Jul 2026 sion of the footage but a deliberate creative act : it demands both an understanding of what is happening in the video and a deliberate choice of how to present it to communicate something meaningful to viewers. The key ingredient that drives this process is the mes-sage , a natural language statement of the narrative the editor wishes to convey. The message determines not just which 
+
+moments to include but how they should be composed into a coherent story: a visually salient moment may be entirely irrelevant to a given message, while an apparently unre-markable shot may be indispensable for the narrative setup. Crucially, the same source footage can yield radically dif-ferent edits under different messages, and even for the same message, multiple valid interpretations exist that reflect in-dividual editorial style. This diversity (across messages and across editors) is absent from existing video summarization benchmarks, which primarily focus on summaries of visual highlights [16, 46] and thus conflate the richness of editorial intent into a single notion of saliency. In this work, we focus on message-driven video edit-ing and make the following contributions. (1) We for-mulate the task and introduce MEDit-Bench (ME ssage-
+
+Driven video ed it ing Bench mark), which pairs 60 long-form videos with 540 professional message-conditioned ed-its, providing multiple messages per video and multiple ed-itors per message (Fig. 1) to capture the diversity of edito-rial intent that single-reference summarization benchmarks overlook. (2) We establish an evaluation protocol centered on temporal alignment metrics (R@ θ, F1@ θ, mIoU), strat-ified by message quality (ambiguity and contextfulness) and complemented by a 1,620-judgment human percep-tual study; we further show that an LLM-as-a-judge pref-erence metric [14, 58, 60] suffers from severe position bias and is unreliable for this task, a cautionary result for auto-matic narrative-quality evaluation. (3) We propose MED-itor , a model trained with GRPO using editing-specific rewards (temporal coverage and cut-level F1); MEDitor-8B surpasses all zero-shot open-source baselines and rivals commercial models. (4) Through extensive experiments, we find that even strong MLLMs (Gemini-3-pro, GPT-5, Qwen3-VL) fall well short of the human ceiling at strict cut-precision thresholds, a gap corroborated by our human perceptual study in which professional edits remain consis-tently preferred over model outputs, while MEDitor’s edit-ing ability transfers zero-shot to classic video summariza-tion (SumMe, TVSum), matching or exceeding prior unsu-pervised methods. 
+
+## 2. Related Work 
+
+2.1. Video Editing and Summarization Datasets 
+
+Video editing and summarization datasets have been devel-oped for a variety of objectives and modalities. Early video summarization benchmarks, SumMe [16], TVSum [46], and VSUMM [7], score clip-level importance based on vi-sual saliency and user interest, and are widely used for eval-uating importance-based segment selection. More recently, multimodal datasets have emerged that pair video with text descriptions for semantic summarization [28, 39], broaden-ing the scope of textual signals in evaluation. Datasets focusing on movie analysis and editing tech-nique [18, 37, 43] have advanced shot boundary detection and structural analysis of professional film editing. How-ever, these datasets address individual editing components in isolation and do not model the end-to-end editing pro-cess conditioned on a communicative message. In con-trast, MEDit-Bench is centered on the message that an ed-itor wishes to convey. Single source video is paired with multiple natural-language messages, and professional edi-tors independently produce edits for each, enabling evalua-tion of message-conditioned diversity, which is a dimension absent from existing benchmarks. 
+
+2.2. Video Summarization and Editing Methods 
+
+Video summarization has been the predominant target of automated video editing. Early work used CNNs and RNNs to assign importance scores to frames or shots [2, 8, 13, 19, 44, 50, 64]. More recent methods leverage vision-language models, such as CLIP, to incorporate textual cues and improve multimodal alignment [17, 25, 26, 33]. An LLM’s chain-of-thought reasoning has been used for frame-wise importance scoring, further pushing the state of the art [23]. Although these methods achieve strong perfor-mance on importance-based benchmarks, they optimize for a fixed notion of “important” content and do not support message-conditioned narrative construction. Video editing has been studied from different perspec-tives. Methods for aligning narration or dialogue scripts with footage temporally [22, 49], text-based clip retrieval for montage generation [51, 55], and systems that transfer professional editing styles or generate full timelines from natural-language instructions [10, 38] each address specific aspects of the editing pipeline. Unlike these existing works, our task requires the model to holistically interpret a long video and autonomously construct a narrative aligned with the given message. 
+
+2.3. Video Temporal Localization with MLLMs 
+
+Video temporal localization involves a suite of related tasks such as temporal grounding [24], action localization and video summarization [16, 35, 46, 63], which invariably re-quire the model to find the segments that best correspond to the input query. Recently, MLLMs have been leveraged to tackle such tasks, with most of them focusing on de-veloping MLLM-friendly representations of time, includ-ing time-aware positional embedding [15, 40], semantic-2based embedding matching [31, 36], and interleaved tex-tual timestamps [32], where models are mostly trained with supervised fine-tuning. As the time representation starts to converge to the interleaved timestamps [5, 57], recent works have begun to study the optimization strategy, i.e ., the shift from supervised fine-tuning to reinforcement learning [53, 57]. Message-driven video editing requires the same tempo-ral localization ability but is harder in two ways. First, rather than retrieving segments that explicitly match the query, it must infer those that are contextually relevant to the message, i.e ., that set up, explain, or advance it, not merely depict its surface content. Second, while ex-isting multi-segment tasks output segments that are either near-duplicates of one semantic concept ( e.g ., action lo-calization) or mutually independent ( e.g ., dense captioning [21, 56], video summarization), ours are contextually con-nected into a coherent storyline. For instance, an edit for “The revenge of the white rabbit” may include segments establishing why the rabbit seeks revenge, not only the re-venge scenes. 
+
+## 3. MEDit-Bench 
+
+We design MEDit-Bench to evaluate a model’s ability to generate video narratives from a high-level message, which requires deep comprehension of the video content and the creation of a convincing storyline that conveys the message. 
+
+3.1. Data Collection 
+
+MEDit-Bench is constructed in three stages: (i) source video selection, (ii) editing message creation, and (iii) pro-fessional editing and annotation. 
+
+Source videos and messages. We select 60 videos of length 7–18 minutes from LongVideoBench [54], VideoMME [11], and Blender Studio open movies [6]. For each source video, we write three distinct editing mes-sages that describe the narrative the editor wishes to con-vey to viewers, resulting in 180 video-message pairs. Mes-sages are designed to be (i) visually communicable with-out relying on audio or dialogue, (ii) diverse in intent so that they encourage substantially different edits from the same footage, and (iii) varied in difficulty, spanning clear and concrete messages to ambiguous or context-dependent ones. 
+
+Professional annotation. During the annotation process, each video-message pair is given to three professional video editors, who independently produce a collection of temporal cuts, each of which is represented by the start and end times-tamps of a selected clip, resulting in 540 edited videos in total; further details on dataset construction, statistics, and representative examples are provided in the supplementary material. Editors are instructed to (i) trim the source to a 1–3 minute summary using only cut operations, (ii) reorder                                           
+
+> Table 1. Comparison with representative video summarization datasets.
+> Dataset Message Footage Edits Avg. duration
+> SumMe [16] ×25 25 2m40s VSUMM [7] ×50 50 1m30s TVSum [46] ×50 50 4m12s
+> MEDit-Bench ✓60 540 13m44s
+> Table 2. Agreement across editors (Cross-Ann.) and across mes-sages (Cross-Msg.) measured by F1 score. 1Cross-Ann.: agree-ment between different editors for the same video and message.
+> 2Cross-Msg.: agreement between different messages for the same video and editor. ∗Quoted from [34].
+> SumMe [16] TVSum [46] MEDit-Bench (ours)
+> Cross-Ann. 1Cross-Msg. 2
+> Avg ∗Max ∗Avg ∗Max ∗Avg Max Avg Max 0.31 0.54 0.54 0.78 0.42 0.55 0.15 0.27
+
+shots freely, (iii) ignore the audio and base their decisions solely on the visual content, and (iv) provide a rationale for every cut to discourage careless cuts. Although the shot ordering and rationales are not used in our benchmark, we release them to the community for future research. 
+
+3.2. Comparison with Existing Datasets 
+
+Table 1 compares MEDit-Bench with existing summariza-tion datasets. Unlike prior datasets that provide a single target edit per source video without an explicit message, MEDit-Bench provides multiple messages and multiple ed-its per message, enabling evaluation of the diversity stem-ming from different messages as well as editors’ styles and tastes. MEDit-Bench also features substantially longer source footage (13m44s on average) compared to SumMe (2m40s), VSUMM (1m30s), and TVSum (4m12s), posing a greater challenge for models to process. We analyze agreement across editors (cross-annotator) and across messages (cross-message), following the exist-ing protocol [34]. Table 2 shows that cross-annotator F1-Avg is 0.42 (higher than SumMe at 0.31 and lower than TVSum at 0.54), reflecting editors’ different styles. Cross-message F1-Avg is only 0.15, indicating that messages sub-stantially diversify the edits even for the same editor. 
+
+3.3. Message Quality Annotations 
+
+To characterize the inherent characteristics of messages, we annotate each of the 180 messages in the following two as-pects using an LLM-assisted protocol: 
+
+Ambiguity (1–5, low to high): To what extent does the mes-sage admit multiple valid interpretations? A highly ambigu-ous message admits multiple equally valid narrative inter-31 2 3 4 5    
+
+> Score (1 = low, 5 = high)
+> 020 40 60 80
+> # Messages
+> 646 72 39 17
+> Ambiguity
+> 12345
+> Score (1 = low, 5 = high)
+> 010 20 30 40 50
+> # Messages  40 47 38 43 12
+> Contextfulness
+
+Figure 2. Distribution of message quality annotations across the 180 MEDit-Bench messages. Ambiguity measures how open the message is to interpretation. Contextfulness measures the extent to which external context is required. 
+
+pretations, making it harder for any single edit to match the reference ( e.g ., “A story of resilience” provides no concrete visual anchor and can be realized in many ways). 
+
+Contextfulness (1–5, low to high): How much context is required to understand the message? A contextful message can require some introductory cuts to make the narrative meaningful ( e.g ., “The long-awaited reunion” presupposes that the viewer understands who separated and why, requir-ing contextual buildup before the key moment). Figure 2 shows the distribution of both properties across the 180 messages. Most messages fall in the moderate-to-high range for ambiguity (scores 3–4) and in the low-to-moderate range for contextfulness (scores 1–2), indicating that our messages are generally interpretable but leave some room for creative variation. 
+
+3.4. Task Definition 
+
+Given a video V and a message M in natural language text, we propose to predict the edited video as a sequence of tem-poral cuts 
+
+ˆC = ( c1, c 2, . . . , c K ), (1) where ck = ( sk, e k), with sk and ek (0 ≤ sk < e k ≤ T ,with T the video duration) denoting the start and end times-tamps of the k-th cut. Unlike conventional summarization, which targets a single general synopsis per video, our task is explicitly conditioned on M , which is arbitrarily specified by the user, enabling ˆC to convey diverse narratives. 
+
+3.5. Evaluation Metrics 
+
+We propose to evaluate predicted edit ˆC on the MEDit-Bench’s triplet D = {(V, M, C)} using the following three metrics, where V , M , and C = ( c1, . . . , c K′ ) represent the footage, message, and reference cuts, respectively. 
+
+Recall at Temporal IoU. Since each edit consists of multi-ple cuts, we adopt a union-based temporal IoU formulation that treats a cut sequence as a single temporal region. Let 
+
+tIoU( c, c ′) = |c ∩ c′|/|c ∪ c′| be the temporal IoU of two cuts, where | · | denotes the duration, we define a binary hit at threshold θ as 
+
+hθ ( ˆC, C) = 1
+
+h
+
+tIoU ( ˆC, C) ≥ θ
+
+i
+
+, (2) where tIoU ( ˆC, C) = tIoU 
+
+S 
+
+> m
+
+ˆcm, S 
+
+> n
+
+cn
+
+
+
+. R@ θ is the hit rate averaged over D:R@ θ = 1
+
+|D| 
+
+X
+
+> D
+
+hθ ( ˆC, C), (3) which we report at θ ∈ { 0.3, 0.5, 0.7} along with the mean temporal IoU (mIoU). 
+
+F1 Score with Greedy Cut Matching. We collect all can-didate pairs (i, j ) with IoU (ˆ ci, c j ) ≥ θ, sort them by IoU in descending order, and assign each predicted and reference cut to at most one partner via greedy matching, yielding a matched set Mθ ⊆ [K] × [K′] ([N ] denotes the set of pos-itive integers up to N ). F1 at threshold θ are defined as F1 @θ = 2 P @θ · R@θP @θ + R@θ , (4) where P@ θ = |M θ |/K and R@ θ = |M θ |/K ′ and θ ∈{0.3, 0.5, 0.7}. Unlike the union-based recall above, the F1 score also evaluates the per-cut alignment and cut quan-tity consistency between the predicted and the reference se-quence. 
+
+LLM-based Preference. Temporal metrics alone are in-sufficient: an edit ˆC may convey the message well with-out temporally matching C, or match it closely yet miss key context [30]. As an experimental probe of semantic 
+
+quality, we adopt an LLM-as-a-judge protocol [14, 60] with Gemini-3-pro. The judge performs a blind A/B compari-son of ˆC and C given M , considering shot selection and storytelling flow. Let JM (C, ˆC) ∈ { 0, 1} return 1 if the first-presented edit is preferred. Since LLM judges exhibit 
+
+position bias [42], we evaluate each pair in both orders and count a win only when ˆC is preferred regardless of position: Agg M ( ˆC, C) = JM ( ˆC, C) × (1 − J M (C, ˆC)) . (5) The WinRate is the mean over the dataset: WinRate = 1
+
+|D| 
+
+X
+
+> (V,M, C)∈D
+
+Agg M ( ˆC, C). (6) 
+
+## 4. Methods 
+
+To tackle the proposed message-driven video editing task, we propose a training-free baseline method using frozen MLLMs (Sec. 4.1) and a reinforcement learning method trained on pseudo-labels distilled from a frontier MLLM (Sec. 4.2). 44.1. Editing with Frozen MLLMs 
+
+MLLMs such as LLaVA [29] and the Qwen-VL family [5] have been shown to excel in video tasks such as video QA and captioning. Recent works have also revealed their po-tential in video temporal localization tasks such as tempo-ral grounding and video summarization [31, 36, 40]. To probe the message-driven video editing capability of such MLLMs, we treat an MLLM as a frozen function f that di-rectly maps the video and message to a sequence of cuts: 
+
+ˆC = f (V, M ). (7) The MLLM is prompted with a fixed instruction (see the supplementary material for the full prompt and configura-tion) that introduces the task and specifies the output for-mat. 
+
+4.2. GRPO with Editing Rewards 
+
+Group relative policy optimization (GRPO) [41] is widely used to train MLLMs on video tasks [9, 27, 53, 57]; for temporal grounding, Time-R1 [53] and TimeLens [57] re-ward the temporal intersection-over-union (tIoU) between the predicted and reference span. We adopt the same cut format but find a tIoU-only reward suboptimal for editing: grounding localizes a single reference span, whereas an edit is a sequence of cuts. Extending tIoU to the union of the predicted and reference cuts rewards only which portion of the timeline is selected, not how it is partitioned, leaving the number and boundaries of cuts unsupervised; a few coarse cuts can then match the reference’s coverage but not its composition. We therefore complement this coverage term with a cut-level F1 reward that matches predicted and ref-erence cuts one-to-one, rewarding the correct number and placement of cuts. 
+
+Reward. Following Sec. 3.5, let ˆC = (ˆ c1, . . . , ˆcK ) and 
+
+C = ( c1, . . . , c K′ ) be the predicted and reference cuts of a training triplet (V, M, C) ∈ D GRPO . Our coverage reward is the temporal IoU between the unions of the two cut sets, 
+
+Rcov = tIoU ( ˆC, C), (8) which scores temporal overlap but is invariant to how the union is partitioned into cuts. The cut-level F1 reward instead operates on individ-ual cuts: we form a greedy matching set P ⊆ [K] ×
+
+[K′] from the prediction and reference cut pairs like de-scribed in Sec. 3.5 but without the tIoU-based thresh-olding, and then accumulate soft true positives TP =P 
+
+> (m,n )∈P
+
+tIoU(ˆ cm, c n), yielding 
+
+RF1 = 2 P · RP + R , (9) where P = TP /K and R = TP /K ′. This soft, tIoU-weighted TP, rather than a thresholded count, keeps the re-ward continuous in the cut boundaries. The final reward combines these two terms with equal weight, i.e ., 
+
+R = Rcov + RF1 , (10) so that Rcov enforces a decent global coverage while RF1 
+
+the correct number and placement of cuts. We ablate the effect of these two rewards in the supplementary material. 
+
+Policy Optimization. We optimize the policy πΦ with GRPO [41], which directly maximizes the reward R rather than imitating the reference cuts by maximum likelihood. For each training sample (V, M, C) ∈ D GRPO , we sample a group G = { ˆC} of |G| candidate edits from the current policy and score each with the reward, 
+
+r = R( ˆC, C). (11) The group-normalized advantage of ˆC is given by 
+
+A( ˆC) = r − μG
+
+σG
+
+, (12) where μG and σG are the mean and standard deviation of r
+
+over G. The GRPO objective is 
+
+LGRPO (Φ) = −E
+
+ X
+
+> ˆC∈G
+
+A( ˆC) log πΦ( ˆC | V, M )
+
+ , (13) where we drop the KL divergence term as in [53, 57]. 
+
+Training Data. To build a training set without expensive professional annotation, we construct the dataset DGRPO 
+
+by distilling pseudo-labels from a frontier MLLM Mteacher 
+
+over 977 videos from MLVU [62], with durations ranging from 5 to 15 minutes. Formally, for each source video V
+
+in MLVU, Mteacher directly generates three message-edit pairs, which yields 977 × 3 = 2 ,931 distillation samples in total; details of the construction procedure and dataset statistics are provided in the supplementary material. We refer to Qwen3-VL models trained with this procedure as 
+
+MEDitor , with MEDitor-4B and MEDitor-8B denoting the 4B and 8B variants, respectively. 
+
+## 5. Experiments 
+
+5.1. Evaluation Setup 
+
+We evaluate a range of commercial and open-source MLLMs on MEDit-Bench in zero-shot settings, as well as MEDitor, our GRPO-based fine-tuned models (Sec. 4.2). All models are assessed with temporal alignment metrics (R@ θ, F1@ θ, mIoU) and LLM-based preference (Win-Rate). To further study the gap between human and 5Table 3. Main results on MEDit-Bench. Temporal alignment is measured by R@ θ, F1@ θ, and mIoU; LLM Pref. shows the LLM-as-a-judge win rate against human reference edits, counted only when the model is preferred in both presentation orders to eliminate position-biased judgments (green: model preferred, red: human preferred). Although the LLM Pref. is relatively unreliable as an evaluation metric due to the position bias effect, we provide them here for reference. Human row shows inter-annotator performance (gray). 
+
+Model R@0.3 R@0.5 R@0.7 F1@0.3 F1@0.5 F1@0.7 mIoU LLM Pref. Random 0.030 0.002 0.000 0.121 0.054 0.017 0.112 16.7% 
+
+Commercial models. 
+
+GPT-5 0.348 0.065 0.009 0.273 0.151 0.064 0.253 77.8% 
+
+GPT-5-mini 0.157 0.033 0.000 0.229 0.112 0.041 0.186 31.1% 
+
+Gemini-3-pro [48] 0.263 0.054 0.004 0.255 0.152 0.083 0.235 72.8% 
+
+Gemini-2.5-pro [48] 0.144 0.033 0.006 0.180 0.102 0.051 0.152 28.3% 
+
+Open-source models. 
+
+Qwen3-VL-4B [5] 0.032 0.009 0.002 0.075 0.036 0.014 0.119 25.2% 
+
+Gemma-4-E4B 0.111 0.017 0.000 0.156 0.071 0.024 0.169 30.6% 
+
+Qwen3-VL-8B [5] 0.144 0.030 0.004 0.173 0.099 0.041 0.165 26.1% 
+
+InternVL3.5-8B [52] 0.020 0.000 0.000 0.106 0.042 0.011 0.080 7.4% 
+
+Qwen3-VL-32B [5] 0.248 0.070 0.013 0.234 0.126 0.061 0.227 40.7% 
+
+MEDitor-4B (Ours) 0.244 0.069 0.013 0.250 0.146 0.071 0.229 52.9% 
+
+MEDitor-8B (Ours) 0.304 0.100 0.026 0.258 0.150 0.061 0.241 54.9% 
+
+Human 0.432 0.133 0.033 0.277 0.184 0.109 0.290 —model edits, we conduct a user study comparing profes-sional human edits to those of Gemini-3-pro, yielding 1,620 evaluations in total. See the supplementary material for more details on the user study settings. We also evaluate MEDitor on classic video summarization benchmarks, i.e ., SumMe [16] and TVSum [46], and provide the evaluation setup and results in Sec. 5.4. 
+
+5.2. MEDit-Bench Results 
+
+Temporal alignment. All models outperform the Ran-dom baseline, but fall short of the human editing. Among zero-shot models, larger commercial models generally out-perform open-source ones, suggesting that general-purpose video reasoning capacity is an important factor. Perfor-mance degrades sharply at stricter thresholds; at θ = 0 .7,even the best model achieves only 0.026, indicating that precise cut-boundary alignment remains very challenging. MEDitor substantially improves performance: MEDitor-8B surpasses all zero-shot open-source models and rivals com-mercial models, achieving the highest R@0.5 (0.100) and R@0.7 (0.026) among all evaluated models. 
+
+LLM-based preference. While the win-rate metric has known reliability concerns (Sec. 6), its ranking is broadly consistent with model capability: larger models score markedly higher than smaller ones, and MEDitor raises win rate substantially, mirroring the trend in temporal metrics. One exception is Gemini-3-pro, whose win rate (72.8%) ap-pears disproportionately high relative to its temporal scores, possibly reflecting self-enhancement bias 
+
+Effect of message quality. Figure 3 shows that both am-biguity and contextfulness negatively correlate with mIoU (r = −0.15 and r = −0.18 , p < 0.001 ). In partic-ular, the most ambiguous messages (score 5) yield mIoU roughly 34% lower than low-ambiguity ones (score 1), as highly open-ended narratives admit many valid interpreta-tions. Contextful messages pose a distinct challenge as well, requiring models to infer prerequisite background content rather than select scenes that explicitly match the message. These results establish message quality as a mean-ingful stratification factor for evaluation. 
+
+User Study results. Three independent evaluators as-sessed each edit on five aspects: (A) message transmis-sion (how well the edit conveys the intended narrative), 
+
+(B) cut order (whether the ordering of shots effectively serves the intended message and narrative), (C) shot con-tinuity (whether transitions between cuts are smooth), (D) contextual depth (whether sufficient context is provided to make the narrative meaningful), and (E) narrative pacing 
+
+(whether the timing and rhythm of cuts feel appropriate). They also provided A/B preference judgments before and after the questionnaire. Figure 4 summarizes the results. Human edits were preferred in 56.7% of first-choice eval-uations and 56.8% of final-choice evaluations, a prefer-ence that is consistent across both judgment stages. This means that the awareness of specific evaluation aspects does not affect the overall preference. Across all five evalu-61 2 3 4 5            
+
+> Score (1 = low, 5 = high)
+> 0.00 0.10 0.20 0.30
+> Mean mIoU Ambiguity
+> r=−0.15 * , p= 0.000
+> 12345
+> Score (1 = low, 5 = high)
+> 0.00 0.10 0.20 0.30
+> Mean mIoU Contextfulness
+> r=−0.18 * , p= 0.000
+
+Figure 3. Mean mIoU as a function of message ambiguity (left) and contextfulness (right), aggregated across all models. Error bars show standard error. Both dimensions negatively correlate with mIoU ( ∗p < 0.001 ). First choice Final choice 010 20 30 40 50 60 70   
+
+> Win Rate (%)
+> 56.7% 56.8% 43.3% 43.2%
+> Preference Win Rate
+> Human Gemini-3-pro
+> Message Transmission Cut Order Shot Continuity Contextual Depth Editing Pace
+> 1.0 1.5 2.0 2.5 3.0 3.5 4.0 4.5 5.0
+> Mean Score (1 –5) Per-Aspect Human Evaluation
+> Human Gemini-3-pro
+
+Figure 4. Human perceptual study comparing professional human edits vs. Gemini-3-pro outputs (1,620 evaluations). Left : win rates at first and final preference choice. Right : mean scores (1–5) per evaluation aspect; higher is better. Human 
+
+The white rabbit who loves nature 
+
+Gemini 
+
+Ambiguous message 
+
+Human 
+
+The revenge of the white rabbit 
+
+Gemini 
+
+Lost conetxt 
+
+context for revenge irrelevant to the narrative revenge against bullies 
+
+Figure 5. Qualitative comparison of human and Gemini-3-pro edits on two cases where all evaluators unanimously preferred the human edit. Each pair shows the human edit (top strip) and the Gemini edit (bottom strip) alongside the diagnosed failure mode. Top (“The white rabbit who loves nature”): the abstract message causes Gemini to select clips irrelevant to the intended narrative. Bottom (“The revenge of the white rabbit”): Gemini omits the contextual buildup needed to make the reversal meaningful. 
+
+ated aspects, human edits consistently score higher than the model’s edits. The largest gaps appear in (B) cut order and (A) message transmission , indicating that models particu-larly struggle to construct an ordering of shots that conveys the narrative. The gap is smallest for (C) shot continuity ,suggesting that models achieve acceptable temporal transi-tions even when the overall narrative is weaker. 
+
+5.3. Qualitative Analysis 
+
+To illustrate the nature of the gap between humans and models, we present qualitative comparisons on two video-message pairs for which all three human evaluators unani-mously preferred the human edit and the score gap was es-pecially pronounced (Fig. 5). 
+
+Sample 1 (message: “The white rabbit who loves na-ture” ). The message lacks references to concrete objects, making the cut selection criterion inherently ambiguous. The model (Gemini-3-pro) selects clips mostly irrelevant to the nuance of the message, failing to ground the abstract message in visual content. Evaluators rated the model par-ticularly low on message transmission and cut order (Hu-man/model: 4.33/2.00 and 4.00/2.00, respectively). We ob-serve that models tend to handle messages containing ex-plicit object names more reliably, suggesting that message concreteness is a key factor for good edits. 
+
+Sample 2 (message: “The revenge of the white rabbit” ). 
+
+This message implies a causal arc from victimization to re-taliation. The human editor includes contextual buildup, 7Table 4. Zero-shot performance on video summariza-tion benchmarks. Bold and underline denote the best and second-best scores per metric. Human row: per video, each annotator is scored against the consensus of the remaining annotators (SumMe) or against every other annotator indi-vidually (TVSum), then averaged over annotators. Method SumMe TVSum                                                                         
+
+> τρτρ
+> Random 0.000 0.000 0.000 0.000 Human 0.296 0.329 0.177 0.204
+> Vision-only methods.
+> CSNet [20] ——0.025 0.034 CASUM [3] 0.063 0.084 0.160 0.210 DSAVS [61] ——0.080 0.087 DRDSN [63] 0.047 0.048 0.020 0.026 RSGN u[59] 0.071 0.073 0.048 0.052 RSSUM [1] 0.007 0.015 0.080 0.106 CTVSum [35] 0.036 0.044 0.161 0.212
+> Vision-language methods.
+> LGSSVS [47] 0.102 0.148 0.133 0.174 LfVS (zeroshot) [4] 0.125 0.148 0.151 0.182 Ge et al. [12] 0.157 0.182 0.184 0.213 SSPVS [26] 0.154 0.207 0.151 0.199 Qwen3-VL-4B [5] 0.138 0.161 0.081 0.092 Qwen3-VL-8B [5] 0.160 0.186 0.089 0.101 MEDitor-4B (Ours) 0.149 0.172 0.193 0.219
+> MEDitor-8B (Ours) 0.218 0.254 0.193 0.218
+
+i.e ., scenes establishing the bullying dynamic, before the counterattack, making the eventual reversal comprehensible and emotionally resonant. The model cuts directly to the re-venge without sufficient setup, losing the narrative context that gives the revenge its meaning. The largest gap appears in cut order (Human/model: 4.33/1.67), whereas shot con-tinuity is rated higher for the model edit (4.00 vs. 3.33), demonstrating that temporal smoothness alone does not im-ply narrative coherence. 
+
+5.4. Generalization to Video Summarization 
+
+Setup. We probe whether the capabilities acquired through GRPO training transfer to , without any additional fine-tuning. The prompt format and model weights are kept identical to the message-driven editing task, replacing only the message M . Because the model’s output is sensitive to the phrasing of M (different messages select different cuts), we do not rely on a single message but ensemble asmall set of generic highlight messages (“critical”, “excit-ing”, and “memorable moments”), running the model once per message and averaging their per-frame selection masks into a graded, phrasing-robust per-frame importance. We then compute Kendall’s τ and Spearman’s ρ between this importance and the human ground truth by following [34]. Following [45], for SumMe, the reference is the consen-sus selection frequency (the fraction of annotators selecting each frame); for TVSum, the coefficients are computed for each annotator separately and then averaged. 
+
+Results. Although neither benchmark is seen during train-ing, the editing capability transfers zero-shot. MEDitor-8B attains the best SumMe scores ( τ /ρ 0.218/0.254) and both MEDitor models lead on TVSum (0.193/0.219), surpassing prior unsupervised and vision-language methods on both benchmarks. The improvement over the untrained Qwen3-VL backbones is largest on TVSum, where τ climbs from 0.081 (4B) and 0.089 (8B) to 0.193, confirming that the transfer is driven by GRPO training rather than the base model. On TVSum our models even exceed the leave-one-out human agreement (0.177/0.204): they match the an-notator consensus more closely than individual annotators match one another, reflecting the well-known annotator dis-agreement on this benchmark. On SumMe they remain be-low the higher human agreement (0.296/0.329), and model scale helps there (8B > 4B) while making little difference on TVSum. 
+
+## 6. Limitations 
+
+MEDit-Bench focuses on cut-only editing, whereas profes-sional video production also involves titles and captions, color grading, and motion effects. Cut selection is nonethe-less the most fundamental step that drives all subsequent editing decisions, making it a natural starting point for benchmarking message-driven video editing. On the evalu-ation side, the LLM-as-a-judge protocol has known limita-tions: the judge may lack sensitivity to narrative coherence and professional editing craft, and is susceptible to position bias and self-enhancement bias despite our order-swapping mitigation; we provide a detailed analysis of these limita-tions in the supplementary material. Furthermore, relying on commercial models such as Gemini or GPT as evalua-tion judges raises a reproducibility concern: these models are subject to deprecation and silent version updates, mean-ing that the same evaluation prompt may yield different re-sults over time and cannot serve as a fixed, reproducible metric. 
+
+## 7. Conclusion 
+
+We introduced MEDit-Bench, a dataset and benchmark for message-driven video editing, pairing long-form videos with multiple natural-language editing messages and professionally produced edits. Our benchmark scores edits automatically with temporal alignment metrics (R@ θ,F1@ θ, mIoU), quantifying the structural quality of cut selection and placement. We also explored automatic semantic evaluation via LLM-as-a-judge, but found it unreliable for this task due to severe position bias, acautionary result for automatic narrative-quality eval-8uation. Experiments show that precise cut placement and narrative coherence remain open challenges, with message ambiguity and contextfulness stratifying model performance further. A complementary human perceptual study confirms this gap, with professional edits consistently preferred over model outputs across all evaluated narrative aspects. We hope MEDit-Bench provides a rigorous foun-dation for advancing message-aware video editing research. 
+
+## References 
+
+[1] Mehryar Abbasi and Parvaneh Saeedi. Adopting self-supervised learning into unsupervised video summarization through restorative score. In ICIP , pages 425–429, 2023. 8 [2] Evlampios Apostolidis, Georgios Balaouras, Vasileios Mezaris, and Ioannis Patras. Combining global and local attention with positional encoding for video summarization. In IEEE Int. Symp. Multimedia , pages 226–234, 2021. 1, 2 [3] Evlampios Apostolidis, Georgios Balaouras, Vasileios Mezaris, and Ioannis Patras. Summarizing videos using con-centrated attention and considering the uniqueness and diver-sity of the video frames. In Int. Conf. Multimedia Retrieval ,page 407–415, 2022. 8 [4] Dawit Mureja Argaw, Seunghyun Yoon, Fabian Caba Heil-bron, Hanieh Deilamsalehy, Trung Bui, Zhaowen Wang, Franck Dernoncourt, and Joon Son Chung. Scaling up video summarization pretraining with large language models. In 
+
+CVPR , pages 8332–8341, 2024. 8 [5] Shuai Bai et al. Qwen3-VL technical report. arXiv preprint arXiv:2511.21631 , 2025. 3, 5, 6, 8 [6] Blender Studio. Blender studio films. https://studio. blender.org/films/ , 2026. Collection of open movies by Blender Studio. 3 [7] Sandra Eliza Fontes de Avila, Ana Paula Brand˜ ao Lopes, Antonio da Luz, and Arnaldo de Albuquerque Ara´ ujo. VSUMM: A mechanism designed to produce static video summaries and a novel evaluation method. Pattern Recog-nit. Lett. , 32(1):56–68, 2011. 1, 2, 3 [8] Jiri Fajtl, Hajar Sadeghi Sokeh, Vasileios Argyriou, Dorothy Monekosso, and Paolo Remagnino. Summarizing videos with attention. In Asian Conf. Comput. Vis. Workshops ,pages 39–54, 2019. 2 [9] Kaituo Feng, Kaixiong Gong, Bohao Li, Zonghao Guo, Yibing Wang, Tianshuo Peng, Junfei Wu, Xiaoying Zhang, Benyou Wang, and Xiangyu Yue. Video-R1: Reinforcing video reasoning in MLLMs. NeurIPS , 38:99114–99137, 2026. 5 [10] Nathan Frey, Peggy Chi, Weilong Yang, and Irfan Essa. Au-tomatic non-linear video editing transfer. In CVPRW , 2021. 2[11] Chaoyou Fu, Yuhan Dai, Yongdong Luo, Lei Li, Shuhuai Ren, Renrui Zhang, Zihan Wang, Chenyu Zhou, Yunhang Shen, Mengdan Zhang, Peixian Chen, Yanwei Li, Shaohui Lin, Sirui Zhao, Ke Li, Tong Xu, Xiawu Zheng, Enhong Chen, Caifeng Shan, Ran He, and Xing Sun. Video-MME: The first-ever comprehensive evaluation benchmark of multi-modal LLMs in video analysis. In CVPR , 2025. 3, 12, 13 [12] Wei Ge, Yongwei Nie, Fei Ma, Keke Tang, Fei Richard Yu, Hongmin Cai, and Ping Li. Training-free language-guided video summarization via multi-grained saliency scoring. In 
+
+Computational Visual Media , page 89–104, 2025. 8 [13] Junaid Ahmed Ghauri, Sherzod Hakimov, and Ralph Ew-erth. Supervised video summarization via multiple feature sets with parallel attention. In Int. Conf. Multimedia and Expo , pages 1–6, 2021. 2 [14] Jiawei Gu, Xuhui Jiang, Zhichao Shi, Hexiang Tan, Xue-hao Zhai, Chengjin Xu, Wei Li, Yinghan Shen, Shengjie Ma, Honghao Liu, Saizhuo Wang, Kun Zhang, Yuanzhuo Wang, Wen Gao, Lionel Ni, and Jian Guo. A survey on LLM-as-a-judge. arXiv preprint arXiv:2411.15594 , 2024. 2, 4 [15] Yongxin Guo, Jingyu Liu, Mingda Li, Dingxin Cheng, Xi-aoying Tang, Dianbo Sui, Qingbin Liu, Xi Chen, and Kevin Zhao. VTG-LLM: Integrating timestamp knowledge into video LLMs for enhanced video temporal grounding. In 
+
+AAAI , pages 3302–3310, 2025. 2 [16] Michael Gygli, Helmut Grabner, Hayko Riemenschneider, and Luc Van Gool. Creating summaries from user videos. In 
+
+ECCV , pages 505–520, 2014. 1, 2, 3, 6 [17] Bo He, Jun Wang, Jielin Qiu, Trung Bui, Abhinav Shrivas-tava, and Zhaowen Wang. Align and attend: Multimodal summarization with dual contrastive losses. In CVPR , 2023. 1, 2 [18] Qingqiu Huang, Yu Xiong, Anyi Rao, Jiaze Wang, and Dahua Lin. MovieNet: A holistic dataset for movie under-standing. In ECCV , 2020. 2 [19] Hao Jiang and Yadong Mu. Joint video summarization and moment localization by cross-task sample transfer. In CVPR ,pages 16367–16377, 2022. 2 [20] Yunjae Jung, Donghyeon Cho, Dahun Kim, Sanghyun Woo, and In So Kweon. Discriminative feature learning for unsu-pervised video summarization. In AAAI , 2019. 8 [21] Ranjay Krishna, Kenji Hata, Frederic Ren, Li Fei-Fei, and Juan Carlos Niebles. Dense-captioning events in videos. In 
+
+Proceedings of the IEEE international conference on com-puter vision , pages 706–715, 2017. 3 [22] Mackenzie Leake, Abe Davis, Anh Truong, and Maneesh Agrawala. Computational video editing for dialogue-driven scenes. ACM Trans. Graph. , 36(4), 2017. 2 [23] Min Jung Lee, Dayoung Gong, and Minsu Cho. Video sum-marization with large language models. In CVPR , pages 18981–18991, 2025. 1, 2 [24] Jie Lei, Tamara L Berg, and Mohit Bansal. Detecting mo-ments and highlights in videos via natural language queries. 
+
+NeurIPS , 34:11846–11858, 2021. 2 [25] Haopeng Li, Qiuhong Ke, Mingming Gong, and Tom Drum-mond. Progressive video summarization via multimodal self-supervised learning. In WACV , pages 5573–5582, 2023. 1, 2[26] Haopeng Li, Qiuhong Ke, Mingming Gong, and Tom Drum-mond. Progressive video summarization via multimodal self-supervised learning. In WACV , pages 5584–5593, 2023. 1, 2, 8 [27] Xinhao Li, Ziang Yan, Desen Meng, Lu Dong, Xiangyu Zeng, Yinan He, Yali Wang, Yu Qiao, Yi Wang, and Limin 
+
+9Wang. VideoChat-R1: Enhancing spatio-temporal percep-tion via reinforcement fine-tuning. NeurIPS , 2025. 5 [28] Jingyang Lin, Hang Hua, Ming Chen, Yikang Li, Jenhao Hsiao, Chiuman Ho, and Jiebo Luo. VideoXum: cross-modal visual and textural summarization of videos. IEEE Trans. Multimedia , 26:5548–5560, 2024. 2 [29] Haotian Liu, Chunyuan Li, Qingyang Wu, and Yong Jae Lee. Visual instruction tuning. NeurIPS , 36:34892–34916, 2023. 5[30] Yang Liu, Dan Iter, Yichong Xu, Shuohang Wang, Ruochen Xu, and Chenguang Zhu. G-Eval: NLG evaluation using gpt-4 with better human alignment. In EMNLP , pages 2511– 2522, 2023. 4 [31] Ye Liu, Zongyang Ma, Zhongang Qi, Yang Wu, Ying Shan, and Chang W Chen. E.T. Bench: Towards open-ended event-level video-language understanding. NeurIPS , 37:32076– 32110, 2024. 3, 5 [32] Boris Meinardus, Hector Rodriguez, Anil Batra, Anna Rohrbach, and Marcus Rohrbach. Chrono: A simple blueprint for representing time in MLLMs. arXiv preprint arXiv:2406.18113 , 2024. 3 [33] Medhini Narasimhan, Anna Rohrbach, and Trevor Dar-rell. CLIP-It! language-guided video summarization. In 
+
+NeurIPS , pages 13988–14000, 2021. 1, 2 [34] Mayu Otani, Yuta Nakashima, Esa Rahtu, and Janne Heikkil¨ a. Rethinking the evaluation of video summaries. In 
+
+CVPR , pages 7588–7596, 2019. 3, 8 [35] Zongshang Pang, Yuta Nakashima, Mayu Otani, and Hajime Nagahara. Contrastive losses are natural criteria for unsu-pervised video summarization. In WACV , pages 2010–2019, 2023. 2, 8 [36] Zongshang Pang, Mayu Otani, and Yuta Nakashima. Mea-sure Twice, Cut Once: A semantic-oriented approach to video temporal localization with video LLMs. In ICLR ,2026. 3, 5 [37] Alejandro Pardo, Fabian Caba Heilbron, Juan Le´ on Alc´ azar, Ali Thabet, and Bernard Ghanem. MovieCuts: A new dataset and benchmark for cut type recognition. In ECCV , pages 668–685, 2022. 2 [38] Alejandro Pardo, Jui-Hsien Wang, Bernard Ghanem, Josef Sivic, Bryan Russell, and Fabian Caba Heilbron. Generative timelines for instructed visual assembly. In NeurIPS Work-shop , 2025. 2 [39] Jielin Qiu, Jiacheng Zhu, William Han, Aditesh Kumar, Karthik Mittal, Claire Jin, Zhengyuan Yang, Linjie Li, Jian-feng Wang, Ding Zhao, Bo Li, and Lijuan Wang. MMSum: A dataset for multimodal summarization and thumbnail gen-eration of videos. In CVPR , pages 21909–21921, 2024. 2 [40] Shuhuai Ren, Linli Yao, Shicheng Li, Xu Sun, and Lu Hou. TimeChat: A time-sensitive multimodal large language model for long video understanding. In CVPR , pages 14313– 14323, 2024. 2, 5 [41] Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junx-iao Song, Mingchuan Zhang, Y.K. Li, Y. Wu, and Daya Guo. Deepseekmath: Pushing the limits of mathematical reason-ing in open language models, 2024. 5 [42] Lin Shi, Chiyu Ma, Wenhua Liang, Xingjian Diao, Weicheng Ma, and Soroush Vosoughi. Judging the judges: A system-atic study of position bias in LLM-as-a-Judge. In Proc. Int. Joint Conf. Nat. Lang. Process. , pages 292–314, 2025. 4 [43] Mike Zheng Shou, Stan Weixian Lei, Weiyao Wang, Deepti Ghadiyaram, and Matt Feiszli. Generic event boundary de-tection: A benchmark for event segmentation. In ICCV ,pages 8055–8064, 2021. 2 [44] Jaewon Son, Jaehun Park, and Kwangsu Kim. CSTA: Cnn-based spatiotemporal attention for video summarization. In 
+
+CVPR , pages 18847–18856, 2024. 1, 2 [45] Jaewon Son, Jaehun Park, and Kwangsu Kim. Csta: Cnn-based spatiotemporal attention for video summarization. In 
+
+Proceedings of the IEEE/CVF Conference on Computer Vi-sion and Pattern Recognition , pages 18847–18856, 2024. 8 [46] Yale Song, Jordi Vallmitjana, Amanda Stent, and Alejandro Jaimes. TVSum: Summarizing web videos using titles. In 
+
+CVPR , pages 5179–5187, 2015. 1, 2, 3, 6 [47] Tomoya Sugihara, Shuntaro Masuda, Ling Xiao, and Toshi-hiko Yamasaki. Language-guided self-supervised video summarization using text semantic matching considering the diversity of the video. In ACM Int. Conf. Multimedia Asia ,2024. 8 [48] Gemini Team et al. Gemini: A family of highly capable multimodal models, 2025. 6 [49] Anh Truong, Floraine Berthouzoz, Wilmot Li, and Maneesh Agrawala. QuickCut: An interactive tool for editing narrated video. In ACM Symp. User Interface Softw. Technol. , page 497–507, 2016. 2 [50] Junyan Wang, Yang Bai, Yang Long, Bingzhang Hu, Zhen-hua Chai, Yu Guan, and Xiaolin Wei. Query Twice: Dual mixture attention meta learning for video summarization. In 
+
+ACM Int. Conf. Multimedia , page 4023–4031, 2020. 1, 2 [51] Miao Wang, Guo-Wei Yang, Shi-Min Hu, Shing-Tung Yau, and Ariel Shamir. Write-A-Video: Computational video montage from themed text. ACM Trans. Graph. , 38(6): 177:1–177:13, 2019. 2 [52] Weiyun Wang, Zhangwei Gao, Lixin Gu, Hengjun Pu, Long Cui, Xingguang Wei, Zhaoyang Liu, Linglin Jing, Shenglong Ye, Jie Shao, et al. InternVL3. 5: Advancing open-source multimodal models in versatility, reasoning, and efficiency. 
+
+arXiv preprint arXiv:2508.18265 , 2025. 6 [53] Ye Wang, Ziheng Wang, Boshen Xu, Yang Du, Kejun Lin, Zihan Xiao, Zihao Yue, Jianzhong Ju, Liang Zhang, Dingyi Yang, et al. Time-R1: Post-training large vision language model for temporal video grounding. NeurIPS , 38:83330– 83364, 2026. 3, 5 [54] Haoning Wu, Dongxu Li, Bei Chen, and Junnan Li. LongVideoBench: a benchmark for long-context interleaved video-language understanding. In NeurIPS , 2024. 3, 12, 13 [55] Yu Xiong, Fabian Caba Heilbron, and Dahua Lin. Transcript to Video: Efficient clip sequencing from texts. In ACM Int. Conf. Multimedia , page 5407–5416, 2022. 2 [56] Antoine Yang, Arsha Nagrani, Paul Hongsuck Seo, An-toine Miech, Jordi Pont-Tuset, Ivan Laptev, Josef Sivic, and Cordelia Schmid. Vid2seq: Large-scale pretraining of a vi-sual language model for dense video captioning. In Proceed-
+
+10 ings of the IEEE/CVF conference on computer vision and pattern recognition , pages 10714–10726, 2023. 3 [57] Jun Zhang, Teng Wang, Yuying Ge, Yixiao Ge, Xinhao Li, and Limin Wang. TimeLens: Rethinking video temporal grounding with multimodal LLMs. In CVPR , pages 10419– 10429, 2026. 3, 5, 13 [58] Xinlu Zhang, Yujie Lu, Weizhi Wang, An Yan, Jun Yan, Lianke Qin, Heng Wang, Xifeng Yan, William Yang Wang, and Linda Ruth Petzold. Gpt-4v(ision) as a generalist evalu-ator for vision-language tasks. CoRR , abs/2311.01361, 2023. 2[59] Bin Zhao, Haopeng Li, Xiaoqiang Lu, and Xuelong Li. Re-constructive sequence-graph network for video summariza-tion. IEEE Trans. Pattern Anal. Mach. Intell. , page 1–1, 2021. 8 [60] Lianmin Zheng, Wei-Lin Chiang, Ying Sheng, Siyuan Zhuang, Zhanghao Wu, Yonghao Zhuang, Zi Lin, Zhuohan Li, Dacheng Li, Eric P. Xing, Hao Zhang, Joseph E. Gonza-lez, and Ion Stoica. Judging LLM-as-a-judge with MT-bench and Chatbot Arena. In NeurIPS , 2023. 2, 4 [61] Sheng-Hua Zhong, Jingxu Lin, Jianglin Lu, Ahmed Fares, and Tongwei Ren. Deep semantic and attentive network for unsupervised video summarization. ACM Trans. Multimedia Comput. Commun. Appl. , 18(2), 2022. 8 [62] Junjie Zhou, Yan Shu, Bo Zhao, Boya Wu, Zhengyang Liang, Shitao Xiao, Minghao Qin, Xi Yang, Yongping Xiong, Bo Zhang, Tiejun Huang, and Zheng Liu. MLVU: Benchmarking multi-task long video understanding. In 
+
+CVPR , pages 13691–13701, 2025. 5, 14 [63] Kaiyang Zhou, Yu Qiao, and Tao Xiang. Deep reinforce-ment learning for unsupervised video summarization with diversity-representativeness reward. In AAAI , 2018. 2, 8 [64] Wencheng Zhu, Jiwen Lu, Jiahao Li, and Jie Zhou. DSNet: A flexible detect-to-summarize network for video summa-rization. IEEE Trans. Image Process. , 30:948–962, 2020. 2 
+
+11 MEDit-Bench: A Dataset for Evaluating Message-Driven Narrative Video Editing 
+
+# Supplementary Material 
+
+This supplementary material provides (A) dataset collec-tion details including statistics, editor recruitment, and mes-sage creation, (B) implementation details including GRPO training data construction, (C) user study protocol details, (D) LLM-as-judge limitations, (E) full inference prompts, and (F) representative dataset examples. 
+
+## A. Dataset Collection Details 
+
+A.1. Video Selection 
+
+We selected 60 videos from LongVideoBench [54] and VideoMME [11], applying the following criteria. 
+
+Domain diversity. We aimed for a balanced distribution across eight categories to ensure the benchmark covers a wide range of visual styles and content types. Table 5 shows the resulting distribution.           
+
+> Table 5. Domain distribution of MEDit-Bench source videos.
+> Category # Videos
+> Vlog 14 Travel 13 Movie 9Animation 6Sports 5Documentary 5Food 4Cooking 4
+> Total 60
+
+Message potential. We selected videos with visually rich and varied content, enabling the creation of multiple distinct editing messages per video. 
+
+Visual editability. We excluded videos in which the pri-mary information is conveyed through speech rather than visual content ( e.g ., news broadcasts where spoken text is essential for understanding), ensuring that all editing deci-sions can be made based on visual content alone. 
+
+A.2. Dataset Statistics 
+
+Figure 6 summarizes the statistics of MEDit-Bench. Source videos range from 461 to 1,076 seconds (824 seconds on average), while edited videos range from 28 to 329 seconds (132 seconds on average), with an average compression ra-tio of 16.5%. Cuts are distributed almost uniformly over time, indicating minimal temporal bias. MEDit-Bench con-tains 6,231 cuts in total; the average cut length is 11.40 sec-onds (median 5.09 seconds). 
+
+Shot reordering. To characterize the extent to which ed-itors deviate from chronological ordering, we count cuts whose start timestamp precedes that of the immediately pre-ceding cut in the edit sequence. Table 6 shows the reorder-ing rates for all evaluated models and the human reference. Among professional edits, 26.1% of edits and 5.3% of cuts involve at least one temporal reversal, whereas current AI models produce near-zero reordering rates (0–2%). This gap highlights that intentional shot reordering, an important tool in professional narrative editing, is largely absent from model outputs, representing a qualitative gap beyond what temporal alignment metrics alone can capture. 
+
+> Table 6. Shot reordering rates for AI models and human reference editors. “Edits” counts edits with at least one temporal reversal; “Cuts” counts individual cuts placed before the preceding cut.
+
+Model Edits w/ reorder Cuts (reorder) 
+
+GPT-5 0/180 (0.0%) 0/1542 (0.0%) GPT-5-mini 3/180 (1.7%) 3/1106 (0.3%) Gemini-3-pro 0/180 (0.0%) 0/2025 (0.0%) Gemini-2.5-pro 0/180 (0.0%) 0/1582 (0.0%) Qwen3-VL-4B 14/176 (8.0%) 124/15939 (0.8%) Gemma-4-E4B 1/180 (0.6%) 1/934 (0.1%) Qwen3-VL-8B 0/180 (0.0%) 0/2304 (0.0%) InternVL3.5-8B 0/180 (0.0%) 0/1472 (0.0%) Qwen3-VL-32B 0/180 (0.0%) 0/2730 (0.0%) MEDitor-4B 2/180 (1.1%) 2/2030 (0.1%) MEDitor-8B 4/180 (2.2%) 5/1503 (0.3%) Human (reference) 141/540 (26.1%) 329/6231 (5.3%) 
+
+A.3. Editor Recruitment and Compensation 
+
+Editors were recruited through a crowdsourcing platform via an open call. Applicants were not filtered by formal credentials at the application stage; instead, editors were selected from among applicants based on their platform rating and demonstrated editing experience. Each editor was compensated at 10,000-15,000 JPY per source video ,which covers producing three edited videos (one per mes-sage) along with the required deliverables. 
+
+A.4. Editor Instructions 
+
+Each editor received a source video (10–15 minutes) and three editing messages, and was asked to produce one edited video per message. Editors are instructed to (i) trim the source to a 1–3 minute summary using only cut operations, 12 600 800 1000              
+
+> Source duration (s)
+> 0246810
+> Count
+> =824
+> 100 200 300
+> Edited duration (s)
+> 020 40 60 80
+> Count
+> =132
+> 10 20 30 40
+> Compression ratio (%)
+> 020 40 60 80 100
+> Count
+> =16.5%
+> 0.0 0.2 0.4 0.6 0.8 1.0
+> Normalised cut center
+> 0100 200 300 400
+> Count
+> 050 100 150
+> Segment length (s)
+> 10 0
+> 10 1
+> 10 2
+> 10 3
+> Count
+> =11.4s
+
+Figure 6. Statistics of the MEDit-Bench dataset. 
+
+(ii) reorder shots freely, (iii) ignore the audio and base their decisions solely on the visual content, and (iv) provide a ra-tionale for every cut to discourage careless cuts. Although the shot ordering and rationales are not used in our bench-mark, we release them to the community for future research. For each edited video, editors were required to submit three deliverables: (i) an exported video file (mp4), (ii) the editing project file (Adobe Premiere Pro or equivalent), and (iii) a rationale memo (one line per cut) explaining why each scene was selected. 
+
+A.5. Data Availability 
+
+The released dataset consists of (i) YouTube video IDs, (ii) the editing messages in text form, and (iii) the cut times-tamps for each professional edit, extracted from the editors’ project files (Adobe Premiere Pro or equivalent) to ensure frame-level precision. The source videos originate from LongVideoBench [54] and VideoMME [11], both of which are publicly available datasets, so the underlying footage can be freely accessed. 
+
+A.6. Quality Control 
+
+All submitted edits were manually reviewed by the authors. For edits with an unusually low number of cuts or those that appeared superficial, the editing rationale memo was cross-checked against the actual cut sequence to verify that each cut was intentional and consistent with the stated in-tent. Submissions deemed to fall below an acceptable qual-ity level were returned to the editor with a request for re-submission. No strictly formalized acceptance criteria were applied; quality judgments were made by the authors based on overall consistency between the edit, the message, and the rationale. 
+
+A.7. Message Creation Process 
+
+After watching each source video in full, the authors created three editing messages per video. Messages were designed to satisfy the following properties. 
+
+Visual communicability. Each message describes a nar-rative that can be conveyed through visual content alone, without relying on audio or spoken dialogue, consistent with the visual-only editing constraint imposed on editors. 
+
+Diversity of intent. The three messages per video were designed to evoke distinctly different impressions or narra-tives from the same footage, ensuring that different mes-sages yield substantially different edits. 
+
+Varied difficulty. The message set deliberately spans a range of difficulty levels. This includes straightforward messages with clear visual anchors, ambiguous messages open to multiple equally valid interpretations, and context-dependent messages that require introductory shots to make the narrative meaningful to viewers. This design is reflected in the ambiguity and contextfulness annotations described in the main paper (Sec. 3.3). 
+
+## B. Implementation Details 
+
+B.1. Open-Source Models 
+
+Qwen3-VL. We evaluate Qwen3-VL in 4B, 8B, and 32B parameter variants. Videos are sampled at 2FPS with a maximum of 2,048 frames. Spatial res-olution is controlled by a per-frame lower bound of 
+
+min pixels = 65,536 and a cross-frame upper bound of 
+
+total pixels = 20,971,520 , which allows the model to adaptively trade frame count against per-frame resolution based on video length. The maximum number of generated tokens is set to 1024. 
+
+Gemma-4. We evaluate Gemma-4-E4B using its native video processing pipeline. Thinking mode is disabled (enable thinking = False ) and the maximum num-ber of generated tokens is set to 1,024. 
+
+InternVL3.5. We evaluate InternVL3.5-8B by uniformly sampling 32 frames from each video. Each frame is resized to 448 ×448 and treated as a single tile ( max num = 1 , no dynamic sub-image splitting). The maximum number of generated tokens is set to 1024. 
+
+B.2. Commercial Models 
+
+GPT-5. Following [57], we sample frames at 1 FPS and prepend a textual timestamp label ( e.g ., Frame at 2.5s: ) to each frame. For videos shorter than 50 sec-onds all frames are passed directly; for videos of 50–80 seconds we uniformly downsample to 50 frames; for videos longer than 80 seconds we sample at 1 FPS and arrange ev-13 ery 4 consecutive frames into a 2×2 grid image. For GPT-5, which is a reasoning model, we use the default value for the reasoning effort parameter. GPT-5-mini uses the same pipeline. 
+
+Gemini. Source videos are uploaded to the Google File API and passed directly to the model via the file data inter-face, delegating all frame sampling and resolution control to the model’s native video processing. We evaluate both Gemini-2.5-Pro and Gemini-3-Pro using this pipeline. 
+
+B.3. GRPO Training Data Construction 
+
+We use GPT-5 as the teacher model Mteacher to gener-ate pseudo-labeled (message, cut sequence) pairs over 977 source videos drawn from the MLVU benchmark [62], with durations ranging from 5 to 15 minutes. For each video, the teacher generates three message-edit pairs, yielding 
+
+977 × 3 = 2 ,931 training samples in total. 
+
+Dataset statistics. Table 7 and Figure 7 summarize the key statistics of the resulting training set. Source footage aver-ages 543 seconds (9.1 min), and the generated edits aver-age 74 seconds with a compression ratio of approximately 14.3%. Each generated edit selects on average 4.2 cuts, with an average segment length of 17.7 seconds.                           
+
+> Table 7. Statistics of MEDit-Bench and MEDitor (GRPO) training data.
+> MEDit-Bench MEDitor (GRPO)
+> Source Mean 824 s 543 s Median 905 s 490 s Edit duration Mean 132 s 74 s Median 130 s 69 s Cuts per edit Mean 11.5 4.2 Median 6.0 4.0 Compression ratio Mean 16.5% 14.3% Median 16.2% 13.7% Segment length Mean 11.4 s 17.7 s Median 5.1 s 14.0 s
+
+Figure 7 shows the distributions of source duration, edited duration, compression ratio, normalised cut center, and segment length across the 977 training videos and 2,931 generated edits. 
+
+Generation prompt. The prompt used to generate pseudo-labels is shown in Section F.2. 
+
+B.4. MEDitor Training and Inference 
+
+Training. We initialize MEDitor directly from Qwen3-VL-4B/8B-Instruct and train it with GRPO on the 2,931 distilled (message, cut sequence) pairs. For every sample we draw 
+
+G = 4 rollouts at temperature 1.0, normalize the advan-tages within the group, and drop the KL term ( β = 0 ). The vision encoder is frozen while the language model and the vision-language merger are trained, with a constant learn-ing rate of 1×10 −6, global batch size 64 for half an epoch, beyond which the training reward starts to plateau. Videos are decoded at 2 fps and capped at 448 frames with a total visual-token budget of 14,336 (per-frame floor 64). 
+
+Inference. At test time MEDitor uses greedy decoding (no sampling) with the same video sampling budget as training. Given a video and message, it emits the plain seconds list specified by the prompt, which we parse into the predicted cut set; no post-processing or re-ranking is applied. 
+
+B.5. Human Performance Evaluation 
+
+The Human row in the Table 3 reports inter-annotator per-formance under a leave-one-out protocol. For each (video, message) pair, one of the three editors is designated as the predictor and the remaining two as references. All temporal alignment metrics (R@ θ, F1@ θ, mIoU) are computed be-tween the predictor’s edit and each reference edit separately, then averaged over the two references. This procedure is repeated for all three choices of predictor editor, and the fi-nal score is the average over all three combinations and all (video, message) pairs in MEDit-Bench. 
+
+## C. Ablation Studies 
+
+C.1. Reward Function Ablation 
+
+We ablate the GRPO reward on the MEDit-Bench to isolate the contribution of each term in our combined reward R =
+
+Rcov +RF1 . All three variants train the base Qwen3-VL-4B from scratch under identical settings (GPT-5 pseudo-labels, half an epoch, global batch 64) and differ only in the reward: coverage only ( Rcov ), cut-matching only ( RF1 ), and their equal-weight combination.                                      
+
+> Table 8. Reward ablation on the MEDit-Bench. mIoU is union-mask coverage; F1@ τis optimal cut-match F1 at IoU τ.Bold =best among the three rewards.
+> Reward mIoU F1@.3 F1@.5 F1@.7 Cuts/edit Raw (no training) 11.90 7.48 3.60 1.35 2.0
+> Rcov only 24.01 12.18 5.68 3.72 1.8
+> RF1 only 22.80 25.26 13.64 5.91 8.5 Combined (ours) 24.73 25.36 15.26 7.48 8.2 Human (ceiling) 28.97 27.69 18.44 10.88 11.5
+
+Findings. The combined reward is best on all four align-ment metrics, and the two terms are complementary rather than redundant. Coverage alone ( Rcov ) is blind to how the timeline is partitioned, so the policy collapses to a single fat span (1.8 cuts vs. the human 11.5), matches at most a cou-ple of the human moments, and craters F1 (F1@.5 = 5 .68 ). Cut-matching alone ( RF1 ) restores the cut count (8.5 cuts) and more than doubles F1, but is slightly weaker on cov-14 400 600 800               
+
+> Source duration (s)
+> 050 100 150 200 250 300 350
+> Count
+> μ=543
+> 050 100 150 200
+> Edited duration (s)
+> 0200 400 600 800 1000
+> Count
+> μ=74
+> 020 40
+> Compression ratio (%)
+> 0200 400 600 800 1000
+> Count
+> μ=14.3%
+> 0.0 0.2 0.4 0.6 0.8 1.0
+> Normalised cut center
+> 0200 400 600 800 1000
+> Count
+> 050 100 150
+> Segment length (s)
+> 10 0
+> 10 1
+> 10 2
+> 10 3
+> Count
+> μ=17.7s
+
+Figure 7. Distribution statistics of the MEDitor (GRPO) training data. From left to right: source video duration (s), generated edit duration (s), compression ratio (%), normalised cut center, and segment length (s, log scale). Dashed lines mark the mean. 
+
+erage. Combining them retains both properties: the right number of well-placed cuts and the highest coverage. 
+
+C.2. Message Ensembling for Video Summarization 
+
+Our video-summarization evaluation runs the model with three generic messages (“critical”, “exciting”, and “mem-orable” moments) and averages their per-frame selection masks into a single soft importance, which is then scored once. We emphasize that AVG3 averages the model’s pre-dictions , not the per-message metrics: it forms one averaged prediction and computes a single τ /ρ from it, rather than scoring each message separately and averaging the three co-efficients. Table 9 decomposes this ensemble against each constituent message, where every single-message column is scored on that message’s own prediction. 
+
+Table 9. Message-ensembling ablation for video summarization (Kendall τ ). Single-message columns score each message’s pre-diction on its own; AVG3 averages the three predictions (per-frame masks) into one importance and scores that single averaged predic-tion. 
+
+Model Data critical exciting memorable AVG3 Qwen3-VL-4B SumMe 0.121 0.136 0.107 0.138 
+
+TVSum 0.056 0.092 0.064 0.081 Qwen3-VL-8B SumMe 0.106 0.163 0.146 0.160 TVSum 0.092 0.076 0.052 0.089 MEDitor-4B SumMe 0.159 0.132 0.108 0.149 TVSum 0.181 0.189 0.168 0.193 
+
+MEDitor-8B SumMe 0.198 0.197 0.217 0.218 
+
+TVSum 0.176 0.162 0.150 0.193 Findings. No single message is consistently best: the top-scoring message changes across models and datasets (e.g., “critical” for MEDitor-4B on SumMe but “exciting” on TV-Sum). Averaging the three avoids this brittle choice while matching or exceeding the best single message; for both MEDitor models on TVSum, AVG3 strictly beats every individual message (e.g., MEDitor-8B: 0.193 vs. at most 0.176). 
+
+## D. User Study Details 
+
+D.1. Study Design 
+
+We conducted a human perceptual study comparing profes-sional human edits to Gemini-3-pro outputs on 90 (video, message) pairs sampled from MEDit-Bench. For each pair, 
+
+three independent evaluators watched both edits side-by-side (Video A: human edit; Video B: Gemini-3-pro output) and assessed them along five aspects. Evaluators first pro-vided an immediate preference choice, then scored each aspect on a 5-point Likert scale, and finally gave a con-sidered preference choice after reviewing all five scores. This yields 90 ×3×2 = 540 preference judgments and 
+
+90 ×3×5 = 1 ,350 aspect ratings ( 1,620 evaluations in to-tal). 
+
+Participants. Evaluators were recruited through a crowd-sourcing platform with no restriction on gender or age; participants were drawn randomly from the available pool. Each evaluator was compensated at approximately 300 JPY per (video, message) pair evaluated .
+
+D.2. Evaluation Aspects 
+
+Evaluators rated each edit on five aspects adapted from film editing practice (higher = better): 
+
+(A) Message Transmission. Does the edit successfully communicate the intended message? 
+
+(B) Cut Order. Is the ordering of shots logical for con-veying the narrative? 
+
+(C) Shot Continuity. Do transitions between cuts feel nat-ural and visually coherent? 
+
+(D) Contextual Depth. Does the edit provide sufficient context for the narrative? 
+
+(E) Editing Pace. Is the pacing appropriate for the in-tended message? 
+
+## E. LLM-as-Judge Limitations 
+
+Position bias. LLM judges tend to favor whichever video appears in position A, independent of content quality. We quantify this on our Gemini-3-pro A/B evaluation (Gemini-3.5-flash as judge): when the human edit is Video A (human-ai condition), the judge selects the human edit 15 Figure 8. LLM-as-judge limitations. Left : cross-run pairwise agreement for Gemini-3-pro across three independent runs in both condi-tions; 83–87% agreement confirms the judge is stable across repeated trials. Right : human vs. AI win rate per model under human-ai (Video A = human) and ai-human (Video A = AI) conditions; win rates shift dramatically with presentation order, a consistent position bias across all models. 
+
+55.6% of the time; when positions are swapped ( ai-human 
+
+condition), the human win rate drops to 20.2% , a swing of 35.4 pp driven purely by presentation order. Decompos-ing this swing, the video-A preference contributes +17 .7 pp and the residual AI content advantage contributes +12 .1 pp. As shown in Figure 8 (right), this position effect is consis-tent across all evaluated models. We mitigate it by averag-ing judgments from both presentation orders; the resulting 
+
+position-averaged win rates (Human 37.9%, AI 62.1%) are the numbers reported in the main paper. 
+
+Run-to-run stability. Despite the large position effect, re-peated runs under the same presentation order are highly consistent. Pairwise agreement across three independent runs ranges from 83% to 87% (Figure 8, left), confirm-ing that the judge is stable and that additional trials under identical conditions do not alter the conclusions. 
+
+Correlation with human judgment. To examine how well LLM preferences align with human perception, we com-pare LLM-as-a-judge outcomes with human judgments on the same 540 triples in D (Gemini-3-pro vs . human refer-ence edits). For human preference, we use the user study results. For LLM preference, we fix the presentation order (human-first, i.e ., J (C, ˆC)) and query the judge three times independently, then aggregate via majority voting. 1
+
+The pair-wise agreement rate is 59.9% (chance baseline = 50%), with Cohen’s κ = 0 .18 , indicating only fair agree-
+
+> 1Due to the stochastic nature of LLM sampling, repeated runs under identical conditions can yield different individual judgments.
+
+ment above chance. Agreement rises to 66.1% when re-stricted to triples where all three runs are unanimous for both the human and LLM judge, suggesting the judge is most consistent when the quality difference is clear-cut. Treating judgments as continuous probabilities (fraction of runs preferring the model), Pearson’s r = 0 .185 and Spear-man’s ρ = 0.167 (both p < 0.001 ) confirm a statisti-cally significant but modest monotonic association. Over-all, these results show that the LLM judge captures a weak signal of human preference, but the low κ value underscores that it should not be treated as a reliable substitute for hu-man evaluation. 
+
+## F. Prompts 
+
+F.1. Zero-shot Editing Prompt 
+
+All MLLM baselines (Qwen3-VL-8B, Gemma-4, InternVL3.5-8B, GPT-5, Gemini-2.5-pro, Gemini-3-pro) receive the identical prompt below, where {message } is replaced by the actual editing message. 
+
+Zero-shot Editing Prompt                           
+
+> You are aprofessional video editor. Review the provided video and select the key temporal highlights that best convey the following message to viewers: Message: "{message}" Respond strictly with JSON using this schema:
+
+16 {"segments": [ ["mm:ss.ff", "mm:ss.ff"], ... ]}Rules: - Select segments that best communicate the message: "{message}" - The total duration of all selected segments combined should be approximately 1 to 3 minutes - Choose the most visually compelling and relevant moments - Ensure all timestamps are within the video length - Match the precision pattern "mm:ss.ff" (minutes , seconds, hundredths) - Do not include descriptions, titles, or any extra commentary - Return only valid JSON with no surrounding text Example: {"segments": [["00:15.46", "00:19.42"], ["01:16.05", "01:22.70"]]} 
+
+F.2. Pseudo-label Generation Prompt 
+
+GPT-5 generates three (message, cut sequence) pairs per source video using the prompt below, with frame-grid im-ages as visual context. 
+
+Pseudo-label Generation Prompt 
+
+You are a video editor creating edited videos with clear intent and purpose. Task: Create 3 different edited video proposals. For each proposal: 1. First, decide on a specific MESSAGE you want to convey to viewers - What story do you want to tell? - What emotion or understanding should viewers gain? - What is the core intent behind this edit? 2. Then, with that MESSAGE in mind, select the clip intervals (timestamps) that will effectively communicate it - Choose clips strategically to build acoherent narrative - Each edited video should be 1-3 minutes in total length - Use timestamps in [start, end] format with MM:SS:CS (e.g., [’01:23:00’, ’02:45:50’]) - You can arrange clips in any order --chronological order is NOT required Output exactly 3 EditedVideo objects, each with: - A SHORT and CONCISE message (5-10 words maximum ) that clearly captures the core intent/purpose - Timestamps selected specifically to deliver that message IMPORTANT: Timestamp Format (MM:SS:CS): MM = minutes (00-59) SS = seconds (00-59) CS = centiseconds (00-99) e.g., "01:30:50" = 1 min 30.50 sec (NOT 1 hour 30 min) 
+
+F.3. MEDitor Prompt 
+
+Our GRPO-trained MEDitor uses the prompt below, kept identical at training and inference time, where {message }
+
+is the editing message. Unlike the JSON schema used for the zero-shot baselines, it requests a plain seconds list and states an explicit length budget of roughly 15% of the video. 
+
+MEDitor Prompt 
+
+You are a professional video editor. Select highlight segments conveying the message below. The selected segments should total roughly 15% of the video length. Message: "{message}" List the selected highlights as time ranges in seconds, using exactly this format, with a single period only at the very end: <start> to <end> seconds; <start> to <end> seconds; ...; <start> to <end> seconds. Rules: - Use seconds with one decimal, e.g. "12.5 to 30.0 seconds". - Separate segments with "; "; put a period only after the final segment. - Every time must be within the video length and start < end. - Output only the list and stop right after the final period. Example: 15.5 to 19.4 seconds; 76.0 to 82.7 seconds. 
+
+F.4. LLM-as-Judge Prompt 
+
+The pairwise preference judge (Gemini-3.5-Pro) receives the two videos followed by the prompt below. The judge is queried twice per pair (human-first and AI-first) and the responses are combined to cancel position bias. 
+
+LLM-as-Judge Prompt 
+
+You are an assistant specialized in evaluating the quality of video editing, particularly in terms of story-telling to convey the message. Evaluate which video’s editing more effectively communicates the message: "{message}" ### Criteria: - Editing Strategy: How the choice of shots, their sequence, and the pacing create a visual narrative for the message. - Storytelling & Narrative Flow: How well the sequence of shots creates a logical and compelling arc to support the message. - Informativeness & Visual Detail: The richness of the visual information and how effectively composition, movement, and subjects provide context. ### Output Format (JSON only): {"answer": "A or B", "reason": "Explain the effectiveness of the editing and visual storytelling without using labels." }
+
+17 G. Dataset Examples 
+
+Figure 9 shows representative frame strips from four MEDit-Bench source videos alongside their editing mes-sages and corresponding human-produced cut sequences. Despite sharing the same source footage, different mes-sages yield temporally and visually distinct edits, demon-strating the intent-driven nature of the dataset. A subset of the edited videos is available on our project page ( https: //ogatakatsuya.github.io/medit-bench ). 18 Category: Travel 
+
+Source video 
+
+Breathtaking Swiss landscapes 
+
+Savoring food across diverse locations 
+
+Happy moments with a partner 
+
+Category: Sports 
+
+Source video 
+
+History of the World Cup 
+
+Crowd frenzy and players' euphoria 
+
+Penalty kicks: the mind game 
+
+Category: Movie 
+
+Source video 
+
+A house haunted by the past 
+
+A crumbling couple's relationship 
+
+Strange phenomena and hidden truth 
+
+Category: Cooking 
+
+Source video 
+
+Transformation of ingredients 
+
+Warmth and bonds through the dining table 
+
+Traditional skills in harmony with nature Figure 9. Representative MEDit-Bench examples across four categories (Travel, Sports, Movie, Cooking). For each source video, the top strip shows 8 uniformly sampled frames spanning the full duration ( ∼14–16 min). The three strips below show frames from a professional editor’s cut under each of the three editing messages. 19

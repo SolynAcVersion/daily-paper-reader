@@ -1,0 +1,621 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-23T03:51:51.444591+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 7,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 7,
+    "quick_skim_target": 11,
+    "quick_selected": 7
+  },
+  "deep_dive": [
+    {
+      "id": "2608.04956v1",
+      "source": "arxiv",
+      "title": "ContextMaster: Interactive Multi-Shot Video Creation via Fixed-Budget Sparse Context Routing",
+      "abstract": "Recent video models increasingly support generation, reference conditioning, and editing within a single model, yet typically expose them as separate operations over fixed inputs. Practical creation unfolds across multiple shots, requiring one model to generate from text, follow a reference, or edit source footage while maintaining shared history. We formalize this setting as interactive multi-shot video creation (IMVC) and introduce ContextMaster, a unified model with a role-aware context representation for these operations. An interactive model must retain access to an expanding history without allowing the context read cost at each denoising step to grow. ContextMaster combines reusable clean context states with fixed budget sparse context routing and uses ConstraintSink to keep task constraints visible. To address the dual challenges of sparse context access and inference with few denoising steps, we propose a two-stage privileged context distillation framework, which transfers full context behavior from a dense teacher through consistency distillation and then refines deployment rollouts with distribution matching. Experiments on the three primitive tasks demonstrate improved task fulfillment and consistency across shots over specialized baselines. User studies further validate flexibly composed workflows, while the model reaches 16 FPS on a single GPU.",
+      "authors": [
+        "Xu Guo",
+        "Zhengxuan Wei",
+        "Xinghui Li",
+        "Hanzhuo Huang",
+        "Xinyu Liu",
+        "Xiangyang Luo",
+        "Min Wei",
+        "Yiran Zhu",
+        "Qiulin Wang",
+        "Yulong Xu",
+        "Xintao Wang",
+        "Pengfei Wan",
+        "Qi Fan",
+        "Xiangwang Hou"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-05T15:27:26+00:00",
+      "link": "https://arxiv.org/pdf/2608.04956v1",
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "interactive multi-shot video creation model directly suited for episodic drama generation",
+      "llm_evidence_cn": "交互式多镜头视频生成模型，直接适用于短剧剧集生成",
+      "llm_evidence": "交互式多镜头视频生成模型，直接适用于短剧剧集生成",
+      "canonical_evidence": "交互式多镜头视频生成模型，直接适用于短剧剧集生成",
+      "llm_tldr_en": "ContextMaster formalizes interactive multi-shot video creation and introduces a unified model with role-aware context representation and fixed-budget sparse routing, enabling generation, reference conditioning, and editing with shared history for practical video creation.",
+      "llm_tldr_cn": "实际视频创作常跨多个镜头展开，需要模型一边生成文本、跟随参考或编辑源素材，一边维护共享历史。该论文将这一设定形式化为交互式多镜头视频创作（IMVC），提出ContextMaster统一模型，引入角色感知的上下文表示和固定预算稀疏路由。模型在每次去噪步骤中复用干净的上下文状态，避免上下文读取成本无限增长。这为多镜头短剧的自动化生成与交互式编辑提供了可行的技术路径。",
+      "llm_tldr": "实际视频创作常跨多个镜头展开，需要模型一边生成文本、跟随参考或编辑源素材，一边维护共享历史。该论文将这一设定形式化为交互式多镜头视频创作（IMVC），提出ContextMaster统一模型，引入角色感知的上下文表示和固定预算稀疏路由。模型在每次去噪步骤中复用干净的上下文状态，避免上下文读取成本无限增长。这为多镜头短剧的自动化生成与交互式编辑提供了可行的技术路径。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "tool or system for generating short episodic dramas",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.08820v1",
+      "source": "arxiv",
+      "title": "LogiShot: Logically Coherent Cross-Shot Video Generation",
+      "abstract": "Generating cross-shot videos that are logically connected is essential for content creation. Currently, most cross-shot video-generation workflows, such as short-drama production, still rely on isolated textual scripts or explicit reference images to specify the generated content. Consequently, when user instructions are underspecified or ambiguous, a generated clip may appear visually plausible on its own but fail to align with the overall narrative, leading to disjointed content. We argue that achieving cross-shot logical coherence in video generation requires establishing logical connections across shots and maintaining visual consistency. To this end, we propose LogiShot, which incorporates information through two complementary paths: 1) LogiShot jointly encodes the context video and other conditioning signals, yielding dense multimodal cues that provide visual-semantic evidence for cross-shot generation; 2) the model maintains a visual memory of the context video throughout generation to preserve visual consistency across shots. Additionally, we construct a dataset with 110K samples and a dedicated benchmark for evaluating cross-shot logical coherence. Experiments demonstrate that LogiShot consistently outperforms existing baselines in terms of logical coherence across multiple shots. Model and data will be made publicly available.",
+      "authors": [
+        "Shuai Guo",
+        "Yuhang Yang",
+        "Zeyu Zhang",
+        "Pengfei Yu",
+        "Wei Zhai",
+        "Yang Cao",
+        "Zheng-Jun Zha"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-09T17:11:57+00:00",
+      "link": "https://arxiv.org/pdf/2608.08820v1",
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "cross-shot video generation for short-drama production with narrative coherence",
+      "llm_evidence_cn": "面向短剧生产的跨镜头视频生成与逻辑一致性",
+      "llm_evidence": "面向短剧生产的跨镜头视频生成与逻辑一致性",
+      "canonical_evidence": "面向短剧生产的跨镜头视频生成与逻辑一致性",
+      "llm_tldr_en": "LogiShot generates logically coherent cross-shot videos for short-drama production by jointly encoding shared context and maintaining visual consistency, preventing disjointed clips from underspecified instructions.",
+      "llm_tldr_cn": "短剧等跨镜头视频生成目前常依赖孤立文本脚本或参考图，指令不明确时各片段视觉合理但叙事脱节。LogiShot提出通过两条互补路径联合编码共享上下文并维持视觉一致性，建立镜头间的逻辑连接。实验表明该方法能显著提升跨镜头内容的叙事连贯性和画面一致性，直接服务于自动化短剧生产。",
+      "llm_tldr": "短剧等跨镜头视频生成目前常依赖孤立文本脚本或参考图，指令不明确时各片段视觉合理但叙事脱节。LogiShot提出通过两条互补路径联合编码共享上下文并维持视觉一致性，建立镜头间的逻辑连接。实验表明该方法能显著提升跨镜头内容的叙事连贯性和画面一致性，直接服务于自动化短剧生产。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "automated creation of short drama videos",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.17468v1",
+      "source": "arxiv",
+      "title": "SAGE: Self-Evolving Storyboard Skills via Attribution-Guided Rule Evolution",
+      "abstract": "Storyboards turn screenplays into visual shot plans for automated short drama production. Professional storyboarding relies on tacit directorial expertise and remains an industrial bottleneck. Large language models can automate this step, but methods for supplying directing knowledge face three challenges: (1) Knowledge acquisition: the craft remains implicit in exemplars or must be written manually. (2) Knowledge refinement: authored knowledge is not evaluated against execution outcomes, and opaque generation prevents feedback attribution to the knowledge behind each decision. (3) Knowledge injection: injecting all knowledge exceeds usable context, while manual selection for every narrative group does not scale. We present SAGE (Skill with Attribution-Guided Evolution), a deployed framework that learns, attributes, evolves, and routes directing knowledge from expert demonstrations. SAGE derives rules that are independent of episode content by contrasting each training screenplay with its expert storyboard. During generation, the model records each narrative group's adopted rules. Combining these records with localized feedback enables targeted updates to individual rules. Evolved rules form scenario packages with a routing index, so each group retrieves only a bounded set appropriate to its situation without expert intervention. On 18 test episodes across three genres, SAGE scored 77.8 on a rubric validated by experts, versus 77.1 for professional directors. Deployed for 14 days on Virtual Film Studio, SAGE produced 1,344 narrative group outputs; 87.2 percent were accepted without substantive edits, and the production team recorded over 83 percent less authoring time per episode. We release PROSE, the first public dataset pairing screenplays with storyboards by professional directors across 68 episodes: https://github.com/creDreams/PROSE.",
+      "authors": [
+        "Maolin Ran",
+        "Xiaoyang Lu",
+        "Jiaqi Liu",
+        "Jian Wang",
+        "Weiwen Liu",
+        "Jianghao Lin",
+        "Yong Yu",
+        "Weinan Zhang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-08-18T07:49:46+00:00",
+      "link": "https://arxiv.org/pdf/2608.17468v1",
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "self-evolving storyboard skills for automated short drama production",
+      "llm_evidence_cn": "面向自动化短剧生产的分镜技能自演化",
+      "llm_evidence": "面向自动化短剧生产的分镜技能自演化",
+      "canonical_evidence": "面向自动化短剧生产的分镜技能自演化",
+      "llm_tldr_en": "SAGE develops self-evolving storyboard skills for automated short drama production via attribution-guided rule evolution, addressing knowledge acquisition, refinement, and injection.",
+      "llm_tldr_cn": "分镜是将剧本转为可视化拍摄计划的关键步骤，但依赖隐性导演经验，是自动化短剧生产中的瓶颈。SAGE提出归因引导的规则自演化方法，从样例获取知识、依据执行结果自动精炼，并动态注入适当导演知识。该方法解决了知识获取、反馈归因和上下文注入三大挑战，为自动化短剧制作提供了可扩展的分镜能力。",
+      "llm_tldr": "分镜是将剧本转为可视化拍摄计划的关键步骤，但依赖隐性导演经验，是自动化短剧生产中的瓶颈。SAGE提出归因引导的规则自演化方法，从样例获取知识、依据执行结果自动精炼，并动态注入适当导演知识。该方法解决了知识获取、反馈归因和上下文注入三大挑战，为自动化短剧制作提供了可扩展的分镜能力。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "production process for manga-style short dramas",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.26529v1",
+      "source": "arxiv",
+      "title": "CineWeaver: Training-Free Reference-Controllable Multi-Shot Long Video Generation for Cinematic Storytelling",
+      "abstract": "Cinematic video generation is challenging for text-to-video diffusion models due to concurrent requirements on multi-shot generation, fine-grained controllability over characters and scenes, and long-form generation across extended temporal horizons. Existing methods rely on customization and retraining to separately address specific requirements, and cannot simultaneously fulfill all the requirements with a unified framework. In this paper, we shed light on the training-free paradigm with the key insight that the difficulty of multi-shot generation arises from a structural bias toward temporal continuity in pretrained video diffusion models, and consequently, propose a unified framework named CineWeaver to achieve reference-controllable multi-shot long-video generation without retraining. We manipulate positional encoding and attention patterns to break temporal continuity during inference to enable clear shot transitions using pretrained video diffusion models. Furthermore, we extend the proposed framework with a shot-routed reference conditioning mechanism for per-shot fine-grained controllability, and develop an anchor memory mechanism to allow long-form generation with consistent global appearance cues. To our best knowledge, CineWeaver is the first unified framework to simultaneously enable \\textbf{long-form}, \\textbf{reference-controllable}, and \\textbf{multi-shot} video generation in a training-free fashion. Experimental results demonstrate that CineWeaver produces high-quality cinematic videos of long durations with consistent identities, stable global appearance, and clear shot transitions. The project page is available at: https://cineweaver.github.io.",
+      "authors": [
+        "Yuyang Huang",
+        "Yabo Chen",
+        "Wenrui Dai",
+        "Ziyang Zheng",
+        "Haibin Huang",
+        "Chi Zhang",
+        "Junni Zou",
+        "Hongkai Xiong",
+        "Xuelong Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-29T06:48:11+00:00",
+      "link": "https://arxiv.org/pdf/2607.26529v1",
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multi-shot long video generation with character and scene control for cinematic storytelling, directly supports short episodic drama creation",
+      "llm_evidence_cn": "多镜头长视频生成，支持角色与场景参考控制，可用于短剧和微短剧的自动化制作",
+      "llm_evidence": "多镜头长视频生成，支持角色与场景参考控制，可用于短剧和微短剧的自动化制作",
+      "canonical_evidence": "多镜头长视频生成，支持角色与场景参考控制，可用于短剧和微短剧的自动化制作",
+      "llm_tldr_en": "CineWeaver is a training-free unified framework that enables multi-shot, reference-controllable long video generation for cinematic storytelling, addressing the structural temporal continuity bias in pretrained video diffusion models.",
+      "llm_tldr_cn": "针对文本到视频扩散模型难以同时实现多镜头生成、角色与场景精细控制以及长时生成的问题，提出免训练的统一框架CineWeaver。它指出多镜头生成困难源于预训练模型对时间连续性的结构偏好，并据此设计参考控制机制，在不重新训练的情况下实现多镜头、长视频的电影化叙事生成。该方法为自动生成短剧、微短剧等多镜头视频内容提供了直接可用的工具方案。",
+      "llm_tldr": "针对文本到视频扩散模型难以同时实现多镜头生成、角色与场景精细控制以及长时生成的问题，提出免训练的统一框架CineWeaver。它指出多镜头生成困难源于预训练模型对时间连续性的结构偏好，并据此设计参考控制机制，在不重新训练的情况下实现多镜头、长视频的电影化叙事生成。该方法为自动生成短剧、微短剧等多镜头视频内容提供了直接可用的工具方案。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "tool or system for generating short episodic dramas",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.16717v1",
+      "source": "arxiv",
+      "title": "PersonaShot: Benchmarking Person-Centric Narrative Continuity in Multi-Shot Video Generation",
+      "abstract": "Video generation is rapidly evolving from single-shot clips to multi-shot narratives, where the human character serves as the core narrative anchor. However, existing benchmarks mainly assess character appearance or individual-shot quality, without measuring whether physical and emotional states remain coherent across cuts. They also rarely provide criterion-specific evaluation methods, although physical continuity, facial dynamics, and cinematic relations require different visual, temporal, and relational evidence. To address these limitations, we introduce PersonaShot, the first person-centric benchmark for narrative continuity in multi-shot video generation. PersonaShot contains approximately 1,000 multi-shot segments and 16 metrics spanning physical continuity, affective dynamics, and cinematic grammar. \\textbf{\\textit{1)} Narrative Continuity Benchmark:} We evaluate character coherence across three temporal levels: within-shot states, cross-shot transitions, and sequence-level trajectories. \\textbf{\\textit{2)} Human-Aligned Specialist Evaluators:} We distill reasoning from a large multimodal teacher into lightweight criterion-specific evaluators, each grounded in the visual, temporal, or relational evidence required by its metric, and align them with expert human judgments. \\textbf{\\textit{3)} Systematic Evaluation and Insights:} Our evaluation reveals distinct capability profiles across state-of-the-art models and a clear gap between perceptual quality and cross-shot narrative continuity. Even visually compelling videos frequently exhibit physical-state resets, abrupt affective shifts, and broken cinematic relations across shots. Human studies further demonstrate strong agreement between our evaluators and expert judgments.",
+      "authors": [
+        "Yuji Wang",
+        "Yuheng Chen",
+        "Teng Hu",
+        "Ran Yi",
+        "Yijia Hong",
+        "Han Feng",
+        "Weijian Cao",
+        "Chengjie Wang",
+        "Lizhuang Ma",
+        "Jiangning Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-17T15:34:54+00:00",
+      "link": "https://arxiv.org/pdf/2608.16717v1",
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multi-shot narrative video continuity benchmark beneficial for episodic drama generation",
+      "llm_evidence_cn": "多镜头叙事视频连续性基准，有益于短剧生成",
+      "llm_evidence": "多镜头叙事视频连续性基准，有益于短剧生成",
+      "canonical_evidence": "多镜头叙事视频连续性基准，有益于短剧生成",
+      "llm_tldr_en": "PersonaShot introduces a benchmark for person-centric narrative continuity in multi-shot video generation, measuring physical and emotional state coherence across cuts to support evaluation of episodic and character-driven video content.",
+      "llm_tldr_cn": "视频生成正从单镜头片段走向多镜头叙事，人物是核心叙事锚点。现有基准多关注外观或单镜头质量，难以衡量跨镜头的物理与情绪状态一致性。为此论文提出PersonaShot基准，包含约1000个多镜头片段，专门评估物理连续性、面部动态和电影关系等维度。该基准为多镜头叙事视频生成尤其是短剧类人物驱动内容提供了重要的评测工具。",
+      "llm_tldr": "视频生成正从单镜头片段走向多镜头叙事，人物是核心叙事锚点。现有基准多关注外观或单镜头质量，难以衡量跨镜头的物理与情绪状态一致性。为此论文提出PersonaShot基准，包含约1000个多镜头片段，专门评估物理连续性、面部动态和电影关系等维度。该基准为多镜头叙事视频生成尤其是短剧类人物驱动内容提供了重要的评测工具。",
+      "llm_tags": [
+        "query:manga-drama:composite"
+      ],
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation.",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.02023v1",
+      "source": "arxiv",
+      "title": "SwanTale: Unified Multi-Speaker Speech and Audio Generation for Instruct and Zero-Shot Tasks",
+      "abstract": "Speech and audio generation is often needed in animation dubbing, audio drama, movies, advertising, games, podcasts, and short-video production. In these scenarios, creators may need to design voices without reference recordings, control speaker styles with natural language, support acoustic scenes with environments and audio effects, and later reuse the designed voices. Therefore, it is important to support multi-speaker speech and audio generation for both instruct and zero-shot tasks. The instruct task requires a caption of the environment, speaker styles, and fine-grained content, while the zero-shot task uses reference audio together with the same fine-grained content. We address these tasks from both the data and model sides. First, we propose SwanData-Caption, which cleans raw speech and audio data, adds targeted synthetic coverage, and annotates diverse and accurate multi-level captions. Then, we propose SwanTale, a multi-speaker expressive speech and audio generation model that supports both zero-shot and instruct tasks. We introduce SwanVAE to support high-quality multi-audio-modality generation. Then, we adopt reward-conditioned quality control and Engram conditioning, along with Unified MoE for multi-task and multi-audio-modality modeling. In addition, we use curriculum learning and GRPO post-training to let the model progressively learn and strengthen its capabilities. Experimental results show that SwanTale leads on multiple key zero-shot and instruct metrics, achieves the best expressiveness scores in both tasks, and supports complex instruct generation involving multi-speaker speech and audio. Demos can be found at https://swanaigc.github.io/\\#swantale.",
+      "authors": [
+        "Yu Zhang",
+        "Ruiqi Li",
+        "Changhao Pan",
+        "Ke Lei",
+        "Xiang Yin",
+        "Cheng Yang"
+      ],
+      "primary_category": "eess.AS",
+      "categories": [
+        "eess.AS",
+        "cs.SD"
+      ],
+      "published": "2026-08-03T10:20:52+00:00",
+      "link": "https://arxiv.org/pdf/2608.02023v1",
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multi-speaker speech and audio generation designed for animation dubbing, audio drama, movies, and short-video production",
+      "llm_evidence_cn": "面向动画配音、音频剧、短片与短视频制作的多说话人语音与音频生成，可直接服务短剧音效与配音",
+      "llm_evidence": "面向动画配音、音频剧、短片与短视频制作的多说话人语音与音频生成，可直接服务短剧音效与配音",
+      "canonical_evidence": "面向动画配音、音频剧、短片与短视频制作的多说话人语音与音频生成，可直接服务短剧音效与配音",
+      "llm_tldr_en": "SwanTale unifies multi-speaker speech and audio generation for both instruct and zero-shot tasks, enabling voice design, style control, acoustic scenes, and voice reuse in short-video and drama production.",
+      "llm_tldr_cn": "针对短视频、动画配音、音频剧等创作场景中需要无参考设计声音、自然语言控制说话人风格、加入环境声与音效以及复用声音的多样化需求，提出SwanTale统一框架，同时支持指令与零样本两类任务。方法从数据和模型两侧解决多说话人语音与音频生成的一致性与可控性问题。该工作为短剧和短视频制作提供了可直接使用的配音与音效生成工具。",
+      "llm_tldr": "针对短视频、动画配音、音频剧等创作场景中需要无参考设计声音、自然语言控制说话人风格、加入环境声与音效以及复用声音的多样化需求，提出SwanTale统一框架，同时支持指令与零样本两类任务。方法从数据和模型两侧解决多说话人语音与音频生成的一致性与可控性问题。该工作为短剧和短视频制作提供了可直接使用的配音与音效生成工具。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "drama content designed for short video platforms",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.05803v1",
+      "source": "arxiv",
+      "title": "Vorch-Omni: Multi-Task Orchestration of Sight and Sound",
+      "abstract": "Recent advances in generative video modeling have enabled diverse generation, reference-based synthesis, extension, and editing, but existing approaches often rely on fragmented task-specific models. A general model must distinguish heterogeneous target, source, and reference signals to determine what to generate, preserve, or use as guidance, while reducing interference among tasks. Joint audio-visual generation further increases this challenge by introducing diverse conditioning and output configurations across modalities. We present Vorch-Omni, a unified multi-task framework for audio-visual synthesis based on an arbitrary-condition-to-arbitrary-output formulation. It flexibly treats video and audio signals as either conditioning inputs or generation targets. Token-level conditioning masks and task identifiers distinguish targets, source content, and references, while position types separate temporal context from independent conditions. To capture semantic and structural information, Vorch-Omni employs complementary visual conditioning pathways: a vision-language model interprets sampled frames with text instructions, and a video VAE encodes conditions into latent tokens for direct guidance. We further build a distributed data pipeline to curate diverse temporally aligned audio-visual clips, generate structured captions and metadata, and balance heterogeneous task distributions. Built on a single flow-matching diffusion transformer without task-specific architectural changes, Vorch-Omni supports over 10 tasks, including text-to-video, text-to-audio-video, image- and reference-conditioned generation, temporal extension, audio-driven generation, video transformation, and audio-visual editing. This unified framework provides a scalable foundation for general-purpose audio-visual generation and manipulation.",
+      "authors": [
+        "Vorch Team",
+        "Xiaoyu Chen",
+        "Yang Ding",
+        "Cong Han",
+        "Menglin Han",
+        "Yuxin Hong",
+        "Jiebo Hou",
+        "Zequn Jie",
+        "Xiang Li",
+        "Jing Liu",
+        "Qi Liu",
+        "Yulei Lu",
+        "Siyuan Luo",
+        "Lin Ma",
+        "Xin Ma",
+        "Yinlong Qian",
+        "Peng Shi",
+        "Fang Wan",
+        "Siqi Wang",
+        "Yaohui Wang",
+        "Yaole Wang",
+        "Yidi Wu",
+        "Siqian Yang",
+        "Mingyu Yin",
+        "Haoran Yu",
+        "Gang Yue",
+        "Lisai Zhang",
+        "Yuting Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-06T09:38:30+00:00",
+      "link": "https://arxiv.org/pdf/2608.05803v1",
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "unified multi-task audio-visual generation framework that flexibly treats video and audio as inputs or outputs, enabling joint video-and-sound synthesis for episodic content",
+      "llm_evidence_cn": "统一的音视频联合生成框架，可灵活以视频或音频为条件或目标，支持短视频和短剧的画面与声音协同生成",
+      "llm_evidence": "统一的音视频联合生成框架，可灵活以视频或音频为条件或目标，支持短视频和短剧的画面与声音协同生成",
+      "canonical_evidence": "统一的音视频联合生成框架，可灵活以视频或音频为条件或目标，支持短视频和短剧的画面与声音协同生成",
+      "llm_tldr_en": "Vorch-Omni is a unified multi-task audio-visual framework using an arbitrary-condition-to-arbitrary-output formulation, jointly generating or editing video and audio while reducing task interference.",
+      "llm_tldr_cn": "针对现有生成视频模型任务碎片化、音视频联合生成条件与输出配置多样的问题，提出Vorch-Omni统一多任务视听生成框架。它采用任意条件到任意输出的设定，将视频和音频信号灵活视为条件或生成目标，通过统一的token处理减少任务间干扰。该框架可同时完成参考视频合成、视频扩展、编辑以及音视频联合生成等任务，为短视频与短剧的多模态自动化生产提供了统一基座。",
+      "llm_tldr": "针对现有生成视频模型任务碎片化、音视频联合生成条件与输出配置多样的问题，提出Vorch-Omni统一多任务视听生成框架。它采用任意条件到任意输出的设定，将视频和音频信号灵活视为条件或生成目标，通过统一的token处理减少任务间干扰。该框架可同时完成参考视频合成、视频扩展、编辑以及音视频联合生成等任务，为短视频与短剧的多模态自动化生产提供了统一基座。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "tool or system for generating short episodic dramas",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.23588v1",
+      "source": "arxiv",
+      "title": "JarvisHub: An Open Harness for Canvas-Native Multimodal Creative Agents",
+      "abstract": "Creative AI is moving from single-step asset generation toward long-horizon multimodal production. Although recent generative models can synthesize high-quality images, videos, audio clips, UI elements, storyboards, slides, and other creative assets, real-world creative work requires more than isolated prompt-output interactions. It involves references, drafts, alternatives, edits, failed attempts, version relations, tool actions, evaluation signals, and human feedback, which together form an evolving project state. Existing prompt-based, chat-based, and node-based generation systems only partially support this state, as they often discard intermediate context, rely on linear conversations, or require manually specified workflows. Recent commercial systems indicate a shift toward agent-assisted creative production, but their closed architectures make it difficult to study how agents represent context, choose tools, revise artifacts, recover from failures, and maintain consistency over time. To address this gap, we introduce JarvisHub, a canvas-native creative agent harness for long-horizon multimodal creation. JarvisHub treats an editable canvas as the user workspace, the agent's external memory, action space, and shared project state, representing multimodal artifacts, dependencies, versions, and feedback as typed canvas nodes and links. Through a three-layer architecture of canvas state, protocol bridge, and agent runtime, JarvisHub enables agents to act within an inspectable and editable creative state. This design moves creative agents beyond isolated tool use toward sustained, human-steerable creative automation, where agents can progressively plan, generate, revise, and organize multimodal projects while users remain able to inspect, guide, and intervene throughout the process.",
+      "authors": [
+        "Yunlong Lin",
+        "Zixu Lin",
+        "Zhaohu Xing",
+        "Biqiang Li",
+        "Chenxin Li",
+        "Haonan Wang",
+        "Haitao Wu",
+        "Hengyu Liu",
+        "Jianghai Chen",
+        "Kaituo Feng",
+        "Kaixin Li",
+        "Shawn Chen",
+        "Shijue Huang",
+        "Sixiang Chen",
+        "Tsung-Yi Ho",
+        "Wenxuan Huang",
+        "Xiangyan Liu",
+        "Xiaomeng Hu",
+        "Xuanhua He",
+        "Yan Sun",
+        "Yunqing Zhao",
+        "Zhiqin Yang",
+        "Zehan Wang",
+        "Zhengyang Tang",
+        "Tianyu Pang",
+        "Xiangyu Yue"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-26T10:36:24+00:00",
+      "link": "https://arxiv.org/pdf/2607.23588v1",
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal creative agent harness supporting long-horizon production of videos and storyboards",
+      "llm_evidence_cn": "支持视频和故事板等长周期多模态创作的工具架",
+      "llm_evidence": "支持视频和故事板等长周期多模态创作的工具架",
+      "canonical_evidence": "支持视频和故事板等长周期多模态创作的工具架",
+      "llm_tldr_en": "JarvisHub is an open harness for canvas-native multimodal creative agents that manages evolving project state over long-horizon production, enabling references, edits, versions, and human feedback across images, videos, and other assets.",
+      "llm_tldr_cn": "真实创意工作不仅是单次提示交互，而是涉及参考、草稿、修改、版本和人工反馈的长周期多模态制作。现有基于提示、对话或节点的系统难以完整维护这种演化中的项目状态。论文提出JarvisHub开放工具架，为画布原生多模态创意智能体提供状态管理、智能体协作与评估信号。该系统可灵活支持短视频、故事板等多模态素材的规模化生产，有助于构建短剧创作工作流。",
+      "llm_tldr": "真实创意工作不仅是单次提示交互，而是涉及参考、草稿、修改、版本和人工反馈的长周期多模态制作。现有基于提示、对话或节点的系统难以完整维护这种演化中的项目状态。论文提出JarvisHub开放工具架，为画布原生多模态创意智能体提供状态管理、智能体协作与评估信号。该系统可灵活支持短视频、故事板等多模态素材的规模化生产，有助于构建短剧创作工作流。",
+      "llm_tags": [
+        "query:manga-drama:composite"
+      ],
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation.",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.24241v2",
+      "source": "arxiv",
+      "title": "FilmBench: A Film-Grade Benchmark for Cinematic Video Generation",
+      "abstract": "Progress in video generation keeps narrowing the visual gap between AI-generated and professionally produced footage, yet most benchmarks still draw prompts from web sources or LLM templates and score them with untrained, generic multimodal models. More fundamentally, their evaluation taxonomies remain rudimentary (overall visual quality, coarse text alignment and temporal smoothness) rather than the professional Cinematic Language criteria by which films are actually made and judged, so they assess basic video plausibility rather than film-grade craft. We introduce FilmBench, a text-to-video (T2V) and reference-to-video (R2V) benchmark grounded in the professional Cinematic Language of the film- academy tradition and co-developed with directors and faculty from the Beijing Film Academy and the Hujing Digital Media & Entertainment Group film studio. It rests on three choices. First, prompts are reverse-engineered from clips of award-winning films spanning 20 cinematic genres and chosen by professional directors, so every prompt is anchored to a verified live-action reference; the prompts follow real shot lists, and most script multiple shots (1,056 of the 1,169 prompts are multi-shot), unlike prior single-clip benchmarks. Second, evaluation follows a three-level Cinematic taxonomy of 3 axes, 12 components and 35 (T2V) +3 (R2V-only) sub-metrics. Third, we develop an in-house expert-grade automatic evaluation agent and open-source its core suite of Cinematic Language operators (FilmOps). Benchmarking leading video generation models (9 for T2V, 7 for R2V), the evaluator reproduces the human model ranking at model-level Spearman \\r{ho} = 0.95 (T2V) and 0.96 (R2V). Scores fall well below prior web-style benchmarks, with two consistent gaps in dynamic aesthetics and a marked single- to multi-shot performance drop that widens for weaker models.",
+      "authors": [
+        "Shengyi Wang",
+        "Niantong Li",
+        "Guangzheng Hu",
+        "Hong Qi",
+        "Fei Ding",
+        "Weixu Qiao",
+        "Jinlin Wang",
+        "Xiaotong Lv",
+        "Peng Han",
+        "Zimeng Li",
+        "Fanshu Ding",
+        "Yushu Wang",
+        "Han Wu",
+        "Jingjing Chen",
+        "Chongxiao Wang",
+        "Yanhao Wu",
+        "Chenglong Huang",
+        "Xiaoqian Zhu",
+        "Jie Tian",
+        "Hua Li",
+        "Jingjing Fan",
+        "Mingshuang Tang",
+        "Zhong Li",
+        "Hengxia Qiang",
+        "Weibin Chen",
+        "Jinyang Zhen",
+        "Bing Zhao",
+        "Lin Qu",
+        "Jing Li",
+        "Hu Wei"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-27T10:20:31+00:00",
+      "link": "https://arxiv.org/pdf/2607.24241v2",
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "film-grade benchmark for cinematic video generation based on professional Cinematic Language",
+      "llm_evidence_cn": "基于专业电影语言的电影级视频生成基准",
+      "llm_evidence": "基于专业电影语言的电影级视频生成基准",
+      "canonical_evidence": "基于专业电影语言的电影级视频生成基准",
+      "llm_tldr_en": "FilmBench is a film-grade T2V/R2V benchmark grounded in professional Cinematic Language, co-developed with directors, evaluating film craft rather than basic plausibility.",
+      "llm_tldr_cn": "现有视频生成基准多使用网页提示或模板，评测维度停留在画质、文本对齐和时间平滑，无法衡量电影级制作水准。论文提出FilmBench，以电影学院传统专业电影语言为基础，与导演和教师共同开发T2V和R2V评测任务。该基准从电影级成片角度评估生成视频，使评测超越基本合理性，可用于短剧等影视级视频生成的质量验证。",
+      "llm_tldr": "现有视频生成基准多使用网页提示或模板，评测维度停留在画质、文本对齐和时间平滑，无法衡量电影级制作水准。论文提出FilmBench，以电影学院传统专业电影语言为基础，与导演和教师共同开发T2V和R2V评测任务。该基准从电影级成片角度评估生成视频，使评测超越基本合理性，可用于短剧等影视级视频生成的质量验证。",
+      "llm_tags": [
+        "query:manga-drama:composite"
+      ],
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation.",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.25300v1",
+      "source": "arxiv",
+      "title": "MEDit-Bench: A Dataset for Evaluating Message-Driven Narrative Video Editing",
+      "abstract": "Video editing is fundamentally message-driven: even from the same source footage, the selected shots change depending on the narrative the editor wishes to convey. Benchmarks for a closely related task, video summarization, reduce editorial intent to a single, message-agnostic notion of saliency and thus do not account for this diversity. For evaluating message-driven video editing, we present \\textbf{MEDit-Bench}, a dataset and benchmark, which pairs long-form videos with multiple editing messages and multiple professionally produced edits per message, demonstrating that different messages yield substantially different edits from the same source. We define an automatic evaluation protocol based on temporal alignment metrics, and find that an LLM-as-a-judge preference, a natural proxy for narrative quality, is unreliable for this task due to severe position bias. We additionally annotate each message with ambiguity and contextfulness scores, and show that both dimensions negatively correlate with model performance, establishing message difficulty as a meaningful stratification factor. Experiments with state-of-the-art MLLMs and reinforcement fine-tuned baselines show that while strong models approach human temporal alignment at lenient thresholds, all models fall behind humans at stricter criteria. A human perceptual study further confirms a large quality gap, with professional human edits remaining consistently preferred over model outputs.",
+      "authors": [
+        "Katsuya Ogata",
+        "Zongshang Pang",
+        "Mayu Otani",
+        "Yuta Nakashima"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-28T05:24:10+00:00",
+      "link": "https://arxiv.org/pdf/2607.25300v1",
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "benchmark for message-driven narrative video editing; directly relevant to automated editing for short dramas",
+      "llm_evidence_cn": "消息驱动的叙事视频编辑基准，直接支持短剧自动剪辑评估",
+      "llm_evidence": "消息驱动的叙事视频编辑基准，直接支持短剧自动剪辑评估",
+      "canonical_evidence": "消息驱动的叙事视频编辑基准，直接支持短剧自动剪辑评估",
+      "llm_tldr_en": "MEDit-Bench pairs long-form videos with multiple messages and professional edits per message, using temporal alignment metrics to evaluate message-driven narrative video editing.",
+      "llm_tldr_cn": "视频编辑本质是消息驱动的，同一素材会因叙事意图不同而采用不同镜头。论文提出MEDit-Bench数据集和基准，将长视频与多个编辑消息及对应的专业剪辑配对，以反映编辑意图的多样性，并定义基于时间对齐的自动评估协议。通过该基准检验发现，不同消息确实导致显著不同的编辑结果，LLM在预测这类消息驱动编辑上仍具挑战，为微短剧等叙事视频编辑的自动评测提供了新工具。",
+      "llm_tldr": "视频编辑本质是消息驱动的，同一素材会因叙事意图不同而采用不同镜头。论文提出MEDit-Bench数据集和基准，将长视频与多个编辑消息及对应的专业剪辑配对，以反映编辑意图的多样性，并定义基于时间对齐的自动评估协议。通过该基准检验发现，不同消息确实导致显著不同的编辑结果，LLM在预测这类消息驱动编辑上仍具挑战，为微短剧等叙事视频编辑的自动评测提供了新工具。",
+      "llm_tags": [
+        "query:manga-drama:composite"
+      ],
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation.",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.26910v1",
+      "source": "arxiv",
+      "title": "CinemaTraj: Composing Atomic Camera Trajectories for 3D Scenes with LLM Agents",
+      "abstract": "Automatically generating cinematically expressive camera trajectories through 3D scenes from natural language descriptions is a challenging task of high practical value, with applications ranging from real-estate advertising to virtual tour creation. Existing methods either lack true 3D spatial awareness by relying on 2D image priors, or treat trajectory generation as a geometric path planning problem divorced from cinematographic semantics. We present CinemaTraj, a framework that reframes camera trajectory planning as a language-grounded spatial reasoning problem. Given a set of RGB-D images and a user prompt, CinemaTraj equips an LLM agent with a structured 3D scene graph: the agent decomposes the prompt into a sequence of atomic cinematographic movements (dolly, orbit, crane, pan, tilt, zoom, arc). Each movement is instantiated via a novel parametric trajectory representation that is both cinematographically expressive and optimizable for collision avoidance. The scene graph acts as a structured spatial prior, grounding the agent's reasoning in accurate geometric and semantic knowledge of the environment. CinemaTraj further generates synchronized voiceover and subtitles aligned with camera motion, producing narrated cinematic video outputs. We evaluate CinemaTraj on real-world ScanNet++ environments, and show that it produces prompt-faithful, collision-free trajectories with high cinematographic quality, outperforming existing approaches on prompt alignment, trajectory quality, and safety metrics.",
+      "authors": [
+        "Qianru Li",
+        "Xuyang Chen",
+        "Erkin Türköz",
+        "Lu Liu",
+        "Xuqin Wang",
+        "Liqiu Meng",
+        "Tao Wu",
+        "Yanfeng Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-29T13:41:52+00:00",
+      "link": "https://arxiv.org/pdf/2607.26910v1",
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "LLM agent composing cinematic camera trajectories from natural language for 3D scenes",
+      "llm_evidence_cn": "使用大语言模型智能体从自然语言生成电影化相机轨迹",
+      "llm_evidence": "使用大语言模型智能体从自然语言生成电影化相机轨迹",
+      "canonical_evidence": "使用大语言模型智能体从自然语言生成电影化相机轨迹",
+      "llm_tldr_en": "CinemaTraj uses an LLM agent with a structured 3D scene graph to decompose text prompts into atomic camera trajectories, combining 3D spatial awareness with cinematographic semantics.",
+      "llm_tldr_cn": "从自然语言自动生成电影化相机轨迹在3D场景中具有高实用价值，现有方法要么缺乏3D空间感知，要么脱离电影语义。CinemaTraj将轨迹规划转换为语言驱动的空间推理，用LLM智能体结合结构化3D场景图，把用户提示分解为一系列原子摄影轨迹组合。该方法提高了轨迹生成的电影表达与空间一致性，可应用于短剧等视频生成中的镜头运动控制。",
+      "llm_tldr": "从自然语言自动生成电影化相机轨迹在3D场景中具有高实用价值，现有方法要么缺乏3D空间感知，要么脱离电影语义。CinemaTraj将轨迹规划转换为语言驱动的空间推理，用LLM智能体结合结构化3D场景图，把用户提示分解为一系列原子摄影轨迹组合。该方法提高了轨迹生成的电影表达与空间一致性，可应用于短剧等视频生成中的镜头运动控制。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "tool or system for generating short episodic dramas",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.10337v1",
+      "source": "arxiv",
+      "title": "Narrative Keyframing for Generative Creative Writing",
+      "abstract": "We introduce narrative keyframing, an interaction technique for AI-assisted creative writing that lets writers specify different types of narrative constraints at selected moments in a story, then use AI to generate intervening prose. Inspired by the use of keyframing in animation, narrative keyframing offers a flexible way to connect story planning with adaptive control over generated text. We explore three types of keyframes: plot keyframes define significant events in a story, character keyframes represent how individual characters change over the narrative, and perspective keyframes capture how individual characters experience different events through first-person narratives. Plot and character keyframes offer a flexible way to adapt the type of high-level conditioning explored in previous AI writing tools to more customizable, iterative, and fine-scale control, while perspective keyframes add a new way to control characterization and focalization by using first-person narratives as an intermediary. Through a user study, we show that narrative keyframing supports a more controllable, transparent, and engaging way to use generative AI in creative writing.",
+      "authors": [
+        "Chao Zhang",
+        "Abe Davis"
+      ],
+      "primary_category": "cs.HC",
+      "categories": [
+        "cs.HC",
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-08-11T00:41:29+00:00",
+      "link": "https://arxiv.org/pdf/2608.10337v1",
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "narrative keyframing for AI story planning and generative prose",
+      "llm_evidence_cn": "面向AI故事规划与生成式散文的叙事关键帧交互",
+      "llm_evidence": "面向AI故事规划与生成式散文的叙事关键帧交互",
+      "canonical_evidence": "面向AI故事规划与生成式散文的叙事关键帧交互",
+      "llm_tldr_en": "Introduces narrative keyframing, an interaction technique letting writers specify plot, character, and perspective constraints at story moments and use AI to generate intervening prose, connecting planning with adaptive text generation.",
+      "llm_tldr_cn": "现有AI辅助写作缺乏让作者在故事指定节点设定叙事约束的机制。论文提出叙事关键帧交互技术，支持情节、角色和视角三类关键帧，由AI生成关键帧之间的文本。这种方法将故事规划与自适应文本控制连接起来，为生成式创意写作提供了灵活的组合式规划方法，可迁移到短剧剧本的情节与角色设定流程中。",
+      "llm_tldr": "现有AI辅助写作缺乏让作者在故事指定节点设定叙事约束的机制。论文提出叙事关键帧交互技术，支持情节、角色和视角三类关键帧，由AI生成关键帧之间的文本。这种方法将故事规划与自适应文本控制连接起来，为生成式创意写作提供了灵活的组合式规划方法，可迁移到短剧剧本的情节与角色设定流程中。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "production process for manga-style short dramas",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.12313v2",
+      "source": "arxiv",
+      "title": "AVA-Encoder: Towards Agent-Native Video Representation Learning",
+      "abstract": "Video creative agents still lack an effective way to learn from high-quality human films, limiting their ability to produce cinematic-grade videos. A key challenge is the absence of a structured video representation that is both faithful to film content and directly usable for agentic reasoning and manipulation. To address the challenge, we propose the Agentic Video Auto-Encoder (AVA-Encoder), a novel auto-encoding framework driven by agentic self-evolution to learn agent-native video representations.   AVA-Encoder transforms a video into a Film Knowledge Graph (KG) representation and then reconstructs it back into video. This Film KG representation explicitly captures entities, events, assets, and their multimodal relationships in a structured form that can be easily understood, queried, and manipulated by agents. The reconstruction residual drives a dual-loop textual-gradient optimization framework that jointly improves the Film KG representation and the Agentic Video Encoder.   Extensive experiments show that AVA-Encoder achieves a 20.7-percentage-point absolute gain, or a 73.1% relative improvement, over the strongest external baseline. In the controlled policy-only setting, its pseudo-trained Agentic Video Encoder policy also outperforms a carefully human-tuned policy while using 74.3% fewer shot-level and 70.1% fewer keyframe-level system-prompt tokens. We release the complete AVA-Encoder framework, a reliable agentic video reconstruction benchmark, and the first dataset of high-quality Film KG representations.",
+      "authors": [
+        "Chuyue Li",
+        "Jinpeng Yu",
+        "Haozhe Wang",
+        "Tian Xueyun",
+        "Zhijing Zhang",
+        "Bingnan Li",
+        "Shuqi Gu",
+        "Kan Ren",
+        "Jiaming Liu",
+        "Ruihua Huang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL"
+      ],
+      "published": "2026-08-12T17:58:02+00:00",
+      "link": "https://arxiv.org/pdf/2608.12313v2",
+      "tags": [
+        "keyword:manga-drama",
+        "query:manga-drama"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "agent-native video representation via Film Knowledge Graph for video creative agents",
+      "llm_evidence_cn": "面向视频创作智能体的电影知识图谱视频表征",
+      "llm_evidence": "面向视频创作智能体的电影知识图谱视频表征",
+      "canonical_evidence": "面向视频创作智能体的电影知识图谱视频表征",
+      "llm_tldr_en": "AVA-Encoder learns agent-native video representations by encoding video as a Film Knowledge Graph and reconstructing it, capturing entities, events, assets and relationships for agentic reasoning.",
+      "llm_tldr_cn": "视频创作智能体缺乏从高质量电影中学习的有效方式，原因是没有既忠实于影片又便于推理操作的结构化表征。AVA-Encoder提出智能体自演化的自编码框架，把视频转换为电影知识图谱再重建视频，显式捕捉实体、事件、资产及其多模态关系。这种表征可直接用于智能体的推理和操作，为影视级视频生成智能体提供基础能力。",
+      "llm_tldr": "视频创作智能体缺乏从高质量电影中学习的有效方式，原因是没有既忠实于影片又便于推理操作的结构化表征。AVA-Encoder提出智能体自演化的自编码框架，把视频转换为电影知识图谱再重建视频，显式捕捉实体、事件、资产及其多模态关系。这种表征可直接用于智能体的推理和操作，为影视级视频生成智能体提供基础能力。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "tool or system for generating short episodic dramas",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
