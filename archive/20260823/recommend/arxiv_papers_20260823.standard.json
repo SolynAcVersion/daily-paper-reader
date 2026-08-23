@@ -1,0 +1,272 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-23T20:17:44.061255+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 2,
+    "deep_cap": 8,
+    "deep_selected": 2,
+    "quick_candidates": 3,
+    "quick_skim_target": 13,
+    "quick_selected": 3
+  },
+  "deep_dive": [
+    {
+      "id": "2608.16717v1",
+      "source": "arxiv",
+      "title": "PersonaShot: Benchmarking Person-Centric Narrative Continuity in Multi-Shot Video Generation",
+      "abstract": "Video generation is rapidly evolving from single-shot clips to multi-shot narratives, where the human character serves as the core narrative anchor. However, existing benchmarks mainly assess character appearance or individual-shot quality, without measuring whether physical and emotional states remain coherent across cuts. They also rarely provide criterion-specific evaluation methods, although physical continuity, facial dynamics, and cinematic relations require different visual, temporal, and relational evidence. To address these limitations, we introduce PersonaShot, the first person-centric benchmark for narrative continuity in multi-shot video generation. PersonaShot contains approximately 1,000 multi-shot segments and 16 metrics spanning physical continuity, affective dynamics, and cinematic grammar. \\textbf{\\textit{1)} Narrative Continuity Benchmark:} We evaluate character coherence across three temporal levels: within-shot states, cross-shot transitions, and sequence-level trajectories. \\textbf{\\textit{2)} Human-Aligned Specialist Evaluators:} We distill reasoning from a large multimodal teacher into lightweight criterion-specific evaluators, each grounded in the visual, temporal, or relational evidence required by its metric, and align them with expert human judgments. \\textbf{\\textit{3)} Systematic Evaluation and Insights:} Our evaluation reveals distinct capability profiles across state-of-the-art models and a clear gap between perceptual quality and cross-shot narrative continuity. Even visually compelling videos frequently exhibit physical-state resets, abrupt affective shifts, and broken cinematic relations across shots. Human studies further demonstrate strong agreement between our evaluators and expert judgments.",
+      "authors": [
+        "Yuji Wang",
+        "Yuheng Chen",
+        "Teng Hu",
+        "Ran Yi",
+        "Yijia Hong",
+        "Han Feng",
+        "Weijian Cao",
+        "Chengjie Wang",
+        "Lizhuang Ma",
+        "Jiangning Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-17T15:34:54+00:00",
+      "link": "https://arxiv.org/pdf/2608.16717v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "person-centric benchmark for multi-shot video generation measuring physical and emotional states across cuts",
+      "llm_evidence_cn": "构建多镜头视频生成基准，度量跨镜头物理与情绪状态连续性，直接契合物理正确性评测",
+      "llm_evidence": "构建多镜头视频生成基准，度量跨镜头物理与情绪状态连续性，直接契合物理正确性评测",
+      "canonical_evidence": "构建多镜头视频生成基准，度量跨镜头物理与情绪状态连续性，直接契合物理正确性评测",
+      "llm_tldr_en": "PersonaShot is the first person-centric benchmark for multi-shot video generation continuity, containing about 1,000 segments and 16 metrics covering physical continuity, facial dynamics, and cinematic relations.",
+      "llm_tldr_cn": "视频生成正从单镜头片段迈向多镜头叙事，但现有基准主要检测角色外观或单镜头质量，未衡量镜头切换间物理与情绪状态是否连贯，也缺乏分准则评测方法。为此提出PersonaShot，首个以人物为中心的多镜头叙事连续性基准，包含约1000个多镜头片段和16个评测指标，覆盖物理连续性、面部动态和电影关系等。该基准填补了多镜头视频生成中物理与叙事状态评测空白，为后续研究提供标准化工具。",
+      "llm_tldr": "视频生成正从单镜头片段迈向多镜头叙事，但现有基准主要检测角色外观或单镜头质量，未衡量镜头切换间物理与情绪状态是否连贯，也缺乏分准则评测方法。为此提出PersonaShot，首个以人物为中心的多镜头叙事连续性基准，包含约1000个多镜头片段和16个评测指标，覆盖物理连续性、面部动态和电影关系等。该基准填补了多镜头视频生成中物理与叙事状态评测空白，为后续研究提供标准化工具。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.19583v1",
+      "source": "arxiv",
+      "title": "VGI-BENCH: Probing Visual Intelligence in Video Generation Models",
+      "abstract": "Recent studies suggest that video generation models can exhibit certain forms of zero-shot visual reasoning through generated frames. Yet reliable evaluation remains challenging: benchmarks should adopt inputs aligned with the visual priors of current video models, require valid evolving processes rather than only plausible final states, and calibrate task difficulty to remain challenging yet partly feasible. To this end, we introduce VGI-bench, containing 27 tasks and 810 instances, organized by a two-level taxonomy of task domains and skill tags for fine-grained evaluation of visual reasoning capabilities of video generation models. Our evaluations show that current generative systems can solve a subset of visually grounded reasoning tasks, but remain far from reliable, with even the strongest model, Seedance~2.0, achieving only 51.0% under our evaluation criteria. Our analysis further explore the output failure modes, input condition sensitivity, performance transfer boundary from synthetic fine-tuning, and internal denoising perspective revealing limited self-correction, where later steps mainly refine early hypotheses rather than correct reasoning errors. We hope VGI-bench will help stimulate the development of next-generation video generation models. We will release our code and data.",
+      "authors": [
+        "Xuan He",
+        "Cong Wei",
+        "Yuhao Cheng",
+        "Linrui Ma",
+        "Yuxuan Zhang",
+        "Zuojun Li",
+        "Yuhao Wen",
+        "Zeyi Liu",
+        "Yuren Hao",
+        "Songcheng Cai",
+        "Keming Wu",
+        "Penghui Du",
+        "Kai Zou",
+        "Rui Yang",
+        "Chenkai Sun",
+        "Ke Yang",
+        "Ping Nie",
+        "Kelsey R Allen",
+        "Chenglong Wang",
+        "Michel Galley",
+        "Jianfeng Gao",
+        "ChengXiang Zhai"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-20T02:56:56+00:00",
+      "link": "https://arxiv.org/pdf/2608.19583v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "benchmark with 27 tasks probing visual reasoning in video generation models",
+      "llm_evidence_cn": "包含27个任务，探测视频生成模型的视觉推理能力",
+      "llm_evidence": "包含27个任务，探测视频生成模型的视觉推理能力",
+      "canonical_evidence": "包含27个任务，探测视频生成模型的视觉推理能力",
+      "llm_tldr_en": "Presents VGI-bench, a benchmark with 27 tasks and 810 instances to evaluate visual reasoning in video generation models, requiring valid evolving processes beyond plausible final states.",
+      "llm_tldr_cn": "针对视频生成模型视觉推理评估的挑战，构建VGI-bench基准，含27个任务和810个实例，按任务域与技能标签进行细粒度评估。该基准强调需要有效演化过程而非仅合理的最终状态，评测发现当前生成系统只能解决部分视觉推理任务，为提升视频生成模型的物理与语义合理性提供了评测导向。",
+      "llm_tldr": "针对视频生成模型视觉推理评估的挑战，构建VGI-bench基准，含27个任务和810个实例，按任务域与技能标签进行细粒度评估。该基准强调需要有效演化过程而非仅合理的最终状态，评测发现当前生成系统只能解决部分视觉推理任务，为提升视频生成模型的物理与语义合理性提供了评测导向。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.16222v1",
+      "source": "arxiv",
+      "title": "HiPHI: A Large-Scale Benchmark for High-Precision Human Motion and Object-Interaction",
+      "abstract": "Humanoid intelligence requires learning over an extremely diverse space of whole-body motions and physically grounded interactions. However, existing embodied datasets remain fundamentally limited: internet-scale video data lack precise physical states and interaction grounding, while laboratory motion datasets provide high fidelity but only narrow behavioral coverage. This mismatch creates a critical bottleneck for scalable humanoid policy learning. We present HiPHI, a 600+ hour scale high-fidelity whole-body human motion dataset designed to systematically maximize coverage of the human motion and interaction manifold. HiPHI is theoretically guided by FrameNet, a linguistic framework organizing human primitives. Created using an optical motion capture pipeline, HiPHI provides sub-millimeter spatial marker tracking accuracy for full-body human motion and mesh-level object trajectories. We further introduce a benchmark suite evaluating motion-space diversity, interaction grounding, object consistency, and physical AI applications. Our analyses demonstrate that HiPHI significantly expands motion coverage compared to existing motion datasets while maintaining high-fidelity interaction quality, and establishes a scalable data foundation for training, evaluating, and generalizing humanoid policies in real-world embodied tasks, where similar extensions are also applicable to motion prior models in computer graphics.",
+      "authors": [
+        "Jiahao Ji",
+        "Ji Ma",
+        "Runhan Zhang",
+        "Runyi Yu",
+        "Wenjia Wang",
+        "Weiheng Chi",
+        "Qianqian Peng",
+        "Weichao Yan",
+        "Yongfei Gu",
+        "Ye Tian",
+        "Ting Wu",
+        "Longwei Li",
+        "Chun Yuan",
+        "Ruoli Dai",
+        "Lei Han"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-08-17T07:54:26+00:00",
+      "link": "https://arxiv.org/pdf/2608.16222v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "large-scale physically grounded human motion and object-interaction dataset",
+      "llm_evidence_cn": "大规模物理交互人体运动数据集与基准",
+      "llm_evidence": "大规模物理交互人体运动数据集与基准",
+      "canonical_evidence": "大规模物理交互人体运动数据集与基准",
+      "llm_tldr_en": "HiPHI is a 600+ hour high-fidelity whole-body human motion and object-interaction benchmark guided by FrameNet, providing precise physical states and interaction grounding for embodied policy learning.",
+      "llm_tldr_cn": "HiPHI是一个面向具身智能的大规模高精度人体运动与物体交互基准，包含600多小时的全身运动数据。该数据集以FrameNet语言框架为指导，通过光学动捕等方式系统覆盖人体运动与交互流形，弥补了互联网视频缺乏精确物理状态、实验室数据覆盖窄的问题。实验表明其兼具规模与高保真度，能够为具身策略学习以及视频模型训练提供物理交互数据支撑，具有重要的数据贡献。",
+      "llm_tldr": "HiPHI是一个面向具身智能的大规模高精度人体运动与物体交互基准，包含600多小时的全身运动数据。该数据集以FrameNet语言框架为指导，通过光学动捕等方式系统覆盖人体运动与交互流形，弥补了互联网视频缺乏精确物理状态、实验室数据覆盖窄的问题。实验表明其兼具规模与高保真度，能够为具身策略学习以及视频模型训练提供物理交互数据支撑，具有重要的数据贡献。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "datasets containing physical interactions and dynamics for training video models",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.18077v1",
+      "source": "arxiv",
+      "title": "Hydra-0: Action Flow for Generalist World Modeling and Control",
+      "abstract": "We introduce Hydra-0, a generalist world model conditioned on action flow, which represents robot actions as pixel motion. This shared visual interface enables generalist world modeling and control by learning action consequences across embodiments, tasks, environments, and video-generation backbones. Our best configuration achieves 90.4% lower robot-motion error and 60.2% lower object-motion error than our action-conditioned baseline, while supporting zero-shot composition and data-efficient adaptation. On the RoboLab benchmark, Hydra-0 achieves a Pearson correlation of r=0.96 between replayed and reference success rates. Finally, we uncover an emergent inverse mode of this interface: a world action model that predicts compatible robot motion from desired object flow transferred from a human demonstration. A trained action head maps the resulting latent features to executable actions without requiring task-specific expert robot demonstrations. Together, these results demonstrate the potential of action flow as a shared control interface connecting heterogeneous training data, open-loop policy evaluation, and robot control.",
+      "authors": [
+        "Hongyu Li",
+        "Bowen Wen",
+        "Xinghao Zhu",
+        "Yixuan Wang",
+        "Yilun Du",
+        "Yunzhu Li",
+        "George Konidaris",
+        "Stan Birchfield",
+        "Soha Pouya",
+        "Chenran Li",
+        "Yan Chang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-08-18T17:59:30+00:00",
+      "link": "https://arxiv.org/pdf/2608.18077v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "action flow world model learns action consequences across video-generation backbones, improving object-motion prediction",
+      "llm_evidence_cn": "动作流世界模型在视频生成骨干上学习动作后果，降低物体运动误差，属于物理合理性视频生成架构改进",
+      "llm_evidence": "动作流世界模型在视频生成骨干上学习动作后果，降低物体运动误差，属于物理合理性视频生成架构改进",
+      "canonical_evidence": "动作流世界模型在视频生成骨干上学习动作后果，降低物体运动误差，属于物理合理性视频生成架构改进",
+      "llm_tldr_en": "Hydra-0 introduces action flow, representing robot actions as pixel motion, enabling generalist world modeling and control across embodiments and video-generation backbones, with large reductions in robot and object motion errors.",
+      "llm_tldr_cn": "通用世界模型往往依赖特定动作表示，难以跨本体、任务和环境学习动作后果。Hydra-0提出动作流，将机器人动作编码为像素运动，形成统一的视觉接口，支持在多种环境与视频生成骨干上进行世界建模与控制。最佳配置使机器人运动误差降低90.4%、物体运动误差降低60.2%，RoboLab相关性达0.96，并支持零样本组合与数据高效适配。该工作为动作条件世界建模和物理后果预测提供了通用架构基础。",
+      "llm_tldr": "通用世界模型往往依赖特定动作表示，难以跨本体、任务和环境学习动作后果。Hydra-0提出动作流，将机器人动作编码为像素运动，形成统一的视觉接口，支持在多种环境与视频生成骨干上进行世界建模与控制。最佳配置使机器人运动误差降低90.4%、物体运动误差降低60.2%，RoboLab相关性达0.96，并支持零样本组合与数据高效适配。该工作为动作条件世界建模和物理后果预测提供了通用架构基础。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.18710v1",
+      "source": "arxiv",
+      "title": "CamWorldQA: Perceptual Quality Assessment of Camera-Controlled World Video Generation",
+      "abstract": "Recent advances in generative video models have enabled camera-controlled world video generation, allowing models to synthesize videos under user-defined camera trajectories. However, existing video quality assessment (VQA) methods are mainly developed for natural videos and fail to capture the unique perceptual characteristics of camera-controlled generation, such as viewpoint consistency, motion coherence, and content preservation. In this work, we introduce CamWorldQA, the first benchmark for perceptual quality assessment of camera-controlled world video generation. CamWorldQA contains 720 generated videos produced by 6 representative generation methods from 20 diverse source videos under 6 camera trajectories, where each video is annotated with a human-rated perceptual quality score through subjective experiments. Furthermore, we propose CWQA, a no-reference quality assessment network with three complementary branches that extract spatial features, temporal motion features and optical flow features to jointly predict quality scores. Extensive experiments demonstrate that CWQA achieves superior performance over existing quality assessment methods on the CamWorldQA dataset.",
+      "authors": [
+        "Yunhe Li",
+        "Likun Wu",
+        "Sijing Wu",
+        "Xinyu Tian",
+        "Huiyu Duan",
+        "Yixuan Gao",
+        "Yunhao Li",
+        "Guangtao Zhai"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-19T09:10:02+00:00",
+      "link": "https://arxiv.org/pdf/2608.18710v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "first benchmark for perceptual quality of camera-controlled world video generation, covering motion coherence and viewpoint consistency",
+      "llm_evidence_cn": "首个相机控制世界视频生成感知质量基准，覆盖运动连贯性和视角一致性",
+      "llm_evidence": "首个相机控制世界视频生成感知质量基准，覆盖运动连贯性和视角一致性",
+      "canonical_evidence": "首个相机控制世界视频生成感知质量基准，覆盖运动连贯性和视角一致性",
+      "llm_tldr_en": "CamWorldQA presents the first benchmark for perceptual quality of camera-controlled world video generation, with 720 annotated videos covering viewpoint consistency and motion coherence. It offers an evaluation framework that can be extended to physical correctness benchmarks.",
+      "llm_tldr_cn": "相机控制的世界视频生成发展迅速，但缺乏针对性的质量评估基准。CamWorldQA收集6种生成方法、20个源视频和6条相机轨迹产生的720个生成视频，并标注主观感知质量，覆盖视角一致性、运动连贯性和内容保持。实验表明现有自然视频VQA方法难以处理这类生成视频的独特失真。该基准可为后续衡量生成视频物理正确性等质量维度提供评测框架。",
+      "llm_tldr": "相机控制的世界视频生成发展迅速，但缺乏针对性的质量评估基准。CamWorldQA收集6种生成方法、20个源视频和6条相机轨迹产生的720个生成视频，并标注主观感知质量，覆盖视角一致性、运动连贯性和内容保持。实验表明现有自然视频VQA方法难以处理这类生成视频的独特失真。该基准可为后续衡量生成视频物理正确性等质量维度提供评测框架。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
