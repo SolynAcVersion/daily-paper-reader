@@ -1,0 +1,39 @@
+{
+  "label": "2026-08-24",
+  "date": "2026-08-24",
+  "generated_at": "2026-08-24T20:56:19",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202608/24/2608.20770v1-motionphys-detecting-ai-generated-videos-via-physical-consistency-of-optical-flow-trajectories",
+      "section": "deep",
+      "title_en": "MotionPhys: Detecting AI-Generated Videos via Physical Consistency of Optical-Flow Trajectories",
+      "authors": "Haojin He, Hao Tan, Zichang Tan, Ajian Liu, Jun Wan",
+      "date": "2026-08-21",
+      "pdf": "https://arxiv.org/pdf/2608.20770v1",
+      "score": "8.0",
+      "evidence": "通过光流轨迹物理一致性检测AI视频，为物理正确性提供度量",
+      "tldr": "AI视频模型通过像素/潜空间分布匹配生成高保真画面，但未显式遵守惯性、连续力等物理约束，导致短片段逼真而整体轨迹失真。MotionPhys将稀疏运动轨迹作为物理证据，跨多时间尺度分析其几何演化，将细微物理不一致编码为紧凑特征。该方法不依赖外观伪影或生成器指纹，轻量且可解释。在多个数据集和多种生成器上，MotionPhys均能有效检测物理异常，并展现出很强的跨生成器泛化能力。",
+      "tags": "query:phys-video",
+      "abstract_en": "Modern AI video generation models can produce videos with high visual fidelity and seemingly smooth temporal transitions. However, visual realism does not necessarily imply physical motion consistency. Existing generative models mainly optimize distribution matching in pixel or latent spaces, without explicitly enforcing real-world constraints such as inertia, continuous forces, and trajectory geometry. Our experiments show that AI-generated videos remain visually plausible over short sequences of consecutive frames, yet fail to preserve physical motion consistency throughout a complete object action, resulting in systematic statistical discrepancies in their motion trajectories. Based on this observation, we introduce MotionPhys, a lightweight and interpretable framework that treats sparse motion trajectories as physical evidence rather than relying on appearance artifacts or generator-specific traces. By modeling the geometric evolution of trajectories across multiple temporal scales, MotionPhys reveals subtle motion inconsistencies that are difficult to capture with conventional visual cues and transforms them into a compact representation for efficient detection. Experiments on multiple datasets show that MotionPhys can effectively detect physical inconsistencies in generated videos and generalizes well across different video generators.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/24/2608.17224v1-probing-association-instability-with-track-state-perturbations-for-clip-level-active-learning-in-query-propagation-multi-object-tracking",
+      "section": "quick",
+      "title_en": "Probing Association Instability with Track-State Perturbations for Clip-Level Active Learning in Query-Propagation Multi-Object Tracking",
+      "authors": "Riku Inoue, Shogo Sato, Kazuhiko Murasaki, Tomoyasu Shimada, Toshihiko Nishimura, Ryuichi Tanida",
+      "date": "2026-08-18",
+      "pdf": "https://arxiv.org/pdf/2608.17224v1",
+      "score": "6.0",
+      "evidence": "片段级主动学习降低视频数据标注成本，可应用于物理交互数据收集",
+      "tldr": "训练query-propagation多目标跟踪模型需密集标注，成本高昂。现有片段级主动学习基于时间不确定性，易忽略轨迹关联不稳定的信息。本文提出QPID，通过扰动内部轨迹状态并比较预测差异，量化关联不稳定性，并结合视觉多样性选批。在DanceTrack和SportsMOT上验证，同等标注预算下性能优于基线。",
+      "tags": "query:phys-video",
+      "abstract_en": "Training query-propagation end-to-end multi-object tracking (MOT) models requires dense bounding-box and identity annotations across video sequences, making dataset construction expensive. Clip-level active learning reduces this cost by selecting video clips for annotation, but prior acquisition criteria based on output-level temporal uncertainty may miss clips whose informativeness comes from association instability in propagated track states. We propose QPID (Query-Propagation Instability and Diversity), a clip acquisition method for query-propagation MOT that targets association instability in propagated track states. QPID estimates this instability by applying two-sided perturbations to internal track states and measuring prediction differences from a clean reference branch. The key idea is that, in stable clips, each propagated track should continue to follow the same target under small perturbations, whereas in ambiguous clips, small changes in the track state can alter which target the track follows, leading to changes in localization or confidence. QPID measures these perturbation-induced prediction differences with two metrics: Localization Drift and Entropy-Weighted Confidence Discrepancy. These metrics are aggregated into a clip-level association-instability score. To avoid redundant uncertainty-only selection, QPID selects a representative annotation batch from high-instability clips using Uncertainty-Weighted Visual Coverage with track-level visual prototypes. Experiments on DanceTrack and SportsMOT with MeMOTR and SambaMOTR show that QPID achieves strong performance compared with active learning baselines under the same annotation budget.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

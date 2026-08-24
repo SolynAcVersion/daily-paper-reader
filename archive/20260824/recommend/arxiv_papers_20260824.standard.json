@@ -1,0 +1,102 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-24T20:53:57.710552+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 1,
+    "deep_cap": 8,
+    "deep_selected": 1,
+    "quick_candidates": 1,
+    "quick_skim_target": 13,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2608.20770v1",
+      "source": "arxiv",
+      "title": "MotionPhys: Detecting AI-Generated Videos via Physical Consistency of Optical-Flow Trajectories",
+      "abstract": "Modern AI video generation models can produce videos with high visual fidelity and seemingly smooth temporal transitions. However, visual realism does not necessarily imply physical motion consistency. Existing generative models mainly optimize distribution matching in pixel or latent spaces, without explicitly enforcing real-world constraints such as inertia, continuous forces, and trajectory geometry. Our experiments show that AI-generated videos remain visually plausible over short sequences of consecutive frames, yet fail to preserve physical motion consistency throughout a complete object action, resulting in systematic statistical discrepancies in their motion trajectories. Based on this observation, we introduce MotionPhys, a lightweight and interpretable framework that treats sparse motion trajectories as physical evidence rather than relying on appearance artifacts or generator-specific traces. By modeling the geometric evolution of trajectories across multiple temporal scales, MotionPhys reveals subtle motion inconsistencies that are difficult to capture with conventional visual cues and transforms them into a compact representation for efficient detection. Experiments on multiple datasets show that MotionPhys can effectively detect physical inconsistencies in generated videos and generalizes well across different video generators.",
+      "authors": [
+        "Haojin He",
+        "Hao Tan",
+        "Zichang Tan",
+        "Ajian Liu",
+        "Jun Wan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-21T06:29:35+00:00",
+      "link": "https://arxiv.org/pdf/2608.20770v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "detects AI-generated videos by physical consistency of optical-flow trajectories; provides a metric for physical correctness",
+      "llm_evidence_cn": "通过光流轨迹物理一致性检测AI视频，为物理正确性提供度量",
+      "llm_evidence": "通过光流轨迹物理一致性检测AI视频，为物理正确性提供度量",
+      "canonical_evidence": "通过光流轨迹物理一致性检测AI视频，为物理正确性提供度量",
+      "llm_tldr_en": "MotionPhys detects AI-generated videos by exploiting statistical discrepancies in physical consistency of optical-flow trajectories, offering an evaluation tool for physical realism in generated videos.",
+      "llm_tldr_cn": "AI视频生成模型能生成视觉保真度高且时间过渡平滑的视频，但视觉真实性并不代表物理运动一致性。本文发现生成视频在完整物体运动中无法保持物理运动一致性，其轨迹存在系统性统计差异。作者提出MotionPhys方法，基于光流轨迹的物理一致性来检测AI生成视频。实验表明该方法能有效区分AI生成视频与真实视频，并为生成视频的物理正确性评估提供了重要工具。这一结果对构建物理合理性评估基准具有直接价值。",
+      "llm_tldr": "AI视频生成模型能生成视觉保真度高且时间过渡平滑的视频，但视觉真实性并不代表物理运动一致性。本文发现生成视频在完整物体运动中无法保持物理运动一致性，其轨迹存在系统性统计差异。作者提出MotionPhys方法，基于光流轨迹的物理一致性来检测AI生成视频。实验表明该方法能有效区分AI生成视频与真实视频，并为生成视频的物理正确性评估提供了重要工具。这一结果对构建物理合理性评估基准具有直接价值。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.17224v1",
+      "source": "arxiv",
+      "title": "Probing Association Instability with Track-State Perturbations for Clip-Level Active Learning in Query-Propagation Multi-Object Tracking",
+      "abstract": "Training query-propagation end-to-end multi-object tracking (MOT) models requires dense bounding-box and identity annotations across video sequences, making dataset construction expensive. Clip-level active learning reduces this cost by selecting video clips for annotation, but prior acquisition criteria based on output-level temporal uncertainty may miss clips whose informativeness comes from association instability in propagated track states. We propose QPID (Query-Propagation Instability and Diversity), a clip acquisition method for query-propagation MOT that targets association instability in propagated track states. QPID estimates this instability by applying two-sided perturbations to internal track states and measuring prediction differences from a clean reference branch. The key idea is that, in stable clips, each propagated track should continue to follow the same target under small perturbations, whereas in ambiguous clips, small changes in the track state can alter which target the track follows, leading to changes in localization or confidence. QPID measures these perturbation-induced prediction differences with two metrics: Localization Drift and Entropy-Weighted Confidence Discrepancy. These metrics are aggregated into a clip-level association-instability score. To avoid redundant uncertainty-only selection, QPID selects a representative annotation batch from high-instability clips using Uncertainty-Weighted Visual Coverage with track-level visual prototypes. Experiments on DanceTrack and SportsMOT with MeMOTR and SambaMOTR show that QPID achieves strong performance compared with active learning baselines under the same annotation budget.",
+      "authors": [
+        "Riku Inoue",
+        "Shogo Sato",
+        "Kazuhiko Murasaki",
+        "Tomoyasu Shimada",
+        "Toshihiko Nishimura",
+        "Ryuichi Tanida"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-18T00:24:09+00:00",
+      "link": "https://arxiv.org/pdf/2608.17224v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "clip-level active learning to reduce annotation cost for video datasets, applicable to physics-interaction collection",
+      "llm_evidence_cn": "片段级主动学习降低视频数据标注成本，可应用于物理交互数据收集",
+      "llm_evidence": "片段级主动学习降低视频数据标注成本，可应用于物理交互数据收集",
+      "canonical_evidence": "片段级主动学习降低视频数据标注成本，可应用于物理交互数据收集",
+      "llm_tldr_en": "Proposes QPID, a clip acquisition method for query-propagation MOT that estimates association instability to select informative clips, reducing annotation cost; transferable to physics-video dataset construction.",
+      "llm_tldr_cn": "训练端到端多目标跟踪模型需要大量的视频框和身份标注，数据集构建成本高昂。片段级主动学习通过选择有价值的视频片段来降低标注开销，但现有基于输出时间不确定性的标准可能遗漏轨迹状态关联不稳定的关键片段。作者提出QPID（查询传播不稳定性和多样性）方法，通过双向扰动估计轨迹状态关联的不稳定性，从而挑选最有信息量的片段。该方法在减少标注量的同时提升了跟踪性能，其主动学习思想可直接迁移到物理交互视频数据集的低成本构建中。",
+      "llm_tldr": "训练端到端多目标跟踪模型需要大量的视频框和身份标注，数据集构建成本高昂。片段级主动学习通过选择有价值的视频片段来降低标注开销，但现有基于输出时间不确定性的标准可能遗漏轨迹状态关联不稳定的关键片段。作者提出QPID（查询传播不稳定性和多样性）方法，通过双向扰动估计轨迹状态关联的不稳定性，从而挑选最有信息量的片段。该方法在减少标注量的同时提升了跟踪性能，其主动学习思想可直接迁移到物理交互视频数据集的低成本构建中。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "collect and annotate physical interaction datasets for video generation training",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
