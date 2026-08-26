@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-08-26T07:03:43.997491+00:00",
-  "updated_date": "20260817-20260826",
+  "generated_at": "2026-08-26T22:16:41.041375+00:00",
+  "updated_date": "20260826",
   "carryover_days": 9,
   "tag_states": {
     "phys-video": {
-      "updated_date": "20260817-20260826",
+      "updated_date": "20260826",
       "carryover_days": 9,
       "items": []
     },
     "psd": {
-      "updated_date": "20260817-20260826",
+      "updated_date": "20260826",
       "carryover_days": 9,
       "items": []
     },
     "manga-drama": {
-      "updated_date": "20260824",
+      "updated_date": "20260826",
       "carryover_days": 9,
       "items": []
     }

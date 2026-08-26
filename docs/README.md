@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-17 ~ 2026-08-26</span>
+      <span class="dpr-home-dashboard-kicker">2026-08-26</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 9 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 3 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>7</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>2</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-26 07:09:40 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-26 22:19:20 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,9 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>本周共览9篇论文，精读2篇高分工作，聚焦世界模型与物理仿真前沿。</p>
-<p>最值得关注：修正物理不变性可提升世界模型长程推演，NVIDIA Cosmos-H-Dreams将实时生成式物理仿真用于手术机器人。</p>
-<p>下一步建议：普通读者可留意物理一致性如何让AI视频预测与交互生成更可靠、更实用。</p>
+<p>今日共读3篇论文，精读1篇、速读2篇，重点聚焦AI生成内容与仿真场景方向。最值得关注的是精读论文《SEAM》，提出实体属性记忆机制解决短剧生成中的角色一致性问题（9.0分）。建议普通读者优先了解短剧生成的一致性技术，其次可关注从单目图像生成交互场景的NeoWorld-Pro。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -73,12 +71,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">2 篇</strong>
+    <strong class="dpr-home-dashboard-count">1 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Correcting a learned physical invariant improves world-model rollouts">Correcting a learned physical invariant improves world-model rollouts</span></li><li><span class="dpr-home-dashboard-paper-title" title="NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics">NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="SEAM: Shot Entity-Attribute Memory for Consistent Short-Drama Generation at Scale">SEAM: Shot Entity-Attribute Memory for Consistent Short-Drama Generation at Scale</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>2</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">manga-drama <strong>1</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -86,12 +84,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">7 篇</strong>
+    <strong class="dpr-home-dashboard-count">2 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Learning Implicit Constitutive Laws for Dynamic 3D Gaussian Splatting from Monocular Videos">Learning Implicit Constitutive Laws for Dynamic 3D Gaussian Splatting from Monocular Videos</span></li><li><span class="dpr-home-dashboard-paper-title" title="Long-Horizon Audio-Visual Generation for Persistent Stories and Interactive Worlds">Long-Horizon Audio-Visual Generation for Persistent Stories and Interactive Worlds</span></li><li><span class="dpr-home-dashboard-paper-title" title="TransPhy: Visual In-Context Learning for Physically Grounded Image Editing">TransPhy: Visual In-Context Learning for Physically Grounded Image Editing</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="NeoWorld-Pro: Programming Interactive Scenes from Monocular Images for Embodied Simulation">NeoWorld-Pro: Programming Interactive Scenes from Monocular Images for Embodied Simulation</span></li><li><span class="dpr-home-dashboard-paper-title" title="Following Motion for Sequential Modeling in Video Frame Interpolation">Following Motion for Sequential Modeling in Video Frame Interpolation</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>5</strong></span><span class="dpr-home-dashboard-tag">manga-drama <strong>2</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>2</strong></span></div>
 </section>
 </div>
 

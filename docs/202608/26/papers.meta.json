@@ -1,0 +1,54 @@
+{
+  "label": "2026-08-26",
+  "date": "2026-08-26",
+  "generated_at": "2026-08-26T22:19:22",
+  "count": 3,
+  "papers": [
+    {
+      "paper_id": "202608/26/2608.22725v1-seam-shot-entity-attribute-memory-for-consistent-short-drama-generation-at-scale",
+      "section": "deep",
+      "title_en": "SEAM: Shot Entity-Attribute Memory for Consistent Short-Drama Generation at Scale",
+      "authors": "Jiaqi Liu, Maolin Ran, Xiaoyang Lu, Jian Wang, Weiwen Liu, Jianghao Lin, Yong Yu, Weinan Zhang",
+      "date": "2026-08-24",
+      "pdf": "https://arxiv.org/pdf/2608.22725v1",
+      "score": "9.0",
+      "evidence": "利用镜头间记忆图实现一致的短剧生成系统。",
+      "tldr": "短剧生成已形成工业化流水线，但逐镜头孤立生成导致跨镜头上下文漂移，角色、道具与姿态不一致，放大后造成严重视觉断裂。本文提出SEAM，一种免训练、模型无关的记忆图，在纯文本提示层通过抽取每镜头的多维状态、沿因果图检索并筛选约束、以自然语言改写注入，实现连续一致。在SEAM-Bench上，跨集连续召回率从0.700提升至0.946，泛化于六个主流文本模型，并已在生产管线中达到96.5%导演接受率。",
+      "tags": "query:manga-drama",
+      "abstract_en": "Short-drama generation has grown into a large, industrialized pipeline, and as it scales from isolated shots to the episode level, visual continuity has become a critical bottleneck. Current agent frameworks generate each shot in isolation, so context drifts across shots and props, character posture, and blocking turn inconsistent. Once assembled, these small discrepancies amplify into severe visual breaks. We present SEAM (Shot Entity-Attribute Memory), a training-free, model-agnostic memory graph that repairs continuity entirely at the prompt-text layer by extracting a multi-dimensional state for every shot, retrieving only causally prior context over the resulting graph, filtering it selectively, and injecting the surviving constraints by natural-language prompt rewriting. We further release SEAM-Bench, a double-blind continuity storyboarding benchmark, on which SEAM raises cross-episode continuity recall from 0.700 to 0.946, generalizes across six mainstream text models, and yields consistent, though not yet significant, gains at the generated-image layer. Deployed as a mandatory stage in CreativeFitting's SEAM-Agent production pipeline over 201 shots, SEAM reaches a 96.5% director-acceptance rate with zero unsafe injections; a conservative counterfactual attributes at least 21.9 percentage points of that rate to its cross-episode memory.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/26/2608.24212v1-neoworld-pro-programming-interactive-scenes-from-monocular-images-for-embodied-simulation",
+      "section": "quick",
+      "title_en": "NeoWorld-Pro: Programming Interactive Scenes from Monocular Images for Embodied Simulation",
+      "authors": "Yumeng He, Yichen Song, Xiaotian Yang, Weijia Zhang, Zanwei Zhou, Junru Gong, Xiaokang Yang, Yunbo Wang",
+      "date": "2026-08-25",
+      "pdf": "https://arxiv.org/pdf/2608.24212v1",
+      "score": "7.0",
+      "evidence": "物理在环的交互式场景编程，为仿真指定铰接与物理属性",
+      "tldr": "具身AI发展依赖能反映真实世界的仿真资产，但从单目图像重建交互式场景缺乏物理约束。NeoWorld-Pro利用多模态大模型的代码生成能力，将RGB图像转化为定义物体几何、关节与物理属性的可执行程序，并通过物理引擎在环迭代验证与修正。该方法在关节合理性、物体组合和空间关系上优于开环及已有重建方法，并能支持稳定堆叠与精细操作等下游任务，为图像到仿真提供了可编程可验证的新思路。",
+      "tags": "query:phys-video",
+      "abstract_en": "The advancement of Embodied AI necessitates high-quality simulation assets that faithfully mirror the real world. However, transforming raw visual observations into simulation-ready scenes remains challenging due to the lack of physical grounding and scene-level interactivity in current image-to-URDF methods. We propose NeoWorld-Pro, a framework that reformulates monocular scene reconstruction as procedural programming for interactive 3D environments. Leveraging the zero-shot reasoning and code synthesis capabilities of MLLMs, NeoWorld-Pro converts a single RGB image into executable programs specifying object geometry, articulation, and physical properties. A physics-in-the-loop mechanism then iteratively refines the generated programs by validating their execution in a physics engine, enforcing physically plausible articulations, valid object compositions and interactions, and accurate spatial relationships. Experiments show that NeoWorld-Pro outperforms open-loop and prior monocular reconstruction methods, while enabling complex downstream tasks such as stable stacking and fine-grained manipulation.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/26/2608.22861v1-following-motion-for-sequential-modeling-in-video-frame-interpolation",
+      "section": "quick",
+      "title_en": "Following Motion for Sequential Modeling in Video Frame Interpolation",
+      "authors": "Jaehyun Park, Nam Ik Cho",
+      "date": "2026-08-24",
+      "pdf": "https://arxiv.org/pdf/2608.22861v1",
+      "score": "6.0",
+      "evidence": "通过SSM中运动引导序列化实现帧间运动一致性",
+      "tldr": "视频帧插值中，状态空间模型虽能以线性复杂度捕获长程依赖，但固定扫描顺序限制了对动态运动轨迹的建模。为此，提出运动引导Mamba（MGMVFI），通过光流定义运动自适应1D输入顺序，使因果状态更新对齐语义相关标记；并引入上下文综合缓解光流误差，配合轻量级细化提升细节。在标准基准上，尤其对复杂动态运动，该方法取得最先进性能，为视频插值序列建模提供了新方向。",
+      "tags": "query:phys-video",
+      "abstract_en": "State Space Models (SSMs) have surfaced as a promising architecture in Video Frame Interpolation (VFI), as they can capture long-range dependencies with linear computational complexity. However, their predefined scanning order limits their effectiveness in modeling the dynamic motion trajectories inherent in VFI problems. To tackle this challenge, we propose Motion-Guided Mamba for Video Frame Interpolation (MGMVFI), an adaptation of the selective state space model tailored explicitly for VFI. MGMVFI introduces Motion-Guided Serialization (MGS), which leverages optical flow to define a motion-adaptive 1D input order for the SSM. This aligns the causal state updates with semantically related tokens, enabling motion-consistent feature propagation, particularly for large and dynamic motions. Additionally, to mitigate the unreliable feature representations caused by inaccurate optical flow estimates, we introduce contextual synthesis that utilizes the surrounding spatial context for robust inter-frame feature synthesis. These components are seamlessly integrated within our tailored Mamba architecture, which also employs a lightweight refinement block to enhance local detail reconstruction at a reduced computational cost. Extensive experiments on standard VFI benchmarks demonstrate that MGMVFI achievesstate-of-the-artperformance,particularly on complex and dynamic motions, thereby establishing a new direction for sequence modeling in video interpolation.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

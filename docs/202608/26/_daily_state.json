@@ -1,0 +1,57 @@
+{
+  "date": "20260826",
+  "date_label": "",
+  "generated_at": "2026-08-26 22:19:20 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.22725v1",
+      "route": "202608/26/2608.22725v1-seam-shot-entity-attribute-memory-for-consistent-short-drama-generation-at-scale",
+      "title": "SEAM: Shot Entity-Attribute Memory for Consistent Short-Drama Generation at Scale",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "利用镜头间记忆图实现一致的短剧生成系统。",
+      "first_seen_at": "2026-08-26 22:19:20 UTC",
+      "updated_at": "2026-08-26 22:19:20 UTC"
+    },
+    {
+      "paper_id": "2608.24212v1",
+      "route": "202608/26/2608.24212v1-neoworld-pro-programming-interactive-scenes-from-monocular-images-for-embodied-simulation",
+      "title": "NeoWorld-Pro: Programming Interactive Scenes from Monocular Images for Embodied Simulation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "物理在环的交互式场景编程，为仿真指定铰接与物理属性",
+      "first_seen_at": "2026-08-26 22:19:20 UTC",
+      "updated_at": "2026-08-26 22:19:20 UTC"
+    },
+    {
+      "paper_id": "2608.22861v1",
+      "route": "202608/26/2608.22861v1-following-motion-for-sequential-modeling-in-video-frame-interpolation",
+      "title": "Following Motion for Sequential Modeling in Video Frame Interpolation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "通过SSM中运动引导序列化实现帧间运动一致性",
+      "first_seen_at": "2026-08-26 22:19:20 UTC",
+      "updated_at": "2026-08-26 22:19:20 UTC"
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-26T22:16:41.040798+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 1,
+    "deep_cap": 8,
+    "deep_selected": 1,
+    "quick_candidates": 2,
+    "quick_skim_target": 13,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2608.22725v1",
+      "source": "arxiv",
+      "title": "SEAM: Shot Entity-Attribute Memory for Consistent Short-Drama Generation at Scale",
+      "abstract": "Short-drama generation has grown into a large, industrialized pipeline, and as it scales from isolated shots to the episode level, visual continuity has become a critical bottleneck. Current agent frameworks generate each shot in isolation, so context drifts across shots and props, character posture, and blocking turn inconsistent. Once assembled, these small discrepancies amplify into severe visual breaks. We present SEAM (Shot Entity-Attribute Memory), a training-free, model-agnostic memory graph that repairs continuity entirely at the prompt-text layer by extracting a multi-dimensional state for every shot, retrieving only causally prior context over the resulting graph, filtering it selectively, and injecting the surviving constraints by natural-language prompt rewriting. We further release SEAM-Bench, a double-blind continuity storyboarding benchmark, on which SEAM raises cross-episode continuity recall from 0.700 to 0.946, generalizes across six mainstream text models, and yields consistent, though not yet significant, gains at the generated-image layer. Deployed as a mandatory stage in CreativeFitting's SEAM-Agent production pipeline over 201 shots, SEAM reaches a 96.5% director-acceptance rate with zero unsafe injections; a conservative counterfactual attributes at least 21.9 percentage points of that rate to its cross-episode memory.",
+      "authors": [
+        "Jiaqi Liu",
+        "Maolin Ran",
+        "Xiaoyang Lu",
+        "Jian Wang",
+        "Weiwen Liu",
+        "Jianghao Lin",
+        "Yong Yu",
+        "Weinan Zhang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-08-24T02:27:50+00:00",
+      "link": "https://arxiv.org/pdf/2608.22725v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "System for consistent short-drama generation using a memory graph over shots.",
+      "llm_evidence_cn": "利用镜头间记忆图实现一致的短剧生成系统。",
+      "llm_evidence": "利用镜头间记忆图实现一致的短剧生成系统。",
+      "canonical_evidence": "利用镜头间记忆图实现一致的短剧生成系统。",
+      "llm_tldr_en": "SEAM addresses visual continuity in industrial short-drama generation by extracting per-shot state, retrieving causally prior context, and injecting constraints at the prompt level, enabling consistent episode-level production.",
+      "llm_tldr_cn": "针对短剧生成从单镜头扩展到剧集级别时出现的视觉连续性问题，提出SEAM，一种无需训练的模型无关记忆图。它提取每个镜头的多维状态，在图上检索因果先验上下文并选择性注入到提示文本层，从而修复角色、道具和姿态的跨镜头一致性。实验表明该方法能有效减少镜头拼接后的视觉断裂，为大规模短剧工业化生产提供了一种轻量级连续性保障方案。",
+      "llm_tldr": "针对短剧生成从单镜头扩展到剧集级别时出现的视觉连续性问题，提出SEAM，一种无需训练的模型无关记忆图。它提取每个镜头的多维状态，在图上检索因果先验上下文并选择性注入到提示文本层，从而修复角色、道具和姿态的跨镜头一致性。实验表明该方法能有效减少镜头拼接后的视觉断裂，为大规模短剧工业化生产提供了一种轻量级连续性保障方案。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "tool or system for generating short episodic dramas",
+      "matched_requirement_id": "req-23",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.24212v1",
+      "source": "arxiv",
+      "title": "NeoWorld-Pro: Programming Interactive Scenes from Monocular Images for Embodied Simulation",
+      "abstract": "The advancement of Embodied AI necessitates high-quality simulation assets that faithfully mirror the real world. However, transforming raw visual observations into simulation-ready scenes remains challenging due to the lack of physical grounding and scene-level interactivity in current image-to-URDF methods. We propose NeoWorld-Pro, a framework that reformulates monocular scene reconstruction as procedural programming for interactive 3D environments. Leveraging the zero-shot reasoning and code synthesis capabilities of MLLMs, NeoWorld-Pro converts a single RGB image into executable programs specifying object geometry, articulation, and physical properties. A physics-in-the-loop mechanism then iteratively refines the generated programs by validating their execution in a physics engine, enforcing physically plausible articulations, valid object compositions and interactions, and accurate spatial relationships. Experiments show that NeoWorld-Pro outperforms open-loop and prior monocular reconstruction methods, while enabling complex downstream tasks such as stable stacking and fine-grained manipulation.",
+      "authors": [
+        "Yumeng He",
+        "Yichen Song",
+        "Xiaotian Yang",
+        "Weijia Zhang",
+        "Zanwei Zhou",
+        "Junru Gong",
+        "Xiaokang Yang",
+        "Yunbo Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-25T08:19:39+00:00",
+      "link": "https://arxiv.org/pdf/2608.24212v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "physics-in-the-loop interactive scene programming with articulated physical properties for simulation",
+      "llm_evidence_cn": "物理在环的交互式场景编程，为仿真指定铰接与物理属性",
+      "llm_evidence": "物理在环的交互式场景编程，为仿真指定铰接与物理属性",
+      "canonical_evidence": "物理在环的交互式场景编程，为仿真指定铰接与物理属性",
+      "llm_tldr_en": "Reformulates monocular scene reconstruction as programmatic generation of interactive 3D environments with physical properties via MLLM code synthesis and physics-in-the-loop refinement.",
+      "llm_tldr_cn": "具身AI需要忠实反映真实世界的高质量仿真资产，但现有图像到URDF方法缺乏物理接地和场景级交互性。作者提出NeoWorld-Pro，将单目图像重建重新表述为过程化编程，利用MLLM的推理和代码生成能力，输出指定物体几何、铰接和物理属性的可执行程序，并通过物理在环机制迭代优化。该方法从单张RGB图像生成可交互的3D环境，为物理仿真和具身agent训练提供支持。实验显示其生成场景具有更好的物理一致性和交互性。该工作可作为视频生成物理一致性建模的可行思路。",
+      "llm_tldr": "具身AI需要忠实反映真实世界的高质量仿真资产，但现有图像到URDF方法缺乏物理接地和场景级交互性。作者提出NeoWorld-Pro，将单目图像重建重新表述为过程化编程，利用MLLM的推理和代码生成能力，输出指定物体几何、铰接和物理属性的可执行程序，并通过物理在环机制迭代优化。该方法从单张RGB图像生成可交互的3D环境，为物理仿真和具身agent训练提供支持。实验显示其生成场景具有更好的物理一致性和交互性。该工作可作为视频生成物理一致性建模的可行思路。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.22861v1",
+      "source": "arxiv",
+      "title": "Following Motion for Sequential Modeling in Video Frame Interpolation",
+      "abstract": "State Space Models (SSMs) have surfaced as a promising architecture in Video Frame Interpolation (VFI), as they can capture long-range dependencies with linear computational complexity. However, their predefined scanning order limits their effectiveness in modeling the dynamic motion trajectories inherent in VFI problems. To tackle this challenge, we propose Motion-Guided Mamba for Video Frame Interpolation (MGMVFI), an adaptation of the selective state space model tailored explicitly for VFI. MGMVFI introduces Motion-Guided Serialization (MGS), which leverages optical flow to define a motion-adaptive 1D input order for the SSM. This aligns the causal state updates with semantically related tokens, enabling motion-consistent feature propagation, particularly for large and dynamic motions. Additionally, to mitigate the unreliable feature representations caused by inaccurate optical flow estimates, we introduce contextual synthesis that utilizes the surrounding spatial context for robust inter-frame feature synthesis. These components are seamlessly integrated within our tailored Mamba architecture, which also employs a lightweight refinement block to enhance local detail reconstruction at a reduced computational cost. Extensive experiments on standard VFI benchmarks demonstrate that MGMVFI achievesstate-of-the-artperformance,particularly on complex and dynamic motions, thereby establishing a new direction for sequence modeling in video interpolation.",
+      "authors": [
+        "Jaehyun Park",
+        "Nam Ik Cho"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-24T06:43:48+00:00",
+      "link": "https://arxiv.org/pdf/2608.22861v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "ensuring motion consistency across frames via motion-guided serialization in SSM",
+      "llm_evidence_cn": "通过SSM中运动引导序列化实现帧间运动一致性",
+      "llm_evidence": "通过SSM中运动引导序列化实现帧间运动一致性",
+      "canonical_evidence": "通过SSM中运动引导序列化实现帧间运动一致性",
+      "llm_tldr_en": "MGMVFI adapts state space models for video frame interpolation by using optical flow to define motion-guided serialization, enabling motion-consistent feature propagation and better trajectory modeling.",
+      "llm_tldr_cn": "视频插值需要建模动态运动轨迹，但状态空间模型的预定义扫描顺序限制其效果。本文提出MGMVFI，利用光流定义运动自适应的1D输入顺序，使状态更新与语义相关token对齐，实现运动一致的帧间特征传播。实验表明该方法在视频插值任务上显著提升性能，为运动序列建模提供新思路。",
+      "llm_tldr": "视频插值需要建模动态运动轨迹，但状态空间模型的预定义扫描顺序限制其效果。本文提出MGMVFI，利用光流定义运动自适应的1D输入顺序，使状态更新与语义相关token对齐，实现运动一致的帧间特征传播。实验表明该方法在视频插值任务上显著提升性能，为运动序列建模提供新思路。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "ensuring physical properties remain coherent across video frames",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
