@@ -1,0 +1,430 @@
+Title: NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics
+
+URL Source: https://arxiv.org/pdf/2608.24199v1
+
+Published Time: Wed, 26 Aug 2026 00:45:48 GMT
+
+Number of Pages: 20
+
+Markdown Content:
+2026-8-26 
+
+# NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics 
+
+Javier Gamazo Tejero 1,†, Lukas Zbinden 1,†, Keyur Sheth 1, Raghavendra K M 1, Nadim Daher 1, Diego Granero Maraña 2, Filip Binkiewicz 2, Patrick Thornycroft 2, Mahdi Azizian 1, Sean D. Huver 11NVIDIA, 2CMR Surgical  
+
+> †
+
+Equal contribution 
+
+# Abstract 
+
+Generative simulation for surgical robotics still lacks real-time interaction. Physical-robot experi-ments, often involving animal or cadaver labs, are time-consuming, costly, and difficult to reproduce, while classical simulators struggle to capture photorealistic appearance and deformable-tissue dy-namics. We address this gap with Cosmos-H-Dreams , an integrated real-time surgical world-model system combining an action-conditioned generative model, a teacher-to-student distillation recipe, and a deployment stack built on the NVIDIA FlashDreams streaming-inference library. Starting from 
+
+Cosmos-H-Surgical-Simulator , a multi-embodiment action-conditioned surgical video world model fine-tuned on the large-scale Open-H-Embodiment corpus, we post-train this checkpoint on embodiment- and procedure-specific data. By distilling the resulting bidirectional teacher into a causal, few-step student with Self Forcing, we turn a passive video generator into a controllable surgical simulator that streams at roughly 160 inference FPS on a single NVIDIA RTX PRO 6000 Blackwell workstation GPU. Crucially, 
+
+Cosmos-H-Dreams is controller-agnostic: any interface that emits a stream of robot kinematics can drive it. We demonstrate live control through a browser keyboard over WebRTC, a Meta Quest headset over WebXR, a commercial surgical robot console such as CMR Surgical’s Versius, and learned policies operating in closed loop. To our knowledge, this is the first interactive surgical world model supporting live human and policy control. Human operators and policies alike can act inside the synthesized world and observe the consequences in real time. We release Cosmos-H-Dreams as an open surgical simulation system, providing a common foundation for surgical education, scalable synthetic data generation, and future intraoperative decision support. 
+
+Open-Source Code 
+
+Cosmos-H-Dreams (deployment stack) github.com/isaac-for-healthcare/Cosmos-H-Dreams 
+
+Cosmos-H-Surgical-Simulator (foundation model) github.com/NVIDIA-Medtech/Cosmos-H-Surgical-Simulator 
+
+Open-Weight Model Checkpoints 
+
+Cosmos-H-Dreams huggingface.co/nvidia/Cosmos-H-Dreams 
+
+Cosmos-H-Surgical-Simulator huggingface.co/nvidia/Cosmos-H-Surgical-Simulator 
+
+© 2026 NVIDIA. All rights reserved. arXiv:2608.24199v1 [cs.RO] 25 Aug 2026 NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics 
+
+# Contents 
+
+1 Introduction 32 Data 4
+
+2.1 Open-H-Embodiment: A Multi-Embodiment Open Surgical Data Corpus . . . . . . . . . . . . . 42.2 dVRK Tabletop Suturing Data . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+
+3 Model Architecture 5
+
+3.1 Model Conditioning . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+
+4 Training 5
+
+4.1 Open-H-Embodiment Pre-Training . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 54.2 Teacher Fine-Tuning . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 64.3 Self Forcing Distillation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+
+5 Inference and Serving 8
+
+5.1 FlashDreams for Streaming Inference . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 85.2 Serving and Control Interfaces . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 85.3 End-to-End Performance . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+
+6 Experiments and Results 9
+
+6.1 Simulation Quality . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10 6.2 Closed-Loop Surgical Policy Evaluation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10 6.3 Performance Benchmarks and Ablations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11 
+
+7 Related Work 12 
+
+7.1 World Foundation Models and World-Action Models . . . . . . . . . . . . . . . . . . . . . . . . 12 7.2 Interactive and Real-Time Video World Models . . . . . . . . . . . . . . . . . . . . . . . . . . . 13 7.3 Surgical Simulation and Surgical World Models . . . . . . . . . . . . . . . . . . . . . . . . . . 13 7.4 Human Interfaces and Robotic Platforms . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14 
+
+8 Limitations 14 9 Conclusion 14 A Cosmos-H-Dreams at Higher Resolution 16 B Contributors and Acknowledgments 17 
+
+B.1 Contributors . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17 B.2 Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17 
+
+> 2NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics
+
+# 1. Introduction 
+
+Surgical robotics is advancing at an unprecedented pace thanks to teleoperated platforms such as the da Vinci from Intuitive or the Versius from CMR Surgical, which have made robot-assisted minimally invasive surgery routine. At the same time, the field of vision-language-action models (VLAs) has benefited from the advance-ments in compute and novel model architectures to achieve realistic humanoid robotic movements (NVIDIA et al., 2025). The two fields together set the scene for surgical VLAs, with policies able to automate tasks such as suturing, tissue retraction, and dissection. However, the evaluation and training of these systems at scale share similar challenges to surgical training. Evaluating a policy directly on a physical robot is expensive, slow, hard to reproduce, and potentially unsafe if soft tissue and live anatomy are involved. Historically, simulation environments have served as testbeds for evaluating VLA policies. Surgical scenes, however, are particularly difficult to simulate because of their unique physical and visual characteristics: deformable soft tissue, bleeding, electrocautery smoke, specular wet surfaces, and fine-grained interactions between instruments and anatomy remain challenging for classical asset- and physics-based simulators (Zhang et al., 2019; Liang et al., 2024). Furthermore, surgical scenes are full of variable intricacies that matter for the surgical outcome. Simulating these details is both time-consuming and expensive, so alternative methods have arisen. World foundation models (WFMs) for Physical AI offer an appealing alternative thanks to their ability to learn the dynamics of the world directly from data and synthesize plausible futures (Agarwal et al., 2025; NVIDIA, 2025c; Robbyant et al., 2026). The recent Cosmos-Surg-dVRK (Zbinden et al., 2025) showed that a surgical fine-tune of the Cosmos WFM, paired with a learned video classifier, can produce automated, online evaluation of surgical policies whose simulated outcomes correlate with outcomes on the real da Vinci Research Kit (dVRK), making a strong case for WFMs as an alternative to traditional simulators. Be it a world model or a traditional simulator, any frame-generation engine must satisfy two requirements to be usable. First, its outputs must follow the laws of physics, meaning that object dynamics should appear indistinguishable from reality to the user. Second, to provide a natural sense of control, the simulator must generate frames at a rate that avoids perceptible jumps or delays. Indeed, in the context of WFMs, the two requirements impose a tradeoff between visual quality and generation speed. Recent research on world models has proved that the former point is achievable with today’s technology (Bruce et al., 2024; Brooks et al., 2024), while many distillation and post-training techniques have been studied to achieve the latter (Huang et al., 2025; Yin et al., 2025; Li et al., 2024). However, jointly achieving high visual and physical fidelity, action controllability, and real-time generation remains an open challenge, particularly in the surgical domain (Chen et al., 2025). We present Cosmos-H-Dreams , an integrated real-time surgical world-model system comprising an action-conditioned generative model, a teacher-to-student distillation recipe, and a deployment stack. Its real-time operation turns the world model into an interactive simulator for human operators and a closed-loop environment for learned policies, a role analogous to that of OmniDreams (NVIDIA, 2026) in autonomous driving. The model component of Cosmos-H-Dreams is initialized from the bidirectional, multi-embodiment 
+
+Cosmos-H-Surgical-Simulator , specialized to a single embodiment and procedure, and distilled into a causal, autoregressive, action-conditioned simulator for real-time closed-loop interaction. Concretely, the contributions and design concepts behind Cosmos-H-Dreams are: • The first interactive surgical world model with live human and policy control. Cosmos-H-Dreams is driven live through three control surfaces: a browser keyboard over WebRTC, a Meta Quest headset over WebXR, and a surgical robot console such as CMR Surgical’s Versius. The same model serves a human operator in VR and a learned surgical policy in closed-loop evaluation. • A multi-embodiment surgical foundation. Our starting point, Cosmos-H-Surgical-Simulator , is an action-conditioned model fine-tuned across 9 robotic embodiments and multiple surgical domains through a unified action space (Sec. 3). It provides a reusable foundation checkpoint to efficiently post-train 
+
+> 3NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics
+
+embodiment- and procedure-specific models for use with Cosmos-H-Dreams .• Real-time streaming on a single GPU. A causal student distilled with Self Forcing (Huang et al., 2025) generates short frame blocks autoregressively using a streaming KV cache and few-step diffusion, reaching interactive frame rates at 288 × 512 on a single NVIDIA RTX PRO 6000 Blackwell workstation GPU. The Cosmos-H-Dreams deployment stack wraps the FlashDreams streaming-inference library with surgical-model integration and live control interfaces (Sec. 5). • Beyond pixel metrics: closed-loop action controllability as a new benchmark family. We argue that the surgical world-model field has largely measured appearance, and we outline an evaluation suite (Sec. 6) that additionally measures whether the synthesized world responds correctly to actions, remains stable over long task rollouts, and supports synthetic-data generation and closed-loop policy evaluation. As an initial demonstration of the system’s scope, we consider three procedure regimes: tabletop suturing pads (on both dVRK and CMR Versius), ex-vivo porcine cholecystectomy, and clinical procedures (cholecystectomy, prostatectomy, and hysterectomy). In this report, we focus in detail on the tabletop suturing regime, for which we present the full recipe: we use the entire dVRK suturing dataset of Cosmos-Surg-dVRK (Zbinden et al., 2025) to post-train a 13-frame teacher, extend it to a 73-frame horizon, and distill the resulting teacher into a real-time causal student. The resulting tabletop checkpoint is the model component released with Cosmos-H-Dreams 
+
+and the primary model artifact we release. The clinical regimes are sketched as a direct extension of the same pipeline. 
+
+# 2. Data 
+
+Training an action-conditioned surgical world model places two demands on the data: broad coverage of surgical appearance and dynamics across many robots and procedures, and precisely time-aligned robot actions paired with video. We satisfy the first with a large multi-embodiment, multi-domain corpus called Open-H-Embodiment, and the second by post-training on a focused, action-rich tabletop dataset. 
+
+## 2.1. Open-H-Embodiment: A Multi-Embodiment Open Surgical Data Corpus 
+
+Open-H-Embodiment (Nelson et al., 2026) is a surgical data-collection and curation effort that aggregates teleoperated robot-assisted surgery recordings into a single, action-aligned training mixture. In total it spans 32 datasets, 9 robotic embodiments, and on the order of 22M frames, unified under the same 44D action space. The dataset contains both in-vivo and ex-vivo recordings, acquired with a number of different systems such as the CMR Versius or the dVRK. Each dataset is converted to the unified action representation by mapping its native controls onto the shared dual-arm pose/gripper block and zero-padding unused dimensions, and each is normalized using per-embodiment statistics. Because the datasets differ in size by orders of magnitude, we use a two-level sampling mixture: CMR Versius contributes 50% of the pre-training distribution, divided equally among its four procedure datasets, while the remaining 50% is allocated among the non-CMR datasets in proportion to their frame counts. The result is Cosmos-H-Surgical-Simulator , a multi-embodiment foundation checkpoint that has seen a wide range of surgical instruments, anatomies, lighting conditions, and motion styles. It provides a strong initialization for downstream procedure-specific models served through the Cosmos-H-Dreams deployment stack. 
+
+## 2.2. dVRK Tabletop Suturing Data 
+
+We post-train on the dVRK suturing dataset introduced in Cosmos-Surg-dVRK (Zbinden et al., 2025). We deliberately use the entire dataset, including the failure episodes, following prior work showing that failure episodes are beneficial for model learning. Concretely, the tabletop mixture combines the SutureBot (Haworth et al., 2025) suturing and knot-tying data with failure and out-of-distribution episodes. Together, these data comprise on the order of one million frames at 10 Hz and are expressed in the dual-arm 20 D dVRK action format (padded to 44 D). This is the same data regime on which Cosmos-Surg-dVRK demonstrated correlation 
+
+> 4NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics
+
+between simulated rollouts and real dVRK outcomes. 
+
+# 3. Model Architecture 
+
+The model component of Cosmos-H-Dreams is an action-conditioned video world model that predicts short sequences of future frames conditioned on chunks of robot actions. To support interactive control from surgical policies or human inputs, the model performs generation autoregressively. At each inference step, the model ingests the next action chunk and generates the corresponding frames conditioned on this action chunk. Accordingly, the model adopts a causal formulation in which each prediction depends only on the current action chunk and past generations through a streaming KV cache that enables long-term context and efficient memory utilization. The model is built in two stages from the same backbone: a bidirectional teacher that learns action-conditioned surgical dynamics, and a distilled causal student (Sec. 4). The model is built on Cosmos-Predict2.5 (NVIDIA, 2025c), the action-conditionable diffusion transformer (DiT) in the Cosmos WFM platform (Agarwal et al., 2025). 
+
+## 3.1. Model Conditioning 
+
+As depicted in Fig. 1, the model’s outputs are conditioned on the following inputs: • First RGB frame: A non-generated frame that starts the simulation. It is encoded as clean latent tokens and fed to the first inference step through an additional binary mask channel appended to the latent input that marks which frames are clean context versus to-be-generated. • Memory cache: A streaming KV cache retains previously generated tokens to preserve temporal context. In addition to the most recent tokens, it may retain memory sinks that provide stable long-range reference information, such as the first frame. • Robot Kinematics: Robotic actions are fed to the model in the form of an action vector. We adopt the unified 44-dimensional (44D) action vector from the Cosmos-H-Surgical-Simulator model as the input format. Different embodiments populate a subset of these dimensions with their native content and zero-pad the remainder; the model always sees a fixed 44D input, which makes weights horizon- and embodiment-invariant. Actions are injected into the DiT through the timestep/AdaLN modulation pathway rather than as separate attention tokens, which keeps the per-step overhead negligible. Because the tokenizer compresses time by 4×,each latent frame corresponds to 4 consecutive action steps; we therefore fold the 4 action vectors for a latent frame into a single 4 × 44 = 176 -dimensional input and pass it through two multi-layer perceptrons (MLPs). The first MLP produces a per-latent-frame embedding that is added to the diffusion timestep embedding; the second produces a three-way embedding that is added to the AdaLN-LoRA modulation (the shift, scale, and gate signals) of the transformer blocks. Action embeddings are zeroed on latent frames marked as clean conditioning input, so the action chunk modulates exactly the frames it is responsible for. 
+
+# 4. Training 
+
+The Cosmos-H-Dreams training pipeline uses a multi-stage strategy. Starting from the Cosmos-H-Surgical-Simulator 
+
+checkpoint, we (i) fine-tune an action-conditioned bidirectional teacher on embodiment- and procedure-specific data, optionally at increasing temporal horizons to improve long-rollout stability (NVIDIA, 2026), and (ii) distill that teacher into a causal, few-step student that streams in real time. Fig. 2 summarizes the pipeline; the per-stage hyperparameters below are those used for the released tabletop checkpoint. 
+
+## 4.1. Open-H-Embodiment Pre-Training 
+
+In prior work, Cosmos-Predict2.5 was post-trained on Open-H-Embodiment (Nelson et al., 2026), yielding the 
+
+Cosmos-H-Surgical-Simulator checkpoint used to initialize the Cosmos-H-Dreams bidirectional teacher. 
+
+> 5NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics
+
+Encoder (VAE) 
+
+Clean latent tokens 
+
+... 1 First RGB frame 
+
+Non-generated frame that starts the simulation 
+
+DiT block 
+
+# 2 Memory cache 
+
+Streaming KV cache preserves temporal context 
+
+... 
+
+First frame sink + recent latent tokens 
+
+# 3 Robot kinematics 
+
+Unified action vector  ... 
+
+a1  a2  a3  a4  a5 
+
+Action encoder 
+
+Generated latents 
+
+Figure 1: The model component of Cosmos-H-Dreams conditions next-frame surgical video generation on (i) the first RGB frame for the initial inference, (ii) a streaming KV-cache memory of recent history, and (iii) a chunk of robot actions in a unified action space. At each step the operator or policy supplies the next action chunk; the model synthesizes the next block of frames and returns them, closing the loop. VAE decoding and action injection have been omitted for clarity. 
+
+## 4.2. Teacher Fine-Tuning 
+
+Objective. Following Cosmos-Predict2.5, the teacher is trained with a rectified-flow objective (Liu et al., 2022). Let x denote a clean latent video, 𝜖 ∼ 𝒩 (0 , 𝐼 ), and 𝑡 ∈ [0 , 1] a time drawn from a logit-normal distribution. With x𝑡 = (1 − 𝑡 )x + 𝑡𝜖 and velocity target v𝑡 = 𝜖 − x, the model u𝜃 minimizes 
+
+ℒ = Ex,𝑡 [︀ ‖u𝜃 (x 𝑡 , 𝑡 ; c) − v𝑡 ‖2]︀ , (1) where, in our setting, the conditioning c comprises the action chunk (Sec. 3.1) and the clean context frame(s) marked by the condition mask. The teacher is bidirectional (full-sequence attention). 
+
+Horizon. We use horizon to mean the clip length in video frames: a horizon-𝐻 teacher consumes one context frame and predicts 𝐻 − 1 frames, corresponding to 1 + ( 𝐻 − 1) /4 latent frames. The real-time student operates on 12 -frame blocks, but the teacher may be trained at longer horizons to provide long-context supervision during distillation. Our base tabletop teacher is trained at horizon 13 at 288 × 512 resolution. It is warm-started from the 
+
+Cosmos-H-Surgical-Simulator checkpoint and fine-tuned on the dVRK tabletop mixture (Sec. 2.2) with action_dim =20 (padded to 44 ), a per-GPU batch size of 16 on 8 nodes of 8 GPUs (effective batch 1024 ), a learning rate of 
+
+1.6×10 −4 with a fused AdamW optimizer and weight decay of 0.1. After the main run, we apply a short fine-anneal phase with a cosine schedule decaying to 5% of the peak rate, and take the exponential-moving-average (EMA) weights as the deliverable teacher for distillation. To improve stability over long task rollouts (NVIDIA, 2026), we continue training the teacher at increasing horizons ( 25 , 49 , and 73 frames), warm-starting the teacher at each horizon from the previous, shorter-horizon teacher. The horizon-73 teacher is the longest we train for the tabletop regime. Because longer clips are far more memory-intensive, we reduce the per-GPU batch size (e.g., to 4 at horizon 73 , effective batch 256 ) and scale the learning rate down accordingly (e.g., 4×10 −5), training for a few thousand additional iterations 
+
+> 6NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics
+
+## 1 Open-H pre-training  Multi-embodiment
+Multi-domain       
+
+> a1 a2 a3 a4 ... a44 44D actions
+
+Bidirectional model 
+
+## 2 Teacher fine-tune       
+
+> Specialize to tabletop dVRK
+> Extended horizon
+> a1 a2 a3 a4 ... a20 20D actions
+
+Bidirectional model 
+
+## 3 Self-forcing warmup  Initialize causal student  
+
+> Cached teacher latents
+> Causal student
+
+Causal student 
+
+## 4 Self-forcing training  DMD distillation with self-rollout  Causal student  
+
+> Self-rollout Frozen teacher
+> Fake-score net
+> DMD loss
+
+Causal student 
+
+Figure 2: Cosmos-H-Dreams training pipeline. The bidirectional teacher learns action-conditioned surgical dynamics; the causal student is then distilled to run in real time with few-step diffusion and a streaming KV cache. with the same warmup cosine schedule. Even though the DiT weight shapes are horizon-invariant, we found experimentally that increasing the horizon progressively yielded better results than training on long horizons from scratch. 
+
+## 4.3. Self Forcing Distillation 
+
+The teacher from the previous section is a bidirectional model that needs to perform many diffusion steps (𝐾 ) at inference time to produce a sensible output ( 𝐾 = 35 in our setting). While this generates good-quality frames, frame generation time grows linearly with the number of diffusion steps, so it is crucial to reduce the number of steps as much as possible for real-time streaming. The goal of the distillation process, in this case, is to obtain a model that generates with a few diffusion steps. Few-step diffusion, however, may suffer from compounding errors during long autoregressive rollouts due to the quality loss at each latent generation. To minimize this behavior, we distill the bidirectional teacher into a causal student with Self Forcing (Huang et al., 2025) combined with Distribution Matching Distillation (DMD) (Yin et al., 2024). The distillation proceeds in two phases. 
+
+Phase 1: Causal warmup. We initialize the causal student from the teacher’s EMA weights and train it to imitate the cached teacher latents with a simple regression objective, matching the student’s velocity prediction to the cached target. No live teacher is present in this phase; its role is purely to bridge the bidirectional teacher to the causal, KV-cached student before adversarial-style distribution matching begins. For the tabletop student, we warm up for up to 20 k iterations at a small constant learning rate ( ∼ 3×10 −5), early-stopping when the moving average of this regression loss plateaus. 
+
+> 7NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics
+
+Phase 2: Self Forcing training via self-rollout. Standard teacher forcing conditions each frame’s denoising on clean, ground-truth context. At inference, however, the student must condition on its own previously generated (and thus imperfect) frames, creating a train-test mismatch, known as exposure bias, that compounds over long rollouts (Huang et al., 2025). Self Forcing closes this gap by training on self-generated context: the student performs an autoregressive self-rollout, generating each latent frame conditioned on its own previous outputs through a 𝐾 -step diffusion process ( 𝐾 ∈ { 2, 4} in our setting). To keep training tractable, gradients are backpropagated through a single randomly chosen denoising step per iteration, and gradients are detached from the KV-cache embeddings of previous frames so that gradient flow is confined to the current frame. 
+
+Distribution Matching Distillation. Self Forcing aligns the distribution of self-generated video clips with the data distribution using Distribution Matching Distillation (DMD) (Yin et al., 2024), rather than supervising individual frames with a pixel-wise reconstruction loss. Let ˆ𝑥 denote a clip generated through a student self-rollout, f𝜑 a frozen score network representing the real-data distribution, and f𝜓 a trainable fake-score network that estimates the student distribution. The student is optimized using 
+
+ℒDMD (𝜃 ) = E[︁ 12⃦⃦ ˆ𝑥 − sg [︀ ˆ𝑥 − (f𝜓 (ˆ 𝑥 𝑡 , 𝑡 ) − f𝜑 (ˆ 𝑥 𝑡 , 𝑡 )) ]︀⃦⃦ 2]︁ , (2) where sg[ ·] denotes the stop-gradient operator. The difference between the fake and real score estimates provides a distribution-level training signal that moves the student rollouts toward the data manifold without requiring paired targets or pixel-wise supervision. We initialize f𝜓 from the teacher and alternate between optimizing the student and the fake-score network. Specifically, we use a 1:5 student-to-fake-score update ratio, with learning rates of 5×10 −8 for the student and 5×10 −6 for the fake-score network. Both networks use the rectified-flow parameterization, and classifier-free guidance is disabled for the teacher during distillation. 
+
+# 5. Inference and Serving 
+
+Distilling a multi-step diffusion model into a few-step model provides a significant speedup, but is not suffi-cient to achieve interactive simulation. Further gains must come from optimizing the inference stack. The 
+
+Cosmos-H-Dreams deployment stack builds on FlashDreams (NVIDIA, 2026), an open streaming-inference library for autoregressive world and video models, and targets edge hardware that allows the simulator to run next to or within a surgeon console with appropriate compute rather than in a data center. This section describes the model-level optimizations that make a 12 -frame block cheap enough to generate at interactive rates, the serving architecture that makes the model controllable, and the edge hardware we target. 
+
+## 5.1. FlashDreams for Streaming Inference 
+
+FlashDreams is a high-performance inference and serving library for autoregressive video and world models, including Cosmos-Predict2.5 and Wan2.1-based models (Wan et al., 2025). The surgical pipeline runs the distilled student described in Sec. 4.3, while maintaining static tensor shapes throughout the rollout, enabling ahead-of-time compilation with torch.compile (Ansel et al., 2024) and CUDA Graph capture. Additional opti-mizations include a fixed-size streaming KV cache with asynchronous updates, local-window temporal attention with an appearance sink (Xiao et al., 2024), lightweight latent encoders and decoders from TAEHV (Boer Bohan, 2025), and the precomputation of operations that remain constant across denoising steps. These optimizations are model-agnostic, while the Cosmos-H-Dreams deployment stack provides the surgical model configuration, serving integration, and live control interfaces. 
+
+## 5.2. Serving and Control Interfaces 
+
+The Cosmos-H-Dreams deployment stack exposes the surgical model through real-time control interfaces. Its stateful inference server holds the model, the pre-allocated KV cache, and the captured CUDA graph for the lifetime of a session, and clients exchange compact messages with it. We serve the model and control the inputs 
+
+> 8NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics
+
+from four different interfaces: • Keyboard over WebRTC. A browser client opens a WebRTC peer connection; key events are streamed to the server over a data channel and synthesized frames are streamed back over a WebRTC video track. The server reports per-block events (block index, frames enqueued) so the client can pace playback. • Meta Quest over WebSocket/WebXR. Because headset network conditions are less suitable for WebRTC data channels, the Quest client uses a WebSocket to send per-hand pose-delta and trigger messages, and the synthesized video is presented in the headset. • Surgical Policy over TCP Socket. We connect Cosmos-H-Dreams and a surgical policy model over a raw TCP socket. Generated frames are streamed to the policy, which produces the next actions to accomplish a task. These are sent back to Cosmos-H-Dreams , which closes the loop by generating new frames. • Surgical Robot Console. In further experiments, we successfully integrated Cosmos-H-Dreams with CMR Surgical’s Versius console. Dual-arm pose, gripper, energy, and thumbstick signals are converted into the unified action message and forwarded to the engine. A session abstraction generates a fresh identifier and KV cache per rollout, mirroring the stateful-service pattern used elsewhere. The server enforces backpressure by bounding the number of buffered frames (a couple of blocks) so that generation and playback stay synchronized. 
+
+Acceleration outside the main generation pipeline. Our goal is to minimize action-to-photon latency, defined as the time between a user action and its corresponding visual response on the display. The optimizations described above address only the generation stage, ending when a new frame is produced. The frame must then be postprocessed, encoded as H.264, transmitted from the server to the client over RTP, and displayed. To reduce the latency of these downstream stages, we adopt a fully GPU-resident pipeline and replace MJPEG encoding with NVENC-based H.264 encoding. This provides several benefits. First, the H.264 bitstream requires approximately 10 × less network bandwidth than the corresponding MJPEG stream. Second, at our target resolution, NVENC encoding is 25% faster than MJPEG encoding. Combined with GPU-resident postprocessing, these changes reduce downstream latency by a factor of 1.20 , from 98 .4 ms to 82 .1 ms on an NVIDIA RTX PRO 6000 Blackwell Workstation Edition GPU. After these optimizations, model inference becomes the dominant latency bottleneck. 
+
+## 5.3. End-to-End Performance 
+
+A defining feature of Cosmos-H-Dreams is that it runs on a single accelerator that can be deployed at the edge rather than requiring a multi-GPU server. We target the NVIDIA RTX PRO 6000 Blackwell Workstation Edition GPU as the canonical edge device and use it for continuous-integration validation of the surgical recipe. Generating a 12 -frame block at 288 × 512 with a 2-step student requires only the single static-shape forward pass and a lightweight decode described above, which is what brings the system into the interactive regime on one card. Tab. 1 reports the per-stage budget. In Tab. 5, we report latency figures for 540p and show that the inference engine can run reasonably well at higher resolutions. 
+
+# 6. Experiments and Results 
+
+An interactive surgical simulator must respond accurately to actions, stay stable over the length of a task, and be faithful enough that data generated inside it transfers to the real robot. We therefore evaluate Cosmos-H-Dreams 
+
+along three axes. First, we probe the synthesized video on appearance fidelity and long-horizon stability (Sec. 6.1). Then, we evaluate whether the real-time model can serve as a closed-loop evaluation environment for surgical policies (Sec. 6.2). Finally, we characterize the real-time system as a whole — the distilled model and the inference engine — on output visual quality and inference latency (Sec. 6.3). With this set of experiments, we aim to move beyond pixel-level metrics and investigate the novel application of surgical world models to closed-loop action controllability at interactive rates.                      
+
+> 9NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics
+> Stage 8-frame chunks 12 -frame chunks Initial frame encode 143 ms 143 ms
+> Conditioning encode <1 ms <1 ms
+> Diffusion DiT ( 2steps) 47 ms 69 ms
+> RGB decode (TAEHV (Boer Bohan, 2025)) 4 ms 5 ms
+> KV-cache update 22 ms 33 ms
+> Render loop (NVENC) 3 ms 6 ms
+> Total inference 51 ms 74 ms
+> Inference FPS 159 161
+
+Table 1: Per-block inference budget for Cosmos-H-Dreams on a single NVIDIA RTX PRO 6000 Blackwell Workstation Edition GPU at 288 × 512 (8 or 12 pixel frames per block, 2-step student, Wan 2.1 encoder (Wan et al., 2025), TAEHV decoder (Boer Bohan, 2025)). The KV-cache update runs on a side thread and is excluded from the critical-path total. 
+
+## 6.1. Simulation Quality 
+
+We assess simulation fidelity by replaying recorded action sequences from 12 held-out suturing episodes and comparing each synthesized rollout with its corresponding real video. Metrics cover the complete available rollout of each episode, excluding the shared real conditioning frame. We report complementary annotation-free metrics: Fréchet Video Distance (FVD), computed from pooled 17-frame I3D clip features, for distribution-level video quality; LPIPS for paired perceptual similarity; PSNR for pixel-level reconstruction quality; and mean L1 error for absolute frame-wise deviation. LPIPS, PSNR, and L1 are computed over every aligned real–generated frame and macro-averaged across episodes so that each episode contributes equally. In Tab. 2 we compare the bidirectional teacher with the causal 4-step student and the causal 2-step student, which uses TAEHV (Boer Bohan, 2025), to quantify the quality cost of real-time operation introduced by few-step causal generation and lightweight decoding.                     
+
+> Model FVD ↓LPIPS ↓PSNR ↑Mean L1 ↓
+> Bidirectional teacher 170.13 0.0864 25.92 0.0513 Causal student ( 4-step) 257.16 0.1187 24.48 0.0538 Causal student ( 2-step, TAEHV) 265.36 0.1212 24.38 0.0561
+
+Table 2: Simulation quality on suturing episodes. Metrics cover the complete available rollout after excluding the real conditioning frame; paired metrics are macro-averaged across episodes. 
+
+Rollout stability. Furthermore, autoregressive video diffusion models exhibit growing temporal degradation over time due to imperfect latents (Wang et al., 2025; Huang et al., 2025). As mentioned in Sec. 4 and 5, Self Forcing distillation with a progressive long-context teacher, together with a streaming KV cache, helps alleviate temporal drift. Qualitatively, this is shown in Fig. 3. We further quantify degradation over time with segmented FVD in Fig. 4 for two students with identical configurations but trained with different teachers. We roll out full test-set trajectories autoregressively, then split each rollout into contiguous 5-second windows and compute FVD against the real video distribution. 
+
+## 6.2. Closed-Loop Surgical Policy Evaluation 
+
+Following the protocol of Cosmos-Surg-dVRK (Zbinden et al., 2025), we place a surgical policy inside 
+
+Cosmos-H-Dreams : at each step the policy observes the last synthesized frame, emits an action chunk, and the simulator advances. A trained video classifier scores the task outcome (e.g., success/failure of a suture throw) from the generated rollout, yielding a fully automated, online evaluation. Video evaluation focuses on the whole process, going beyond a simple comparison between the initial and the final frames. It aims to distinguish violations of physical laws as well as infeasible movements. We compare simulated and real             
+
+> 10 NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics Short context
+> T = 1 T = 35 T = 105 T = 140
+> Long context
+> T = 1 T = 35 T = 105 T = 140
+> Short context
+> T = 1 T = 35 T = 105 T = 140
+> Long context
+> T = 1 T = 35 T = 105 T = 140
+
+Figure 3: Frames sampled along long autoregressive rollouts of Cosmos-H-Dreams , comparing distillation with a short-horizon teacher (top) versus a progressive longer-horizon teacher (bottom). dVRK success rates using Pearson correlation, mean maximum rank violation (MMRV), and mean bias, across six policy checkpoints: half-training and full-training checkpoints from three policy families ( 𝜋 0 (Black et al., 2024), GR00T N1 (NVIDIA et al., 2025) and GR00T N1.5). Together, these metrics measure linear sim-to-real agreement, preservation of policy ranking, and systematic over- or underestimation of real-world success.                   
+
+> Evaluation method Pearson 𝑟 ↑Avg. MMRV ↓Mean bias →0
+> Cosmos-Surg-dVRK 0.756 0.10 ±0.04 0.153
+> Cosmos-H-Dreams 0.696 0.23 ±0.09 −0.12
+
+Table 3: Sim-to-real policy-evaluation agreement for Cosmos-H-Dreams and the offline Cosmos-Surg-dVRK 
+
+baseline. Pearson 𝑟 measures linear agreement between simulated and real dVRK success rates, MMRV measures policy-ranking violations, and mean bias measures systematic error in predicted success rates. The results in Tab. 3 and Fig. 5 show moderate overall agreement between Cosmos-H-Dreams and real-world policy rollouts, with a Pearson correlation of 0.696 and an MMRV of 0.23 ± 0.09 when pooling the four tasks. However, performance varies substantially across tasks. Agreement is relatively strong for pickup and throw, with correlations of 𝑟 = 0 .67 and 𝑟 = 0 .77 , respectively, whereas handover and knot tie yield negative correlations of 𝑟 = −0.39 and 𝑟 = −0.24 . As illustrated in Fig. 6, these failures are primarily associated with scenes containing multiple overlapping fine structures. In knot tying, for example, the distilled model may hallucinate the geometry of the thread when it folds or crosses over itself, a behavior that is markedly less pronounced in the teacher. This suggests that, although the distilled model retains the ability to generate broadly plausible and physically consistent dynamics, its fidelity degrades when the scene requires accurate reconstruction of thin, interacting structures. 
+
+## 6.3. Performance Benchmarks and Ablations 
+
+Finally, we characterize Cosmos-H-Dreams as a system. We report latency and visual quality for four different configurations with distinct inference engine parameters. We sweep the number of diffusion steps and the       
+
+> 11 NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics 246810 12 14
+> time in clip (s)
+> 250 500 750 1000 1250 1500 1750 2000
+> FVD
+> FVD (lower is better)
+> Progressive (H=73) Short horizon (H=13)
+
+Figure 4: Segmented FVD over contiguous 5-second windows along full autoregressive rollouts, comparing students trained with different-horizon teachers. decoder type in Tab. 4. As expected, the highest throughput configuration comes from the lowest number of diffusion steps and the lightweight TAEHV decoder (Boer Bohan, 2025). It is worth noting that the tradeoff between speed and visual quality (measured with LPIPS here) is minimal, as neither LPIPS nor FVD shows a significant difference on the test set. We attribute this behavior to the simplicity of the tabletop scenes, and expect higher variability on more challenging scenes. 
+
+Setting Diffusion steps Decoder type Inference (ms) ↓ Inference FPS ↑ LPIPS ↓
+
+Highest throughput 2 TAEHV 74 .7 161 0.121 Balanced 1 4 TAEHV 136 .9 87 0.118 Balanced 2 2 VAE 179 67 0.117 Highest quality 4 VAE 243 49 0.115 
+
+Table 4: Inference FPS, latency and visual quality for four different configurations, ranging from highest throughput (lower latency) to highest quality (highest latency). Visual quality is measured with LPIPS on the test set. All of the configurations are set to generate 12 frames per inference step. 
+
+# 7. Related Work 
+
+Cosmos-H-Dreams sits at the intersection of several research threads: world foundation models and their action-conditioned descendants, real-time and streaming video diffusion, surgical simulation and surgical world models, and the human interface devices and robotic platforms that make interactive control possible. We review each in turn and position Cosmos-H-Dreams and Cosmos-H-Surgical-Simulator within them. 
+
+## 7.1. World Foundation Models and World-Action Models 
+
+World models learn how an environment evolves and how an agent’s actions change future observations. Early latent-dynamics models such as World Models (Ha and Schmidhuber, 2018) and Dreamer (Hafner et al., 2020) learned compact predictive states for control, while JEPA-style models predict in latent space for perception and planning (Bardes et al., 2025; Assran et al., 2025). A complementary, generative line makes the predicted future directly observable as pixels: Sora (Brooks et al., 2024) popularized video generation as implicit world simulation, and the NVIDIA Cosmos platform develops this direction explicitly for Physical AI (Agarwal et al., 2025; NVIDIA, 2025a,c,b). The model component of Cosmos-H-Dreams builds on Cosmos-Predict2.5 (NVIDIA, 2025c) as its backbone. A growing body of work shows that the representations learned by such generative world models can be repurposed into competitive policies, world-action models (WAMs), in robotics (Ye        
+
+> 12 NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics 020 40 60 80 100
+> Simulated success rate (%)
+> 020 40 60 80 100
+> Real-world success rate (%)
+> Simulator vs. real-robot policy ranking
+> Task
+> Handover Throw Knot Tie Pickup
+> Policy
+> π04k
+> π010k GR00T N1 20k GR00T N1 39k GR00T N1.5 25k GR00T N1.5 50k
+
+Figure 5: Relationship between surgical policy success rates measured in Cosmos-H-Dreams simulation (horizontal axis) and on the real-world dVRK (vertical axis). Each policy is shown with two training regimes: half–training and full–training across four tabletop suture pad tasks. et al., 2026) and, more recently, driving via OmniDreams (NVIDIA, 2026). Cosmos 3 (NVIDIA, 2026), as an omnimodel, unifies understanding and generation across modalities including action within a single backbone. 
+
+Cosmos-H-Surgical-Simulator specializes this lineage to surgery, adding dual-arm action conditioning in a unified surgical action space. 
+
+## 7.2. Interactive and Real-Time Video World Models 
+
+A separate thread targets interactivity. Genie (Bruce et al., 2024) and its successors (Parker-Holder et al., 2024; Ball et al., 2025) learn action-controllable, playable environments from video; UniSim (Yang et al., 2023) proposes a universal simulator of real-world interaction. Pushing video diffusion into the interactive-latency regime requires advances on both the algorithm and systems sides. Self Forcing (Huang et al., 2025) and CausVid (Yin et al., 2025) bridge the train-test gap of autoregressive video diffusion through self-rollout and asymmetric distillation. Diffusion Forcing (Chen et al., 2024) provides the per-token noise schedule underlying causal mid-training. Furthermore, Xiao et al. (2024) introduce the idea of attention sinks, which are applied to video diffusion to improve consistency over long rollouts. On the inference engine side, the FlashDreams 
+
+streaming-inference library (NVIDIA, 2026) accelerates autoregressive video models into live, controllable simulations, such as OmniDreams (NVIDIA, 2026) or LingBot-World (Robbyant et al., 2026). 
+
+## 7.3. Surgical Simulation and Surgical World Models 
+
+Surgical simulation has historically relied on physics- and asset-based virtual-reality trainers, which provide controllable, repeatable practice but struggle to reproduce the photorealistic appearance and soft-tissue behavior of real procedures. Surgical data science has, in parallel, built perception tools for tool detection, phase recognition, and scene segmentation (Maier-Hein et al., 2017; Schmidgall et al., 2024). Most directly related is Cosmos-Surg-dVRK (Zbinden et al., 2025), a surgical fine-tune of the Cosmos WFM that, together with a V-JEPA 2-derived video classifier (Assran et al., 2025), enables automated offline evaluation of dVRK policies. Its simulated outcomes correlate with the real dVRK outcomes on tabletop suturing, with promising agreement also reported for ex-vivo porcine cholecystectomy. We use the same data foundation but turn the offline generator into an interactive, real-time simulator: Cosmos-H-Surgical-Simulator provides multi-embodiment initialization, while the single-embodiment model served by Cosmos-H-Dreams lets a human operator or a policy generate actions in real time and observe the consequences within the control loop.  
+
+> 13 NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics Teacher Student
+
+Figure 6: Generative errors due to complex fine structures. The distilled model (right) may hallucinate the geometry of the thread when it folds or crosses over itself, a failure mode far weaker in the teacher (left). 
+
+## 7.4. Human Interfaces and Robotic Platforms 
+
+Cosmos-H-Dreams is designed to be driven by real interfaces. The Meta Quest family of standalone headsets, with inside-out tracking and hand/controller pose estimation exposed through the WebXR API, provides an accessible immersive interface that we use for hand-tracked control. On the robot side, the da Vinci Research Kit (dVRK) (Kazanzides et al., 2014) is the open research platform underlying our tabletop suturing data and policy evaluation, while the CMR Surgical Versius system is a new-generation modular robot whose console signals define the richest portion of the unified action space of Cosmos-H-Surgical-Simulator and which can be targeted as a clinical control surface. By mapping all of these interfaces onto a single action representation, 
+
+Cosmos-H-Dreams remains agnostic to whether a trainee, a surgeon at a console, or a learned policy is driving it. 
+
+# 8. Limitations 
+
+The real-time regime carries a measurable fidelity cost: distilling the bidirectional teacher into the 2-step student with lightweight decoding raises FVD from 170 .1 to 265 .4 and LPIPS from 0.086 to 0.121 (Tab. 2). This cost is not uniform across content. Scenes with thin, self-interacting structures degrade most: the distilled model may hallucinate thread geometry where it folds or crosses over itself, a failure mode far less pronounced in the teacher (Fig. 6). The effect propagates to closed-loop evaluation, where agreement with real dVRK outcomes is strong for pickup and throw ( 𝑟 = 0 .67 , 𝑟 = 0 .76 ) but inverted for handover and knot tie ( 𝑟 = −0.39 , 𝑟 = −0.24 ); pooled agreement ( 𝑟 = 0 .647 , MMRV 0.20 ± 0.10 ) remains below the offline Cosmos-Surg-dVRK baseline. 
+
+Cosmos-H-Dreams is therefore not yet a substitute for offline evaluation on fine bimanual manipulation. Our quantitative evidence is further limited to dVRK tabletop suturing, with 12 held-out episodes for the simulation-quality metrics. Transfer of synthetically generated episodes to real-robot policy training remains future work. Finally, reported throughput characterizes critical-path generation; end-to-end action-to-photon latency additionally includes encode and transport (Sec. 5.3), and long-horizon drift is alleviated by the progressive long-context teacher rather than eliminated. 
+
+# 9. Conclusion 
+
+We presented Cosmos-H-Dreams , an integrated real-time surgical world-model system comprising an action-conditioned generative model, a teacher-to-student distillation recipe, and a deployment stack. Its deployed 
+
+> 14 NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics
+
+model is initialized from the previously released Cosmos-H-Surgical-Simulator , specialized for a target embodi-ment and procedure, and distilled into a causal, few-step student. Cosmos-H-Dreams integrates this student with the FlashDreams streaming-inference library and live human- and policy-control interfaces, enabling interactive streaming on a single edge GPU. To our knowledge, it is the first interactive surgical world-model that can be driven live by a human in VR, a surgeon at a console, or an autonomous learned policy in a closed loop. We detailed the complete training recipe for tabletop suturing and evaluated Cosmos-H-Dreams along three axes: simulation quality including long-horizon rollout stability, real-time closed-loop policy evaluation, and inference performance across visual quality, throughput, and latency. The results demonstrate interactive generation and moderate sim-to-real policy-evaluation agreement, while exposing limitations involving thin, overlapping structures such as sutures. The model’s real-time capabilities transform it from an offline video generator into an interactive environment, enabling several downstream applications. These include surgical training and the closed-loop development and evaluation of robotic policies. The system may also provide a basis for synthetic data generation, including rare or counterfactual scenarios that may be difficult to collect in real-world settings. An important direction for future work is to extend and validate Cosmos-H-Dreams on clinical surgical procedures, which present richer anatomy, more complex tissue interactions, and longer task horizons than the tabletop suturing setting studied here. Looking further ahead, sufficiently accurate and thoroughly validated low-latency models could enable intraoperative decision-making by allowing surgeons to visualize possible outcomes of candidate actions before execution. 
+
+Cosmos-H-Dreams currently builds on Cosmos-Predict2.5. Cosmos 3 (NVIDIA, 2026), its successor, is therefore a natural next-generation backbone for real-time surgical simulation. Adapting our specialization, distillation, and deployment pipeline to Cosmos 3 offers the prospect of improving simulation fidelity, including the fine-structure failure cases identified here, while retaining interactive throughput. Determining how much of these potential quality gains can be preserved under causal, few-step distillation is an important direction for future work. 
+
+> 15 NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics
+
+# A. Cosmos-H-Dreams at Higher Resolution 
+
+We show in Tab. 1 that Cosmos-H-Dreams can run in real time at low resolution on a single NVIDIA RTX PRO 6000 Blackwell GPU. Here, we extend the experiments to higher resolution, showing that the system is not limited to 288 × 512 and can run reasonably well at 540p (Tab. 5). We note that in this case the pressure on the GPU is higher, incurring a higher SM occupancy. Therefore, the NVENC path is not as reliable as it is at low resolution and video encoding has to fall back to the CPU. 
+
+Stage 8-frame chunks 12 -frame chunks Initial frame encode 156 ms 156 ms 
+
+Conditioning encode < 1 ms < 1 ms 
+
+Diffusion DiT ( 2 steps) 249 ms 371 ms 
+
+RGB decode 14 ms 25 ms 
+
+KV-cache update 119 ms 183 ms 
+
+Render loop (CPU) 36 ms 54 ms 
+
+Total inference 263 ms 396 ms 
+
+Inference FPS 31 30 
+
+Table 5: Per-block inference budget for Cosmos-H-Dreams on a single NVIDIA RTX PRO 6000 Blackwell GPU at 
+
+544 × 960 (8 or 12 pixel frames per block, 2-step student, Wan 2.1 encoder (Wan et al., 2025), TAEHV decoder (Boer Bohan, 2025)). The KV-cache update runs on a side thread and is excluded from the critical-path total. 
+
+> 16 NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics
+
+# B. Contributors and Acknowledgments 
+
+## B.1. Contributors 
+
+NVIDIA: Javier Gamazo Tejero, Lukas Zbinden, Keyur Sheth, Raghavendra K M, Nadim Daher, Mahdi Azizian, Sean D. Huver. CMR Surgical: Diego Granero Maraña, Filip Binkiewicz, Patrick Thornycroft. 
+
+## B.2. Acknowledgments 
+
+Ordered alphabetically: Juo-Tung Chen, Yuzhu Dong, Guillermo García Cobo, Zan Gojcic, Ruilong Li, Nigel Nelson, Qi Wu. 
+
+> 17 NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics
+
+# References 
+
+Niket Agarwal, Arslan Ali, Maciej Bala, Yogesh Balaji, Erik Barker, Tiffany Cai, Prithvijit Chattopadhyay, Yongxin Chen, Yin Cui, Yifan Ding, et al. Cosmos world foundation model platform for physical AI. arXiv preprint arXiv:2501.03575 , 2025. 3, 5, 12 Jason Ansel, Edward Yang, et al. PyTorch 2: Faster machine learning through dynamic Python bytecode transformation and graph compilation. In Proceedings of the 29th ACM International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS) , 2024. 8 Mahmoud Assran, Adrien Bardes, David Fan, et al. V-jepa 2: Self-supervised video models enable understanding, prediction and planning. arXiv preprint arXiv:2506.09985 , 2025. 12, 13 Philip J Ball, J Bauer, F Belletti, et al. Genie 3: A new frontier for world models. 
+
+https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/ , 2025. 13 Adrien Bardes, Quentin Garrido, Jean Ponce, Xinlei Chen, Michael Rabbat, Yann LeCun, Mahmoud Assran, and Nicolas Ballas. Revisiting feature prediction for learning visual representations from video. In ICLR , 2025. 12 Kevin Black, Noah Brown, Danny Driess, Adnan Esmail, Michael Equi, Chelsea Finn, Niccolo Fusai, Lachy Groom, Karol Hausman, Brian Ichter, et al. 𝜋 0: A Vision-Language-Action flow model for general robot control. 
+
+arXiv preprint arXiv:2410.24164 , 2024. 11 Ollin Boer Bohan. Taehv: Tiny autoencoder for hunyuan video. https://github.com/madebyollin/taehv ,2025. 8, 10, 12, 16 Tim Brooks, Bill Peebles, Connor Holmes, Will DePue, Yufei Guo, Li Jing, David Schnurr, Joe Taylor, Troy Luhman, Eric Luhman, Clarence Ng, Ricky Wang, and Aditya Ramesh. Video generation models as world simulators. 2024. URL 
+
+https://openai.com/research/video-generation-models-as-world-simulators . 3, 12 Jake Bruce, Michael D Dennis, Ashley Edwards, Jack Parker-Holder, Yuge Shi, Edward Hughes, Matthew Lai, Aditi Mavalankar, Richie Steigerwald, Chris Apps, et al. Genie: Generative interactive environments. In ICML ,2024. 3, 13 Boyuan Chen, Diego Martí Monsó, Yilun Du, Max Simchowitz, Russ Tedrake, and Vincent Sitzmann. Diffusion forcing: Next-token prediction meets full-sequence diffusion. Advances in Neural Information Processing Systems , 37:24081–24125, 2024. 13 Tong Chen, Shuya Yang, Junyi Wang, Long Bai, Hongliang Ren, and Luping Zhou. Surgsora: Object-aware diffusion model for controllable surgical video generation. In International Conference on Medical Image Computing and Computer-Assisted Intervention , pages 521–531. Springer, 2025. 3 David Ha and Jürgen Schmidhuber. World models. arXiv preprint arXiv:1803.10122 , 2018. 12 Danijar Hafner, Timothy Lillicrap, Jimmy Ba, and Mohammad Norouzi. Dream to control: Learning behaviors by latent imagination. In ICLR , 2020. 12 Jesse Haworth, Juo-Tung Chen, Nigel Nelson, Ji Woong Kim, Masoud Moghani, Chelsea Finn, and Axel Krieger. Suturebot: A precision framework & benchmark for autonomous end-to-end suturing. In Conference on Neural Information Processing Systems (NeurIPS) , 2025. 4 Xun Huang, Zhengqi Li, Guande He, Mingyuan Zhou, and Eli Shechtman. Self forcing: Bridging the train-test gap in autoregressive video diffusion. arXiv preprint arXiv:2506.08009 , 2025. 3, 4, 7, 8, 10, 13 
+
+> 18 NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics
+
+Peter Kazanzides, Zihan Chen, Anton Deguet, Gregory S Fischer, Russell H Taylor, and Simon P DiMaio. An open-source research kit for the da Vinci surgical system. In IEEE International Conference on Robotics and Automation (ICRA) , pages 6434–6439. IEEE, 2014. 14 Jiachen Li, Weixi Feng, Tsu-Jui Fu, Xinyi Wang, Sugato Basu, Wenhu Chen, and William Y Wang. T2v-turbo: Breaking the quality bottleneck of video consistency model with mixed reward feedback. Advances in neural information processing systems , 37:75692–75726, 2024. 3 Xiao Liang, Fei Liu, Yutong Zhang, Yuelei Li, Shan Lin, and Michael Yip. Real-to-sim deformable object manipulation: Optimizing physics models with residual mappings for robotic surgery. In 2024 IEEE international conference on robotics and automation (ICRA) , pages 15471–15477. IEEE, 2024. 3 Xingchao Liu, Chengyue Gong, and Qiang Liu. Flow straight and fast: Learning to generate and transfer data with rectified flow. arXiv preprint arXiv:2209.03003 , 2022. 6 Lena Maier-Hein, Swaroop S Vedula, Stefanie Speidel, Nassir Navab, Ron Kikinis, Adrian Park, Matthias Eisenmann, Hubertus Feussner, Germain Forestier, Stamatia Giannarou, et al. Surgical data science for next-generation interventions. Nature Biomedical Engineering , 1(9):691–696, 2017. 13 Nigel Nelson, Juo-Tung Chen, Jesse Haworth, Xinhao Chen, Lukas Zbinden, Dianye Huang, Alaa Eldin Abdelaal, Alberto Arezzo, Ayberk Acar, Farshid Alambeigi, et al. Open-H-Embodiment: A large-scale dataset for enabling foundation models in medical robotics. arXiv preprint arXiv:2604.21017 , 2026. 4, 5 NVIDIA. Cosmos-Predict2. https://research.nvidia.com/labs/cosmos-lab/cosmos-predict2/ , 2025a. 12 NVIDIA. Cosmos-Transfer1: Conditional world generation with adaptive multimodal control. arXiv preprint arXiv:2503.14492 , 2025b. 12 NVIDIA. World simulation with video foundation models for physical AI. arXiv preprint arXiv:2511.00062 ,2025c. 3, 5, 12 NVIDIA. Cosmos 3: Omnimodal world models for physical ai. arXiv preprint arXiv:2606.02800 , 2026. 13, 15 NVIDIA. Flashdreams: A high-performance streaming inference stack for world and video models. 
+
+https://github.com/NVIDIA/flashdreams , 2026. 8, 13 NVIDIA. NVIDIA OmniDreams: Real-time generative world model for closed-loop autonomous vehicle simulation. arXiv preprint arXiv:2606.03159 , 2026. 3, 5, 6, 13 NVIDIA et al. GR00T N1: An open foundation model for generalist humanoid robots. In ArXiv Preprint , March 2025. 3, 11 Jack Parker-Holder, Philip Ball, Jake Bruce, et al. Genie 2: A large-scale foundation world model. 2024. URL 
+
+https://deepmind.google/discover/blog/genie-2-a-large-scale-foundation-world-model/ . 13 Team Robbyant, Zelin Gao, Qiuyu Wang, Yanhong Zeng, Jiapeng Zhu, Ka Leong Cheng, Yixuan Li, Hanlin Wang, Yinghao Xu, Shuailei Ma, et al. Advancing open-source world models. arXiv preprint arXiv:2601.20540 ,2026. 3, 13 Samuel Schmidgall, Ji Woong Kim, and Axel Krieger. Surgical SAM and beyond: Foundation models for surgical scene understanding. In Surgical Data Science , 2024. 13 Team Wan et al. Wan: Open and advanced large-scale video generative models. arXiv preprint arXiv:2503.20314 , 2025. 8, 10, 16 
+
+> 19 NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics
+
+Jing Wang, Fengzhuo Zhang, Xiaoli Li, Vincent YF Tan, Tianyu Pang, Chao Du, Aixin Sun, and Zhuoran Yang. Error analyses of auto-regressive video diffusion models: A unified framework. arXiv preprint arXiv:2503.10704 , 2025. 10 Guangxuan Xiao, Yuandong Tian, Beidi Chen, Song Han, and Mike Lewis. Efficient streaming language models with attention sinks. In International Conference on Learning Representations (ICLR) , 2024. 8, 13 Sherry Yang, Yilun Du, Kamyar Ghasemipour, Jonathan Tompson, Leslie Kaelbling, Dale Schuurmans, and Pieter Abbeel. UniSim: Learning interactive real-world simulators. arXiv preprint arXiv:2310.06114 , 2023. 13 Seonghyeon Ye, Yunhao Ge, Kaiyuan Zheng, Shenyuan Gao, Sihyun Yu, George Kurian, Suneel Indupuru, You Liang Tan, Chuning Zhu, Jiannan Xiang, et al. World action models are zero-shot policies. arXiv preprint arXiv:2602.15922 , 2026. 12 Tianwei Yin, Michaël Gharbi, Richard Zhang, Eli Shechtman, Fredo Durand, William T Freeman, and Taesung Park. One-step diffusion with distribution matching distillation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 6613–6623, 2024. 7, 8 Tianwei Yin, Qiang Zhang, Richard Zhang, William T Freeman, Fredo Durand, Eli Shechtman, and Xun Huang. From slow bidirectional to fast autoregressive video diffusion models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 22963–22974, 2025. 3, 13 Lukas Zbinden, Nigel Nelson, Juo-Tung Chen, Xinhao Chen, Ji Woong Kim, Mahdi Azizian, Axel Krieger, and Sean Huver. Cosmos-Surg-dVRK: World foundation model-based automated online evaluation of surgical robot policy learning. arXiv preprint arXiv:2510.16240 , 2025. 3, 4, 10, 13 Jinao Zhang, Yongmin Zhong, and Chengfan Gu. Deformable models for surgical simulation: a survey. arXiv preprint arXiv:1909.03363 , 2019. 3

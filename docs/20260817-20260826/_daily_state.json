@@ -1,0 +1,153 @@
+{
+  "date": "20260817-20260826",
+  "date_label": "2026-08-17 ~ 2026-08-26",
+  "generated_at": "2026-08-26 07:09:40 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.23526v1",
+      "route": "20260817-20260826/2608.23526v1-correcting-a-learned-physical-invariant-improves-world-model-rollouts",
+      "title": "Correcting a learned physical invariant improves world-model rollouts",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "修正学到的物理不变量以稳定世界模型视频预测",
+      "first_seen_at": "2026-08-26 07:09:40 UTC",
+      "updated_at": "2026-08-26 07:09:40 UTC"
+    },
+    {
+      "paper_id": "2608.24199v1",
+      "route": "20260817-20260826/2608.24199v1-nvidia-cosmos-h-dreams-real-time-generative-physics-simulation-for-surgical-robotics",
+      "title": "NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "动作条件生成式视频世界模型，用于手术机器人的实时物理仿真",
+      "first_seen_at": "2026-08-26 07:09:40 UTC",
+      "updated_at": "2026-08-26 07:09:40 UTC"
+    },
+    {
+      "paper_id": "2608.22102v1",
+      "route": "20260817-20260826/2608.22102v1-learning-implicit-constitutive-laws-for-dynamic-3d-gaussian-splatting-from-monocular-videos",
+      "title": "Learning Implicit Constitutive Laws for Dynamic 3D Gaussian Splatting from Monocular Videos",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "从单目视频学习隐式本构定律，以建模可变形物体的物理动力学",
+      "first_seen_at": "2026-08-26 07:09:40 UTC",
+      "updated_at": "2026-08-26 07:09:40 UTC"
+    },
+    {
+      "paper_id": "2608.23383v2",
+      "route": "20260817-20260826/2608.23383v2-long-horizon-audio-visual-generation-for-persistent-stories-and-interactive-worlds",
+      "title": "Long-Horizon Audio-Visual Generation for Persistent Stories and Interactive Worlds",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向持久故事的长时音视频生成，跨镜头记忆支持多镜头角色一致，可用于自动短剧创作",
+      "first_seen_at": "2026-08-26 07:09:40 UTC",
+      "updated_at": "2026-08-26 07:09:40 UTC"
+    },
+    {
+      "paper_id": "2608.24119v1",
+      "route": "20260817-20260826/2608.24119v1-transphy-visual-in-context-learning-for-physically-grounded-image-editing",
+      "title": "TransPhy: Visual In-Context Learning for Physically Grounded Image Editing",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "提出含物理接地变换规则的PhysVICL-74基准",
+      "first_seen_at": "2026-08-26 07:09:40 UTC",
+      "updated_at": "2026-08-26 07:09:40 UTC"
+    },
+    {
+      "paper_id": "2608.18077v1",
+      "route": "20260817-20260826/2608.18077v1-hydra-0-action-flow-for-generalist-world-modeling-and-control",
+      "title": "Hydra-0: Action Flow for Generalist World Modeling and Control",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "用行为流预测物体运动与动作后果，降低生成视频的物体运动误差",
+      "first_seen_at": "2026-08-26 07:09:40 UTC",
+      "updated_at": "2026-08-26 07:09:40 UTC"
+    },
+    {
+      "paper_id": "2608.20749v1",
+      "route": "20260817-20260826/2608.20749v1-identity-preserving-text-to-video-generation-via-agentic-enhancement-and-semantic-repair",
+      "title": "Identity-Preserving Text-to-Video Generation via Agentic Enhancement and Semantic Repair",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "身份保持的文本到视频生成，智能体提示增强与语义修复保持主体身份与指令跟随，适用于角色一致的短剧制作",
+      "first_seen_at": "2026-08-26 07:09:40 UTC",
+      "updated_at": "2026-08-26 07:09:40 UTC"
+    },
+    {
+      "paper_id": "2608.21093v1",
+      "route": "20260817-20260826/2608.21093v1-gaussian-mixture-latent-flow-for-stochastic-3d-human-motion-prediction",
+      "title": "Gaussian-Mixture Latent Flow for Stochastic 3D Human Motion Prediction",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "针对物理不合理的人体运动预测并量化不确定性",
+      "first_seen_at": "2026-08-26 07:09:40 UTC",
+      "updated_at": "2026-08-26 07:09:40 UTC"
+    },
+    {
+      "paper_id": "2608.23549v1",
+      "route": "20260817-20260826/2608.23549v1-fixanything-3d-consistent-rendering-refinement-via-video-generative-priors",
+      "title": "FixAnything: 3D-Consistent Rendering Refinement via Video Generative Priors",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "用视频生成先验做3D一致渲染修复，涉及跨帧一致性",
+      "first_seen_at": "2026-08-26 07:09:40 UTC",
+      "updated_at": "2026-08-26 07:09:40 UTC"
+    }
+  ]
+}

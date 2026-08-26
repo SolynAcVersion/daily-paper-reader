@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-24</span>
+      <span class="dpr-home-dashboard-kicker">2026-08-17 ~ 2026-08-26</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 2 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 9 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>1</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>7</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-24 20:56:17 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-26 07:09:40 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,9 +62,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日精读运动物理检测AI视频，速读多目标跟踪主动学习，共2篇。</p>
-<p>最值得看的是《MotionPhys》利用光流轨迹物理一致性识别AI生成视频，评分8.0。</p>
-<p>若对视频鉴别感兴趣，可优先精读该文；跟踪方向速读了解即可。</p>
+<p>本周共览9篇论文，精读2篇高分工作，聚焦世界模型与物理仿真前沿。</p>
+<p>最值得关注：修正物理不变性可提升世界模型长程推演，NVIDIA Cosmos-H-Dreams将实时生成式物理仿真用于手术机器人。</p>
+<p>下一步建议：普通读者可留意物理一致性如何让AI视频预测与交互生成更可靠、更实用。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -73,12 +73,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">1 篇</strong>
+    <strong class="dpr-home-dashboard-count">2 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="MotionPhys: Detecting AI-Generated Videos via Physical Consistency of Optical-Flow Trajectories">MotionPhys: Detecting AI-Generated Videos via Physical Consistency of Optical-Flow Trajectories</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Correcting a learned physical invariant improves world-model rollouts">Correcting a learned physical invariant improves world-model rollouts</span></li><li><span class="dpr-home-dashboard-paper-title" title="NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics">NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>1</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>2</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -86,12 +86,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">1 篇</strong>
+    <strong class="dpr-home-dashboard-count">7 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Probing Association Instability with Track-State Perturbations for Clip-Level Active Learning in Query-Propagation Multi-Object Tracking">Probing Association Instability with Track-State Perturbations for Clip-Level Active Learning in Query-Propagation Multi-Object Tracking</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Learning Implicit Constitutive Laws for Dynamic 3D Gaussian Splatting from Monocular Videos">Learning Implicit Constitutive Laws for Dynamic 3D Gaussian Splatting from Monocular Videos</span></li><li><span class="dpr-home-dashboard-paper-title" title="Long-Horizon Audio-Visual Generation for Persistent Stories and Interactive Worlds">Long-Horizon Audio-Visual Generation for Persistent Stories and Interactive Worlds</span></li><li><span class="dpr-home-dashboard-paper-title" title="TransPhy: Visual In-Context Learning for Physically Grounded Image Editing">TransPhy: Visual In-Context Learning for Physically Grounded Image Editing</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>1</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>5</strong></span><span class="dpr-home-dashboard-tag">manga-drama <strong>2</strong></span></div>
 </section>
 </div>
 

@@ -1,0 +1,400 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-26T07:03:43.995844+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 2,
+    "deep_cap": 7,
+    "deep_selected": 2,
+    "quick_candidates": 7,
+    "quick_skim_target": 12,
+    "quick_selected": 7
+  },
+  "deep_dive": [
+    {
+      "id": "2608.23526v1",
+      "source": "arxiv",
+      "title": "Correcting a learned physical invariant improves world-model rollouts",
+      "abstract": "World models can predict video without learning dynamics that they reliably preserve. We test whether a frozen DreamerV3 trained only on pendulum video learns a scalar that its own latent transition treats as approximately conserved. A label-free search recovers the same energy-like invariant across independently trained conservative models, while the same procedure finds no comparable invariant in matched damped models. During autonomous rollouts, this quantity drifts. Projecting the latent state back toward its initial level set reduces rollout error in all three conservative models, whereas matched random constraints usually increase it. These results distinguish a dynamically meaningful invariant from a merely decodable correlate and reveal a concrete failure mode: a world model can learn a physical constraint from pixels yet violate that constraint when it imagines forward.",
+      "authors": [
+        "Richard Bao"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-08-24T17:29:40+00:00",
+      "link": "https://arxiv.org/pdf/2608.23526v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "learns and corrects a physical invariant to stabilize world-model video rollouts",
+      "llm_evidence_cn": "修正学到的物理不变量以稳定世界模型视频预测",
+      "llm_evidence": "修正学到的物理不变量以稳定世界模型视频预测",
+      "canonical_evidence": "修正学到的物理不变量以稳定世界模型视频预测",
+      "llm_tldr_en": "World models often fail to preserve physical invariants. This paper learns an energy-like conserved quantity from pendulum video and shows that projecting latent states back to its level set reduces rollout error.",
+      "llm_tldr_cn": "论文指出世界模型在预测视频时可能并未学到可可靠保持的动力学不变量。作者在没有标签的情况下从摆锤视频中恢复出一个类似能量的守恒量，并在自主 rollout 中发现该量会发生漂移。通过将潜在状态投影回初始水平集，三种保守模型的 rollout 误差均下降，而随机约束通常无效。该工作为在视频预测中注入物理一致性提供了具体途径。",
+      "llm_tldr": "论文指出世界模型在预测视频时可能并未学到可可靠保持的动力学不变量。作者在没有标签的情况下从摆锤视频中恢复出一个类似能量的守恒量，并在自主 rollout 中发现该量会发生漂移。通过将潜在状态投影回初始水平集，三种保守模型的 rollout 误差均下降，而随机约束通常无效。该工作为在视频预测中注入物理一致性提供了具体途径。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "how to ensure physical consistency in generated videos",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.24199v1",
+      "source": "arxiv",
+      "title": "NVIDIA Cosmos-H-Dreams: Real-Time Generative Physics Simulation for Surgical Robotics",
+      "abstract": "Generative simulation for surgical robotics still lacks real-time interaction. Physical-robot experiments, often involving animal or cadaver labs, are time-consuming, costly, and difficult to reproduce, while classical simulators struggle to capture photorealistic appearance and deformable-tissue dynamics. We address this gap with Cosmos-H-Dreams, an integrated real-time surgical world-model system combining an action-conditioned generative model, a teacher-to-student distillation recipe, and a deployment stack built on the NVIDIA FlashDreams streaming-inference library. Starting from Cosmos-H-Surgical-Simulator, a multi-embodiment action-conditioned surgical video world model fine-tuned on the large-scale Open-H-Embodiment corpus, we post-train this checkpoint on embodiment- and procedure-specific data. By distilling the resulting bidirectional teacher into a causal, few-step student with Self Forcing, we turn a passive video generator into a controllable surgical simulator that streams at $\\sim$160 inference FPS on a single NVIDIA RTX PRO 6000 Blackwell workstation GPU. Crucially, Cosmos-H-Dreams is controller-agnostic: any interface that emits a stream of robot kinematics can drive it. We demonstrate live control through a browser keyboard over WebRTC, a Meta Quest headset over WebXR, a commercial surgical robot console such as CMR Surgical's Versius, and learned policies operating in closed loop. To our knowledge, this is the first interactive surgical world model supporting live human and policy control. Human operators and policies alike can act inside the synthesized world and observe the consequences in real time. We release Cosmos-H-Dreams as an open surgical simulation system, providing a common foundation for surgical education, scalable synthetic data generation, and future intraoperative decision support.",
+      "authors": [
+        "Javier Gamazo Tejero",
+        "Lukas Zbinden",
+        "Keyur Sheth",
+        "Raghavendra K M",
+        "Nadim Daher",
+        "Diego Granero Maraña",
+        "Filip Binkiewicz",
+        "Patrick Thornycroft",
+        "Mahdi Azizian",
+        "Sean D. Huver"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-08-25T08:09:40+00:00",
+      "link": "https://arxiv.org/pdf/2608.24199v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "action-conditioned generative video world model for real-time physics simulation in surgical robotics",
+      "llm_evidence_cn": "动作条件生成式视频世界模型，用于手术机器人的实时物理仿真",
+      "llm_evidence": "动作条件生成式视频世界模型，用于手术机器人的实时物理仿真",
+      "canonical_evidence": "动作条件生成式视频世界模型，用于手术机器人的实时物理仿真",
+      "llm_tldr_en": "NVIDIA Cosmos-H-Dreams presents an integrated real-time surgical world-model system that generates action-conditioned videos with physics, enabling interactive physics simulation without classical simulators.",
+      "llm_tldr_cn": "Cosmos-H-Dreams面向手术机器人物理仿真缺乏实时交互的问题，提出集成动作条件生成模型、教师-学生蒸馏和FlashDreams流式推理的实时手术世界模型系统。该系统在大规模Open-H-Embodiment语料上微调得到多形态动作条件手术视频世界模型，并部署为可交互的生成式仿真器，同时保持照片级外观与可变形组织动力学。该工作展示了生成式物理仿真在机器人训练与评测中的潜力，也为此类物理视频生成系统的构建提供了完整范例。",
+      "llm_tldr": "Cosmos-H-Dreams面向手术机器人物理仿真缺乏实时交互的问题，提出集成动作条件生成模型、教师-学生蒸馏和FlashDreams流式推理的实时手术世界模型系统。该系统在大规模Open-H-Embodiment语料上微调得到多形态动作条件手术视频世界模型，并部署为可交互的生成式仿真器，同时保持照片级外观与可变形组织动力学。该工作展示了生成式物理仿真在机器人训练与评测中的潜力，也为此类物理视频生成系统的构建提供了完整范例。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.22102v1",
+      "source": "arxiv",
+      "title": "Learning Implicit Constitutive Laws for Dynamic 3D Gaussian Splatting from Monocular Videos",
+      "abstract": "We present GCA (Gaussian Constitutive Alignment), a framework for learning implicit constitutive laws from monocular dynamic video of deformable objects represented by 3D Gaussians. Given a static multi-view scan for geometric initialization, our method learns intrinsic physical dynamics solely from a single fixed-viewpoint video of the moving object. Existing implicit methods often suffer from local minima under noisy supervision and lack physical interpretability, while explicit approaches rely on predefined constitutive equations, limiting generalizability and becoming unstable in monocular settings. To address these challenges, our framework unifies LoRA-based adaptation with two key alignment modules. First, we propose Rank-based Depth-Geometric Anchors (RDGA) to establish robust geometric constraints from monocular dynamic observations via scale-invariant rank-based depth alignment, reducing the reliance on unreliable pixel-level color supervision. Second, a Constitutive Prior Regularizer (CPR) integrates classical constitutive models as soft differentiable priors, regularizing the optimization while preserving the flexibility of implicit modeling---even when the actual material is absent from the hypotheses. Extensive experiments on synthetic, real-to-sim, and real-world datasets demonstrate that GCA outperforms existing methods, achieving 48% lower Chamfer Distance than the strongest baseline on synthetic benchmarks while remaining robust under monocular supervision.",
+      "authors": [
+        "Xiaoyang Liu",
+        "Kai Han"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-22T20:47:17+00:00",
+      "link": "https://arxiv.org/pdf/2608.22102v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "learns implicit constitutive laws from monocular videos to model physical dynamics of deformable objects",
+      "llm_evidence_cn": "从单目视频学习隐式本构定律，以建模可变形物体的物理动力学",
+      "llm_evidence": "从单目视频学习隐式本构定律，以建模可变形物体的物理动力学",
+      "canonical_evidence": "从单目视频学习隐式本构定律，以建模可变形物体的物理动力学",
+      "llm_tldr_en": "GCA learns implicit constitutive laws from monocular video of deformable 3D Gaussians, improving physical interpretability and generalization without predefined constitutive equations.",
+      "llm_tldr_cn": "针对现有隐式物理建模方法在单目视频监督下容易陷入局部最优且缺乏物理可解释性的问题，本文提出GCA框架，从单目视频学习隐式本构定律来驱动动态3D高斯。该方法结合LoRA适应与两类对齐模块，仅用固定视角视频即可学习内在物理动力学。实验显示其比显式预设本构方程的方法更稳定且泛化更好。该工作有助于提升视频生成与动态场景建模的物理一致性。",
+      "llm_tldr": "针对现有隐式物理建模方法在单目视频监督下容易陷入局部最优且缺乏物理可解释性的问题，本文提出GCA框架，从单目视频学习隐式本构定律来驱动动态3D高斯。该方法结合LoRA适应与两类对齐模块，仅用固定视角视频即可学习内在物理动力学。实验显示其比显式预设本构方程的方法更稳定且泛化更好。该工作有助于提升视频生成与动态场景建模的物理一致性。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "how to ensure physical consistency in generated videos",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.18077v1",
+      "source": "arxiv",
+      "title": "Hydra-0: Action Flow for Generalist World Modeling and Control",
+      "abstract": "We introduce Hydra-0, a generalist world model conditioned on action flow, which represents robot actions as pixel motion. This shared visual interface enables generalist world modeling and control by learning action consequences across embodiments, tasks, environments, and video-generation backbones. Our best configuration achieves 90.4% lower robot-motion error and 60.2% lower object-motion error than our action-conditioned baseline, while supporting zero-shot composition and data-efficient adaptation. On the RoboLab benchmark, Hydra-0 achieves a Pearson correlation of r=0.96 between replayed and reference success rates. Finally, we uncover an emergent inverse mode of this interface: a world action model that predicts compatible robot motion from desired object flow transferred from a human demonstration. A trained action head maps the resulting latent features to executable actions without requiring task-specific expert robot demonstrations. Together, these results demonstrate the potential of action flow as a shared control interface connecting heterogeneous training data, open-loop policy evaluation, and robot control.",
+      "authors": [
+        "Hongyu Li",
+        "Bowen Wen",
+        "Xinghao Zhu",
+        "Yixuan Wang",
+        "Yilun Du",
+        "Yunzhu Li",
+        "George Konidaris",
+        "Stan Birchfield",
+        "Soha Pouya",
+        "Chenran Li",
+        "Yan Chang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-08-18T17:59:30+00:00",
+      "link": "https://arxiv.org/pdf/2608.18077v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Action-flow world model predicts object motion and action consequences in generated videos",
+      "llm_evidence_cn": "用行为流预测物体运动与动作后果，降低生成视频的物体运动误差",
+      "llm_evidence": "用行为流预测物体运动与动作后果，降低生成视频的物体运动误差",
+      "canonical_evidence": "用行为流预测物体运动与动作后果，降低生成视频的物体运动误差",
+      "llm_tldr_en": "Hydra-0 grounds robot actions as pixel motion and learns action consequences with video generation backbones, cutting robot-motion error by 90.4% and object-motion error by 60.2%, with an emergent inverse world action model for control.",
+      "llm_tldr_cn": "论文提出Hydra-0，把机器人动作表示为像素运动，通过视频生成骨干学习动作后果，从而在跨具身、跨任务和跨环境中实现通用世界建模与控制。实验显示该方法相比动作条件基线将机器人运动误差降低90.4%、物体运动误差降低60.2%，并在RoboLab基准上达到0.96的相关性。作者还发现了可交互的反向模式，能从期望物体运动预测兼容的机器人动作，为物理合理的视频生成提供新思路。",
+      "llm_tldr": "论文提出Hydra-0，把机器人动作表示为像素运动，通过视频生成骨干学习动作后果，从而在跨具身、跨任务和跨环境中实现通用世界建模与控制。实验显示该方法相比动作条件基线将机器人运动误差降低90.4%、物体运动误差降低60.2%，并在RoboLab基准上达到0.96的相关性。作者还发现了可交互的反向模式，能从期望物体运动预测兼容的机器人动作，为物理合理的视频生成提供新思路。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "videos depicting physically realistic behaviors and outcomes",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.23383v2",
+      "source": "arxiv",
+      "title": "Long-Horizon Audio-Visual Generation for Persistent Stories and Interactive Worlds",
+      "abstract": "Video generation is progressing beyond isolated clips toward long-form narratives and interactive worlds, requiring models to preserve identities, follow user controls, and remain stable over extended rollouts. We present JoyAI-Echo-1.5, a unified audio-visual generation system with two purpose-built variants. The long-video variant introduces composable cross-shot memory that aggregates visual evidence across multiple prior shots and speaker cues derived from speech-filtered full-shot audio, enabling persistent character appearance and voice identity across flexible combinations of text, image, and memory conditioning. The world-model variant converts heterogeneous navigation inputs into calibrated metric 6-DoF camera trajectories and injects them through a geometry-aware conditioning pathway, enabling controller-agnostic interaction across flexible viewpoints. To support efficient long-horizon generation, we transform a bidirectional audio-visual backbone into a causal few-step generator using progressive teacher forcing and short- and long-horizon Self-Gradient Forcing on self-generated rollouts. Experiments demonstrate strong performance in both settings. JoyAI-Echo-1.5 achieves improvements over existing long-video baselines in cross-shot consistency, visual quality, text alignment, and speech fidelity. Its world-model variant ranks first on WBench, with an average score of 81.7, and achieves leading visual quality and long-horizon persistence on SANA-WM-Bench. Together, these results indicate that memory, geometric control, and rollout-aware training provide a practical foundation for generating coherent stories and continuously evolving interactive worlds. Project page: https://echo-team-joy-future-academy-jd.github.io/Echo-1.5-Page/.",
+      "authors": [
+        "Nan Duan",
+        "Haoyang Huang",
+        "Weiyang Jin",
+        "Haoran Li",
+        "Yaowei Li",
+        "Yuming Li",
+        "Yijun Liu",
+        "Xin Lu",
+        "Xiaoxiao Ma",
+        "Yanwen Ma",
+        "Yaofeng Su",
+        "Yilang Sun",
+        "Haoyu Wang",
+        "Zeyue Xue",
+        "Songchun Zhang",
+        "Junhao Zhuang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-24T15:31:12+00:00",
+      "link": "https://arxiv.org/pdf/2608.23383v2",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "long-horizon audio-visual generation for persistent stories and interactive worlds; cross-shot memory enables persistent characters across shots, relevant to automated short drama creation",
+      "llm_evidence_cn": "面向持久故事的长时音视频生成，跨镜头记忆支持多镜头角色一致，可用于自动短剧创作",
+      "llm_evidence": "面向持久故事的长时音视频生成，跨镜头记忆支持多镜头角色一致，可用于自动短剧创作",
+      "canonical_evidence": "面向持久故事的长时音视频生成，跨镜头记忆支持多镜头角色一致，可用于自动短剧创作",
+      "llm_tldr_en": "JoyAI-Echo-1.5 is a unified audio-visual generation system with a long-video variant using composable cross-shot memory to preserve character appearance and voice identity, plus a world-model variant turning navigation inputs into camera trajectories, enabling stable long-form story generation.",
+      "llm_tldr_cn": "长时视频生成正从孤立片段走向持久故事与交互世界，但需要保持角色身份和长期稳定。作者提出统一的音视频生成系统JoyAI-Echo-1.5，其长视频变体用可组合跨镜头记忆聚合多镜头视觉证据与说话人线索，维持角色外观与声音身份；世界模型变体把导航输入转为度量相机轨迹。通过两个变体支持文本、图像与记忆的灵活组合，实现长叙事与交互世界的稳定生成，为自动短剧和长故事创作提供新工具。",
+      "llm_tldr": "长时视频生成正从孤立片段走向持久故事与交互世界，但需要保持角色身份和长期稳定。作者提出统一的音视频生成系统JoyAI-Echo-1.5，其长视频变体用可组合跨镜头记忆聚合多镜头视觉证据与说话人线索，维持角色外观与声音身份；世界模型变体把导航输入转为度量相机轨迹。通过两个变体支持文本、图像与记忆的灵活组合，实现长叙事与交互世界的稳定生成，为自动短剧和长故事创作提供新工具。",
+      "llm_tags": [
+        "query:manga-drama:composite"
+      ],
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation.",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.20749v1",
+      "source": "arxiv",
+      "title": "Identity-Preserving Text-to-Video Generation via Agentic Enhancement and Semantic Repair",
+      "abstract": "Identity-preserving video generation aims to synthesize videos that follow natural-language instructions while maintaining the visual identity of a given subject. Recent commercial video generation models have achieved strong visual quality and motion realism, but they still suffer from identity drift, incomplete instruction following, and missing visual details under complex prompts. Since these models are usually closed-source black boxes, directly improving them through parameter optimization is often infeasible. We therefore propose Agentic Enhancement and Semantic Repair (AESR), a lightweight enhancement framework for identity-preserving video generation. To improve prompt construction before generation and mitigate the above failures, AESR introduces a global agentic prompt enhancement module. This module learns model-specific prompting formats from official documentation, acquires human-centered video generation priors from human-interaction data, and accumulates test-domain identity-preserving generation experience into a reusable playbook through an agentic loop. To further repair errors in videos generated with enhanced prompts, AESR introduces a sample-level visual semantic repair module, which uses a VLM to locate erroneous video segments and design repair instructions, edits selected frames into explicit visual references, and guides a video editing model to fix local semantic or identity-related errors. We also adopt a lightweight Mixture-of-Experts selection strategy to choose reliable outputs from different generation and refinement paths. Under the official evaluation protocol of the ACM MM 2026 Identity-Preserving Video Generation Challenge, our system MIPL\\_Video ranked first in Track 1, demonstrating the effectiveness of AESR for practical identity-preserving video generation. The code is available at https://github.com/oceanflowlab/AESR.",
+      "authors": [
+        "Jiayi Gao",
+        "Changcheng Hua",
+        "Jiaqi Tang",
+        "Yuxin Peng",
+        "Yang Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-21T05:19:13+00:00",
+      "link": "https://arxiv.org/pdf/2608.20749v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "identity-preserving text-to-video generation; agentic prompt enhancement and semantic repair keep subject identity and instruction following, relevant to character-consistent short drama production",
+      "llm_evidence_cn": "身份保持的文本到视频生成，智能体提示增强与语义修复保持主体身份与指令跟随，适用于角色一致的短剧制作",
+      "llm_evidence": "身份保持的文本到视频生成，智能体提示增强与语义修复保持主体身份与指令跟随，适用于角色一致的短剧制作",
+      "canonical_evidence": "身份保持的文本到视频生成，智能体提示增强与语义修复保持主体身份与指令跟随，适用于角色一致的短剧制作",
+      "llm_tldr_en": "AESR is a lightweight framework for black-box text-to-video models that enhances prompts before generation and repairs semantics afterward, reducing identity drift and missing details while preserving subject identity without parameter optimization.",
+      "llm_tldr_cn": "商业视频生成模型通常为黑盒，难以直接优化参数，却常在复杂指令下出现身份漂移、指令执行不全和视觉细节缺失。作者提出AESR轻量增强框架，在生成前通过智能体增强优化提示词，在生成后执行语义修复，从而在不改动基础模型的前提下缓解上述失败。该方法显著提升身份保持与指令跟随能力，适用于需要角色一致性的文本到视频生成场景，如短剧与动漫内容创作。",
+      "llm_tldr": "商业视频生成模型通常为黑盒，难以直接优化参数，却常在复杂指令下出现身份漂移、指令执行不全和视觉细节缺失。作者提出AESR轻量增强框架，在生成前通过智能体增强优化提示词，在生成后执行语义修复，从而在不改动基础模型的前提下缓解上述失败。该方法显著提升身份保持与指令跟随能力，适用于需要角色一致性的文本到视频生成场景，如短剧与动漫内容创作。",
+      "llm_tags": [
+        "query:manga-drama:composite"
+      ],
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation.",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.24119v1",
+      "source": "arxiv",
+      "title": "TransPhy: Visual In-Context Learning for Physically Grounded Image Editing",
+      "abstract": "Visual demonstrations provide a natural interface for specifying image transformations that are difficult to describe exhaustively with text. However, existing visual in-context learning (VICL) methods primarily focus on appearance-level relation transfer and provide limited support for physically grounded transformations, whose outcomes depend on material properties, geometry, object interactions, and environmental conditions. Given a source--target exemplar pair and a query image, physically grounded VICL requires a model to infer the demonstrated transformation, adapt its effects to the query-specific scene context, and preserve rule-irrelevant content. We introduce PhysVICL-74, comprising 74 physically grounded transformation rules and 5,240 source--target image pairs that form nearly 75K training and evaluation contexts. Its benchmark split separately evaluates novel-instance transfer and unseen-rule generalization. We further propose TransPhy, a framework that decomposes physically grounded VICL into physical-rule induction and transition-aligned rendering. TransPhy first predicts the demonstrated rule and an explicit query-specific target-state description, and then synthesizes the target image through token-wise mixture-of-experts adaptation, with expert routing guided by localized transition cues. Experiments show that TransPhy improves physical-rule adherence, query consistency, and unseen-rule generalization over existing visual in-context editing methods.",
+      "authors": [
+        "Siyi Xie",
+        "Xuanke Shi",
+        "Jinsheng Quan",
+        "Haoran Tang",
+        "Zukai Chen",
+        "Lei Yang",
+        "Quan Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-25T06:28:39+00:00",
+      "link": "https://arxiv.org/pdf/2608.24119v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "introduces PhysVICL-74 benchmark of physically grounded transformation rules",
+      "llm_evidence_cn": "提出含物理接地变换规则的PhysVICL-74基准",
+      "llm_evidence": "提出含物理接地变换规则的PhysVICL-74基准",
+      "canonical_evidence": "提出含物理接地变换规则的PhysVICL-74基准",
+      "llm_tldr_en": "TransPhy studies physically grounded visual in-context editing, introducing the PhysVICL-74 benchmark with 74 transformation rules and 5,240 exemplars, enabling models to infer physical transformations from demonstrations and adapt them to new scenes.",
+      "llm_tldr_cn": "针对现有视觉上下文学习仅关注外观层面、难以处理依赖材料属性和物体交互的物理变换问题，TransPhy提出物理接地图像编辑任务，并构建PhysVICL-74基准，包含74条物理变换规则和5240个实例。该方法要求模型从源-目标示例对中推断变换，并适配到查询场景上下文中。该基准和任务设定为评测生成模型的物理理解与物理合理性提供重要参考，可作为视频物理一致性评估与数据构建的借鉴。",
+      "llm_tldr": "针对现有视觉上下文学习仅关注外观层面、难以处理依赖材料属性和物体交互的物理变换问题，TransPhy提出物理接地图像编辑任务，并构建PhysVICL-74基准，包含74条物理变换规则和5240个实例。该方法要求模型从源-目标示例对中推断变换，并适配到查询场景上下文中。该基准和任务设定为评测生成模型的物理理解与物理合理性提供重要参考，可作为视频物理一致性评估与数据构建的借鉴。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "datasets containing physical interactions and dynamics for training video models",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.21093v1",
+      "source": "arxiv",
+      "title": "Gaussian-Mixture Latent Flow for Stochastic 3D Human Motion Prediction",
+      "abstract": "Stochastic human motion prediction aims to forecast future motion distributions. Although recent studies have achieved strong performance in terms of accuracy and diversity, they often overlook plausibility (e.g., resulting in physically unrealistic predictions) and uncertainty quantification, both of which are essential for real-world applications and downstream tasks. To address these issues, we propose a latent flow-based model equipped with a data-driven Gaussian mixture prior that more effectively disentangles diverse human behaviors than conventional single-modal priors. This prior is derived from patterns in the training data without requiring additional annotations. Furthermore, the fully invertible nature of our model enables natural uncertainty quantification through tractable likelihood computation. Experiments on the Human3.6M and AMASS datasets demonstrate that our approach achieves state-of-the-art performance in both accuracy and plausibility.",
+      "authors": [
+        "Yue Ma",
+        "Frederick W. B. Li",
+        "Xiaohui Liang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-21T13:39:51+00:00",
+      "link": "https://arxiv.org/pdf/2608.21093v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "targets physically unrealistic motion predictions and quantifies uncertainty",
+      "llm_evidence_cn": "针对物理不合理的人体运动预测并量化不确定性",
+      "llm_evidence": "针对物理不合理的人体运动预测并量化不确定性",
+      "canonical_evidence": "针对物理不合理的人体运动预测并量化不确定性",
+      "llm_tldr_en": "Existing stochastic human motion predictors often yield physically unrealistic futures. A latent flow model with a data-driven Gaussian mixture prior better separates diverse behaviors, improves plausibility, and enables natural uncertainty quantification.",
+      "llm_tldr_cn": "现有随机人体运动预测常产生物理上不合理的未来，且缺乏不确定性量化。论文提出带数据驱动高斯混合先验的潜流模型，能更有效解耦多样人体行为，提高预测的物理合理性与不确定性量化能力。先验无需额外标注，完全可逆的性质支持自然的不确定性估计。",
+      "llm_tldr": "现有随机人体运动预测常产生物理上不合理的未来，且缺乏不确定性量化。论文提出带数据驱动高斯混合先验的潜流模型，能更有效解耦多样人体行为，提高预测的物理合理性与不确定性量化能力。先验无需额外标注，完全可逆的性质支持自然的不确定性估计。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "videos depicting physically realistic behaviors and outcomes",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.23549v1",
+      "source": "arxiv",
+      "title": "FixAnything: 3D-Consistent Rendering Refinement via Video Generative Priors",
+      "abstract": "Rendering views using 3D scene representations such as Gaussian Splatting (3DGS), Neural Radiance Fields (NeRF), meshes, or even point clouds produces artifacts when input views are sparse or target views lie far from the input. Recent work mitigates these artifacts using diffusion-based generative priors, but is specialized to individual representations and require custom architectures or extensive retraining. We present FixAnything, a single model for fixing a wide range of rendering artifacts. It does so by repurposing a pretrained video generative model, leveraging its implicit multi-view priors with only minimal modification and lightweight finetuning. Our key insight is that even noisily-rendered sequences preserve camera motion and coarse scene structure, allowing cleanup to be formulated as video-to-video translation. To control what scene structure should be preserved, we introduce a binary mask denoting the clean pixels, enabling the model to anchor its output to high-quality inputs (e.g. training views) while refining the rest. To encourage FixAnything to produce 3D-consistent renderings that support downstream reconstruction, we use camera pose accuracy (recovered via structure-from-motion) as a reward signal for direct preference optimization (DPO). Across four distinct 3D representations, FixAnything consistently improves rendering quality with lightweight finetuning, demonstrating that a single generalist video prior can replace multiple specialist refinement pipelines. The simplicity of the framework enables immediate adoption of stronger future video models without architectural redesign.",
+      "authors": [
+        "Khiem Vuong",
+        "Deva Ramanan",
+        "Srinivasa Narasimhan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-24T17:51:33+00:00",
+      "link": "https://arxiv.org/pdf/2608.23549v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "video generative prior for 3D-consistent rendering refinement, cross-frame consistency",
+      "llm_evidence_cn": "用视频生成先验做3D一致渲染修复，涉及跨帧一致性",
+      "llm_evidence": "用视频生成先验做3D一致渲染修复，涉及跨帧一致性",
+      "canonical_evidence": "用视频生成先验做3D一致渲染修复，涉及跨帧一致性",
+      "llm_tldr_en": "A single model that refines rendering artifacts across several 3D representations using video generative priors and lightweight finetuning; addresses cross-view consistency, not explicit physics.",
+      "llm_tldr_cn": "该论文提出FixAnything，通过复用预训练视频生成模型的隐式多视角先验，并仅做最小修改和轻量微调，统一修复高斯溅射、NeRF、网格或点云在稀疏输入或远视角下的渲染伪影。其核心洞察是即使有噪声的渲染序列也保留相机运动与粗略结构，因此可用视频生成模型来细化。该工作增强三维一致性和视频连续性，虽未显式建模物理规律，但对保证生成视频中跨帧属性一致性有方法论启发。",
+      "llm_tldr": "该论文提出FixAnything，通过复用预训练视频生成模型的隐式多视角先验，并仅做最小修改和轻量微调，统一修复高斯溅射、NeRF、网格或点云在稀疏输入或远视角下的渲染伪影。其核心洞察是即使有噪声的渲染序列也保留相机运动与粗略结构，因此可用视频生成模型来细化。该工作增强三维一致性和视频连续性，虽未显式建模物理规律，但对保证生成视频中跨帧属性一致性有方法论启发。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "how to ensure physical consistency in generated videos",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
