@@ -1,0 +1,427 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-29T22:54:39.258854+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 1,
+    "deep_cap": 8,
+    "deep_selected": 1,
+    "quick_candidates": 8,
+    "quick_skim_target": 13,
+    "quick_selected": 8
+  },
+  "deep_dive": [
+    {
+      "id": "2608.22750v1",
+      "source": "arxiv",
+      "title": "MOSH-WM: Mask-Grounded Soft-Hamiltonian Dynamics for Object-Centric World Models",
+      "abstract": "Object-centric world models forecast future videos by evolving a set of entity slots, but the variables receiving dynamics supervision are often unconstrained visual features. We introduce \\method{}, a mask-grounded soft-Hamiltonian world model that makes its position-like state explicitly depend on slot-owned image support. A frozen video-slot encoder produces slots and masks; spatial moments of mask-owned support form a canonical state $Q$, temporal differences form $P$, and a learned energy supplies a soft directional bias to a bounded learned increment. Decoder-relevant appearance and identity are stored separately in a causal visual context. A gated composer and bounded residual then combine this context with the propagated phase state to reconstruct decoder-compatible slots. On OBJ3D, given six observed frames and evaluated over the following 30 frames, \\method{} reduces LPIPS by 25.0\\% and spatial MSE by 33.7\\% relative to the strongest object-centric baseline. On CLEVRER, given six observed frames and evaluated over the following ten frames, the corresponding reductions are 14.5\\% and 18.7\\%. Horizon-resolved visual and object-state measurements show that the complete model accumulates error more slowly throughout the 30-frame closed-loop rollout. Project page:https://github.com/moshwm-anon/-moshwm-anon.github.io.",
+      "authors": [
+        "Zhekai Wang",
+        "Haoxiang Huang",
+        "Xiang Liu",
+        "Zhikang Chen",
+        "Yueqing Sun",
+        "Qi Gu",
+        "Shiji Zhou",
+        "Miao Liu",
+        "Sen Cui"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-08-24T03:17:21+00:00",
+      "link": "https://arxiv.org/pdf/2608.22750v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Soft-Hamiltonian dynamics world model for physics-consistent video forecasting",
+      "llm_evidence_cn": "基于软哈密顿动力学的世界模型，实现物理一致的视频预测",
+      "llm_evidence": "基于软哈密顿动力学的世界模型，实现物理一致的视频预测",
+      "canonical_evidence": "基于软哈密顿动力学的世界模型，实现物理一致的视频预测",
+      "llm_tldr_en": "MOSH-WM grounds object-centric world model states on mask-owned image support and evolves them with learned soft-Hamiltonian dynamics, enabling physically plausible and identity-preserving video forecasting across frames.",
+      "llm_tldr_cn": "物体中心世界模型在预测未来视频时通常用无约束的视觉特征作为动力学变量，导致动态演化不逼真。MOSH-WM提出掩膜约束的软哈密顿世界模型，将位置类状态显式依赖于掩膜支撑区域的空间矩，时间差分作为动量，并由学习能量提供有界增量；外观与身份信息单独存储。实验证明该模型在视频预测中能保持物体身份、产生更符合物理规律的动态，为物理合理的视频生成提供了新方法。",
+      "llm_tldr": "物体中心世界模型在预测未来视频时通常用无约束的视觉特征作为动力学变量，导致动态演化不逼真。MOSH-WM提出掩膜约束的软哈密顿世界模型，将位置类状态显式依赖于掩膜支撑区域的空间矩，时间差分作为动量，并由学习能量提供有界增量；外观与身份信息单独存储。实验证明该模型在视频预测中能保持物体身份、产生更符合物理规律的动态，为物理合理的视频生成提供了新方法。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.26794v1",
+      "source": "arxiv",
+      "title": "Ring Forcing: Towards Precise Long-Term Memory for Autoregressive Video Diffusion",
+      "abstract": "Scaling video generation to long durations reveals a critical bottleneck: current models lack robust long-term memory. This deficiency can be studied along two critical aspects: object permanence, the ability to precisely reproduce the appearance of objects upon re-entry; and memory capacity, the ability to process ultra-long context and use information from distant history. Robust long-term memory requires both: object permanence without sufficient context handling limits the temporal scope, while long context length without permanence fails to maintain identity. To address this, we present Ring Forcing, an autoregressive video diffusion framework designed to robustly construct and precisely utilize long-term memory. Our ring-structured training strategy enforces retrieval from distant history, effectively reconciling the trade-off between strict historical adherence and generative diversity. To expand memory capacity, we introduce a compression and timestep composition strategy. Under fixed sequence length constraints, this method extends the effective historical span to minutes-long durations and achieves a comprehensive receptive field over the entire history. Furthermore, we present a sparse RoPE mechanism to enable flexible, scalable memory adaptation while fully exploiting pre-trained priors. Extensive experiments demonstrate that Ring Forcing achieves superior minutes-long coherence and object permanence, significantly outperforming state-of-the-art methods.",
+      "authors": [
+        "Bowen Xue",
+        "Brandon Y. Feng",
+        "Chenguo Lin",
+        "Yuchen Lin",
+        "Yujia Zeng",
+        "Lvmin Zhang",
+        "Maneesh Agrawala",
+        "Honglei Yan",
+        "Panwang Pan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-27T08:25:32+00:00",
+      "link": "https://arxiv.org/pdf/2608.26794v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "object permanence and long-term memory in autoregressive video diffusion, supporting physical consistency across frames",
+      "llm_evidence_cn": "自回归视频扩散中的对象恒存性与长期记忆，支持跨帧物理一致性",
+      "llm_evidence": "自回归视频扩散中的对象恒存性与长期记忆，支持跨帧物理一致性",
+      "canonical_evidence": "自回归视频扩散中的对象恒存性与长期记忆，支持跨帧物理一致性",
+      "llm_tldr_en": "Ring Forcing proposes an autoregressive video diffusion framework with ring-structured training to build precise long-term memory, solving object permanence and memory capacity issues, thus improving identity consistency in long generated videos.",
+      "llm_tldr_cn": "该论文指出长时视频生成模型缺乏稳健的长期记忆，具体表现为对象恒存性不足和记忆容量有限。作者提出环强制（Ring Forcing）自回归视频扩散框架，通过环结构训练构造长期记忆，使模型能够精确复现重新进入画面的对象外观，并有效利用远距离上下文。实验表明该方法改善了对象身份保持和长视频生成的连贯性。该工作对生成符合物理世界常理、对象不突然变化或消失的视频具有重要价值。",
+      "llm_tldr": "该论文指出长时视频生成模型缺乏稳健的长期记忆，具体表现为对象恒存性不足和记忆容量有限。作者提出环强制（Ring Forcing）自回归视频扩散框架，通过环结构训练构造长期记忆，使模型能够精确复现重新进入画面的对象外观，并有效利用远距离上下文。实验表明该方法改善了对象身份保持和长视频生成的连贯性。该工作对生成符合物理世界常理、对象不突然变化或消失的视频具有重要价值。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "ensuring physical properties remain coherent across video frames",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.20749v1",
+      "source": "arxiv",
+      "title": "Identity-Preserving Text-to-Video Generation via Agentic Enhancement and Semantic Repair",
+      "abstract": "Identity-preserving video generation aims to synthesize videos that follow natural-language instructions while maintaining the visual identity of a given subject. Recent commercial video generation models have achieved strong visual quality and motion realism, but they still suffer from identity drift, incomplete instruction following, and missing visual details under complex prompts. Since these models are usually closed-source black boxes, directly improving them through parameter optimization is often infeasible. We therefore propose Agentic Enhancement and Semantic Repair (AESR), a lightweight enhancement framework for identity-preserving video generation. To improve prompt construction before generation and mitigate the above failures, AESR introduces a global agentic prompt enhancement module. This module learns model-specific prompting formats from official documentation, acquires human-centered video generation priors from human-interaction data, and accumulates test-domain identity-preserving generation experience into a reusable playbook through an agentic loop. To further repair errors in videos generated with enhanced prompts, AESR introduces a sample-level visual semantic repair module, which uses a VLM to locate erroneous video segments and design repair instructions, edits selected frames into explicit visual references, and guides a video editing model to fix local semantic or identity-related errors. We also adopt a lightweight Mixture-of-Experts selection strategy to choose reliable outputs from different generation and refinement paths. Under the official evaluation protocol of the ACM MM 2026 Identity-Preserving Video Generation Challenge, our system MIPL\\_Video ranked first in Track 1, demonstrating the effectiveness of AESR for practical identity-preserving video generation. The code is available at https://github.com/oceanflowlab/AESR.",
+      "authors": [
+        "Jiayi Gao",
+        "Changcheng Hua",
+        "Jiaqi Tang",
+        "Yuxin Peng",
+        "Yang Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-21T05:19:13+00:00",
+      "link": "https://arxiv.org/pdf/2608.20749v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "identity-preserving text-to-video generation improving character consistency for drama video creation",
+      "llm_evidence_cn": "身份保持的文本到视频生成，提升短剧视频中的角色一致性",
+      "llm_evidence": "身份保持的文本到视频生成，提升短剧视频中的角色一致性",
+      "canonical_evidence": "身份保持的文本到视频生成，提升短剧视频中的角色一致性",
+      "llm_tldr_en": "AESR is a lightweight enhancement framework for identity-preserving text-to-video generation, improving prompt construction and mitigating identity drift in closed-source video models.",
+      "llm_tldr_cn": "该论文针对商业视频生成模型在复杂提示下出现的身份漂移、指令遵循不完整和细节缺失问题，提出AESR轻量增强框架。框架在生成前优化提示构建，并在生成后修复语义，且无需修改黑盒模型参数。实验证明该方法能有效提升生成视频的身份保持与指令遵循能力。该工作对需要角色一致性的短剧自动化生成具有直接应用价值。",
+      "llm_tldr": "该论文针对商业视频生成模型在复杂提示下出现的身份漂移、指令遵循不完整和细节缺失问题，提出AESR轻量增强框架。框架在生成前优化提示构建，并在生成后修复语义，且无需修改黑盒模型参数。实验证明该方法能有效提升生成视频的身份保持与指令遵循能力。该工作对需要角色一致性的短剧自动化生成具有直接应用价值。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "automated creation of short drama videos",
+      "matched_requirement_id": "req-20",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.23383v1",
+      "source": "arxiv",
+      "title": "Long-Horizon Audio-Visual Generation for Persistent Stories and Interactive Worlds",
+      "abstract": "Video generation is progressing beyond isolated clips toward long-form narratives and interactive worlds, requiring models to preserve identities, follow user controls, and remain stable over extended rollouts. We present JoyAI-Echo-1.5, a unified audio-visual generation system with two purpose-built variants. The long-video variant introduces composable cross-shot memory that aggregates visual evidence across multiple prior shots and speaker cues derived from speech-filtered full-shot audio, enabling persistent character appearance and voice identity across flexible combinations of text, image, and memory conditioning. The world-model variant converts heterogeneous navigation inputs into calibrated metric 6-DoF camera trajectories and injects them through a geometry-aware conditioning pathway, enabling controller-agnostic interaction across flexible viewpoints. To support efficient long-horizon generation, we transform a bidirectional audio-visual backbone into a causal few-step generator using progressive teacher forcing and short- and long-horizon Self-Gradient Forcing on self-generated rollouts. Experiments demonstrate strong performance in both settings. JoyAI-Echo-1.5 achieves improvements over existing long-video baselines in cross-shot consistency, visual quality, text alignment, and speech fidelity. Its world-model variant ranks first on WBench, with an average score of 81.7, and achieves leading visual quality and long-horizon persistence on SANA-WM-Bench. Together, these results indicate that memory, geometric control, and rollout-aware training provide a practical foundation for generating coherent stories and continuously evolving interactive worlds. Project page: https://echo-team-joy-future-academy-jd.github.io/Echo-1.5-Page/.",
+      "authors": [
+        "Nan Duan",
+        "Haoyang Huang",
+        "Weiyang Jin",
+        "Haoran Li",
+        "Yaowei Li",
+        "Yuming Li",
+        "Yijun Liu",
+        "Xin Lu",
+        "Xiaoxiao Ma",
+        "Yanwen Ma",
+        "Yaofeng Su",
+        "Yilang Sun",
+        "Haoyu Wang",
+        "Zeyue Xue",
+        "Songchun Zhang",
+        "Junhao Zhuang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-24T15:31:12+00:00",
+      "link": "https://arxiv.org/pdf/2608.23383v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Audio-visual generation system for persistent stories and interactive worlds, enabling long-form narrative creation",
+      "llm_evidence_cn": "面向持久故事的长时音视频生成系统，可支持短剧等叙事内容自动创作",
+      "llm_evidence": "面向持久故事的长时音视频生成系统，可支持短剧等叙事内容自动创作",
+      "canonical_evidence": "面向持久故事的长时音视频生成系统，可支持短剧等叙事内容自动创作",
+      "llm_tldr_en": "JoyAI-Echo-1.5 is a unified audio-visual generation system with a long-video variant using composable cross-shot memory for persistent identities and a world-model variant with metric 6-DoF camera trajectories.",
+      "llm_tldr_cn": "视频生成正从孤立片段走向长叙事和交互世界，需要保持角色身份、遵循用户控制并稳定长时间推演。JoyAI-Echo-1.5提出统一音视频生成系统：长视频变体用组合式跨镜头记忆和语音过滤后的说话人线索保持角色外观与声音，世界模型变体将各种导航输入转为标定6-DoF相机轨迹。该系统可实现多种条件下的持久角色生成。它为3至5分钟微短剧等自动化叙事内容生产提供了可行基础。",
+      "llm_tldr": "视频生成正从孤立片段走向长叙事和交互世界，需要保持角色身份、遵循用户控制并稳定长时间推演。JoyAI-Echo-1.5提出统一音视频生成系统：长视频变体用组合式跨镜头记忆和语音过滤后的说话人线索保持角色外观与声音，世界模型变体将各种导航输入转为标定6-DoF相机轨迹。该系统可实现多种条件下的持久角色生成。它为3至5分钟微短剧等自动化叙事内容生产提供了可行基础。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "automated creation of short drama videos",
+      "matched_requirement_id": "req-20",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.24212v1",
+      "source": "arxiv",
+      "title": "NeoWorld-Pro: Programming Interactive Scenes from Monocular Images for Embodied Simulation",
+      "abstract": "The advancement of Embodied AI necessitates high-quality simulation assets that faithfully mirror the real world. However, transforming raw visual observations into simulation-ready scenes remains challenging due to the lack of physical grounding and scene-level interactivity in current image-to-URDF methods. We propose NeoWorld-Pro, a framework that reformulates monocular scene reconstruction as procedural programming for interactive 3D environments. Leveraging the zero-shot reasoning and code synthesis capabilities of MLLMs, NeoWorld-Pro converts a single RGB image into executable programs specifying object geometry, articulation, and physical properties. A physics-in-the-loop mechanism then iteratively refines the generated programs by validating their execution in a physics engine, enforcing physically plausible articulations, valid object compositions and interactions, and accurate spatial relationships. Experiments show that NeoWorld-Pro outperforms open-loop and prior monocular reconstruction methods, while enabling complex downstream tasks such as stable stacking and fine-grained manipulation.",
+      "authors": [
+        "Yumeng He",
+        "Yichen Song",
+        "Xiaotian Yang",
+        "Weijia Zhang",
+        "Zanwei Zhou",
+        "Junru Gong",
+        "Xiaokang Yang",
+        "Yunbo Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-25T08:19:39+00:00",
+      "link": "https://arxiv.org/pdf/2608.24212v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Physics-in-the-loop scene programming with physical properties and articulation",
+      "llm_evidence_cn": "以物理在环方式生成带物理属性与关节的可交互场景，符合物理约束建模",
+      "llm_evidence": "以物理在环方式生成带物理属性与关节的可交互场景，符合物理约束建模",
+      "canonical_evidence": "以物理在环方式生成带物理属性与关节的可交互场景，符合物理约束建模",
+      "llm_tldr_en": "NeoWorld-Pro uses MLLM code synthesis to turn monocular images into executable programs specifying geometry, articulation, and physical properties, refined by physics-in-the-loop for embodied simulation.",
+      "llm_tldr_cn": "具身仿真需要高质量仿真资产，但将单目图像转为仿真场景缺少物理接地与场景级交互。NeoWorld-Pro将单目场景重建重构为程序化生成，让多模态大模型用代码输出物体几何、关节和物理属性，并通过物理在环机制迭代细化。实验表明该方法能生成可交互且物理上更一致的仿真场景。该框架可作为物理合理视频生成中场景与动力学约束构建的基础工具。",
+      "llm_tldr": "具身仿真需要高质量仿真资产，但将单目图像转为仿真场景缺少物理接地与场景级交互。NeoWorld-Pro将单目场景重建重构为程序化生成，让多模态大模型用代码输出物体几何、关节和物理属性，并通过物理在环机制迭代细化。实验表明该方法能生成可交互且物理上更一致的仿真场景。该框架可作为物理合理视频生成中场景与动力学约束构建的基础工具。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.24329v1",
+      "source": "arxiv",
+      "title": "How Do Professional Editors Evaluate the Editing Quality of AI-Generated Cinematic Video Ads?",
+      "abstract": "On social media, we often encounter short-form video ads that employ cinematic editing techniques to evoke an emotional response. While AI tools are beginning to generate such cinematic ads automatically, we lack a fine-grained framework for evaluating these ads. In this paper, we first characterize social media video ad formats and identify cinematic ads as a recurring format in our corpus. We then analyze the duration, shot structure, audio and text elements, and editing techniques of cinematic ads to inform a two-stage generation pipeline in which an LLM first generates a shot plan and a video generation model renders the video. Using this pipeline, we generated 70 cinematic ads for 35 real brands and recruited professional video editors to critique their editing choices. From their critiques, we derive six dimensions of editing quality: narrative progression, audiovisual coordination and sound design, visual composition and graphics, shot-to-shot continuity, message and brand coherence, and temporal rhythm and pacing. We discuss how these dimensions can guide editing-aware generation, human evaluation, and automated evaluation of AI-generated cinematic ads.",
+      "authors": [
+        "Po-Ming Law",
+        "Weizhi Li",
+        "Arpit Narechania"
+      ],
+      "primary_category": "cs.HC",
+      "categories": [
+        "cs.HC"
+      ],
+      "published": "2026-08-25T09:51:29+00:00",
+      "link": "https://arxiv.org/pdf/2608.24329v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "AI-generated cinematic short videos with LLM shot planning and professional editor evaluation, transferable to automated micro-drama creation",
+      "llm_evidence_cn": "AI生成电影化短视频，含LLM镜头规划与专业剪辑评估，可迁移至微短剧自动创作",
+      "llm_evidence": "AI生成电影化短视频，含LLM镜头规划与专业剪辑评估，可迁移至微短剧自动创作",
+      "canonical_evidence": "AI生成电影化短视频，含LLM镜头规划与专业剪辑评估，可迁移至微短剧自动创作",
+      "llm_tldr_en": "This paper analyzes social-media cinematic video ads and builds a two-stage pipeline (LLM shot planning plus video generation), generating 70 ads for 35 brands and recruiting professional editors to evaluate editing quality, providing a transferable framework for automated short-video creation and evaluation.",
+      "llm_tldr_cn": "该论文针对社交媒体电影化视频广告缺乏精细评估框架的问题，分析广告时长、镜头结构、音频文本和剪辑技巧，提出两阶段生成流程：由LLM生成镜头计划、视频生成模型渲染画面。作者利用该流程为35个品牌生成70条广告，并邀请专业剪辑师评估剪辑质量，揭示了AI生成广告的优点与不足。这项工作为AI驱动的短视频自动创作与质量评估提供了可借鉴的流程和标准。",
+      "llm_tldr": "该论文针对社交媒体电影化视频广告缺乏精细评估框架的问题，分析广告时长、镜头结构、音频文本和剪辑技巧，提出两阶段生成流程：由LLM生成镜头计划、视频生成模型渲染画面。作者利用该流程为35个品牌生成70条广告，并邀请专业剪辑师评估剪辑质量，揭示了AI生成广告的优点与不足。这项工作为AI驱动的短视频自动创作与质量评估提供了可借鉴的流程和标准。",
+      "llm_tags": [
+        "query:manga-drama:composite"
+      ],
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation.",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.25479v1",
+      "source": "arxiv",
+      "title": "4DStreamCtrl: Interactive Video Generation with Online 4D Control",
+      "abstract": "Generative video models now synthesize footage nearly indistinguishable from reality. Their promise as interactive tools hinges on fine-grained control of how objects and the camera move over time, yet each existing approach captures only part of this: camera-parameter methods steer the viewpoint but cannot move objects, 2D-trajectory methods act in the image plane and ignore depth and occlusion, and recent 3D methods add geometry but run only offline at a fixed length. In particular, none combines 3D-consistent control of both camera and objects with real-time, streaming generation. Here we show that camera motion, object trajectories, and depth can be unified into a single 3D point-track representation, from which one model performs joint camera and object control, depth editing, and motion transfer in a single forward pass. To learn this interface at scale, we mine in-the-wild video for 3D motion supervision, yielding OpenVidHD-Motion3D, and encode it with a lightweight Geometric Motion Head that plugs into a pretrained video diffusion model. Because this encoder is temporally separable, we distill the model into a causal streaming student that generates arbitrarily long video in four denoising steps at memory independent of length. This unified design surpasses prior camera-only, 2D, and offline-3D methods in motion-control precision while covering modalities they address only in isolation. 4DStreamCtrl runs at 20 FPS on a single high-end GPU for 480p video and stays temporally coherent over hundreds of frames, enabling, to our knowledge, interactive 4D-controllable streaming generation for the first time. More broadly, grounding generation in explicit 3D geometry with efficient causal inference points toward interactive world models with closed-loop spatiotemporal control, from controllable simulators to real-time visual imagination for embodied agents.",
+      "authors": [
+        "Shiqian Li",
+        "Chenguo Lin",
+        "Zhiguang Liu",
+        "Yu Tang",
+        "Jiarong Ou",
+        "Rui Chen",
+        "Yixin Zhu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-26T07:49:39+00:00",
+      "link": "https://arxiv.org/pdf/2608.25479v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "3D-consistent control of camera and object trajectories in video generation",
+      "llm_evidence_cn": "视频生成中相机与物体轨迹的3D一致控制",
+      "llm_evidence": "视频生成中相机与物体轨迹的3D一致控制",
+      "canonical_evidence": "视频生成中相机与物体轨迹的3D一致控制",
+      "llm_tldr_en": "4DStreamCtrl unifies camera motion, object trajectories, and depth into 3D point tracks for joint control, enabling real-time streaming video generation. Provides fine-grained motion control that supports more physically plausible video synthesis.",
+      "llm_tldr_cn": "针对现有视频生成控制方法只能单独控制相机、2D轨迹或离线3D方法，且无法实时流式生成的问题，提出4DStreamCtrl。方法将相机运动、物体轨迹和深度统一为3D点轨迹表示，通过一个模型联合控制相机与物体，支持任意轨迹的在线流式生成。实验表明该方法能实现实时、三维一致且细粒度可控的视频生成，为生成符合物理直觉的运动提供了直接的控制通道。该工作对物理合理性视频生成具有方法论支撑作用，但与真正嵌入物理约束仍有距离。",
+      "llm_tldr": "针对现有视频生成控制方法只能单独控制相机、2D轨迹或离线3D方法，且无法实时流式生成的问题，提出4DStreamCtrl。方法将相机运动、物体轨迹和深度统一为3D点轨迹表示，通过一个模型联合控制相机与物体，支持任意轨迹的在线流式生成。实验表明该方法能实现实时、三维一致且细粒度可控的视频生成，为生成符合物理直觉的运动提供了直接的控制通道。该工作对物理合理性视频生成具有方法论支撑作用，但与真正嵌入物理约束仍有距离。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "videos depicting physically realistic behaviors and outcomes",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.26902v1",
+      "source": "arxiv",
+      "title": "Tether the Subject, Release the Scene: Query-Aware Memory Routing for Long-Horizon Autoregressive Video Generation",
+      "abstract": "Streaming autoregressive video models generate long videos chunk by chunk, using historical memory to maintain consistency. Existing methods typically expose subject and scene queries to history through similar policies. This stabilizes the subject, but can also lock backgrounds, viewpoints, and scene structure to previously generated states even when local motion continues. We call this failure memory-anchored scene under-progression; consistency and motion metrics alone can miss it. We introduce TetherMem, a training-free, query-aware spatiotemporal memory router for frozen video generators. TetherMem separates subject and scene queries and modulates historical access with region- and age-conditioned priors: subject queries retain identity-bearing history, while scene queries reduce reliance on subject history and stale backgrounds. Across 2,400 blinded pairwise judgments from 10 annotators, TetherMem achieves the highest estimated expected preference among eight streaming long-video baselines for overall quality (0.780) and scene progression (0.769). On complete 30-second videos, it sustains changes in background, viewpoint, and scene state while preserving subject recognizability and temporal continuity.",
+      "authors": [
+        "Chen Li",
+        "Peng Zhang",
+        "Hanyu Zhou",
+        "Jialong Zuo",
+        "Fei Wang",
+        "Daiguo Zhou",
+        "Nong Sang",
+        "Changxin Gao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-27T10:05:17+00:00",
+      "link": "https://arxiv.org/pdf/2608.26902v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Memory routing for subject/scene coherence across long generated videos",
+      "llm_evidence_cn": "通过查询感知记忆路由实现长视频主体与场景跨帧一致性",
+      "llm_evidence": "通过查询感知记忆路由实现长视频主体与场景跨帧一致性",
+      "canonical_evidence": "通过查询感知记忆路由实现长视频主体与场景跨帧一致性",
+      "llm_tldr_en": "TetherMem is a training-free query-aware memory router for autoregressive video generators that separates subject and scene queries, preventing memory-anchored scene under-progression and improving long-horizon coherence.",
+      "llm_tldr_cn": "长时自回归视频生成依赖历史记忆维持一致性，但把主体和场景查询按相同策略暴露给历史会锁定背景，造成场景停滞而主体仍运动。论文提出训练无关的TetherMem记忆路由，将主体与场景查询分离，并按区域和年龄调节历史访问。实验显示该方法能缓解场景欠进展，在保持主体稳定的同时让场景随局部运动继续演化。这为提升生成视频跨帧一致性与物理解释性提供了可复用的架构方法。",
+      "llm_tldr": "长时自回归视频生成依赖历史记忆维持一致性，但把主体和场景查询按相同策略暴露给历史会锁定背景，造成场景停滞而主体仍运动。论文提出训练无关的TetherMem记忆路由，将主体与场景查询分离，并按区域和年龄调节历史访问。实验显示该方法能缓解场景欠进展，在保持主体稳定的同时让场景随局部运动继续演化。这为提升生成视频跨帧一致性与物理解释性提供了可复用的架构方法。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "ensuring physical properties remain coherent across video frames",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.26947v1",
+      "source": "arxiv",
+      "title": "4DSynth: Controllable Procedural World Synthesis for Dynamic Embodied Simulation",
+      "abstract": "Embodied agents need environments that are visually diverse, physically interactive, and changing over time. Procedural simulators can generate large interactive scene collections, and recent 4D generators produce compelling visual dynamics. Combining these properties in one environment, however, still demands extensive manual effort, and the result is rarely editable or controllable enough to reuse at scale.   We present 4DSynth, a controllable procedural system that turns a natural-language description, a blueprint mask, or a single photograph into an editable 4D environment with explicit geometry, animated actors, collision-free trajectories, and physics-ready simulation state. Multiple scene routes share one geometry-grounded representation, so the same pipeline handles animation, camera planning, rendering, and task generation.   To validate the full pipeline, we construct 4DSynth-Nav, an interactive navigation benchmark generated entirely from 4DSynth's procedural scenes. Two vision-language models evaluated across three difficulty tiers both fail the majority of tasks and stall after early subtasks. The same procedural controllability that produces these environments also makes each failure reproducible and each difficulty axis independently tunable. This paper presents both a controllable generation pipeline and the scalable benchmark it enables, offering a practical foundation for developing and evaluating embodied agents.",
+      "authors": [
+        "Zehao Qi",
+        "Haochen Luo",
+        "Jia-Wang Bian",
+        "Zeyu Ma",
+        "Shuyang Sun"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-08-27T10:49:20+00:00",
+      "link": "https://arxiv.org/pdf/2608.26947v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Generates editable 4D environments with physics-ready simulation state, enabling synthetic physical interaction data for video model training.",
+      "llm_evidence_cn": "生成具有物理就绪仿真状态的可编辑4D环境，可为视频模型训练提供物理交互数据。",
+      "llm_evidence": "生成具有物理就绪仿真状态的可编辑4D环境，可为视频模型训练提供物理交互数据。",
+      "canonical_evidence": "生成具有物理就绪仿真状态的可编辑4D环境，可为视频模型训练提供物理交互数据。",
+      "llm_tldr_en": "4DSynth is a controllable procedural system that converts language, blueprint, or photo into editable 4D environments with explicit geometry, animated actors, collision-free trajectories, and physics-ready state, supporting embodied simulation at scale.",
+      "llm_tldr_cn": "本文提出4DSynth，一个可控的程序化世界合成系统，可将自然语言描述、蓝图掩码或单张照片转换为可编辑的4D环境，其中包含显式几何、动画角色、无碰撞轨迹和物理就绪的仿真状态。该方法能生成具有物理交互的动态场景，为具身智能体训练提供多样化的视觉环境。实验展示了其在多场景生成上的可编辑性和可控性。此工作为物理交互视频数据的合成提供了通用途径，可用于训练物理视频生成模型。",
+      "llm_tldr": "本文提出4DSynth，一个可控的程序化世界合成系统，可将自然语言描述、蓝图掩码或单张照片转换为可编辑的4D环境，其中包含显式几何、动画角色、无碰撞轨迹和物理就绪的仿真状态。该方法能生成具有物理交互的动态场景，为具身智能体训练提供多样化的视觉环境。实验展示了其在多场景生成上的可编辑性和可控性。此工作为物理交互视频数据的合成提供了通用途径，可用于训练物理视频生成模型。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "datasets containing physical interactions and dynamics for training video models",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

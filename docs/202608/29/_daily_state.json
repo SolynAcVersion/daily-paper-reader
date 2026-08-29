@@ -1,0 +1,153 @@
+{
+  "date": "20260829",
+  "date_label": "",
+  "generated_at": "2026-08-29 23:02:04 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.22750v1",
+      "route": "202608/29/2608.22750v1-mosh-wm-mask-grounded-soft-hamiltonian-dynamics-for-object-centric-world-models",
+      "title": "MOSH-WM: Mask-Grounded Soft-Hamiltonian Dynamics for Object-Centric World Models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "基于软哈密顿动力学的世界模型，实现物理一致的视频预测",
+      "first_seen_at": "2026-08-29 23:02:04 UTC",
+      "updated_at": "2026-08-29 23:02:04 UTC"
+    },
+    {
+      "paper_id": "2608.26794v1",
+      "route": "202608/29/2608.26794v1-ring-forcing-towards-precise-long-term-memory-for-autoregressive-video-diffusion",
+      "title": "Ring Forcing: Towards Precise Long-Term Memory for Autoregressive Video Diffusion",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "自回归视频扩散中的对象恒存性与长期记忆，支持跨帧物理一致性",
+      "first_seen_at": "2026-08-29 23:02:04 UTC",
+      "updated_at": "2026-08-29 23:02:04 UTC"
+    },
+    {
+      "paper_id": "2608.20749v1",
+      "route": "202608/29/2608.20749v1-identity-preserving-text-to-video-generation-via-agentic-enhancement-and-semantic-repair",
+      "title": "Identity-Preserving Text-to-Video Generation via Agentic Enhancement and Semantic Repair",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "身份保持的文本到视频生成，提升短剧视频中的角色一致性",
+      "first_seen_at": "2026-08-29 23:02:04 UTC",
+      "updated_at": "2026-08-29 23:02:04 UTC"
+    },
+    {
+      "paper_id": "2608.23383v1",
+      "route": "202608/29/2608.23383v1-long-horizon-audio-visual-generation-for-persistent-stories-and-interactive-worlds",
+      "title": "Long-Horizon Audio-Visual Generation for Persistent Stories and Interactive Worlds",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向持久故事的长时音视频生成系统，可支持短剧等叙事内容自动创作",
+      "first_seen_at": "2026-08-29 23:02:04 UTC",
+      "updated_at": "2026-08-29 23:02:04 UTC"
+    },
+    {
+      "paper_id": "2608.24212v1",
+      "route": "202608/29/2608.24212v1-neoworld-pro-programming-interactive-scenes-from-monocular-images-for-embodied-simulation",
+      "title": "NeoWorld-Pro: Programming Interactive Scenes from Monocular Images for Embodied Simulation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "以物理在环方式生成带物理属性与关节的可交互场景，符合物理约束建模",
+      "first_seen_at": "2026-08-29 23:02:04 UTC",
+      "updated_at": "2026-08-29 23:02:04 UTC"
+    },
+    {
+      "paper_id": "2608.24329v1",
+      "route": "202608/29/2608.24329v1-how-do-professional-editors-evaluate-the-editing-quality-of-ai-generated-cinematic-video-ads",
+      "title": "How Do Professional Editors Evaluate the Editing Quality of AI-Generated Cinematic Video Ads?",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "AI生成电影化短视频，含LLM镜头规划与专业剪辑评估，可迁移至微短剧自动创作",
+      "first_seen_at": "2026-08-29 23:02:04 UTC",
+      "updated_at": "2026-08-29 23:02:04 UTC"
+    },
+    {
+      "paper_id": "2608.25479v1",
+      "route": "202608/29/2608.25479v1-4dstreamctrl-interactive-video-generation-with-online-4d-control",
+      "title": "4DStreamCtrl: Interactive Video Generation with Online 4D Control",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "视频生成中相机与物体轨迹的3D一致控制",
+      "first_seen_at": "2026-08-29 23:02:04 UTC",
+      "updated_at": "2026-08-29 23:02:04 UTC"
+    },
+    {
+      "paper_id": "2608.26902v1",
+      "route": "202608/29/2608.26902v1-tether-the-subject-release-the-scene-query-aware-memory-routing-for-long-horizon-autoregressive-video-generation",
+      "title": "Tether the Subject, Release the Scene: Query-Aware Memory Routing for Long-Horizon Autoregressive Video Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "通过查询感知记忆路由实现长视频主体与场景跨帧一致性",
+      "first_seen_at": "2026-08-29 23:02:04 UTC",
+      "updated_at": "2026-08-29 23:02:04 UTC"
+    },
+    {
+      "paper_id": "2608.26947v1",
+      "route": "202608/29/2608.26947v1-4dsynth-controllable-procedural-world-synthesis-for-dynamic-embodied-simulation",
+      "title": "4DSynth: Controllable Procedural World Synthesis for Dynamic Embodied Simulation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "生成具有物理就绪仿真状态的可编辑4D环境，可为视频模型训练提供物理交互数据。",
+      "first_seen_at": "2026-08-29 23:02:04 UTC",
+      "updated_at": "2026-08-29 23:02:04 UTC"
+    }
+  ]
+}
