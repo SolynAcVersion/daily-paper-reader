@@ -1,0 +1,57 @@
+{
+  "date": "20260821-20260830",
+  "date_label": "2026-08-21 ~ 2026-08-30",
+  "generated_at": "2026-08-30 12:23:23 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.27345v1",
+      "route": "20260821-20260830/2608.27345v1-pawbench-how-far-are-we-from-probabilistically-aligned-world-modeling",
+      "title": "PAWBench: How Far Are We from Probabilistically Aligned World Modeling?",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "面向视频生成世界模型的概率对齐基准",
+      "first_seen_at": "2026-08-30 12:23:23 UTC",
+      "updated_at": "2026-08-30 12:23:23 UTC"
+    },
+    {
+      "paper_id": "2608.27406v1",
+      "route": "20260821-20260830/2608.27406v1-clap-cross-embodiment-video-world-models-are-zero-shot-physical-simulators",
+      "title": "CLAP: Cross-Embodiment Video World Models are Zero-Shot Physical Simulators",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "跨本体视频世界模型在互联网规模视频上训练并作为零样本物理模拟器，直接面向服从物理规律的视频生成。",
+      "first_seen_at": "2026-08-30 12:23:23 UTC",
+      "updated_at": "2026-08-30 12:23:23 UTC"
+    },
+    {
+      "paper_id": "2608.23869v1",
+      "route": "20260821-20260830/2608.23869v1-gen2physics-grounding-generated-3d-meshes-in-physics-via-multi-view-material-decomposition",
+      "title": "Gen2Physics: Grounding Generated 3D Meshes in Physics via Multi-View Material Decomposition",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "通过材质分解为生成的3D网格赋予物理属性，产出可直接仿真的资产；可迁移到物理合理的视频内容生成",
+      "first_seen_at": "2026-08-30 12:23:23 UTC",
+      "updated_at": "2026-08-30 12:23:23 UTC"
+    }
+  ]
+}

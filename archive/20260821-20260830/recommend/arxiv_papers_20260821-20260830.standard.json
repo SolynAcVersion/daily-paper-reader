@@ -1,0 +1,148 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-30T12:19:55.273977+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 2,
+    "deep_cap": 7,
+    "deep_selected": 2,
+    "quick_candidates": 1,
+    "quick_skim_target": 12,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2608.27345v1",
+      "source": "arxiv",
+      "title": "PAWBench: How Far Are We from Probabilistically Aligned World Modeling?",
+      "abstract": "Recent video generation models are increasingly framed as world models. Many physical processes can unfold in more than one valid way. Therefore, a world model should reproduce not only a plausible trajectory, but also the distribution of possible behaviors under the same initial observation and action. We call this distribution-level requirement probabilistic alignment. However, existing evaluations largely assess individual-video plausibility and do not test whether repeated generations recover the correct distribution. This raises a central question: how far are current video generators from probabilistically aligned world modeling? To answer it, we formalize probabilistic alignment as a distributional criterion for world models and introduce PAWBench, a benchmark for evaluating video generators as stochastic samplers of world dynamics. We further introduce PAWEval, an outcome-level protocol that converts repeated video rollouts into empirical distributions over possible physical behaviors. Across 50 scenarios and eleven current systems, no model consistently matches the reference probabilities while recovering the range of valid behaviors. Having established this gap, we test whether language prompts, initial noise sampling, or model training can reshape the model's predictive distribution. We believe our work can serve as a foundation for future efforts to move towards probabilistically aligned world modeling.",
+      "authors": [
+        "Yuandong Pu",
+        "Le Zhuo",
+        "Sayak Paul",
+        "Gabriel Jorge Menezes",
+        "Avram Đorđević",
+        "Shiyang Li",
+        "Yifan Zhou",
+        "Bin Fu",
+        "Wenlong Zhang",
+        "Junjun He",
+        "Yu Qiao",
+        "Yihao Liu",
+        "Jingbo Xing",
+        "Xi Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-27T16:46:38+00:00",
+      "link": "https://arxiv.org/pdf/2608.27345v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Benchmark for probabilistic alignment of video generation world models",
+      "llm_evidence_cn": "面向视频生成世界模型的概率对齐基准",
+      "llm_evidence": "面向视频生成世界模型的概率对齐基准",
+      "canonical_evidence": "面向视频生成世界模型的概率对齐基准",
+      "llm_tldr_en": "Introduces PAWBench to evaluate whether video generators recover the correct distribution of future trajectories, not just single plausible videos.",
+      "llm_tldr_cn": "该论文指出现有视频生成模型评估只关注单个视频的合理性，忽略了同一初始条件下行为的分布一致性。作者将这种分布级要求形式化为概率对齐，并构建了PAWBench基准来度量重复生成是否恢复正确行为分布。实验揭示了当前视频生成器在概率对齐上的不足。该基准为衡量生成视频的物理正确性提供了新的评测标准。",
+      "llm_tldr": "该论文指出现有视频生成模型评估只关注单个视频的合理性，忽略了同一初始条件下行为的分布一致性。作者将这种分布级要求形式化为概率对齐，并构建了PAWBench基准来度量重复生成是否恢复正确行为分布。实验揭示了当前视频生成器在概率对齐上的不足。该基准为衡量生成视频的物理正确性提供了新的评测标准。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "benchmark for evaluating physical correctness in video generation models",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.27406v1",
+      "source": "arxiv",
+      "title": "CLAP: Cross-Embodiment Video World Models are Zero-Shot Physical Simulators",
+      "abstract": "State-of-the-art action-conditioned video models are typically restricted to a single robot embodiment, preventing them from leveraging the vast corpus of heterogeneous video data that contains rich signals for learning generalizable physics. To bridge this gap, we introduce CLAP, a framework for cross-embodiment action-conditioned video generation capable of being trained on diverse, internet-scale videos across human and robotic agents. CLAP is grounded in the insight that universal physical laws govern spatiotemporal dynamics regardless of the actor. However, cross-embodiment learning is non-trivial because action representations vary sharply across robot platforms and are typically absent in human videos. CLAP addresses this fundamental challenge through the following core contributions. First, CLAP reconciles disparate action spaces using end-effector poses, language instructions, and latent actions. Second, to resolve their individual limitations, CLAP introduces a curriculum-based cross-embodiment learning recipe that first learns foundational physical priors across unlabeled video data using latent actions and subsequently grounds them in end-effector action spaces for zero-shot deployment to real-world tasks. Crucially, CLAP approaches or surpasses state-of-the-art single-embodiment video models in challenging environments like DROID. These performance advantages compound via few-shot adaptation to establish a novel paradigm for training single-embodiment video world models. Ultimately, CLAP delivers the most comprehensive suite of action-conditioned video world models to date - spanning diverse action-conditioning spaces (end-effector, language, and latent) and robot morphologies (including cross-embodiment, DROID, Bridge, bimanual YAM robots, and G1 humanoids). We open-source all code and models. Project Website at https://omni-clap.github.io .",
+      "authors": [
+        "Kechen Liu",
+        "Ola Shorinwa"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-08-27T17:35:10+00:00",
+      "link": "https://arxiv.org/pdf/2608.27406v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Cross-embodiment video world models trained on internet-scale videos act as zero-shot physical simulators, directly targeting generation of videos obeying physical laws.",
+      "llm_evidence_cn": "跨本体视频世界模型在互联网规模视频上训练并作为零样本物理模拟器，直接面向服从物理规律的视频生成。",
+      "llm_evidence": "跨本体视频世界模型在互联网规模视频上训练并作为零样本物理模拟器，直接面向服从物理规律的视频生成。",
+      "canonical_evidence": "跨本体视频世界模型在互联网规模视频上训练并作为零样本物理模拟器，直接面向服从物理规律的视频生成。",
+      "llm_tldr_en": "CLAP trains action-conditioned video world models on internet-scale human and robot videos across embodiments, enabling zero-shot physical simulation and physically plausible video generation guided by universal laws.",
+      "llm_tldr_cn": "现有动作条件下的视频模型通常局限于单一机器人本体，无法利用异构视频数据学习通用物理规律。本文提出CLAP，通过跨本体视频世界模型在互联网规模的人与机器人视频上训练，借助“通用物理定律支配时空动力学”的洞察，使用统一动作表示跨越不同本体。CLAP可以充当零样本物理模拟器，生成符合物理规律的视频，并为视频生成物理合理性提供了重要架构与训练范式。",
+      "llm_tldr": "现有动作条件下的视频模型通常局限于单一机器人本体，无法利用异构视频数据学习通用物理规律。本文提出CLAP，通过跨本体视频世界模型在互联网规模的人与机器人视频上训练，借助“通用物理定律支配时空动力学”的洞察，使用统一动作表示跨越不同本体。CLAP可以充当零样本物理模拟器，生成符合物理规律的视频，并为视频生成物理合理性提供了重要架构与训练范式。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.23869v1",
+      "source": "arxiv",
+      "title": "Gen2Physics: Grounding Generated 3D Meshes in Physics via Multi-View Material Decomposition",
+      "abstract": "While state-of-the-art generative models produce high-fidelity 3D meshes, these outputs lack the physical properties required for interactive simulation, gaming, or robotics. We introduce Gen2Physics, a unified and automated framework that grounds generated meshes in physics by automatically decomposing them into their constituent material components. Unlike prior approaches, which focus on volumetric representations incompatible with standard physics engines, Gen2Physics operates directly on meshes to produce immediately simulation-ready assets. Our pipeline integrates a fine-tuned Vision Transformer for dense material segmentation, a robust 2D-to-3D consistency projection, and a Vision-Language Model (VLM) guided refinement that leverages contextual reasoning to assign physical properties and infer internal geometry (solid vs. hollow). By converting surface patches into volumes with distinct densities, our method enables physically plausible dynamic simulations. Experimental results on the ABO-500 and PartNet-Material benchmarks demonstrate that Gen2Physics more than doubles the material segmentation accuracy of prior physics-grounding pipelines (15.6 to 48.3 mIoU), while matching the mass-estimation accuracy of volumetric methods and being the only approach to output watertight per-material sub-meshes.",
+      "authors": [
+        "Mauro Comi",
+        "Jordi Serrano Berbel",
+        "Kevis-Kokitsi Maninis",
+        "Philipp Henzler",
+        "Manuel Sanchez"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-24T22:18:44+00:00",
+      "link": "https://arxiv.org/pdf/2608.23869v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Grounds generated 3D meshes in physics via material decomposition, producing simulation-ready assets; transferable to physically realistic content generation",
+      "llm_evidence_cn": "通过材质分解为生成的3D网格赋予物理属性，产出可直接仿真的资产；可迁移到物理合理的视频内容生成",
+      "llm_evidence": "通过材质分解为生成的3D网格赋予物理属性，产出可直接仿真的资产；可迁移到物理合理的视频内容生成",
+      "canonical_evidence": "通过材质分解为生成的3D网格赋予物理属性，产出可直接仿真的资产；可迁移到物理合理的视频内容生成",
+      "llm_tldr_en": "Generated 3D meshes lack physical properties for simulation. Gen2Physics automatically decomposes meshes into materials with a fine-tuned ViT and VLM refinement, making them simulation-ready.",
+      "llm_tldr_cn": "生成式模型可以产生高保真3D网格，但缺少仿真所需的物理属性。Gen2Physics提出统一自动化框架，直接基于网格进行多视角材质分解，通过微调视觉Transformer、2D到3D一致性投影和视觉语言模型指导优化，得到可直接用于物理引擎的资产。这弥补了生成内容与物理仿真之间的鸿沟，为物理一致性内容生成提供基础。",
+      "llm_tldr": "生成式模型可以产生高保真3D网格，但缺少仿真所需的物理属性。Gen2Physics提出统一自动化框架，直接基于网格进行多视角材质分解，通过微调视觉Transformer、2D到3D一致性投影和视觉语言模型指导优化，得到可直接用于物理引擎的资产。这弥补了生成内容与物理仿真之间的鸿沟，为物理一致性内容生成提供基础。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

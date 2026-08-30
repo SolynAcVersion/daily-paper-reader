@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-29</span>
+      <span class="dpr-home-dashboard-kicker">2026-08-21 ~ 2026-08-30</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 9 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 3 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>8</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>1</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-29 23:02:04 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-30 12:23:23 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,9 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日9篇论文聚焦世界模型与视频生成，精读高分力作领衔。</p>
-<p>最值得看《MOSH-WM》（9.0/10）：掩码软哈密顿动力学打造对象中心世界模型；视频扩散的长时记忆与身份保持方向也有关键进展。</p>
-<p>建议优先精读MOSH-WM，再顺速读列表拓展视频生成视野。</p>
+<p>今日精读两篇高分论文，聚焦世界模型与物理模拟；速读一篇3D网格物理生成。最值得关注的是概率对齐世界建模（PAWBench 9.0）与跨具身零样本物理模拟（CLAP 9.0），均达9分水平。建议优先精读这两篇高分论文，速读可作延伸了解。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -73,12 +71,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">1 篇</strong>
+    <strong class="dpr-home-dashboard-count">2 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="MOSH-WM: Mask-Grounded Soft-Hamiltonian Dynamics for Object-Centric World Models">MOSH-WM: Mask-Grounded Soft-Hamiltonian Dynamics for Object-Centric World Models</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="PAWBench: How Far Are We from Probabilistically Aligned World Modeling?">PAWBench: How Far Are We from Probabilistically Aligned World Modeling?</span></li><li><span class="dpr-home-dashboard-paper-title" title="CLAP: Cross-Embodiment Video World Models are Zero-Shot Physical Simulators">CLAP: Cross-Embodiment Video World Models are Zero-Shot Physical Simulators</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>1</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>2</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -86,12 +84,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">8 篇</strong>
+    <strong class="dpr-home-dashboard-count">1 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Ring Forcing: Towards Precise Long-Term Memory for Autoregressive Video Diffusion">Ring Forcing: Towards Precise Long-Term Memory for Autoregressive Video Diffusion</span></li><li><span class="dpr-home-dashboard-paper-title" title="Identity-Preserving Text-to-Video Generation via Agentic Enhancement and Semantic Repair">Identity-Preserving Text-to-Video Generation via Agentic Enhancement and Semantic Repair</span></li><li><span class="dpr-home-dashboard-paper-title" title="Long-Horizon Audio-Visual Generation for Persistent Stories and Interactive Worlds">Long-Horizon Audio-Visual Generation for Persistent Stories and Interactive Worlds</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Gen2Physics: Grounding Generated 3D Meshes in Physics via Multi-View Material Decomposition">Gen2Physics: Grounding Generated 3D Meshes in Physics via Multi-View Material Decomposition</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>5</strong></span><span class="dpr-home-dashboard-tag">manga-drama <strong>3</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>1</strong></span></div>
 </section>
 </div>
 
