@@ -1,0 +1,202 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-30T22:57:06.566592+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 0,
+    "deep_cap": 8,
+    "deep_selected": 0,
+    "quick_candidates": 4,
+    "quick_skim_target": 13,
+    "quick_selected": 4
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2608.24329v1",
+      "source": "arxiv",
+      "title": "How Do Professional Editors Evaluate the Editing Quality of AI-Generated Cinematic Video Ads?",
+      "abstract": "On social media, we often encounter short-form video ads that employ cinematic editing techniques to evoke an emotional response. While AI tools are beginning to generate such cinematic ads automatically, we lack a fine-grained framework for evaluating these ads. In this paper, we first characterize social media video ad formats and identify cinematic ads as a recurring format in our corpus. We then analyze the duration, shot structure, audio and text elements, and editing techniques of cinematic ads to inform a two-stage generation pipeline in which an LLM first generates a shot plan and a video generation model renders the video. Using this pipeline, we generated 70 cinematic ads for 35 real brands and recruited professional video editors to critique their editing choices. From their critiques, we derive six dimensions of editing quality: narrative progression, audiovisual coordination and sound design, visual composition and graphics, shot-to-shot continuity, message and brand coherence, and temporal rhythm and pacing. We discuss how these dimensions can guide editing-aware generation, human evaluation, and automated evaluation of AI-generated cinematic ads.",
+      "authors": [
+        "Po-Ming Law",
+        "Weizhi Li",
+        "Arpit Narechania"
+      ],
+      "primary_category": "cs.HC",
+      "categories": [
+        "cs.HC"
+      ],
+      "published": "2026-08-25T09:51:29+00:00",
+      "link": "https://arxiv.org/pdf/2608.24329v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "LLM shot-plan and video generation pipeline for automated cinematic short-form ads, evaluated by professional editors.",
+      "llm_evidence_cn": "利用LLM镜头计划与视频生成模型自动化制作电影感短视频广告，并由专业剪辑师评价。",
+      "llm_evidence": "利用LLM镜头计划与视频生成模型自动化制作电影感短视频广告，并由专业剪辑师评价。",
+      "canonical_evidence": "利用LLM镜头计划与视频生成模型自动化制作电影感短视频广告，并由专业剪辑师评价。",
+      "llm_tldr_en": "Analyzes cinematic social media video ads, builds a two-stage LLM-shot-plan and video-generation pipeline, generates 70 ads for 35 brands, and gathers professional editor evaluations to reveal fine-grained editing quality criteria.",
+      "llm_tldr_cn": "社交媒体上电影感短视频广告日益常见，但缺乏细粒度评价框架。该文分析广告的时长、镜头结构、音视频元素与剪辑手法，提出两阶段生成流水线：先由LLM生成镜头计划，再由视频生成模型渲染。基于该流水线生成70条真实品牌广告，并邀请专业剪辑师评估，得到剪辑质量评价要点。该工作为短视频广告乃至短剧的自动化创作与专业评估提供了参考。",
+      "llm_tldr": "社交媒体上电影感短视频广告日益常见，但缺乏细粒度评价框架。该文分析广告的时长、镜头结构、音视频元素与剪辑手法，提出两阶段生成流水线：先由LLM生成镜头计划，再由视频生成模型渲染。基于该流水线生成70条真实品牌广告，并邀请专业剪辑师评估，得到剪辑质量评价要点。该工作为短视频广告乃至短剧的自动化创作与专业评估提供了参考。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "automated creation of short drama videos",
+      "matched_requirement_id": "req-20",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.22126v2",
+      "source": "arxiv",
+      "title": "Decoupled Physical Modeling and Execution for Physics Reasoning",
+      "abstract": "Physics reasoning requires constructing a consistent model of the underlying physical system rather than relying solely on symbolic or formula-based manipulation. Although large language models have shown strong ability in solving math and coding problems, they still struggle with physics problems, as these problems entangle the physical modeling process with mathematical calculations. Humans approach physics by first building a representation of the system before performing calculations. Inspired by this, we introduce a unified framework that distills intermediate representations that explicitly encode the physical modeling process and adopt a two-stage post-training strategy, where supervised fine-tuning establishes structured modeling, and reinforcement learning with rubric-based feedback improves the quality of the modeling process. Experiments on multiple multimodal physics benchmarks show that our approach generally improves physical reasoning performance across different models and datasets. Across PhysReason, PhyX, and SeePhys, physical modeling outperforms GRPO by ~3% on average. showing that explicit physical modeling is an effective strategy for improving physics reasoning in small VLMs.",
+      "authors": [
+        "Ye Zhang",
+        "Xuehang Guo",
+        "Rui Pan",
+        "Pengfei Yu",
+        "Denghui Zhang",
+        "Manling Li",
+        "Qingyun Wang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CL"
+      ],
+      "published": "2026-08-22T22:50:04+00:00",
+      "link": "https://arxiv.org/pdf/2608.22126v2",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "uses SFT and reinforcement learning for physics reasoning, method transferable to video generation",
+      "llm_evidence_cn": "利用监督微调与强化学习提升物理推理，方法可迁移至视频生成",
+      "llm_evidence": "利用监督微调与强化学习提升物理推理，方法可迁移至视频生成",
+      "canonical_evidence": "利用监督微调与强化学习提升物理推理，方法可迁移至视频生成",
+      "llm_tldr_en": "The paper decouples physical modeling from execution, using a two-stage post-training with SFT and RL to improve physics reasoning in LLMs.",
+      "llm_tldr_cn": "大语言模型在物理推理中常将物理建模与数学运算纠缠，导致表现不佳。本文提出统一框架，将物理建模过程显式编码为中间表示，并采用两阶段后训练：先通过监督微调建立结构化建模，再利用强化学习优化推理执行。实验表明该方法显著提升物理推理能力，虽然面向文本推理，但所提出的SFT与RL结合策略对视频生成中的物理合理性优化具有方法论借鉴价值。",
+      "llm_tldr": "大语言模型在物理推理中常将物理建模与数学运算纠缠，导致表现不佳。本文提出统一框架，将物理建模过程显式编码为中间表示，并采用两阶段后训练：先通过监督微调建立结构化建模，再利用强化学习优化推理执行。实验表明该方法显著提升物理推理能力，虽然面向文本推理，但所提出的SFT与RL结合策略对视频生成中的物理合理性优化具有方法论借鉴价值。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "improve physical plausibility of video generation using reinforcement learning",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.22819v1",
+      "source": "arxiv",
+      "title": "Direct, Parallel, or Sequential? A Comparative Study of Training-Free Multi-Subject Image-to-Video Generation",
+      "abstract": "Text-conditioned image-to-video (I2V) generation has advanced rapidly, yet generating videos with multiple subjects remains challenging. A model must simultaneously preserve the appearance of each subject, assign distinct motions, and maintain coherent spatial and temporal interactions. This paper presents a systematic study of three representative paradigms for training-free multi-subject I2V generation: direct, parallel, and sequential generation. Direct generation applies a pretrained I2V model to the complete reference image and prompt, requiring all subjects and motions to be synthesized jointly. Parallel and sequential generation instead decompose the reference image and prompt into subject-specific visual and textual conditions. Parallel generation synthesizes each subject independently and subsequently composes the resulting videos, reducing the complexity of each generation step at the cost of weaker inter-subject context. Sequential generation first synthesizes a background video and then progressively introduces individual subjects. This preserves accumulated scene context but introduces sensitivity to subject ordering and error propagation. We empirically evaluate the three paradigms across diverse multi-subject scenes, comparing appearance preservation, motion fidelity, temporal consistency, and inter-subject coherence, while also characterizing their distinct failure modes. Our findings reveal the strengths and limitations of each paradigm and offer practical insights for designing controllable multi-subject video generation systems.",
+      "authors": [
+        "Yanliang Qi",
+        "Kexi Chen",
+        "Muchao Ye",
+        "Haomiao Ni"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-24T05:30:48+00:00",
+      "link": "https://arxiv.org/pdf/2608.22819v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "systematic comparison of multi-subject I2V generation paradigms to maintain coherent spatial and temporal interactions among subjects",
+      "llm_evidence_cn": "系统比较多主体图像到视频生成范式，以维持主体间一致的空间与时间交互",
+      "llm_evidence": "系统比较多主体图像到视频生成范式，以维持主体间一致的空间与时间交互",
+      "canonical_evidence": "系统比较多主体图像到视频生成范式，以维持主体间一致的空间与时间交互",
+      "llm_tldr_en": "Generating multiple subjects in I2V requires preserving appearance, assigning distinct motions, and maintaining coherent interactions. This paper systematically compares direct, parallel, and sequential training-free paradigms, revealing trade-offs in subject consistency and motion coordination. The findings guide better generation strategies and can support more physically plausible multi-object dynamics.",
+      "llm_tldr_cn": "多主体图像到视频生成需要同时保持各主体的外观、运动分配和时空交互，但现有方法缺乏统一比较。作者对直接、并行和顺序三种免训练范式进行了系统研究，利用预训练I2V模型将参考图像与提示分解后进行生成。实验结果展示了各范式在主体一致性、运动多样性和交互协调上的权衡，为选择生成策略提供了依据，也为提升生成视频中物体交互的物理合理性奠定基础。",
+      "llm_tldr": "多主体图像到视频生成需要同时保持各主体的外观、运动分配和时空交互，但现有方法缺乏统一比较。作者对直接、并行和顺序三种免训练范式进行了系统研究，利用预训练I2V模型将参考图像与提示分解后进行生成。实验结果展示了各范式在主体一致性、运动多样性和交互协调上的权衡，为选择生成策略提供了依据，也为提升生成视频中物体交互的物理合理性奠定基础。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.23189v1",
+      "source": "arxiv",
+      "title": "EchoWM: Open and Enterable Omnimodal World Models",
+      "abstract": "We present EchoWM, an omnimodal world model for enterable generative media that responds to continuous navigation while jointly generating 720p video, environmental sound, music and speech. We organize interaction around camera intent: in first-person scenes, it specifies observer motion, while in third-person scenes, camera--character dynamics are learned from data without view-specific controllers. Discrete commands and continuous poses are mapped to a shared metric-scale relative 6-DoF trajectory, with dataset-level calibration preserving motion magnitude across heterogeneous data. To jointly learn audio-visual generation and trajectory control, we construct a complementary data engine and adopt progressive training followed by autoregressive post-training for long-horizon generation. Extensive evaluations show that \\model achieves strong trajectory following and high visual quality on public world-model benchmarks, supporting both first- and third-person interaction across varied subjects, and maintaining synchronized environmental sound and speech over long-horizon generation.",
+      "authors": [
+        "Songchun Zhang",
+        "Yaowei Li",
+        "Junhao Zhuang",
+        "Weiyang Jin",
+        "Haoyu Wang",
+        "Xin Lu",
+        "Yilang Sun",
+        "Shiyi Zhang",
+        "Haoran Li",
+        "Xiaoxiao Ma",
+        "Yuming Li",
+        "Yijun Liu",
+        "Yaofeng Su",
+        "Yanwen Ma",
+        "Haoyu Wu",
+        "Zihan Su",
+        "Yue Ma",
+        "Lvmin Zhang",
+        "Haoyang Huang",
+        "Zeyue Xue",
+        "Anyi Rao",
+        "Nan Duan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-24T12:39:59+00:00",
+      "link": "https://arxiv.org/pdf/2608.23189v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "world model for generating video, relevant to physical plausibility architecture",
+      "llm_evidence_cn": "面向视频生成的世界模型，与物理合理性架构相关",
+      "llm_evidence": "面向视频生成的世界模型，与物理合理性架构相关",
+      "canonical_evidence": "面向视频生成的世界模型，与物理合理性架构相关",
+      "llm_tldr_en": "EchoWM is an omnimodal world model for enterable generative media, jointly generating 720p video, audio, and music while responding to continuous navigation.",
+      "llm_tldr_cn": "现有生成媒体少有支持连续导航并同步生成多模态输出的世界模型。EchoWM将相机意图作为交互核心，把离散命令与连续姿态统一到共享6自由度轨迹，通过补全数据引擎和渐进训练联合生成720p视频、环境音、音乐与语音。该系统可实现可进入的生成媒体体验，虽未显式考虑物理定律，但其世界模型架构对视频生成的物理合理性改进具有潜在参考价值。",
+      "llm_tldr": "现有生成媒体少有支持连续导航并同步生成多模态输出的世界模型。EchoWM将相机意图作为交互核心，把离散命令与连续姿态统一到共享6自由度轨迹，通过补全数据引擎和渐进训练联合生成720p视频、环境音、音乐与语音。该系统可实现可进入的生成媒体体验，虽未显式考虑物理定律，但其世界模型架构对视频生成的物理合理性改进具有潜在参考价值。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

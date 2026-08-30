@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-21 ~ 2026-08-30</span>
+      <span class="dpr-home-dashboard-kicker">2026-08-30</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 3 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 4 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>1</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>4</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-30 12:23:23 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-30 22:59:09 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日精读两篇高分论文，聚焦世界模型与物理模拟；速读一篇3D网格物理生成。最值得关注的是概率对齐世界建模（PAWBench 9.0）与跨具身零样本物理模拟（CLAP 9.0），均达9分水平。建议优先精读这两篇高分论文，速读可作延伸了解。</p>
+<p>今日速读4篇论文，聚焦AI视频编辑与物理推理两大方向；最值得关注的是AI生成影视广告编辑质量评估（7.0分），揭示了专业编辑对AI视频的评判标准；建议普通读者优先了解AI视频编辑质量评估，以把握AI内容创作的实际应用边界。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -71,12 +71,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">2 篇</strong>
+    <strong class="dpr-home-dashboard-count">0 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="PAWBench: How Far Are We from Probabilistically Aligned World Modeling?">PAWBench: How Far Are We from Probabilistically Aligned World Modeling?</span></li><li><span class="dpr-home-dashboard-paper-title" title="CLAP: Cross-Embodiment Video World Models are Zero-Shot Physical Simulators">CLAP: Cross-Embodiment Video World Models are Zero-Shot Physical Simulators</span></li></ul>
+<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>2</strong></span></div>
+
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -84,12 +84,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">1 篇</strong>
+    <strong class="dpr-home-dashboard-count">4 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Gen2Physics: Grounding Generated 3D Meshes in Physics via Multi-View Material Decomposition">Gen2Physics: Grounding Generated 3D Meshes in Physics via Multi-View Material Decomposition</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="How Do Professional Editors Evaluate the Editing Quality of AI-Generated Cinematic Video Ads?">How Do Professional Editors Evaluate the Editing Quality of AI-Generated Cinematic Video Ads?</span></li><li><span class="dpr-home-dashboard-paper-title" title="Decoupled Physical Modeling and Execution for Physics Reasoning">Decoupled Physical Modeling and Execution for Physics Reasoning</span></li><li><span class="dpr-home-dashboard-paper-title" title="Direct, Parallel, or Sequential? A Comparative Study of Training-Free Multi-Subject Image-to-Video Generation">Direct, Parallel, or Sequential? A Comparative Study of Training-Free Multi-Subject Image-to-Video Generation</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>1</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>3</strong></span><span class="dpr-home-dashboard-tag">manga-drama <strong>1</strong></span></div>
 </section>
 </div>
 

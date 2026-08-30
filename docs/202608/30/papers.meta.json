@@ -1,0 +1,69 @@
+{
+  "label": "2026-08-30",
+  "date": "2026-08-30",
+  "generated_at": "2026-08-30T22:59:11",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202608/30/2608.24329v1-how-do-professional-editors-evaluate-the-editing-quality-of-ai-generated-cinematic-video-ads",
+      "section": "quick",
+      "title_en": "How Do Professional Editors Evaluate the Editing Quality of AI-Generated Cinematic Video Ads?",
+      "authors": "Po-Ming Law, Weizhi Li, Arpit Narechania",
+      "date": "2026-08-25",
+      "pdf": "https://arxiv.org/pdf/2608.24329v1",
+      "score": "7.0",
+      "evidence": "利用LLM镜头计划与视频生成模型自动化制作电影感短视频广告，并由专业剪辑师评价。",
+      "tldr": "社交媒体上常见采用电影级剪辑技巧的短视频广告，但现有AI生成与评估缺乏细粒度框架。本文分析电影广告的镜头、音频、文本等特征，提出两阶段生成流程：LLM先生成镜头计划，再由视频模型渲染。由专业编辑对70个真实品牌广告进行批评，提炼出六个剪辑质量维度，可用于生成、人工与自动评估。",
+      "tags": "query:manga-drama",
+      "abstract_en": "On social media, we often encounter short-form video ads that employ cinematic editing techniques to evoke an emotional response. While AI tools are beginning to generate such cinematic ads automatically, we lack a fine-grained framework for evaluating these ads. In this paper, we first characterize social media video ad formats and identify cinematic ads as a recurring format in our corpus. We then analyze the duration, shot structure, audio and text elements, and editing techniques of cinematic ads to inform a two-stage generation pipeline in which an LLM first generates a shot plan and a video generation model renders the video. Using this pipeline, we generated 70 cinematic ads for 35 real brands and recruited professional video editors to critique their editing choices. From their critiques, we derive six dimensions of editing quality: narrative progression, audiovisual coordination and sound design, visual composition and graphics, shot-to-shot continuity, message and brand coherence, and temporal rhythm and pacing. We discuss how these dimensions can guide editing-aware generation, human evaluation, and automated evaluation of AI-generated cinematic ads.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/30/2608.22126v2-decoupled-physical-modeling-and-execution-for-physics-reasoning",
+      "section": "quick",
+      "title_en": "Decoupled Physical Modeling and Execution for Physics Reasoning",
+      "authors": "Ye Zhang, Xuehang Guo, Rui Pan, Pengfei Yu, Denghui Zhang, Manling Li, Qingyun Wang",
+      "date": "2026-08-22",
+      "pdf": "https://arxiv.org/pdf/2608.22126v2",
+      "score": "6.0",
+      "evidence": "利用监督微调与强化学习提升物理推理，方法可迁移至视频生成",
+      "tldr": "物理推理需构建一致的物理系统模型，而非仅靠符号计算。受人类先表示后计算的启发，我们提出统一框架，通过两阶段后训练（监督微调与基于评分标准的强化学习）蒸馏显式物理建模的中间表示。在PhysReason、PhyX、SeePhys基准上，该方法较GRPO平均提升约3%。表明显式物理建模是提升小视觉语言模型物理推理的有效策略。",
+      "tags": "query:phys-video",
+      "abstract_en": "Physics reasoning requires constructing a consistent model of the underlying physical system rather than relying solely on symbolic or formula-based manipulation. Although large language models have shown strong ability in solving math and coding problems, they still struggle with physics problems, as these problems entangle the physical modeling process with mathematical calculations. Humans approach physics by first building a representation of the system before performing calculations. Inspired by this, we introduce a unified framework that distills intermediate representations that explicitly encode the physical modeling process and adopt a two-stage post-training strategy, where supervised fine-tuning establishes structured modeling, and reinforcement learning with rubric-based feedback improves the quality of the modeling process. Experiments on multiple multimodal physics benchmarks show that our approach generally improves physical reasoning performance across different models and datasets. Across PhysReason, PhyX, and SeePhys, physical modeling outperforms GRPO by ~3% on average. showing that explicit physical modeling is an effective strategy for improving physics reasoning in small VLMs.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/30/2608.22819v1-direct-parallel-or-sequential-a-comparative-study-of-training-free-multi-subject-image-to-video-generation",
+      "section": "quick",
+      "title_en": "Direct, Parallel, or Sequential? A Comparative Study of Training-Free Multi-Subject Image-to-Video Generation",
+      "authors": "Yanliang Qi, Kexi Chen, Muchao Ye, Haomiao Ni",
+      "date": "2026-08-24",
+      "pdf": "https://arxiv.org/pdf/2608.22819v1",
+      "score": "6.0",
+      "evidence": "系统比较多主体图像到视频生成范式，以维持主体间一致的空间与时间交互",
+      "tldr": "多主体图像到视频生成需同时保持各主体外观、分配不同运动并维持时空连贯，无训练方法面临巨大挑战且缺乏系统对比。本文对比直接、并行、顺序三种无训练范式：直接联合合成，简单但相互干扰；并行分解后组合，降低复杂度但主体间上下文弱；顺序先背景后主体，保留场景但受排序影响。实验全面评估外观、运动、时序及主体间一致性，明确各范式失败模式与适用场景。为可控多主体视频生成系统设计提供实用指导。",
+      "tags": "query:phys-video",
+      "abstract_en": "Text-conditioned image-to-video (I2V) generation has advanced rapidly, yet generating videos with multiple subjects remains challenging. A model must simultaneously preserve the appearance of each subject, assign distinct motions, and maintain coherent spatial and temporal interactions. This paper presents a systematic study of three representative paradigms for training-free multi-subject I2V generation: direct, parallel, and sequential generation. Direct generation applies a pretrained I2V model to the complete reference image and prompt, requiring all subjects and motions to be synthesized jointly. Parallel and sequential generation instead decompose the reference image and prompt into subject-specific visual and textual conditions. Parallel generation synthesizes each subject independently and subsequently composes the resulting videos, reducing the complexity of each generation step at the cost of weaker inter-subject context. Sequential generation first synthesizes a background video and then progressively introduces individual subjects. This preserves accumulated scene context but introduces sensitivity to subject ordering and error propagation. We empirically evaluate the three paradigms across diverse multi-subject scenes, comparing appearance preservation, motion fidelity, temporal consistency, and inter-subject coherence, while also characterizing their distinct failure modes. Our findings reveal the strengths and limitations of each paradigm and offer practical insights for designing controllable multi-subject video generation systems.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/30/2608.23189v1-echowm-open-and-enterable-omnimodal-world-models",
+      "section": "quick",
+      "title_en": "EchoWM: Open and Enterable Omnimodal World Models",
+      "authors": "Songchun Zhang, Yaowei Li, Junhao Zhuang, Weiyang Jin, Haoyu Wang, Xin Lu, Yilang Sun, Shiyi Zhang, Haoran Li, Xiaoxiao Ma, Yuming Li, Yijun Liu, Yaofeng Su, Yanwen Ma, Haoyu Wu, Zihan Su, Yue Ma, Lvmin Zhang, Haoyang Huang, Zeyue Xue, Anyi Rao, Nan Duan",
+      "date": "2026-08-24",
+      "pdf": "https://arxiv.org/pdf/2608.23189v1",
+      "score": "6.0",
+      "evidence": "面向视频生成的世界模型，与物理合理性架构相关",
+      "tldr": "开放可进入的全模态世界模型EchoWM，支持连续导航并联合生成720p视频、环境声、音乐和语音。将交互组织为相机意图，通过共享6-DoF相对轨迹统一离散命令与连续位姿，并做数据集级尺度校准。采用数据引擎、渐进训练和自回归后训练实现长时程生成。实验显示轨迹跟随与视觉质量优异，支持一/三人称交互及同步音声。",
+      "tags": "query:phys-video",
+      "abstract_en": "We present EchoWM, an omnimodal world model for enterable generative media that responds to continuous navigation while jointly generating 720p video, environmental sound, music and speech. We organize interaction around camera intent: in first-person scenes, it specifies observer motion, while in third-person scenes, camera--character dynamics are learned from data without view-specific controllers. Discrete commands and continuous poses are mapped to a shared metric-scale relative 6-DoF trajectory, with dataset-level calibration preserving motion magnitude across heterogeneous data. To jointly learn audio-visual generation and trajectory control, we construct a complementary data engine and adopt progressive training followed by autoregressive post-training for long-horizon generation. Extensive evaluations show that \\model achieves strong trajectory following and high visual quality on public world-model benchmarks, supporting both first- and third-person interaction across varied subjects, and maintaining synchronized environmental sound and speech over long-horizon generation.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

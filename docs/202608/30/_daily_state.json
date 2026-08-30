@@ -1,0 +1,73 @@
+{
+  "date": "20260830",
+  "date_label": "",
+  "generated_at": "2026-08-30 22:59:09 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.24329v1",
+      "route": "202608/30/2608.24329v1-how-do-professional-editors-evaluate-the-editing-quality-of-ai-generated-cinematic-video-ads",
+      "title": "How Do Professional Editors Evaluate the Editing Quality of AI-Generated Cinematic Video Ads?",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "利用LLM镜头计划与视频生成模型自动化制作电影感短视频广告，并由专业剪辑师评价。",
+      "first_seen_at": "2026-08-30 22:59:09 UTC",
+      "updated_at": "2026-08-30 22:59:09 UTC"
+    },
+    {
+      "paper_id": "2608.22126v2",
+      "route": "202608/30/2608.22126v2-decoupled-physical-modeling-and-execution-for-physics-reasoning",
+      "title": "Decoupled Physical Modeling and Execution for Physics Reasoning",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "利用监督微调与强化学习提升物理推理，方法可迁移至视频生成",
+      "first_seen_at": "2026-08-30 22:59:09 UTC",
+      "updated_at": "2026-08-30 22:59:09 UTC"
+    },
+    {
+      "paper_id": "2608.22819v1",
+      "route": "202608/30/2608.22819v1-direct-parallel-or-sequential-a-comparative-study-of-training-free-multi-subject-image-to-video-generation",
+      "title": "Direct, Parallel, or Sequential? A Comparative Study of Training-Free Multi-Subject Image-to-Video Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "系统比较多主体图像到视频生成范式，以维持主体间一致的空间与时间交互",
+      "first_seen_at": "2026-08-30 22:59:09 UTC",
+      "updated_at": "2026-08-30 22:59:09 UTC"
+    },
+    {
+      "paper_id": "2608.23189v1",
+      "route": "202608/30/2608.23189v1-echowm-open-and-enterable-omnimodal-world-models",
+      "title": "EchoWM: Open and Enterable Omnimodal World Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向视频生成的世界模型，与物理合理性架构相关",
+      "first_seen_at": "2026-08-30 22:59:09 UTC",
+      "updated_at": "2026-08-30 22:59:09 UTC"
+    }
+  ]
+}

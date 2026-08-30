@@ -1,0 +1,616 @@
+Title: Decoupled Physical Modeling and Execution for Physics Reasoning
+
+URL Source: https://arxiv.org/pdf/2608.22126v2
+
+Published Time: Fri, 28 Aug 2026 00:44:06 GMT
+
+Number of Pages: 20
+
+Markdown Content:
+# Decoupled Physical Modeling and Execution for Physics Reasoning 
+
+Ye Zhang 1, Xuehang Guo 2, Rui Pan 3, Pengfei Yu 4,Denghui Zhang 5, Manling Li 6, Qingyun Wang 2
+
+> 1
+
+University of Pennsylvania, 2William & Mary, 
+
+> 3
+
+University of Illinois Urbana-Champaign, 4Amazon, 
+
+> 5
+
+Stevens Institute of Technology, 6Northwestern University 
+
+Abstract 
+
+Physics reasoning requires constructing a con-sistent model of the underlying physical sys-tem rather than relying solely on symbolic or formula-based manipulation. Although large language models have shown strong ability in solving math and coding problems, they still struggle with physics problems, as these prob-lems entangle the physical modeling process with mathematical calculations. Humans ap-proach physics by first building a representa-tion of the system before performing calcula-tions. Inspired by this, we introduce a unified framework that distills intermediate representa-tions that explicitly encode the physical model-ing process and adopt a two-stage post-training strategy, where supervised fine-tuning estab-lishes structured modeling, and reinforcement learning with rubric-based feedback improves the quality of the modeling process. Experi-ments on multiple multimodal physics bench-marks show that our approach generally im-proves physical reasoning performance across different models and datasets. Across PhysRea-son, PhyX, and SeePhys, physical modeling outperforms GRPO by ~3% on average. show-ing that explicit physical modeling is an effec-tive strategy for improving physics reasoning in small VLMs. 
+
+1 Introduction 
+
+Solving physics problems requires more than se-lecting and applying equations. Human experts usu-ally organize the problem into a structured physical representation that captures the relevant principles and relationships (Chi et al., 1981; Kohl and Finkel-stein, 2008; Maloney, 1994). In this view, physics reasoning involves constructing and operating on an internal model of the system, rather than per-forming symbolic manipulation alone. Multimodal Large Language Models (MLLMs) have demonstrated strong performance in a wide range of reasoning tasks, particularly in mathemat-ical (Zhang et al., 2024a; Lu et al., 2024; Zhang 
+
+Figure 1: Physics reasoning errors often arise from in-correct physical modeling. Explicit modeling separates system representation from mathematical execution. 
+
+et al., 2024b; Shi et al., 2024; Chen et al., 2025) and logical reasoning (Xu et al., 2024a,b; Hendrycks et al., 2021; Xu et al., 2026). However, in physics reasoning, MLLMs tend to implicitly conflate phys-ical modeling and mathematical execution into a single reasoning process, leading to conceptual er-rors in physics problem-solving. Our preliminary analysis of 500 responses further shows that a large fraction of errors involve incorrect or incomplete physical modeling (Appendix B.1). In Figure 1, di-rect reasoning fails to identify the force arm by us-ing the cylinder diameter radius relation incorrectly, leading to an overestimated angular acceleration and final cable speed. Recent post-training methods improve reason-ing by introducing an explicit plan before execu-tion (Jiao et al., 2024; Parmar et al., 2025) or by scoring intermediate reasoning against multiple rubric criteria (Gunjal et al., 2025; Viswanathan et al., 2025; Zhou et al., 2026; Jayalath et al., 2026). Planning-based methods organize what the model should do at each stage, but do not directly check whether the underlying system has been rep-arXiv:2608.22126v2 [cs.LG] 27 Aug 2026 Input Sources    
+
+> Textual Problems
+> Multimodal Datasets
+> Synthetic Variants
+> Physics Problem Synthesis & Augmentation
+> Consistency
+> Filtering
+> Detect Visual/Factual Inconsistencies
+> Physical Modeling Trace Generation
+> Caption Generation
+> Physical Modeling Generation
+> Best-of-N Selection
+> Correctness Filtering
+> Execution Trajectory
+> Construction
+> Rubric Construction from High-
+> Quality
+> Traces
+> Curated
+> Structured
+> Dataset
+> Training Data
+> Supervised Fine-Tuning
+> 1. Physical Modeling ( τ)
+> 2. Mathematical Execution (z)
+> 3. Final Answer (y)
+> O1=( τ1, z 1, y 1)
+> O2=( τ2, z 2, y 2)
+> On=( τn, z n, y n)
+> GRPO
+> Rubric Satisfaction
+> Outcome
+> Correctness
+> Format
+> Validity
+> Total
+> Reward
+> Group
+> Optimization
+> A1
+> A2
+> An
+> Training Data
+
+Figure 2: Overview of our physical-modeling post-training framework. Explicit physical modeling provides both structured SFT trajectories and rubric-based process rewards for GRPO, enabling the model to separate system modeling from mathematical execution. 
+
+resented correctly. Rubric-based methods provide more detailed feedback on intermediate reasoning, but their criteria often focus on the validity of in-dividual steps rather than the physical model on which those steps are based. In physics, an in-correct representation of the system can make the entire derivation invalid, even when the subsequent steps appear reasonable. The reward should there-fore assess the physics-specific constraints and prin-ciples that define the physical system. We provide a detailed discussion of related works in Appendix A. In this paper, we explicitly model physics rea-soning as a two-stage process consisting of phys-ical modeling and mathematical execution . We introduce structured physical modeling traces as an intermediate representation and train models through a two-stage post-training framework. First, supervised fine-tuning (SFT) teaches the model to generate explicit physical modeling before execu-tion. Then, Group Relative Policy Optimization (GRPO) (Shao et al., 2024) with rubric-guided re-wards further improves the quality and physical grounding of the generated reasoning process. Ex-perimental results show that explicitly modeling the physical system consistently improves perfor-mance on open-ended multimodal physics reason-ing benchmarks. 
+
+2 Structured Physical Modeling for Physics Reasoning 
+
+2.1 Overview and Task Formulation 
+
+We decompose the physics problem-solving into two stages: physical modeling and mathemati-cal execution . In the physical modeling stage, the large language model applies relevant concepts and constraints to understand the system, while in the mathematical execution stage, these abstract physics concepts and constraints are formulated into specific equations for execution. Given the input problem x, the model first generates τ to con-struct the physical modeling, and then produces 
+
+(z, y ) based on this representation: 
+
+πθ(τ, z, y | x) = πθ(z, y | τ, x ) πθ(τ | x). (1) To formalize structured reasoning, we conduct a two-stage post-training strategy. We first perform supervised fine-tuning (SFT) as a cold start. We further refine this capability using Group relative Policy Optimization(GRPO) (Shao et al., 2024) with rubric-guided rewards, which improves mod-eling quality and encourages physically grounded and informative representations (see Figure 2). Method PhysReason PhyX SeePhys PhysUni mc MMK-12 phys .                                                                                                                           
+
+> P@1 P@5 P@1 P@5 P@1 P@5 P@1 P@5 P@1 P@5 Qwen2.5-VL-3B-Instruct
+> Baseline 13.3 33.6 10.9 23.5 9.1 24.7 17.1 50.9 35.0 73.4 GRPO 17.3 36.8 12.6 27.0 12.4 29.8 19.1 52.7 42.4 82.4
+> Physics-Modeling + GRPO 22.9 47.1 13.6 34.7 16.5 33.9 21.2 53.7 46.2 84.0 Qwen2.5-VL-7B-Instruct
+> Baseline 25.0 47.8 17.0 35.7 14.0 28.9 19.3 53.7 45.4 79.4 GRPO 28.7 52.5 19.2 39.3 18.2 33.1 20.9 55.4 54.2 87.4
+> Physics-Modeling + GRPO 32.1 58.2 21.4 40.0 19.8 34.7 23.5 57.8 56.8 89.6 Qwen3-VL-8B-Instruct
+> Baseline 51.8 70.7 43.2 61.4 27.3 40.5 32.4 60.2 67.6 84.8 GRPO 54.0 73.9 46.1 64.1 30.6 45.5 34.9 63.4 73.8 90.0
+> Physics-Modeling + GRPO 53.3 74.7 45.1 64.8 32.2 47.9 36.6 65.5 74.4 91.2 Gemma3-4B-IT
+> Baseline 7.3 17.1 7.5 16.3 5.0 16.3 17.8 48.9 27.0 61.8 GRPO 10.9 19.3 9.5 17.0 9.9 18.2 21.6 49.9 32.6 64.0
+> Physics-Modeling + GRPO 13.1 22.7 11.2 18.7 11.6 19.0 22.4 51.1 38.0 69.4
+
+Table 1: Main results on PhysReason (Zhang et al., 2025), PhyX (Shen et al., 2025), and SeePhys (Xiang et al., 2025) for in-domain evaluation, and on PhysUniBench (Wang et al., 2026) and the physics subset of MMK-12 (Meng et al., 2025) for out-of-domain evaluation. We report Pass@1 and Pass@5 for the baseline and GRPO variants. Bold indicates the best result within each model block. 
+
+2.2 Physics-Modeling Data Construction Structured Modeling Trace Generation. We construct the multimodal problem pool from Phys-Reason (Zhang et al., 2025), PhyX (Shen et al., 2025), and SeePhys (Xiang et al., 2025), and the text-only pool from SCP-116K (Lu et al., 2025) and MegaScience (Fan et al., 2025). We further synthe-size additional multimodal problems that preserve the underlying physical principles and concepts by using Gemini-2.5-Flash (Comanici et al., 2025). For each problem xi, we generate a structured physical modeling trace τi by rejection sampling using Qwen3.5-Flash (Qwen Team, 2026). To im-prove visual grounding, we use Qwen3-VL-32B-Instruct (Bai et al., 2025a) to extract image captions. We then apply a two-stage verification process to retain high-quality modeling traces. Finally, we obtain the execution trajectory zi by following the verified modeling trace, thereby deriving the cor-rect solution. Details of the generation pipeline and dataset statistics are provided in Appendices C and D, respectively. 
+
+Rubric Derivation from Modeling Traces. We derive the rubrics from verified structured physical modeling traces. For each verified physical mod-eling trace, we generate a rubric set C = {ck}|C| 
+
+> k=1
+
+with 8–12 criteria, covering the following aspects: (1) Visual Criteria ; (2) Physical Modeling Cri-teria ; (3) Strategic Planning Criteria ; (4) Exe-cution Criteria . Each criterion ck consists of a textual specification dk and an adaptive weight wk,i.e., ck = ( dk, w k). The weight reflects the cri-terion’s relative importance for approaching the problem. Details are provided in Appendix C.3. 
+
+2.3 Two-Stage Post-Training 
+
+We adopt a two-stage post-training pipeline. We perform SFT on structured trajectories (τ, z, y ),where τ is the physical modeling, z is the execution process, and y is the final answer: 
+
+LSFT = −E(x,τ,z,y )∼D [log πθ(τ, z, y | x)] . (2) We use a text-to-multimodal curriculum: text-only data first establishes the modeling format, and mul-timodal data then teaches visual grounding. We optimize the model with GRPO using a reward that combines final-answer correctness 
+
+Routcome , format validity Rformat , and rubric-based evaluation Rrubric of the intermediate physical mod-eling: 
+
+Rtotal = Routcome + Rformat + Rrubric . (3) Details are provided in the Appendix E. 
+
+3 Results 
+
+Performance of Physical Modeling. As shown in table 1, physical modeling consistently improves pass@1 accuracy over vanilla GRPO for both Method PhysReason PhyX SeePhys P@1 P@5 P@1 P@5 P@1 P@5 Qwen2.5-VL-7B                               
+
+> Baseline 25.0 47.8 17.0 35.7 14.0 28.9 SFT Cold Start 27.2 54.4 18.2 36.0 15.7 28.9
+> w/o Textual 22.4 43.8 15.1 29.9 14.0 25.6
+> Qwen3-VL-8B
+> Baseline 51.8 70.7 43.2 61.4 27.3 40.5 SFT Cold Start 50.3 70.4 41.5 61.8 29.8 42.1
+
+Table 2: Effect of Physical Modeling SFT Cold Start 
+
+Qwen2.5-VL-Instruct (Bai et al., 2025b) backbones and Gemma3-4B-IT (Team et al., 2025b), while maintaining comparable performance on Qwen3-VL-8B-Instruct (Bai et al., 2025a). The gains reach 5.6 points on PhysReason for Qwen2.5-VL-3B-Instruct and 5.4 points on MMK-12 phys 
+
+for Gemma3-4B-IT. This indicates that structured physical modeling traces may help elicit latent physical reasoning capability. On Qwen3-VL-8B-Instruct, vanilla GRPO may already elicit much of this capability, accounting for the marginal changes in pass@1. The advantage of physical modeling be-comes more consistent at pass@5. Physical model-ing outperforms vanilla GRPO across all backbones and benchmarks, where the gains are substantial on Qwen2.5-VL-3B-Instruct, reaching 10.3 points on PhysReason and 7.7 points on PhyX. Improve-ments remain positive in Qwen3-VL-8B-Instruct, despite the marginal changes observed in pass@1. This suggests that physical modeling leads to a higher probability of obtaining a correct solution over multiple sampled responses. 
+
+Effect of SFT Cold Start. Table 2 shows the effect of physical modeling of the SFT cold start on Qwen2.5-VL-7B-Instruct and Qwen3-VL-8B-Instruct. In Qwen2.5-VL-7B-Instruct, the pro-posed SFT cold start consistently improves per-formance on PhysReason, PhyX, and SeePhys (e.g., the Pass@1/Pass@5 scores on PhysReason increase from 25.0/47.8 to 27.2/54.4), whereas the changes in Qwen3-VL-8B-Instruct are relatively smaller and inconsistent, ranging from -1.7 to +2.5 points for Pass@1 and from -0.3 to +1.6 points for Pass@5. To test whether multimodal data alone are sufficient, we train Qwen2.5-VL-7B-Instruct with-out the initial textual SFT stage. Without the initial textual SFT stage, the performance of Qwen2.5-VL-7B-Instruct drops on all three benchmarks, es-pecially PhysReason, where Pass@1/Pass@5 de-creases from 27.2/54.4 to 22.4/43.8, indicating that 512 1k 2k 4k 8k 
+
+> Token Budget
+> 10 20 30 40
+> Pass@1 Accuracy (%)
+> Qwen3-VL-8B: Accuracy under Token Budget
+> Baseline SFT Cold Start
+
+Figure 3: Pass@1 accuracy of Qwen3-VL-8B-Instruct under different token budgets.       
+
+> Method Samples w/ Reflection Ratio
+> Baseline 309/500 0.618 Modeling-SFT 5/500 0.010
+
+Table 3: Frequency of reflective reasoning patterns in 500 sampled Qwen3-VL-8B-Instruct generations. 
+
+multimodal SFT alone does not account for the gains of the full curriculum. The initial textual physical modeling provides a useful foundation for subsequent multimodal training. 
+
+Token Efficiency in Qwen3-VL-8B To better un-derstand how the SFT cold start affects Qwen3-VL-8B-Instruct beyond the final accuracy, we analyze the model under different token budgets and exam-ine its behavior of reflections. At 512 tokens, the SFT model performs below the baseline. It outper-forms the baseline at 1k tokens, while increasing the token budget beyond 2k tokens gains little fur-ther improvement (See Figure 3). The baseline continues to improve as the token budget increases and approaches the SFT cold-start model only at larger token budgets. We further quantify explicit reflection by counting responses that contain re-flective expressions such as "wait", "rethink", and "verify". These reflective keywords indicate the re-flective patterns within model outputs. We sample 500 responses from Qwen3-VL-8B-Instruct and the SFT cold-start model on the same questions. The reflection rate drops from 61.8% in the base-line to 1.0% after SFT cold start among the 500 sampled responses, as reported in Table 3. Qwen3-VL-8B-Instruct appears to spend additional tokens revisiting and correcting earlier steps, whereas after SFT cold start, the model is more likely to establish the correct formulation before calculation and carry out the subsequent derivation without repeated cor-Method PR PhyX SP PUB MMK               
+
+> w/o SFT 28.1 18.2 15.7 20.5 52.8 w/o Rubric 30.4 20.9 19.8 21.9 54.0
+> Full 32.1 21.4 19.8 23.5 56.8
+
+Table 4: Component ablations on Qwen2.5-VL-7B-Instruct. We report Pass@1 accuracy on PhysReason (PR), PhyX, SeePhys (SP), PhysUniBench (PUB), and MMK-12 (MMK). 
+
+rection. This accounts for its better performance under smaller token budgets, even though the base-line catches up when longer responses are allowed. Qualitative examples are provided in Appendix H. 
+
+Ablation Studies. Table 4 presents the ablation analysis of our two main components. Remov-ing the SFT cold start lowers the average Pass@1 score by 3.7 points, with a drop on every bench-mark. Removing the rubric reward has a smaller effect, lowering the average by 1.3 points. The full method improves over this variant on four of the five benchmarks, with the largest gain of 2.8 points on MMK-12, while the two methods tie on SeeP-hys. The two components play different roles: SFT teaches the model to produce structured physical modeling traces, and the rubric provides feedback on their quality during GRPO. With both compo-nents, the model achieves the best or tied-best result on every benchmark. 
+
+Subfield-wise Analysis. We further analyze per-formance across mechanics, electrodynamics, op-tics, and thermodynamics. Figure 4 reports the accuracies for the four physics subfields. The gains are largest in mechanics and electrodynamics, at 7.3 and 6.7 points over the baseline. Optics and thermodynamics improve by 4.2 and 3.5 points. Many mechanics and electrodynamics problems depend on first identifying the relevant objects and then specifying the forces, fields, and constraints between them. The improvements are smaller for optics and thermodynamics. Optics problems are often built around ray diagrams, whereas thermody-namics problems involve state changes and energy flow. 
+
+Qualitative Analysis. The Carnot engine-refrigerator example (see Appendix I) illustrates how structured modeling supports reasoning in coupled physical systems. The model first analyzes the heat engine to determine the available work output, and then transfers this quantity Thermo. Optics Electromag. Mechanics     
+
+> Physics Subfield
+> 010 20 30 40
+> Pass@1 Accuracy (%)
+> +0.7
+> +3.5
+> +0.9
+> +4.2 +2.2
+> +6.7 +2.3
+> +7.3
+> Baseline SFT Physics-Modeling + GRPO
+
+Figure 4: Performance across physics subfields for Qwen2.5-VL-7B-Instruct. 
+
+to the refrigerator stage, enabling a coherent multi-step solution. This example highlights that the benefit of structured physical modeling lies in explicitly organizing key variables, constraints, and governing relations before numerical execution. Such intermediate representations provide a clear pathway that guides subsequent reasoning steps. We observe similar patterns across other subfields. 
+
+4 Conclusion 
+
+In this paper, we study physics reasoning from the perspective of structured physical modeling. We formulate physics reasoning as a two-stage pro-cess that separates physical modeling from math-ematical execution, and introduce an intermedi-ate representation to explicitly capture the mod-eling stage. To support this formulation, we de-velop a data construction pipeline for structured supervision and train the model through supervised fine-tuning followed by rubric-based reinforcement learning. The physics-specific rubric signals are derived from high-quality modeling traces and pro-vide fine-grained feedback on whether the con-structed physical model is consistent and complete. Experiments across multiple multimodal physics benchmarks show that explicitly improving physi-cal modeling leads to better reasoning performance. The improvements are consistent at Pass@5 across all evaluated models, while the Pass@1 changes on Qwen3-VL-8B-Instruct are relatively small. Our token-budget analysis further shows that the SFT cold start allows Qwen3-VL-8B-Instruct to main-tain strong performance with shorter reasoning traces and less explicit reflection. 
+
+Limitations 
+
+Our study shows that incorporating explicit phys-ical modeling into post-training improves the physics reasoning capabilities of LLMs. How-ever, our method relies on an automated pipeline to generate physical modeling traces and physics-specific rubrics, whose quality depends on the rea-soning capabilities of the models that generate them. Although a multi-stage filtering process re-moves many erroneous examples, the resulting data may still contain incorrect assumptions or incom-plete constraints, and the generated rubrics may not cover alternative but valid formulations. The extent of the improvements varies across model backbones, as the Pass@1 results for Qwen3-VL-8B-Instruct are mixed. Moreover, the token-budget and reflection analyses reveal changes in reasoning behavior after SFT, although the connection be-tween these changes and token efficiency requires further investigation. The experiments described here focus on multimodal physics reasoning and therefore do not examine generalization to other scientific fields. Finally, rubric-based RL incurs additional training costs because each sampled re-sponse must be evaluated by LLM-as-a-judge. 
+
+Acknowledgments 
+
+The authors acknowledge William & Mary Re-search Computing for providing computational re-sources and/or technical support that have con-tributed to the results reported within this paper. This work used DeltaAI at NCSA through allo-cation CIS260012 and CIS230280 from the Ad-vanced Cyberinfrastructure Coordination Ecosys-tem: Services & Support (ACCESS) program, which is supported by U.S. National Science Foun-dation grants #2138259, #2138286, #2138307, #2137603, and #2138296. This material is based upon work supported by the Google Cloud Research Credits program with the award GCP19980904. 
+
+References 
+
+Rahul K. Arora, Jason Wei, Rebecca Soskin Hicks, Pre-ston Bowman, Joaquin Quiñonero-Candela, Foivos Tsimpourlas, Michael Sharman, Meghan Shah, An-drea Vallone, Alex Beutel, Johannes Heidecke, and Karan Singhal. 2025. Healthbench: Evaluating large language models towards improved human health. 
+
+Preprint , arXiv:2505.08775. Shuai Bai, Yuxuan Cai, Ruizhe Chen, Keqin Chen, Xionghui Chen, Zesen Cheng, Lianghao Deng, Wei Ding, Chang Gao, Chunjiang Ge, Wenbin Ge, Zhi-fang Guo, Qidong Huang, Jie Huang, Fei Huang, Binyuan Hui, Shutong Jiang, Zhaohai Li, Mingsheng Li, and 45 others. 2025a. Qwen3-vl technical report. 
+
+Preprint , arXiv:2511.21631. Shuai Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wen-bin Ge, Sibo Song, Kai Dang, Peng Wang, Shi-jie Wang, Jun Tang, Humen Zhong, Yuanzhi Zhu, Mingkun Yang, Zhaohai Li, Jianqiang Wan, Pengfei Wang, Wei Ding, Zheren Fu, Yiheng Xu, and 8 oth-ers. 2025b. Qwen2.5-vl technical report. Preprint ,arXiv:2502.13923. Xinyan Chen, Renrui Zhang, Dongzhi JIANG, Aojun Zhou, Shilin Yan, Weifeng Lin, and Hongsheng Li. 2025. Mint-cot: Enabling interleaved visual tokens in mathematical chain-of-thought reasoning. In Ad-vances in Neural Information Processing Systems ,volume 38, Main Conference, pages 69110–69139. Curran Associates, Inc. Michelene T. H. Chi, Paul J. Feltovich, and Robert Glaser. 1981. Categorization and representation of physics problems by experts and novices. Cognitive Science , 5(2):121–152. Gheorghe Comanici, Eric Bieber, Mike Schaekermann, Ice Pasupat, Noveen Sachdeva, Inderjit Dhillon, Mar-cel Blistein, Ori Ram, Dan Zhang, Evan Rosen, Luke Marris, Sam Petulla, Colin Gaffney, Asaf Aharoni, Nathan Lintz, Tiago Cardal Pais, Henrik Jacobs-son, Idan Szpektor, Nan-Jiang Jiang, and 3416 oth-ers. 2025. Gemini 2.5: Pushing the frontier with advanced reasoning, multimodality, long context, and next generation agentic capabilities. Preprint ,arXiv:2507.06261. Ganqu Cui, Lifan Yuan, Zefan Wang, Hanbin Wang, Yuchen Zhang, Jiacheng Chen, Wendi Li, Bingxiang He, Yuchen Fan, Tianyu Yu, Qixin Xu, Weize Chen, Jiarui Yuan, Huayu Chen, Kaiyan Zhang, Xingtai Lv, Shuo Wang, Yuan Yao, Xu Han, and 6 others. 2025. Process reinforcement through implicit re-wards. Preprint , arXiv:2502.01456. Song Dai, Yibo Yan, Jiamin Su, Dongfang Zihao, Yubo Gao, Yonghua Hei, Jungang Li, Junyan Zhang, Sicheng Tao, Zhuoran Gao, and Xuming Hu. 2025. Physicsarena: The first multimodal physics reasoning benchmark exploring variable, process, and solution dimensions. Preprint , arXiv:2505.15472. Nifu Dan, Yujun Cai, and Yiwei Wang. 2025. Symbolic or numerical? understanding physics problem solv-ing in reasoning llms. Preprint , arXiv:2507.01334. Run-Ze Fan, Zengzhi Wang, and Pengfei Liu. 2025. Megascience: Pushing the frontiers of post-training datasets for science reasoning. arXiv preprint arXiv:2507.16812 .Kaiyue Feng, Yilun Zhao, Yixin Liu, Tianyu Yang, Chen Zhao, John Sous, and Arman Cohan. 2025. Physics: Benchmarking foundation models on university-level physics problem solving. Preprint ,arXiv:2503.21821. Diana Galvan-Sosa, Gabrielle Gaudeau, Pride Kavumba, Yunmeng Li, Hongyi gu, Zheng Yuan, Keisuke Sak-aguchi, and Paula Buttery. 2025. Rubrik’s cube: Test-ing a new rubric for evaluating explanations on the cube dataset. Preprint , arXiv:2503.23899. Zhiqi Gao, Tianyi Li, Yurii Kvasiuk, Sai Chaitanya Tadepalli, Maja Rudolph, Daniel J. H. Chung, Fred-eric Sala, and Moritz Münchmeyer. 2025. Test-time scaling techniques in theoretical physics – a compar-ison of methods on the tpbench dataset. Preprint ,arXiv:2506.20729. Anisha Gunjal, Anthony Wang, Elaine Lau, Vaskar Nath, Yunzhong He, Bing Liu, and Sean Hendryx. 2025. Rubrics as rewards: Reinforcement learning beyond verifiable domains. Preprint ,arXiv:2507.17746. Dan Hendrycks, Collin Burns, Steven Basart, Andy Zou, Mantas Mazeika, Dawn Song, and Jacob Steinhardt. 2021. Measuring massive multitask language under-standing. Preprint , arXiv:2009.03300. Edward J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, and Weizhu Chen. 2021. Lora: Low-rank adaptation of large language models. Preprint , arXiv:2106.09685. Raj Jaiswal, Dhruv Jain, Harsh Parimal Popat, Avinash Anand, Abhishek Dharmadhikari, Atharva Marathe, and Rajiv Ratn Shah. 2024. Improving physics rea-soning in large language models using mixture of refinement agents. Preprint , arXiv:2412.00821. Dulhan Jayalath, Shashwat Goel, Thomas Foster, Parag Jain, Suchin Gururangan, Cheng Zhang, Anirudh Goyal, and Alan Schelten. 2026. Compute as teacher: Turning inference compute into reference-free super-vision. Preprint , arXiv:2509.14234. Fangkai Jiao, Chengwei Qin, Zhengyuan Liu, Nancy F. Chen, and Shafiq Joty. 2024. Learning planning-based reasoning by trajectories collection and process reward synthesizing. Preprint , arXiv:2402.00658. Patrick B. Kohl and Noah D. Finkelstein. 2008. Patterns of multiple representation use by experts and novices during physics problem solving. Phys. Rev. ST Phys. Educ. Res. , 4:010111. Nathan Lambert, Jacob Morrison, Valentina Pyatkin, Shengyi Huang, Hamish Ivison, Faeze Brahman, Lester James V. Miranda, Alisa Liu, Nouha Dziri, Shane Lyu, Yuling Gu, Saumya Malik, Victoria Graf, Jena D. Hwang, Jiangjiang Yang, Ronan Le Bras, Oyvind Tafjord, Chris Wilhelm, Luca Sol-daini, and 4 others. 2025. Tulu 3: Pushing fron-tiers in open language model post-training. Preprint ,arXiv:2411.15124. Dakuan Lu, Xiaoyu Tan, Rui Xu, Tianchu Yao, Chao Qu, Wei Chu, Yinghui Xu, and Yuan Qi. 2025. Scp-116k: A high-quality problem-solution dataset and a generalized pipeline for automated extraction in the higher education science domain. Preprint ,arXiv:2501.15587. Pan Lu, Hritik Bansal, Tony Xia, Jiacheng Liu, Chun-yuan Li, Hannaneh Hajishirzi, Hao Cheng, Kai-Wei Chang, Michel Galley, and Jianfeng Gao. 2024. Mathvista: Evaluating mathematical reasoning of foundation models in visual contexts. Preprint ,arXiv:2310.02255. Pan Lu, Swaroop Mishra, Tony Xia, Liang Qiu, Kai-Wei Chang, Song-Chun Zhu, Oyvind Tafjord, Peter Clark, and Ashwin Kalyan. 2022. Learn to explain: Multimodal reasoning via thought chains for science question answering. Preprint , arXiv:2209.09513. David P. Maloney. 1994. Research on problem solving: Physics. In Dorothy L. Gabel, editor, Handbook of Research on Science Teaching and Learning , pages 327–356. Macmillan. Fanqing Meng, Lingxiao Du, Zongkai Liu, Zhixiang Zhou, Quanfeng Lu, Daocheng Fu, Tiancheng Han, Botian Shi, Wenhai Wang, Junjun He, Kaipeng Zhang, Ping Luo, Yu Qiao, Qiaosheng Zhang, and Wenqi Shao. 2025. Mm-eureka: Exploring the fron-tiers of multimodal reasoning with rule-based rein-forcement learning. Preprint , arXiv:2503.07365. Xinyu Pang, Ruixin Hong, Zhanke Zhou, Fan-grui Lv, Xinwei Yang, Zhilong Liang, Bo Han, and Changshui Zhang. 2024. Physics reasoner: Knowledge-augmented reasoning for solving physics problems with large language models. Preprint ,arXiv:2412.13791. Mihir Parmar, Palash Goyal, Xin Liu, Yiwen Song, Mingyang Ling, Chitta Baral, Hamid Palangi, and Tomas Pfister. 2025. Plan-tuning: Post-training lan-guage models to learn step-by-step planning for com-plex problem solving. Preprint , arXiv:2507.07495. Qwen Team. 2026. Qwen3.5: Towards native multi-modal agents. David Rein, Betty Li Hou, Asa Cooper Stickland, Jackson Petty, Richard Yuanzhe Pang, Julien Di-rani, Julian Michael, and Samuel R. Bowman. 2023. Gpqa: A graduate-level google-proof q&a bench-mark. Preprint , arXiv:2311.12022. Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junxiao Song, Xiao Bi, Haowei Zhang, Mingchuan Zhang, Y. K. Li, Y. Wu, and Daya Guo. 2024. Deepseekmath: Pushing the limits of mathemati-cal reasoning in open language models. Preprint ,arXiv:2402.03300. Hui Shen, Taiqiang Wu, Qi Han, Yunta Hsieh, Jizhou Wang, Yuyue Zhang, Yuxin Cheng, Zijian Hao, Yuan-sheng Ni, Xin Wang, Zhongwei Wan, Kai Zhang, Wendong Xu, Jing Xiong, Ping Luo, Wenhu Chen, Chaofan Tao, Zhuoqing Mao, and Ngai Wong. 2025. Phyx: Does your model have the "wits" for physical reasoning? Preprint , arXiv:2505.15929. Guangming Sheng, Chi Zhang, Zilingfeng Ye, Xibin Wu, Wang Zhang, Ru Zhang, Yanghua Peng, Haibin Lin, and Chuan Wu. 2025. Hybridflow: A flexible and efficient rlhf framework. In Proceedings of the Twentieth European Conference on Computer Sys-tems , EuroSys ’25, page 1279–1297. ACM. Wenhao Shi, Zhiqiang Hu, Yi Bin, Junhua Liu, Yang Yang, See-Kiong Ng, Lidong Bing, and Roy Ka-Wei Lee. 2024. Math-llava: Bootstrapping mathemati-cal reasoning for multimodal large language models. 
+
+Preprint , arXiv:2406.17294. Gemini Team, Rohan Anil, Sebastian Borgeaud, Jean-Baptiste Alayrac, Jiahui Yu, Radu Soricut, Johan Schalkwyk, Andrew M. Dai, Anja Hauth, Katie Millican, David Silver, Melvin Johnson, Ioannis Antonoglou, Julian Schrittwieser, Amelia Glaese, Jilin Chen, Emily Pitler, Timothy Lillicrap, Angeliki Lazaridou, and 1332 others. 2025a. Gemini: A fam-ily of highly capable multimodal models. Preprint ,arXiv:2312.11805. Gemma Team, Aishwarya Kamath, Johan Ferret, Shreya Pathak, Nino Vieillard, Ramona Merhej, Sarah Perrin, Tatiana Matejovicova, Alexandre Ramé, Morgane Rivière, Louis Rouillard, Thomas Mesnard, Geoffrey Cideron, Jean bastien Grill, Sabela Ramos, Edouard Yvinec, Michelle Casbon, Etienne Pot, Ivo Penchev, and 197 others. 2025b. Gemma 3 technical report. 
+
+Preprint , arXiv:2503.19786. Vijay Viswanathan, Yanchao Sun, Shuang Ma, Xi-ang Kong, Meng Cao, Graham Neubig, and Tong-shuang Wu. 2025. Checklists are better than re-ward models for aligning language models. Preprint ,arXiv:2507.18624. Lintao Wang, Encheng Su, Jiaqi Liu, Pengze Li, Jiabei Xiao, Wenlong Zhang, Xinnan Dai, Xi Chen, Yuan Meng, Lei Bai, Wanli Ouyang, Shixiang Tang, Ao-ran Wang, and Xinzhu Ma. 2026. Physunibench: A multi-modal physics reasoning benchmark at under-graduate level. Preprint , arXiv:2506.17667. Yubo Wang, Xueguang Ma, Ge Zhang, Yuansheng Ni, Abhranil Chandra, Shiguang Guo, Weiming Ren, Aaran Arulraj, Xuan He, Ziyan Jiang, Tianle Li, Max Ku, Kai Wang, Alex Zhuang, Rongqi Fan, Xiang Yue, and Wenhu Chen. 2024. Mmlu-pro: A more robust and challenging multi-task language understanding benchmark. Preprint , arXiv:2406.01574. Kun Xiang, Heng Li, Terry Jingchen Zhang, Yinya Huang, Zirong Liu, Peixin Qu, Jixi He, Jiaqi Chen, Yu-Jie Yuan, Jianhua Han, Hang Xu, Hanhui Li, Mrinmaya Sachan, and Xiaodan Liang. 2025. Seep-hys: Does seeing help thinking? –benchmarking vision-based physics reasoning. In Advances in Neural Information Processing Systems , volume 38, Main Conference. Curran Associates, Inc. Fangzhi Xu, Qika Lin, Jiawei Han, Tianzhe Zhao, Jun Liu, and Erik Cambria. 2024a. Are large lan-guage models really good logical reasoners? acomprehensive evaluation and beyond. Preprint ,arXiv:2306.09841. Jundong Xu, Hao Fei, Liangming Pan, Qian Liu, Mong-Li Lee, and Wynne Hsu. 2024b. Faithful logical reasoning via symbolic chain-of-thought. Preprint ,arXiv:2405.18357. Jundong Xu, Hao Fei, Yuhui Zhang, Liangming Pan, Qijun Huang, Qian Liu, Preslav Nakov, Min-Yen Kan, William Yang Wang, Mong-Li Lee, and Wynne Hsu. 2026. Muslr: Multimodal symbolic logical reasoning. Preprint , arXiv:2509.25851. Renrui Zhang, Dongzhi Jiang, Yichi Zhang, Haokun Lin, Ziyu Guo, Pengshuo Qiu, Aojun Zhou, Pan Lu, Kai-Wei Chang, Yu Qiao, Peng Gao, and Hongsheng Li. 2024a. MATHVERSE: does your multi-modal LLM truly see the diagrams in visual math prob-lems? In Computer Vision - ECCV 2024 - 18th European Conference, Milan, Italy, September 29-October 4, 2024, Proceedings, Part VIII , volume 15066 of Lecture Notes in Computer Science , pages 169–186. Springer. Renrui Zhang, Xinyu Wei, Dongzhi Jiang, Ziyu Guo, Shicheng Li, Yichi Zhang, Chengzhuo Tong, Jiaming Liu, Aojun Zhou, Bin Wei, Shanghang Zhang, Peng Gao, Chunyuan Li, and Hongsheng Li. 2024b. Mavis: Mathematical visual instruction tuning with an auto-matic data engine. Preprint , arXiv:2407.08739. Xinyu Zhang, Yuxuan Dong, Yanrui Wu, Jiaxing Huang, Chengyou Jia, Basura Fernando, Mike Zheng Shou, Lingling Zhang, and Jun Liu. 2025. PhysReason: A comprehensive benchmark towards physics-based reasoning. In Proceedings of the 63rd Annual Meet-ing of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 16593–16615, Vi-enna, Austria. Association for Computational Lin-guistics. Yaowei Zheng, Richong Zhang, Junhao Zhang, Yanhan Ye, Zheyan Luo, Zhangchi Feng, and Yongqiang Ma. 2024. Llamafactory: Unified efficient fine-tuning of 100+ language models. Preprint , arXiv:2403.13372. Yang Zhou, Sunzhu Li, Shunyu Liu, Wenkai Fang, Kongcheng Zhang, Jiale Zhao, Jingwen Yang, Yihe Zhou, Jianwei Lv, Tongya Zheng, Hengtong Lu, Wei Chen, Yan Xie, and Mingli Song. 2026. Breaking the exploration bottleneck: Rubric-scaffolded reinforce-ment learning for general llm reasoning. Preprint ,arXiv:2508.16949. 
+
+A Related Work 
+
+LLMs for Physics Reasoning. Recent work has introduced a variety of benchmarks for evaluating physics reasoning across both textual and multi-modal settings, covering a broad range of diffi-culty levels from high-school to advanced prob-lems (Wang et al., 2026; Zhang et al., 2025; Feng et al., 2025; Xiang et al., 2025). Early works treat physics reasoning as part of general scien-tific benchmarks (Lu et al., 2022; Wang et al., 2024; Rein et al., 2023), while more recent work focuses on dedicated physics benchmarks that em-phasize more challenging and diverse reasoning scenarios. In particular, multimodal physics rea-soning requires models to jointly reason over tex-tual and visual information to construct and solve physically grounded representations of the under-lying system (Dai et al., 2025; Shen et al., 2025; Zhang et al., 2025; Xiang et al., 2025). Across these benchmarks, physics reasoning is typically characterized by a modeling-centric process, where the large language model must construct a struc-tured representation of the physical system be-fore performing symbolic or numerical computa-tion (Dai et al., 2025). Prior works have explored approaches such as knowledge-augmented reason-ing (Pang et al., 2024) or iterative refinement meth-ods (Jaiswal et al., 2024) that aim to enhance inter-mediate reasoning quality. A recent study further suggests that scaling inference-time computation alone is often insufficient and that effective physics reasoning is typically based on more structured and consistent reasoning patterns (Gao et al., 2025; Dan et al., 2025). These observations highlight the importance of explicitly modeling the underlying physical system, rather than relying on implicit gen-eration without structured modeling supervision. 
+
+Post-Training Methods for Reasoning. Rein-forcement learning with verifiable rewards (RLVR) has shown strong performance in domains such as mathematics and coding by leveraging program-matic or externally verifiable rewards (Shao et al., 2024). Beyond outcome-level rewards, prior work explores richer feedback over reasoning trajecto-ries (Cui et al., 2025; Lambert et al., 2025). Process supervision and planning-style training provides denser guidance over intermediate reasoning steps by encouraging structured decomposition of the solution process (Jiao et al., 2024; Parmar et al., 2025). More recently, rubric- or checklist-based evaluation has emerged as a way to assess open-ended reasoning tasks using multiple explicit cri-teria rather than relying solely on final-answer ac-curacy or holistic judgments (Arora et al., 2025; Galvan-Sosa et al., 2025). Beyond evaluation, such structured criteria are used as rubric-based rewards to evaluate the reasoning trajectory during pol-icy optimization in reinforcement learning (Gunjal et al., 2025; Viswanathan et al., 2025; Zhou et al., 2026; Jayalath et al., 2026). Despite providing richer supervision than final-answer rewards alone, 19.8% 11.4% 10.8% 9.8% 9.0% 6.2% 4.6% 3.0% 15.8% 
+
+> Applicability Condition (99, 19.8%) Principle Selection (57, 11.4%) System Representation (54, 10.8%) Spatial/Structural Modeling (49, 9.8%) Constraint Modeling (45, 9.0%) Interaction Modeling (31, 6.2%) Diagram Interpretation (23, 4.6%) Given-Value Interpretation (15, 3.0%) Equation Formulation (14, 2.8%) System Boundary (12, 2.4%) Circuit Topology (11, 2.2%) Target Quantity (11, 2.2%) Other (79, 15.8%)
+
+Figure 5: Distribution of physics reasoning error types from a preliminary analysis using a Qwen2.5-VL-7B-Instruct. 
+
+Modeling Trace Correct Accuracy 
+
+No modeling trace 72/400 18.0% Self-generated trace 80/400 20.0% Strong-model trace 154/400 38.5% 
+
+Table 5: Performance of a fixed executor under different sources of physical modeling traces on the same 400 problems. 
+
+these approaches largely rely on generic criteria for assessing reasoning quality. In physics, however, effective problem-solving depends on constructing an explicit physical representation of the system, thereby motivating supervision signals grounded in the underlying physical structure. 
+
+B Preliminary Analysis 
+
+To identify where the main difficulties in physics reasoning arise, we conduct two preliminary anal-yses. We first examine the distribution of errors in generated solutions and then keep the executor fixed while varying the physical modeling trace provided to it. 
+
+B.1 Error Analysis 
+
+To better understand the challenges of physics rea-soning, we conduct a preliminary error analysis using Qwen2.5-VL-7B-Instruct (Bai et al., 2025b) on a subset of 500 physics problems. We categorize the incorrect responses into different error types us-ing Qwen3.5-Flash (Qwen Team, 2026). As shown in Figure 5, a large fraction of failures arises from incorrect or incomplete physical modeling. This observation motivates our focus on explicitly sepa-rating physical modeling from downstream compu-tation. 
+
+B.2 Modeling Trace Intervention 
+
+To understand how the modeling trace quality af-fects mathematical execution in physical reasoning, we conduct a fixed-executor diagnosis on 400 ex-amples. The goal is to change the quality of the physical-modeling input while keeping the mathe-matical executor unchanged. We use Qwen2.5-VL-7B-Instruct (Bai et al., 2025b) as the same weak executor to solve each problem under three inputs: no trace, its own modeling trace, and a stronger-model modeling trace from Qwen3.5-Flash (Qwen Team, 2026). The results are reported in Table 5. Since the executor is unchanged, the main variable is the quality of the physical-modeling input. The gain from 80/400 to 154/400 suggests that better physical modeling can substantially improve final solving accuracy. This provides a more direct diag-nostic of the mechanism underlying the method. 
+
+C Data Generation and Curation Details 
+
+C.1 Data Source PhysReason (Zhang et al., 2025) is a multimodal physics reasoning benchmark constructed from di-verse sources including college entrance exams and international physics competitions. It consists of 1,200 carefully curated problems with diagram-grounded contexts, structured solutions, and step-level annotations, emphasizing long-horizon, multi-step reasoning. Notably, each problem often con-tains multiple sub-questions, which we decompose into independent samples to construct finer-grained training instances. 
+
+PhyX (Shen et al., 2025) focuses on visual physics reasoning across diverse scenarios. It contains 3,000 curated questions spanning six reasoning types, 25 sub-domains, and six core physics domains, including mechanics, electromag-netism, thermodynamics, optics, modern physics, and wave-related topics. Unlike purely symbolic benchmarks, PhyX emphasizes integrating visual understanding with physical principles. 
+
+SeePhys (Xiang et al., 2025) emphasizes vision-dependent physics reasoning grounded in diagrams. It contains 2,000 curated questions paired with 2,245 images, covering 7 physics domains and 21 heterogeneous diagram categories across knowl-edge levels from middle school to PhD qualifying exams. A substantial portion of the benchmark is vision-essential, requiring models to extract indis-pensable information directly from diagrams rather than relying solely on textual cues. 
+
+SCP-116K (Lu et al., 2025) is a large-scale dataset of high-quality problem–solution pairs de-signed for scientific reasoning across STEM do-mains. It contains 116,756 rigorously curated examples automatically extracted from heteroge-neous educational resources, including textbooks and academic materials. The dataset is constructed via a generalized multi-stage pipeline with strin-gent filtering to ensure scientific rigor and appro-priate educational levels. Unlike manually curated benchmarks, SCP-116K emphasizes scalable data construction, providing both the dataset and the extraction pipeline to facilitate future extensions and domain transfer. 
+
+MegaScience (Fan et al., 2025) is a large-scale scientific reasoning dataset consisting of 1.25 mil-lion instances of diverse STEM domains. It is de-signed to support complex multi-step reasoning and scientific problem solving. We construct our training data from both tex-tual and multimodal physics sources. For tex-tual data, we sample 12,000 physics-related prob-lem–solution pairs from SCP-116K and Mega-Science. For multimodal data, we randomly sample instances from PhysReason, PhyX, and SeePhys. We first filter out non-English problems to ensure consistency. To establish a clean evaluation proto-col, we reserve a held-out set of 1,000 problems, including 467 from PhysReason, 412 from PhyX, and 121 from SeePhys. These samples are excluded from all stages of data generation and training. The remaining data is used as input to our data gener-ation pipeline for constructing structured physical modeling traces and rubrics . 
+
+C.2 Data Generation Pipeline Problem Augmentation. To expand the multi-modal physics problem pool, we use Gemini-2.5-Flash (Comanici et al., 2025) to synthesize addi-tional problem instances from existing multimodal physics data. Specifically, we apply the following transformations: • Objective variation: modifying the target quantity or question objective while keeping the physical setup unchanged; • Numerical perturbation: altering numerical values (e.g., masses, distances, or constants) within physically valid ranges; • Linguistic rephrasing: rewriting problem de-scriptions to introduce surface-level diversity without changing semantics. We further filter out samples with visual conflicts or underlying physics inconsistencies using Gemini-2.5-Flash (Comanici et al., 2025). 
+
+Visual Captioning. To improve visual ground-ing, we first extract a caption from the image using Qwen3-VL-32B-Instruct (Bai et al., 2025a). The caption is constrained to describe only observable and physically relevant elements in the scene, in-cluding object identities, spatial relationships, ge-ometric configurations, and annotated quantities (e.g., angles, lengths, or directions), without intro-ducing additional assumptions or inferred conclu-sions. 
+
+Structured Physical Modeling. We construct the model input by combining the image, question, generated caption, and reference solution. The ref-erence solution is used only to guide the modeling structure and does not directly determine the fi-nal answer during modeling trace generation. We adopt a best-of-N strategy ( N = 5 ) to generate multiple candidate physical modeling traces. Each trajectory is required to explicitly represent the physical system in a structured form, rather than a high-level summary. Specifically, each trajectory includes: • System Understanding: the target physical quantity or system property to be solved; • Constraints: conditions implied by the prob-lem setup, diagram, or geometry, such as boundary conditions, conservation constraints, or kinematic relations; • Governing principles: the physical laws or principles relevant to the problem, along with how they apply to the current system; • Equations and physical relationships: sym-bolic formulations that instantiate the govern-ing principles and explicitly connect variables through the underlying physical relationships. 
+
+Two-stage Quality Control. To ensure that the generated modeling traces provide reliable supervi-sion for physical modeling, we apply a two-stage filtering procedure at both the modeling process and outcome levels. 
+
+Stage 1: Modeling-level filtering. We first eval-uate each candidate modeling trace using Gemini-2.5-Flash, focusing on three aspects: (1) internal coherence , which checks whether the reasoning steps are logically consistent and free of contradic-tions; (2) multimodal consistency , which verifies that the modeling process is grounded in the vi-sual scene and does not conflict with the image or problem description; and (3) modeling specificity ,which requires the modeling trace to explicitly rep-resent key elements of the physical system, includ-ing variables, constraints, governing principles, and their relationships. Traces that are inconsistent, underspecified, or remain at a generic high-level description are discarded. 
+
+Stage 2: Execution-based validation. Among the physical modeling traces that pass the first stage, we further validate whether the modeling trace can support correct downstream reasoning. Specifi-cally, we provide the question, image, and can-didate modeling trace to Gemini-2.0-Flash(Team et al., 2025a) and require the model to strictly fol-low the trace to derive the final answer. Only traces that lead to correct solutions are retained. This two-stage procedure ensures that the retained modeling traces are both physically grounded at the modeling stage and executable to-ward correct final answers. 
+
+C.3 Rubric Construction Rubric Derivation from Physical Modeling Traces. For each problem, we derive a set of fine-grained evaluation criteria from the filtered modeling trace. Each criterion corresponds to a specific requirement of the modeling process, en-suring that the rubric is grounded in the underlying physical representation rather than generic reason-ing patterns. 
+
+Design Principles. To ensure that the rubrics pro-vide meaningful and reliable supervision, we en-force that each criterion is atomic , capturing a sin-gle aspect of the modeling process; verifiable , cor-responding to a concrete and independently check-able requirement; and physically grounded , reflect-ing explicit physical concepts such as variables, constraints, governing principles, and their rela-tionships. In addition, we explicitly avoid vague or generic criteria (e.g., “correct reasoning” or “proper simplification”) to ensure that all criteria are non-trivial and informative. 
+
+Rubric Structure. Each rubric consists of 8-12 criteria that collectively capture the construction of a physical system representation. Specifically, the criteria cover key aspects of the modeling process, including: • Visual Criteria: Verify the correctness of key information from physics diagrams (e.g., nu-merical values and spatial relationships); • Physical Modeling Criteria: Evaluate the construction of the underlying physical mod-eling (e.g., concepts, constraints, and physics process); • Strategic Planning Criteria: Evaluate the decomposition of a complex physics problem into appropriate subproblems; • Execution Criteria: Evaluate the translation from abstract concepts to equations and sym-bolic representations, and intermediate an-swers. This process converts modeling traces into struc-tured, physically grounded rubrics that provide ex-plicit supervision over the modeling process. 
+
+C.4 Validation of Rubric-Based Judgments 
+
+We manually audit 50 randomly sampled train-ing instances, covering 498 criterion-level judg-ments. Two human annotators independently eval-uate whether each response satisfies the correspond-ing rubric criterion and achieve a raw agreement rate of 92.0%. Disagreements are resolved through discussion to obtain consensus annotations. Us-ing these annotations as the human reference, the LLM judge agrees on 439 of the 498 judgments, corresponding to an agreement rate of 88.2%. The disagreements include 37 false positives and 22 false negatives. 
+
+D Data Statistics 
+
+In Table 6, we provide detailed statistics of the constructed multimodal physical modeling trace dataset. The final dataset contains 8,880 physical trajectories, including 4,852 original samples and 4,028 synthesized samples, with relatively balanced coverage across major physics categories. The PhysReason, PhyX, and SeePhys evaluation sets reported in Table 1 are the 1,000 held-out prob-lems described in Appendix C, which are excluded from every stage of data construction and augmen-tation. Synthetic problems are generated only from the remaining training pool, and no evaluation sam-ple is used as a source for augmentation. We conduct an explicit overlap analysis between the training and evaluation sets using cosine sim-ilarity over semantic embeddings obtained from 
+
+sentence-transformers/all-MiniLM-L6-v2 .                                                        
+
+> Data Cat. Orig. Synth. Total
+> PhysReason Electro. 962 523 1485 Mech. 567 476 1043 Optics 353 207 560 Thermo. 239 89 328 Other 19 24 43 PhyX Electro. 418 454 872 Mech. 644 695 1339 Optics 537 469 1006 Thermo. 367 348 715 Other 133 110 243 SeePhys Electro. 227 249 476 Mech. 212 254 466 Optics 112 102 214 Thermo. 43 25 68 Other 19 322
+> Total –4852 4028 8880
+
+Table 6: Category-level statistics of the constructed physical modeling trace dataset.                             
+
+> Similarity >0.90 Near-Duplicate
+> Dataset Size Count Rate Count Rate
+> PhysReason 467 12 2.57% 61.28% PhyX 412 61.46% 40.97% SeePhys 121 54.13% 00.00% Total 1000 23 2.30% 10 1.00%
+
+Table 7: Textual overlap between the training and held-out evaluation sets 
+
+We manually inspect all 23 high-similarity cases. We define near-duplicates as problems sharing a similar physical setup and target quantity, with differences mainly in wording and numerical values. Only 10 evaluation problems have near-duplicate counterparts in the training set under this criterion (Figure 7). We note that high embedding similarity does not necessarily indicate duplication. For physics problems, two instances can have similar physical scenarios but ask for different target quantities. Furthermore, even small changes in numerical values would change the implicit boundary conditions or constraints, although other physical settings are very close. Therefore, solving them may require different constraints or reasoning paths. 
+
+E Two-stage Post-training for Physical Modeling 
+
+E.1 SFT Cold Start for Structured Physical Modeling 
+
+We first fine-tune the model to generate structured reasoning trajectories (τ, z, y ), where τ denotes physical modeling, z denotes execution, and y de-notes the final answer: 
+
+LSFT = −E(x,τ,z,y )∼D [log πθ(τ, z, y | x)] . (4) We use a curriculum from text-only to multi-modal data. The former establishes the structural pattern of modeling, while the latter teaches the models to ground physical modeling in visual information. 
+
+E.2 Physical Modeling-Guided Policy Optimization 
+
+We further optimize the model with rubric-based GRPO. Unlike standard GRPO, which primarily rewards final-answer correctness, our approach ad-ditionally rewards intermediate physical modeling and mathematical execution. Specifically, given a group of sampled responses {yi}Gi=1 for each prob-lem x, we optimize 
+
+JGRPO (θ) = Ex, {yi}
+
+"
+
+1
+
+G
+
+> G
+
+X
+
+> i=1
+
+ˆAi log πθ(yi | x)
+
+#
+
+,
+
+where ˆAi is computed from the normalized reward within the sampled group. The reward combines final-answer correctness with rubric-based scores for physical modeling and execution. 
+
+Rubric Reward. Given a sampled reasoning tra-jectory (τ, z, y )i and a set of fine-grained rubrics 
+
+C = {(dk, w k)}|C| 
+
+> k=1
+
+, we evaluate each criterion in-dependently with an LLM-as-a-judge. The judge evaluates whether (τ, z, y )i satisfies the criterion description dk under the original question q and returns a binary score: 
+
+sk(q, (τ, z, y )i) = 
+
+(
+
+1, criterion satisfied ,
+
+0, otherwise . (5) The rubric reward is computed as the weighted average of criterion-level scores: 
+
+Rrubric (q, (τ, z, y )i) = 
+
+P|C|  
+
+> k=1
+
+wksk(q, (τ, z, y )i)
+
+P|C|  
+
+> k=1
+
+wk
+
+.
+
+(6) 
+
+Outcome and Format Rewards. We use an out-come reward to evaluate final-answer correctness: 
+
+Routcome =
+
+(
+
+1, ˆy = y, 
+
+0, otherwise . (7) We also use a format reward Rformat , set to 0.5 if the output follows the required <plan> , <solution> ,and <answer> structure, and 0 otherwise: 
+
+Rformat =
+
+(
+
+0.5, valid format ,
+
+0, otherwise . (8) 
+
+Total Reward. The total reward combines rubric, outcome, and format rewards: 
+
+Rtotal = Rrubric + Routcome + Rformat . (9) 
+
+F Experimental Setup 
+
+Datasets. For text-only SFT, we construct a 12K-problem training set based on SCP-116K (Lu et al., 2025) and MegaScience (Fan et al., 2025). For multimodal SFT, we use PhysReason (Zhang et al., 2025), PhyX (Shen et al., 2025), and SeePhys (Xi-ang et al., 2025) as the problem pool, holding out 1,000 problems for evaluation. We synthesize new problems from the remaining pool using Gemini-2.5-Flash (Comanici et al., 2025), resulting in 8,880 multimodal training instances after synthesis and filtering. For GRPO, we further derive fine-grained rubrics from the verified structured modeling traces in the multimodal training set, enabling process-level reward of physical modeling. 
+
+Base Models. To evaluate our method, we fine-tune three open-source vision-language models of different scales and series: Qwen2.5-VL-3B-Instruct (Bai et al., 2025b), Qwen2.5-VL-7B-Instruct (Bai et al., 2025b), Qwen3-VL-8B-Instruct (Bai et al., 2025a), and Gemma3-4B-IT (Team et al., 2025b) 
+
+Implementation Details. For SFT, we adopt a curriculum training pipeline. We first perform text-only supervised fine-tuning for 2 epochs, followed by multimodal fine-tuning for 2 epochs on the con-structed physics training set. We use LoRA (Hu et al., 2021) with rank 64 and α = 128 , and set the learning rate to 1 × 10 −4. SFT is implemented with LLaMA-Factory (Zheng et al., 2024). For GRPO, we continue training from the multimodal SFT checkpoint using only the multimodal physics training set. We use verl (Sheng et al., 2025) with LoRA rank 64, α = 128 , and a learning rate of 
+
+5 × 10 −5 for 1 epoch. We evaluate open-ended physics reasoning using a hybrid evaluation frame-work, with details in Appendix G.2. 
+
+G Evaluation Details 
+
+G.1 Evaluation Benchmarks 
+
+We evaluate our method on five multimodal physics reasoning benchmarks. PhysReason (Zhang et al., 2025), PhyX (Shen et al., 2025), and SeePhys (Xi-ang et al., 2025) are used for in-domain evalua-tion, while PhysUniBench (Wang et al., 2026) and Model Reasoning Excerpt                              
+
+> Baseline “By conservation of energy:
+> (m1−m2)gh + 12 (m1+m2)v2= 0
+> Solve for v2:
+> v2= 2( m2−m1)gh m1+m2
+> Wait — this gives a negative value for v2,which is impossible. That means we have the sign wrong. The net potential energy loss is m1gh −m2gh , which is positive, and this energy is converted to kinetic energy.” SFT cold start “The system consists of two buckets connected by a lightweight, inextensible rope passing over a frictionless, massless pulley. Since the rope is inextensible, both buckets move with the same magnitude of acceleration a
+> and reach the same final speed v.Determine Acceleration: Apply Newton’s Second Law to the system. The net force is the difference between the weights of the two buckets. Relate this net force to the total mass to solve for acceleration a.
+> a= (m1−m2)gm1+m2
+> ”
+
+Table 8: Reasoning excerpts from an Atwood-machine example. 
+
+MMK-12 phys (Meng et al., 2025) are used for out-of-domain evaluation. For the in-domain bench-marks, we hold out 1,000 problems for evaluation, including 467 from PhysReason, 412 from PhyX, and 121 from SeePhys. These problems are sepa-rated from the training pool before synthetic aug-mentation and physical modeling trace construction and are not used at any stage of training-data gener-ation. We use the English multiple-choice subset of PhysUniBench and the physics subset of MMK-12, denoted as MMK-12 phys .
+
+G.2 Evaluation Protocol 
+
+Evaluating open-ended physics reasoning poses unique challenges due to the diversity of valid an-swer forms, including numerical values with units, symbolic expressions, and free-form textual re-sponses. To ensure reliable and consistent evalua-tion, we adopt a hybrid evaluation framework that combines rule-based matching with LLM-assisted verification. 
+
+Answer Types. We categorize answers into four types: Numerical , Symbolic , Textual , and Multiple-choice . Each type is evaluated using a specialized strategy tailored to its structure. 
+
+Numerical Evaluation. For numerical answers, we first normalize both predicted and ground-truth responses into a canonical value–unit representa-tion. This normalization handles diverse formats, including scientific notation, LaTeX expressions (e.g., fractions and square roots), and implicit unit expressions. We then evaluate correctness based on (i) numerical equivalence under a relative toler-ance, and (ii) unit consistency. When units differ but are dimensionally equivalent, we convert val-ues to a shared canonical form before comparison (e.g., eV ↔ J, deg ↔ rad ). The evaluation also supports multiple-value answers by matching pre-dicted and ground-truth value–unit pairs. 
+
+Symbolic Evaluation. For symbolic answers, we normalize LaTeX expressions to remove format-ting variations and parse them into symbolic rep-resentations. We then evaluate equivalence using the math-verify toolkit. 1 To further improve ro-bustness, we apply additional normalization steps such as removing presentation-level commands and, when applicable, comparing only the right-hand side of equations. 
+
+Multiple-Choice Evaluation. For multiple-choice questions, we extract the predicted option (e.g., A–E) using pattern matching and directly compare it with the ground-truth label. 
+
+Fallback LLM-as-a-Judge. When rule-based evaluation fails (e.g., due to parsing errors, unsup-ported formats, or ambiguous answers), we employ an LLM-as-a-judge as a fallback. The model is prompted to determine whether the predicted an-swer is equivalent to the ground truth and outputs a binary correctness decision. This mechanism ensures coverage for edge cases while preserving consistency with the primary evaluation criteria. This hybrid design balances precision and ro-bustness: rule-based evaluation provides strict and interpretable correctness signals, while the LLM-as-a-judge fallback handles the inherent variability of open-ended physics answers. 
+
+> 1https://github.com/huggingface/Math-Verify
+
+H Analysis of Reflective Reasoning Behavior 
+
+Reflection Keyword Detection. To quantify re-flective reasoning behavior, we use a lightweight keyword-based diagnostic. A generated response is counted as containing reflection behavior if it includes at least one reflection-related expression, such as “wait”, “hold on”, “let me check”, “re-think”, or “verify”. These keywords are intended to capture explicit self-checking or reconsidera-tion patterns in the model’s reasoning trace. We apply this diagnostic to 500 sampled Qwen3-VL-8B-Instruct generations and report the proportion of responses containing such reflection keywords. As shown in Table 3, the baseline exhibits sub-stantially more reflection-keyword patterns than Modeling-SFT, suggesting that the base model more frequently relies on explicit self-revision dur-ing reasoning. 
+
+Qualitative Analysis. Table 8 shows a problem asks for the final speed of a two-bucket Atwood sys-tem released from rest, where the 12 .0 kg bucket starts 2.00 m above the floor and is connected to a 4.0 kg bucket by a lightweight rope over a fric-tionless pulley. Both models solve the problem correctly and obtain 4.43 m /s . However, the base-line first produces an incorrect intermediate sign convention and then recovers through an explicit reflective correction. In contrast, SFT cold start be-gins by constructing the physical system. This sug-gests that structured modeling can reduce the need for explicit self-revision by making the relevant physical constraints available before mathematical execution. I Qualitative Analysis 
+
+Problem 
+
+The figure shows a Carnot heat engine driving a Carnot refrigerator. Determine Q3.
+
+Model Output Objective: 
+
+The problem involves a Carnot heat engine that supplies the work input to a Carnot refrigerator. The engine and refrigerator must therefore be treated as a coupled system. The first law of thermody-namics, Carnot efficiency, and the coefficient of performance of a Carnot refrigerator are used to determine the heat transfers. Goal: Determine the heat Q3 rejected by the refrigerator to the 500 K reservoir. 
+
+Variables: 
+
+• TH = 600 K | Hot-reservoir temperature of the heat engine • TC = 300 K | Cold-reservoir temperature of the heat engine • Q1 = 1000 J | Heat absorbed by the heat engine • Q2 | Heat rejected by the heat engine • Wout | Work output of the heat engine • Tref ,hot = 500 K | Hot-reservoir temperature of the refrigerator • Tref ,cold = 400 K | Cold-reservoir temperature of the refrigerator • Win | Work input to the refrigerator • Q4 | Heat absorbed by the refrigerator from the cold reservoir • Q3 | Heat rejected by the refrigerator to the hot reservoir 
+
+Constraints: 
+
+1. The heat engine and refrigerator operate as ideal, reversible Carnot machines. 2. The engine work output is transferred to the refrigerator without loss, so Win = Wout .3. Energy conservation for the refrigerator gives Q3 = Q4 + Win .
+
+Physical Modeling Process: 
+
+1. Interpret the diagram and separate the two devices. For the heat engine, Q1 is absorbed from the 600 K reservoir and Q2 is rejected to the 300 K reservoir. For the refrigerator, Q4 is absorbed from the 400 K reservoir and Q3 is rejected to the 500 K reservoir. 2. Model the heat engine. Since it is a reversible Carnot engine, its efficiency and work output satisfy 
+
+ηeng = 1 − TC
+
+TH
+
+, Wout = ηeng Q1.3. Connect the two devices through work. The engine drives the refrigerator directly, so the engine work output becomes the refrigerator work input: 
+
+Win = Wout .
+
+4. Model the refrigerator. Its cold-side heat is related to the work input through the Carnot coefficient of performance, 
+
+COP R = Q4
+
+Win 
+
+= Tref ,cold 
+
+Tref ,hot − Tref ,cold 
+
+.
+
+Energy conservation then gives Q3 = Q4 + Win .5. Form the calculation sequence. First obtain Wout , pass it to the refrigerator as Win , determine 
+
+Q4, and finally calculate the requested Q3.
+
+Execution: Step 1: Calculate the engine work output. 
+
+ηeng = 1 − 300 600 = 0 .5, Wout = ηeng Q1 = 0 .5(1000) = 500 J .
+
+Step 2: Determine the refrigerator work input. 
+
+Win = Wout = 500 J .
+
+Step 3: Calculate the refrigerator coefficient of performance. 
+
+COP R = 400 500 − 400 = 4 .
+
+Step 4: Determine Q4 and Q3.
+
+Q4 = COP RWin = 4(500) = 2000 J ,Q3 = Q4 + Win = 2000 + 500 = 2500 J .
+
+Answer: 
+
+Q3 = 2500 J 
+
+Problem 
+
+Near Earth’s surface, a uniform electric field of magnitude E = 150 N /C is directed downward. What is the change ∆U in the electric potential energy of an electron when the electric force moves it vertically upward through d = 520 m ?Model Output Objective: 
+
+The problem asks for the change in electric potential energy of an electron moving upward in a uniform electric field. The force direction must first be determined from the sign of the electron charge. The work done by the electric field can then be related to the change in potential energy. Goal: Determine ∆U for the electron over the given displacement. 
+
+Variables: 
+
+• E = 150 N /C | Magnitude of the downward electric field • d = 520 m | Upward displacement of the electron • qe = −1.602 × 10 −19 C | Electron charge • ∆U | Change in electric potential energy 
+
+Constraints: 
+
+1. The electric field is uniform and directed downward. 2. The electron moves vertically upward. 3. Because the electron has negative charge, its electric force is opposite to the field and therefore points upward. 
+
+Physical Modeling Process: 
+
+1. Set the coordinate direction. Choose upward as positive. Then ⃗ E = −E ˆy and ⃗ d = dˆy.2. Infer the force from the charge sign. The electron is negatively charged, so its force is opposite to the downward field: ⃗F = qe⃗ E = eE ˆy.
+
+The force therefore points upward, in the same direction as the displacement. 3. Determine the sign of the energy change. Because the force and displacement are aligned, the electric field does positive work: 
+
+Wfield =⃗ F ·⃗ d = eEd. 
+
+The electron’s electric potential energy must therefore decrease. 4. Form the executable relation. Using ∆U = −Wfield gives 
+
+∆U = −eEd. 
+
+Execution: Step 1: Determine the force direction and magnitude. ⃗F = qe⃗ E = ( −e)( −E ˆy) = eE ˆy,F = eE = (1 .602 × 10 −19 )(150) = 2 .403 × 10 −17 N.
+
+The force and displacement are both upward, so the electric field does positive work. 
+
+Step 2: Calculate the work done by the field. 
+
+Wfield = eEd = (1 .602 × 10 −19 )(150)(520) = 1 .24956 × 10 −14 J.Step 3: Calculate the change in potential energy. 
+
+∆U = −Wfield = −1.24956 × 10 −14 J ≈ − 1.2 × 10 −14 J.
+
+Answer: 
+
+∆U ≈ − 1.2 × 10 −14 J
+
+Problem 
+
+Find the current I1 in the circuit shown in the figure using Kirchhoff’s rules. 
+
+Model Output Objective: 
+
+The circuit contains a 4.0 Ω resistor in series with two parallel branches containing 5.0 Ω and 9.0 Ω 
+
+resistors. Kirchhoff’s current and voltage laws are used to relate the total current to the two branch currents. Goal: Determine I1, the current supplied by the 6.0 V battery. The branch currents I2 and I3 are also calculated to verify the result. 
+
+Variables: 
+
+• V = 6 .0 V | Battery voltage • R1 = 4 .0 Ω | Series resistance carrying I1
+
+• R2 = 5 .0 Ω | Upper-branch resistance carrying I2
+
+• R3 = 9 .0 Ω | Lower-branch resistance carrying I3
+
+• I1 | Total current through the battery and 4.0 Ω resistor • I2 | Current through the 5.0 Ω branch • I3 | Current through the 9.0 Ω branch 
+
+Constraints: 
+
+1. The wires have negligible resistance and the battery maintains a constant voltage. 2. At node c, the total current splits between the two branches, so I1 = I2 + I3.3. The 5.0 Ω and 9.0 Ω resistors are connected across the same two nodes and have the same voltage drop. 
+
+Physical Modeling Process: 
+
+1. Identify the circuit topology. The 4.0 Ω resistor carries the total current I1 before the circuit splits into the 5.0 Ω and 9.0 Ω branches. 2. Apply current conservation at the junction. At node c,
+
+I1 = I2 + I3.
+
+3. Construct the upper-loop equation. Traversing the battery, the 4.0 Ω resistor, and the 5.0 Ω 
+
+branch gives 
+
+6.0 − 4.0I1 − 5.0I2 = 0 .
+
+4. Construct the lower-loop equation. Traversing the battery, the 4.0 Ω resistor, and the 9.0 Ω 
+
+branch gives 
+
+6.0 − 4.0I1 − 9.0I3 = 0 .
+
+5. Form the solvable system. The junction equation and the two loop equations provide three independent equations for I1, I2, and I3.
+
+Execution: Step 1: Express the branch currents in terms of I1.
+
+I2 = 6.0 − 4.0I1
+
+5.0 , I3 = 6.0 − 4.0I1
+
+9.0 .
+
+Step 2: Substitute into Kirchhoff’s current law. 
+
+I1 = 6.0 − 4.0I1
+
+5.0 + 6.0 − 4.0I1
+
+9.0 .
+
+Multiplying by 45 gives 
+
+45 I1 = 9(6 .0 − 4.0I1) + 5(6 .0 − 4.0I1) = 84 − 56 I1.
+
+Therefore, 
+
+101 I1 = 84 , I1 = 84 101 A ≈ 0.832 A .
+
+Step 3: Calculate the branch currents. 
+
+I2 = 6.0 − 4.0(84 /101) 5.0 = 54 101 A ≈ 0.535 A ,I3 = 6.0 − 4.0(84 /101) 9.0 = 30 101 A ≈ 0.297 A .
+
+The values satisfy I1 = I2 + I3.
+
+Answer: 
+
+I1 ≈ 0.83 A
