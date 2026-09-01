@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-30</span>
+      <span class="dpr-home-dashboard-kicker">2026-08-31</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 4 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 3 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>4</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>3</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-30 22:59:09 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-01 00:47:27 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日速读4篇论文，聚焦AI视频编辑与物理推理两大方向；最值得关注的是AI生成影视广告编辑质量评估（7.0分），揭示了专业编辑对AI视频的评判标准；建议普通读者优先了解AI视频编辑质量评估，以把握AI内容创作的实际应用边界。</p>
+<p>今日速读3篇，均聚焦视频生成与物理动态建模，暂无精读。</p>
+<p>最值得关注的两篇论文《DensityKV》与《LayerRecall》均从缓存与记忆机制入手，优化长视频生成效率与时间一致性。</p>
+<p>建议普通读者优先了解KV缓存压缩与状态条件路由两大方向，后续可延伸关注生成模型的长时稳定性进展。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -84,12 +86,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">4 篇</strong>
+    <strong class="dpr-home-dashboard-count">3 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="How Do Professional Editors Evaluate the Editing Quality of AI-Generated Cinematic Video Ads?">How Do Professional Editors Evaluate the Editing Quality of AI-Generated Cinematic Video Ads?</span></li><li><span class="dpr-home-dashboard-paper-title" title="Decoupled Physical Modeling and Execution for Physics Reasoning">Decoupled Physical Modeling and Execution for Physics Reasoning</span></li><li><span class="dpr-home-dashboard-paper-title" title="Direct, Parallel, or Sequential? A Comparative Study of Training-Free Multi-Subject Image-to-Video Generation">Direct, Parallel, or Sequential? A Comparative Study of Training-Free Multi-Subject Image-to-Video Generation</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="DensityKV: Density-Guided KV Cache Compression for Long Video Generation">DensityKV: Density-Guided KV Cache Compression for Long Video Generation</span></li><li><span class="dpr-home-dashboard-paper-title" title="LayerRecall: A State-Conditioned Memory Router for Long-Horizon Consistency in Video Generation">LayerRecall: A State-Conditioned Memory Router for Long-Horizon Consistency in Video Generation</span></li><li><span class="dpr-home-dashboard-paper-title" title="ChainSplat: A Physics-Inspired Screw-Theoretic Model for Learning Deformable Linear Object Dynamics from Multi-View RGB Videos">ChainSplat: A Physics-Inspired Screw-Theoretic Model for Learning Deformable Linear Object Dynamics from Multi-View RGB Videos</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>3</strong></span><span class="dpr-home-dashboard-tag">manga-drama <strong>1</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>3</strong></span></div>
 </section>
 </div>
 

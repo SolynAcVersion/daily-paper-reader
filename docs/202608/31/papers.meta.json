@@ -1,0 +1,54 @@
+{
+  "label": "2026-08-31",
+  "date": "2026-08-31",
+  "generated_at": "2026-09-01T00:47:29",
+  "count": 3,
+  "papers": [
+    {
+      "paper_id": "202608/31/2608.27922v1-densitykv-density-guided-kv-cache-compression-for-long-video-generation",
+      "section": "quick",
+      "title_en": "DensityKV: Density-Guided KV Cache Compression for Long Video Generation",
+      "authors": "Wenqu Zhao, Xuemin Chi, Xin Zhang, Guoqing Ma, Baorun Li, Jianjie Fang, Peizhi Tang, Chen Gao, Wei Wu",
+      "date": "2026-08-28",
+      "pdf": "https://arxiv.org/pdf/2608.27922v1",
+      "score": "6.0",
+      "evidence": "免训练的KV缓存管理方法，减少历史状态冗余，维持视频生成长程一致性与物理状态不漂移",
+      "tldr": "自回归视频扩散模型通过滑动窗口注意力支持流式生成，但每个新块依赖历史，误差逐渐传播，同时历史KV集随展开持续膨胀，重复帧造成冗余。DensityKV是一种无需训练的KV库管理方法，它为每个注意力头维护独立token级KV库，并利用Soft-Riesz密度量化后RoPE键的局部拥挤度，通过约束入库后密度增长来剔除冗余状态。在三个视频生成骨干及多长度测试中，相同历史KV容量上限下，该方法提升了长时间一致性和生成稳定性。其贡献在于使持久存储不随生成长度增加，为长视频生成提供高效压缩方案。",
+      "tags": "query:phys-video",
+      "abstract_en": "Autoregressive video diffusion models enable streaming generation through sliding-window attention, but each generated block is conditioned on previously generated content, causing appearance and motion errors to propagate recursively over time. Historical key-value (KV) memory preserves earlier subject and scene states and helps maintain long-horizon consistency. However, retaining every generated state creates a historical archive that grows continuously with the rollout, while recurrent states repeatedly add redundant coverage. To address this problem, we propose DensityKV, a training-free historical KV bank management strategy. DensityKV maintains a separate token-level KV bank for each attention head and measures local redundancy among the post-RoPE keys that directly parameterize attention routing using Soft-Riesz density. By constraining neighborhood-density growth after states enter the bank, DensityKV limits repeated historical accumulation while preserving coherent states from each completed generation block. Experiments across three autoregressive video generation backbones and multiple generation lengths show that, at the same upper bound on historical KV capacity, DensityKV improves long-horizon consistency and generation stability while keeping persistent historical storage bounded independently of rollout length.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/31/2608.28460v1-layerrecall-a-state-conditioned-memory-router-for-long-horizon-consistency-in-video-generation",
+      "section": "quick",
+      "title_en": "LayerRecall: A State-Conditioned Memory Router for Long-Horizon Consistency in Video Generation",
+      "authors": "Yixuan Ding, Jiahao Kong, Wei Huang, Ruijie Quan, Yi Yang",
+      "date": "2026-08-28",
+      "pdf": "https://arxiv.org/pdf/2608.28460v1",
+      "score": "6.0",
+      "evidence": "在视频生成中通过条件记忆路由保持长程一致性，可迁移用于物理属性的跨帧一致",
+      "tldr": "自回归视频扩散依赖近期上下文生成，会丢失重现场景所需历史线索，造成长程不一致。分析显示视频DiT层对当前、近期和远距离上下文有不同偏好，于是提出LayerRecall，以当前条件路由将相关历史K/V仅注入记忆敏感层，并采用CHPM在预测空间监督训练。在100个多镜头提示上，MemoBench和MovieBench最优，VBench-Long与骨干持平，不损局部连续性且推理开销可忽略，为长视频一致性提供轻量可移植方案。",
+      "tags": "query:phys-video",
+      "abstract_en": "Autoregressive video diffusion enables scalable long-video generation by producing chunks from a bounded recent context. While recency-based caching preserves local continuity, it evicts historical cues needed when subjects, objects, scenes, or attributes reappear. Existing memory mechanisms expose models to nonlocal history, but access alone does not ensure effective use. Our analysis reveals that video DiT layers exhibit distinct preferences for current, recent, and distant context, suggesting that long-range memory requires deciding both what to retrieve and where to use it. We introduce LayerRecall, a current-conditioned, layer-selective memory router that retrieves relevant historical K/V states and injects them only into backbone-specific memory-sensitive layers while preserving local attention elsewhere. To reduce reliance on scarce high-quality long-horizon videos and explicit memory-allocation labels, we further propose Cross-Horizon Prediction Matching (CHPM), which uses a privileged long-context reference to supervise the bounded-memory router in prediction space. Across 100 multi-shot evaluation prompts, LayerRecall achieves the best overall results on MemoBench and MovieBench while matching its backbone on VBench-Long, demonstrating stronger long-range recovery without sacrificing local continuity. Qualitative analyses further reveal memory-guided self-correction, whereby initially mismatched local attributes return to their historical appearance without resetting ongoing motion or scene structure. Additional analyses show cross-backbone portability and negligible inference overhead.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202608/31/2608.28570v1-chainsplat-a-physics-inspired-screw-theoretic-model-for-learning-deformable-linear-object-dynamics-from-multi-view-rgb-videos",
+      "section": "quick",
+      "title_en": "ChainSplat: A Physics-Inspired Screw-Theoretic Model for Learning Deformable Linear Object Dynamics from Multi-View RGB Videos",
+      "authors": "Seungyeon Kim, Noémie Jaquier",
+      "date": "2026-08-28",
+      "pdf": "https://arxiv.org/pdf/2608.28570v1",
+      "score": "6.0",
+      "evidence": "从多视角RGB视频学习物理启发的动力学模型",
+      "tldr": "针对可变形线性物体（DLO）动力学和3D几何建模难、现有方法依赖深度输入且状态维度高的问题，ChainSplat提出物理启发的螺旋理论模型，以转动关节连接的开链刚体结构表示DLO，并用关节构型作为紧凑状态。结合高斯泼溅，该方法从多视角RGB视频联合学习动力学、运动学感知几何与外观，实现任意状态渲染。在真实实验中，动力学预测、3D重建和RGB渲染均达SOTA，并支持实时状态/力估计与轨迹优化，为机器人操控提供实用方案。",
+      "tags": "query:phys-video",
+      "abstract_en": "Identifying the underlying dynamics and 3D geometry of deformable linear objects (DLOs), such as cables, ropes, and hoses, is essential for accurate robotic manipulation, but remains challenging due to their high-dimensional configuration spaces and diverse behaviors arising from varying material properties. Existing methods often rely on multi-stage pipelines and auxiliary depth inputs, which are prone to errors under dynamic interactions, while their high-dimensional state representations make model-based control computationally expensive. In this paper, we introduce ChainSplat, a physics-inspired framework that jointly learns the 3D geometry, appearance, kinematics, and dynamics of DLOs solely from multi-view RGB videos. ChainSplat represents a DLO as an open-chain structure of rigid links connected by revolute joints, yielding an analytic, screw-theoretic model with a compact state representation parameterized by joint configurations. By integrating this formulation with Gaussian splatting, ChainSplat jointly recovers DLO dynamics, kinematics-aware 3D geometry, and appearance, while enabling high-fidelity RGB rendering from arbitrary states. Through real-world experiments, we demonstrate that ChainSplat achieves state-of-the-art performance in dynamics predictions, 3D geometry reconstruction, and RGB rendering across dynamic interactions. ChainSplat further enables real-time state and force estimation, as well as accurate model-based trajectory optimization, highlighting its practical utility for real-world robotic manipulation of DLOs. Accompanying source code and video are available at: https://chainsplat.github.io.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

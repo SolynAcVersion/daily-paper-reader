@@ -1,0 +1,57 @@
+{
+  "date": "20260831",
+  "date_label": "",
+  "generated_at": "2026-09-01 00:47:27 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.27922v1",
+      "route": "202608/31/2608.27922v1-densitykv-density-guided-kv-cache-compression-for-long-video-generation",
+      "title": "DensityKV: Density-Guided KV Cache Compression for Long Video Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "免训练的KV缓存管理方法，减少历史状态冗余，维持视频生成长程一致性与物理状态不漂移",
+      "first_seen_at": "2026-09-01 00:47:27 UTC",
+      "updated_at": "2026-09-01 00:47:27 UTC"
+    },
+    {
+      "paper_id": "2608.28460v1",
+      "route": "202608/31/2608.28460v1-layerrecall-a-state-conditioned-memory-router-for-long-horizon-consistency-in-video-generation",
+      "title": "LayerRecall: A State-Conditioned Memory Router for Long-Horizon Consistency in Video Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "在视频生成中通过条件记忆路由保持长程一致性，可迁移用于物理属性的跨帧一致",
+      "first_seen_at": "2026-09-01 00:47:27 UTC",
+      "updated_at": "2026-09-01 00:47:27 UTC"
+    },
+    {
+      "paper_id": "2608.28570v1",
+      "route": "202608/31/2608.28570v1-chainsplat-a-physics-inspired-screw-theoretic-model-for-learning-deformable-linear-object-dynamics-from-multi-view-rgb-videos",
+      "title": "ChainSplat: A Physics-Inspired Screw-Theoretic Model for Learning Deformable Linear Object Dynamics from Multi-View RGB Videos",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "从多视角RGB视频学习物理启发的动力学模型",
+      "first_seen_at": "2026-09-01 00:47:27 UTC",
+      "updated_at": "2026-09-01 00:47:27 UTC"
+    }
+  ]
+}
