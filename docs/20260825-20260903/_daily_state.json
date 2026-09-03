@@ -1,0 +1,169 @@
+{
+  "date": "20260825-20260903",
+  "date_label": "2026-08-25 ~ 2026-09-03",
+  "generated_at": "2026-09-03 00:55:03 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.29904v1",
+      "route": "20260825-20260903/2608.29904v1-off-manifold-refinement-guiding-video-generators-with-a-frozen-world-model",
+      "title": "Off-Manifold Refinement: Guiding Video Generators with a Frozen World Model",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "针对视频生成中物体漂浮、轨迹违背重力、接触消失等物理动态问题，提出离流形细化以增强物理一致性",
+      "first_seen_at": "2026-09-03 00:55:03 UTC",
+      "updated_at": "2026-09-03 00:55:03 UTC"
+    },
+    {
+      "paper_id": "2609.00656v1",
+      "route": "20260825-20260903/2609.00656v1-physically-plausible-video-generation-via-visual-semantic-chain-of-events-conditioning",
+      "title": "Physically Plausible Video Generation via Visual-Semantic Chain-of-Events Conditioning",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "直接研究物理合理的视频生成，采用事件链条件化",
+      "first_seen_at": "2026-09-03 00:55:03 UTC",
+      "updated_at": "2026-09-03 00:55:03 UTC"
+    },
+    {
+      "paper_id": "2608.30897v1",
+      "route": "20260825-20260903/2608.30897v1-caer-causal-action-effect-reweighting-for-world-model-training",
+      "title": "CAER: Causal Action Effect Reweighting for World Model Training",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "通过重加权受动作影响的时空token，提升视频世界模型的物理交互与结果预测",
+      "first_seen_at": "2026-09-03 00:55:03 UTC",
+      "updated_at": "2026-09-03 00:55:03 UTC"
+    },
+    {
+      "paper_id": "2608.24714v1",
+      "route": "20260825-20260903/2608.24714v1-gaussianwam-distilling-geometry-and-semantics-from-3d-gaussian-fields-into-world-action-models",
+      "title": "GaussianWAM: Distilling Geometry and Semantics from 3D Gaussian Fields into World-Action Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "通过3D高斯场将几何与语义监督注入世界-动作模型视频潜表征，增强跨视角结构与物体一致性，支持帧间物理连贯",
+      "first_seen_at": "2026-09-03 00:55:03 UTC",
+      "updated_at": "2026-09-03 00:55:03 UTC"
+    },
+    {
+      "paper_id": "2608.28570v1",
+      "route": "20260825-20260903/2608.28570v1-chainsplat-a-physics-inspired-screw-theoretic-model-for-learning-deformable-linear-object-dynamics-from-multi-view-rgb-videos",
+      "title": "ChainSplat: A Physics-Inspired Screw-Theoretic Model for Learning Deformable Linear Object Dynamics from Multi-View RGB Videos",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "从多视角真实视频学习物理动态且带物理启发，契合物理合理性视频主题",
+      "first_seen_at": "2026-09-03 00:55:03 UTC",
+      "updated_at": "2026-09-03 00:55:03 UTC"
+    },
+    {
+      "paper_id": "2608.23927v1",
+      "route": "20260825-20260903/2608.23927v1-glancewam-sparse-test-time-imagination-for-world-action-models",
+      "title": "GlanceWAM: Sparse Test-Time Imagination for World-Action Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向机器人技能的世界-动作模型在控制回路外异步想象未来视频帧，利用视频生成的物理先验指导动作",
+      "first_seen_at": "2026-09-03 00:55:03 UTC",
+      "updated_at": "2026-09-03 00:55:03 UTC"
+    },
+    {
+      "paper_id": "2608.29242v2",
+      "route": "20260825-20260903/2608.29242v2-anyworld-factorized-egocentric-world-models-for-cross-embodiment-generalization",
+      "title": "AnyWorld: Factorized Egocentric World Models for Cross-Embodiment Generalization",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "将真实人类第一视角视频中的物理交互扩展为机器人本体的视频 rollout，生成行为自然的动态结果",
+      "first_seen_at": "2026-09-03 00:55:03 UTC",
+      "updated_at": "2026-09-03 00:55:03 UTC"
+    },
+    {
+      "paper_id": "2608.30194v1",
+      "route": "20260825-20260903/2608.30194v1-noiseasier-test-time-noise-optimization-for-text-to-video-generation",
+      "title": "NoisEasier: Test-Time Noise Optimization for Text-to-Video Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "通过可微奖励引导的测试时噪声优化，可向文本生成视频中加入特定约束，为实现物理一致性提供了一种可迁移手段",
+      "first_seen_at": "2026-09-03 00:55:03 UTC",
+      "updated_at": "2026-09-03 00:55:03 UTC"
+    },
+    {
+      "paper_id": "2608.31106v1",
+      "route": "20260825-20260903/2608.31106v1-dreamx-creator-democratizing-native-audio-video-generation-at-2k-resolution",
+      "title": "DreamX-Creator: Democratizing Native Audio-Video Generation at 2K Resolution",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "提供原生音视频联合生成系统，可根据首帧与文本生成2K连贯视频片段，可作为短剧/漫剧内容生成工具",
+      "first_seen_at": "2026-09-03 00:55:03 UTC",
+      "updated_at": "2026-09-03 00:55:03 UTC"
+    },
+    {
+      "paper_id": "2609.01551v1",
+      "route": "20260825-20260903/2609.01551v1-what-where-and-how-probing-spatiotemporal-representations-in-video-foundation-models",
+      "title": "What, Where, and How: Probing Spatiotemporal Representations in Video Foundation Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "用轻量探针评测视频基础模型对直观物理、相机运动等物理相关属性的理解，可支撑物理正确性评估",
+      "first_seen_at": "2026-09-03 00:55:03 UTC",
+      "updated_at": "2026-09-03 00:55:03 UTC"
+    }
+  ]
+}

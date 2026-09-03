@@ -1,0 +1,451 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-03T00:47:18.303806+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 3,
+    "deep_cap": 7,
+    "deep_selected": 3,
+    "quick_candidates": 7,
+    "quick_skim_target": 12,
+    "quick_selected": 7
+  },
+  "deep_dive": [
+    {
+      "id": "2608.29904v1",
+      "source": "arxiv",
+      "title": "Off-Manifold Refinement: Guiding Video Generators with a Frozen World Model",
+      "abstract": "Modern video generators routinely fail at physical dynamics: objects float, trajectories violate gravity, contacts vanish. Standard denoising and flow-matching objectives fit visual data distributions but do not explicitly penalize such physical violations. Existing remedies can improve physical consistency, but typically add substantial inference or training cost. Candidate-selection methods generate and score multiple videos, while gradient-based world-model guidance repeatedly decodes and re-encodes intermediate estimates. Generator-internal refinement adds perturbation and re-denoising loops, whereas post-training requires curated data and additional optimization. We propose Off-Manifold Refinement (OMR), an inference-time method that instead injects world-model feedback directly into a single sampling trajectory. During scheduled middle ODE steps, we augment the generator velocity with the gradient of an adapter-space V-JEPA 2.1 surprise energy. This external correction can move the latent away from the uncorrected sampling trajectory and toward regions ranked as more physically plausible by the frozen predictor, after which the generator continues rendering from the corrected state. A small trained latent-to-embedding adapter keeps the gradient tractable at inference, and both the video generator and the world model remain frozen. On our fixed 400-prompt VideoPhy-2 detailed subset, OMR lifts the joint Semantic-Adherence-and-Physical-Commonsense metric from 47.0% to 52.0% (+5.0pp absolute, +10.6% relative) over the base Wan2.2-T2V-A14B sampler. On a separate fixed 50-prompt efficiency subset, it requires $1.71 \\times$ the base runtime rather than the multiplicative cost of reward/search alternatives. Project page: https://itruonghai.github.io/omr.",
+      "authors": [
+        "Hai Nguyen-Truong",
+        "Tuan-Anh Vu",
+        "Dang Huynh"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-30T17:00:09+00:00",
+      "link": "https://arxiv.org/pdf/2608.29904v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "addresses video generators failing at physical dynamics such as gravity and contacts; inference-time refinement improves physical consistency",
+      "llm_evidence_cn": "针对视频生成中物体漂浮、轨迹违背重力、接触消失等物理动态问题，提出离流形细化以增强物理一致性",
+      "llm_evidence": "针对视频生成中物体漂浮、轨迹违背重力、接触消失等物理动态问题，提出离流形细化以增强物理一致性",
+      "canonical_evidence": "针对视频生成中物体漂浮、轨迹违背重力、接触消失等物理动态问题，提出离流形细化以增强物理一致性",
+      "llm_tldr_en": "Physical video generators often violate gravity and contacts. This paper proposes Off-Manifold Refinement (OMR), an inference-time method that uses a frozen world model to guide generation toward physically plausible outcomes without retraining.",
+      "llm_tldr_cn": "现代视频生成器在物理动态上经常失败，例如物体漂浮、轨迹违背重力、接触消失。该文提出离流形细化，这是一种推理时方法，利用冻结的世界模型引导生成过程，避免为物理一致性而进行昂贵的训练或反复编解码。候选选择、梯度引导等既有手段成本较高，该方法在保持低成本的同时提升生成视频的物理合理性。实验表明它能有效减少物理违例，为无需重新训练的物理一致性改进提供了新思路。",
+      "llm_tldr": "现代视频生成器在物理动态上经常失败，例如物体漂浮、轨迹违背重力、接触消失。该文提出离流形细化，这是一种推理时方法，利用冻结的世界模型引导生成过程，避免为物理一致性而进行昂贵的训练或反复编解码。候选选择、梯度引导等既有手段成本较高，该方法在保持低成本的同时提升生成视频的物理合理性。实验表明它能有效减少物理违例，为无需重新训练的物理一致性改进提供了新思路。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.00656v1",
+      "source": "arxiv",
+      "title": "Physically Plausible Video Generation via Visual-Semantic Chain-of-Events Conditioning",
+      "abstract": "Physically Plausible Video Generation (PPVG) seeks to synthesize videos consistent with physical principles, yet remains challenging due to underspecified natural language conditioning. Advanced chain-of-thought (CoT) frameworks augment prompts with physical knowledge. However, such prompts describe physical phenomena holistically, overlooking intermediate states and transition dynamics. In this paper, we reformulate PPVG as event-centric generation by representing physical evolution as a chain of causally connected and physically constrained events. Our framework comprises three key modules: (1) Physics-driven Event Chain Reasoning. This module decomposes physical phenomena into causally connected events represented by evolving scene graphs. Formula-derived physical quantities are bound to relevant objects and interactions, characterizing the direction and magnitude of each event transition. (2) Transition-aware Routed Keyframe Conditioning. This module routes each event to a specialized keyframe synthesis operator for appearance variation or object transformation. Consecutive keyframes are injected as residual guidance during denoising, enabling smooth visual transitions between event-boundary states. (3) Physics-injected Contrastive Semantic Guidance. This module constructs physics-informed positive and counterfactual negative prompts for classifier-free guidance, steering generation toward plausible dynamics and away from physics-violating counterparts. Experiments on PhyGenBench, VideoPhy, PhyWorldBench, and Physics-IQ demonstrate that our framework generates videos with superior physical plausibility across diverse domains.",
+      "authors": [
+        "Zixuan Wang",
+        "Yixin Hu",
+        "Wen Li",
+        "Feng Chen",
+        "Yan Liu",
+        "Duo Peng",
+        "Yinjie Lei"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-01T03:35:02+00:00",
+      "link": "https://arxiv.org/pdf/2609.00656v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "directly targets physically plausible video generation with event-chain conditioning",
+      "llm_evidence_cn": "直接研究物理合理的视频生成，采用事件链条件化",
+      "llm_evidence": "直接研究物理合理的视频生成，采用事件链条件化",
+      "canonical_evidence": "直接研究物理合理的视频生成，采用事件链条件化",
+      "llm_tldr_en": "Reformulates physically plausible video generation as event-centric generation, decomposing physical evolution into causally connected events and conditioning the generator on these event chains.",
+      "llm_tldr_cn": "该文提出将物理合理视频生成重写为事件中心的生成任务：把物理演化分解为因果相连、受物理约束的事件链，并通过物理驱动事件链推理与视觉-语义事件链条件化来生成视频。相比整体式的思维链提示，事件级建模能更细致地刻画中间状态和转移动态，从而提升输出视频的物理一致性。该框架为物理约束注入生成模型提供了新范式。",
+      "llm_tldr": "该文提出将物理合理视频生成重写为事件中心的生成任务：把物理演化分解为因果相连、受物理约束的事件链，并通过物理驱动事件链推理与视觉-语义事件链条件化来生成视频。相比整体式的思维链提示，事件级建模能更细致地刻画中间状态和转移动态，从而提升输出视频的物理一致性。该框架为物理约束注入生成模型提供了新范式。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.30897v1",
+      "source": "arxiv",
+      "title": "CAER: Causal Action Effect Reweighting for World Model Training",
+      "abstract": "World models are becoming core infrastructure for embodied intelligence, with action-conditioned video generation providing controllable predictions of how scenes evolve after agent interventions. Yet existing models are commonly trained with space-time-uniform mean squared error, allowing abundant background tokens to dominate the gradient while sparse interaction dynamics remain under-optimized; such uniform fitting rewards reconstructing appearance rather than learning how actions change the world. We introduce Causal Action Effect Reweighting (CAER), a general training paradigm that redistributes supervision toward the tokens whose predicted future is causally affected by the action. CAER contrasts the model's own predictions with and without action conditioning to localize these tokens online, then normalizes the resulting effect map into a weight that preserves the total coefficient mass and changes only where it is spent. This online signal requires no external annotations or offline preprocessing, avoids additional data-processing time, and scales naturally with model and dataset size. Experiments across heterogeneous action-conditioned world-model tasks show that CAER converges to better solutions than uniform MSE training, with consistent improvements in the physical consistency, controllability, and visual quality of generated videos.",
+      "authors": [
+        "Jianjie Fang",
+        "Xvyuan Liu",
+        "Ziyou Wang",
+        "Rongze Tang",
+        "Zhaolu Wang",
+        "Zhuohang Li",
+        "Xin Zhang",
+        "Haisheng Su",
+        "Chen Gao",
+        "Wei Wu",
+        "Xinlei Chen",
+        "Yong Li"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-08-31T14:49:56+00:00",
+      "link": "https://arxiv.org/pdf/2608.30897v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "training action-conditioned video world models with reweighted supervision toward physically meaningful interaction dynamics",
+      "llm_evidence_cn": "通过重加权受动作影响的时空token，提升视频世界模型的物理交互与结果预测",
+      "llm_evidence": "通过重加权受动作影响的时空token，提升视频世界模型的物理交互与结果预测",
+      "canonical_evidence": "通过重加权受动作影响的时空token，提升视频世界模型的物理交互与结果预测",
+      "llm_tldr_en": "CAER reweights supervision in action-conditioned video world models by contrasting predictions with and without actions, focusing training on tokens causally affected by the action to improve interaction dynamics and physical behavior prediction.",
+      "llm_tldr_cn": "CAER面向动作条件视频世界模型的训练，指出时空均匀回归会让背景外观主导梯度，动作带来的稀疏物理交互长期欠学习。方法通过对比有无动作条件时模型自身的预测，把监督重新聚焦到被动作因果改变的未来token，使模型从重建外观转为学习动作如何改变世界。实验表明该方法可明显提升世界模型对交互动力学与物理效果的预测。它为物理一致性的视频生成提供了通用训练范式。",
+      "llm_tldr": "CAER面向动作条件视频世界模型的训练，指出时空均匀回归会让背景外观主导梯度，动作带来的稀疏物理交互长期欠学习。方法通过对比有无动作条件时模型自身的预测，把监督重新聚焦到被动作因果改变的未来token，使模型从重建外观转为学习动作如何改变世界。实验表明该方法可明显提升世界模型对交互动力学与物理效果的预测。它为物理一致性的视频生成提供了通用训练范式。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "videos depicting physically realistic behaviors and outcomes",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.24714v1",
+      "source": "arxiv",
+      "title": "GaussianWAM: Distilling Geometry and Semantics from 3D Gaussian Fields into World-Action Models",
+      "abstract": "World-Action Models (WAMs) jointly learn future visual prediction and action generation, using video dynamics as a representation-learning signal for robotic manipulation. However, their video latents are primarily optimized for visual prediction and are not explicitly encouraged to preserve cross-view geometric structure or spatially localized, object-relevant semantics. We propose \\textbf{GaussianWAM}, a training-time representation-enhancement framework that organizes geometric and semantic supervision through a 3D Gaussian field. Given synchronized multi-view observations, frozen geometry and vision foundation models provide depth, camera parameters, and dense semantic features. GaussianWAM binds these heterogeneous signals to shared Gaussian primitives and renders spatially aligned semantic, depth, and coverage targets, which are distilled into the current-observation representations of the WAM. All teacher models, Gaussian components, and auxiliary prediction heads are removed after training, leaving the original WAM inference path without additional modules or forward computation. On LIBERO-Plus, GaussianWAM improves FastWAM from 52.05\\% to 71.29\\% and Cosmos Policy from 71.52\\% to 77.30\\%. Direct CLIP and VGGT distillation already establishes a strong FastWAM baseline of 69.37\\%, while Gaussian-field unification further improves it to 71.29\\%, supporting the benefit of spatially organizing heterogeneous teacher signals. GaussianWAM also improves performance on standard LIBERO and shows positive transfer trends on RoboTwin and real-world manipulation. These results suggest that training-time Gaussian distillation provides a practical way to inject geometry- and semantics-related supervision into WAM representations without changing their deployment architecture.",
+      "authors": [
+        "Zijian Zhang",
+        "Yuqing Jiang",
+        "Weitao Zhou",
+        "Minglei Li",
+        "Jinhao Zhang",
+        "Yao Mu",
+        "Xiaofan Li",
+        "Hao Zhao",
+        "Haibao Yu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-08-25T15:34:13+00:00",
+      "link": "https://arxiv.org/pdf/2608.24714v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Distills geometry and semantics from 3D Gaussian fields into world-action model latents to preserve cross-view structural coherence in future-video generation",
+      "llm_evidence_cn": "通过3D高斯场将几何与语义监督注入世界-动作模型视频潜表征，增强跨视角结构与物体一致性，支持帧间物理连贯",
+      "llm_evidence": "通过3D高斯场将几何与语义监督注入世界-动作模型视频潜表征，增强跨视角结构与物体一致性，支持帧间物理连贯",
+      "canonical_evidence": "通过3D高斯场将几何与语义监督注入世界-动作模型视频潜表征，增强跨视角结构与物体一致性，支持帧间物理连贯",
+      "llm_tldr_en": "GaussianWAM organizes geometric and semantic supervision from a 3D Gaussian field into world-action-model video latents, preserving cross-view and object-level structure for more physically coherent future-video prediction and robot action.",
+      "llm_tldr_cn": "世界-动作模型用视频动态作为机器人表征学习信号，但其视频隐变量未显式保持跨视图几何与物体语义结构。GaussianWAM利用同步多视图观测，通过三维高斯场把深度、相机参数和密集语义特征绑定到视频潜空间，在训练时增强几何结构与语义一致性。实验显示该方法能使未来视频预测和动作生成在物理结构上更可信。这说明将显式几何监督融入生成式世界模型可帮助保持生成视频的物理一致性。",
+      "llm_tldr": "世界-动作模型用视频动态作为机器人表征学习信号，但其视频隐变量未显式保持跨视图几何与物体语义结构。GaussianWAM利用同步多视图观测，通过三维高斯场把深度、相机参数和密集语义特征绑定到视频潜空间，在训练时增强几何结构与语义一致性。实验显示该方法能使未来视频预测和动作生成在物理结构上更可信。这说明将显式几何监督融入生成式世界模型可帮助保持生成视频的物理一致性。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "ensuring physical properties remain coherent across video frames",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.23927v1",
+      "source": "arxiv",
+      "title": "GlanceWAM: Sparse Test-Time Imagination for World-Action Models",
+      "abstract": "Video generative models provide rich physical priors for robot learning, yet existing world-action models (WAMs) face a fundamental trade-off: synchronous video generation at control rate is latency-prohibitive, while abandoning test-time visual imagination sacrifices task success. We show that visual imagination achieves both real-time inference and superior success rates when generated asynchronously off the critical path and consumed directly in latent space. We introduce GlanceWAM, which decouples imagination from control within a single video DiT: an asynchronous proposer glances ahead on a slow clock to imagine a single lookahead frame seconds into the future in the background, while an action head decodes action chunks at control rate (48 ms) purely in latent space without blocking. Enabled by a non-interfering attention mask that isolates video representations and staleness-robust horizon training that accommodates asynchronous lookahead aging, GlanceWAM breaks the speed-success dilemma. Trained purely on demonstrations, it attains 72.2% on the 24-task RoboCasa kitchen benchmark (surpassing synchronous Cosmos Policy at 67.1% and imagination-free co-training at 64.4%) and 99.0% on LIBERO, executing at 48 ms per chunk on an NVIDIA A100 GPU (24x faster than synchronous baselines). Code is available at https://github.com/linhanwang/GlanceWAM.",
+      "authors": [
+        "Linhan Wang",
+        "Zijian An",
+        "Mingyuan Zhang",
+        "Chen Dai",
+        "Yi Xu",
+        "Can Cui",
+        "Zichong Yang",
+        "Yinlin Chen",
+        "Lifeng Zhou",
+        "Chang-Tien Lu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-25T00:19:09+00:00",
+      "link": "https://arxiv.org/pdf/2608.23927v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "World-action model uses video generative physical priors to produce asynchronous lookahead frames for robot control",
+      "llm_evidence_cn": "面向机器人技能的世界-动作模型在控制回路外异步想象未来视频帧，利用视频生成的物理先验指导动作",
+      "llm_evidence": "面向机器人技能的世界-动作模型在控制回路外异步想象未来视频帧，利用视频生成的物理先验指导动作",
+      "canonical_evidence": "面向机器人技能的世界-动作模型在控制回路外异步想象未来视频帧，利用视频生成的物理先验指导动作",
+      "llm_tldr_en": "GlanceWAM decouples future-video imagination from action decoding in a video DiT, generating a single lookahead frame asynchronously to enable real-time robot control while retaining world-model task success.",
+      "llm_tldr_cn": "机器人世界-动作模型若同步生成视频会因延迟过高而难以用于控制，放弃想象又降低任务成功率。GlanceWAM在单个视频DiT内把前瞻想象与动作解码解耦，由后台异步提议器生成单个未来帧并直接在潜空间供动作头使用，从而实现约48ms实时控制并提升成功率。这表明稀疏异步想象仍能利用视频生成的物理先验，为物理交互的世界模型部署提供了新思路。",
+      "llm_tldr": "机器人世界-动作模型若同步生成视频会因延迟过高而难以用于控制，放弃想象又降低任务成功率。GlanceWAM在单个视频DiT内把前瞻想象与动作解码解耦，由后台异步提议器生成单个未来帧并直接在潜空间供动作头使用，从而实现约48ms实时控制并提升成功率。这表明稀疏异步想象仍能利用视频生成的物理先验，为物理交互的世界模型部署提供了新思路。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.28570v1",
+      "source": "arxiv",
+      "title": "ChainSplat: A Physics-Inspired Screw-Theoretic Model for Learning Deformable Linear Object Dynamics from Multi-View RGB Videos",
+      "abstract": "Identifying the underlying dynamics and 3D geometry of deformable linear objects (DLOs), such as cables, ropes, and hoses, is essential for accurate robotic manipulation, but remains challenging due to their high-dimensional configuration spaces and diverse behaviors arising from varying material properties. Existing methods often rely on multi-stage pipelines and auxiliary depth inputs, which are prone to errors under dynamic interactions, while their high-dimensional state representations make model-based control computationally expensive. In this paper, we introduce ChainSplat, a physics-inspired framework that jointly learns the 3D geometry, appearance, kinematics, and dynamics of DLOs solely from multi-view RGB videos. ChainSplat represents a DLO as an open-chain structure of rigid links connected by revolute joints, yielding an analytic, screw-theoretic model with a compact state representation parameterized by joint configurations. By integrating this formulation with Gaussian splatting, ChainSplat jointly recovers DLO dynamics, kinematics-aware 3D geometry, and appearance, while enabling high-fidelity RGB rendering from arbitrary states. Through real-world experiments, we demonstrate that ChainSplat achieves state-of-the-art performance in dynamics predictions, 3D geometry reconstruction, and RGB rendering across dynamic interactions. ChainSplat further enables real-time state and force estimation, as well as accurate model-based trajectory optimization, highlighting its practical utility for real-world robotic manipulation of DLOs. Accompanying source code and video are available at: https://chainsplat.github.io.",
+      "authors": [
+        "Seungyeon Kim",
+        "Noémie Jaquier"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-08-28T17:46:38+00:00",
+      "link": "https://arxiv.org/pdf/2608.28570v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "physics-inspired dynamics learning from real multi-view RGB videos relevant to physical plausibility theme",
+      "llm_evidence_cn": "从多视角真实视频学习物理动态且带物理启发，契合物理合理性视频主题",
+      "llm_evidence": "从多视角真实视频学习物理动态且带物理启发，契合物理合理性视频主题",
+      "canonical_evidence": "从多视角真实视频学习物理动态且带物理启发，契合物理合理性视频主题",
+      "llm_tldr_en": "ChainSplat is a physics-inspired screw-theoretic framework that jointly learns geometry, appearance, kinematics and dynamics of deformable linear objects from multi-view RGB videos, avoiding depth inputs and multi-stage pipelines.",
+      "llm_tldr_cn": "针对线状可变形物体（如线缆、绳索）动力学建模依赖深度和多阶段流程的问题，提出基于螺旋理论的物理启发框架 ChainSplat。该方法仅从多视角 RGB 视频联合学习物体的三维几何、外观、运动学与动力学参数，避免额外深度输入。实验验证能更高效地刻画细长物体的复杂材料属性和状态演化，为机器人物体操作和物理运动预测提供新的动力学先验，也可服务物理合理的视频建模。",
+      "llm_tldr": "针对线状可变形物体（如线缆、绳索）动力学建模依赖深度和多阶段流程的问题，提出基于螺旋理论的物理启发框架 ChainSplat。该方法仅从多视角 RGB 视频联合学习物体的三维几何、外观、运动学与动力学参数，避免额外深度输入。实验验证能更高效地刻画细长物体的复杂材料属性和状态演化，为机器人物体操作和物理运动预测提供新的动力学先验，也可服务物理合理的视频建模。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.29242v2",
+      "source": "arxiv",
+      "title": "AnyWorld: Factorized Egocentric World Models for Cross-Embodiment Generalization",
+      "abstract": "Collecting contact-rich robot experiences at scale remains a major bottleneck for generalizable manipulation. Beyond data quantity, robot learning also requires diverse experiences across embodiments, viewpoints, and scenes. Human egocentric videos provide abundant physical interactions, but each video captures only a narrow slice of experience under a single body, camera trajectory, and environment. We propose AnyWorld, a cross-embodiment world modeling framework that expands a single human interaction into diverse robot-native rollouts without paired human-robot demonstrations. Our model factorizes an interaction into action, camera, and embodiment: action controls capture the motion structure, camera controls specify viewpoint evolution, and the target embodiment context defines the acting body and its interaction geometry. This formulation enables independent recomposition of embodiment, viewpoint, and scene factors, allowing a single model to generate many robot-domain experiences while preserving the underlying dynamics and object interactions. We train the model with large-scale human interaction pretraining followed by mixed-embodiment fine-tuning. Experiments show that our model supports controllable recomposition across embodiments, viewpoints, and scenes, and we further demonstrate that the generated data can improve manipulation performance on the RoboCasa GR1 tabletop benchmark and a real IRON humanoid robot. Beyond aggregate gains, we test whether unpaired human experience can be recomposed into robot-native video-action pairs that target a policy gap. Controlled IRON interventions correct a spurious completion prior and establish language-grounded spatial target selection; an action-only counterfactual intervention fails to learn the latter reliably, showing that both action calibration and visual recomposition are necessary.",
+      "authors": [
+        "Cheng Chen",
+        "Jerry Bai",
+        "Jiacheng Wei",
+        "Boyu Chen",
+        "Xiaoji Zheng",
+        "Fan Wu",
+        "Minghao Yang",
+        "Tianrun Chen",
+        "Ruibo Li",
+        "Xiaoyu Yue",
+        "Xiaoyang Guo",
+        "Yixiao Ge",
+        "Guosheng Lin",
+        "Fayao Liu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-08-29T12:55:15+00:00",
+      "link": "https://arxiv.org/pdf/2608.29242v2",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "expands real human egocentric physical interactions into robot-native video rollouts through factorized world modeling",
+      "llm_evidence_cn": "将真实人类第一视角视频中的物理交互扩展为机器人本体的视频 rollout，生成行为自然的动态结果",
+      "llm_evidence": "将真实人类第一视角视频中的物理交互扩展为机器人本体的视频 rollout，生成行为自然的动态结果",
+      "canonical_evidence": "将真实人类第一视角视频中的物理交互扩展为机器人本体的视频 rollout，生成行为自然的动态结果",
+      "llm_tldr_en": "Proposes AnyWorld, a factorized world model that expands a single human egocentric interaction into diverse robot-native video rollouts, exploiting real-world physical interactions without paired demonstrations.",
+      "llm_tldr_cn": "针对接触丰富的操纵任务难以大规模采集机器人数据的问题，本文提出 AnyWorld 框架，以解耦动作、相机与本体形态的方式，从单段人类第一视角交互视频生成多样且机器人本体可用的后续视频 rollout。该方法利用真实世界视频中的丰富物理交互，无需成对的人-机器人演示，使模型能在不同本体、视角和场景间泛化。实验表明该框架能产生跨形态一致的动态结果，为机器人学习提供可扩展的仿真数据来源。",
+      "llm_tldr": "针对接触丰富的操纵任务难以大规模采集机器人数据的问题，本文提出 AnyWorld 框架，以解耦动作、相机与本体形态的方式，从单段人类第一视角交互视频生成多样且机器人本体可用的后续视频 rollout。该方法利用真实世界视频中的丰富物理交互，无需成对的人-机器人演示，使模型能在不同本体、视角和场景间泛化。实验表明该框架能产生跨形态一致的动态结果，为机器人学习提供可扩展的仿真数据来源。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "videos depicting physically realistic behaviors and outcomes",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.30194v1",
+      "source": "arxiv",
+      "title": "NoisEasier: Test-Time Noise Optimization for Text-to-Video Generation",
+      "abstract": "Diffusion models have recently advanced text-to-video (T2V) generation, yet they still struggle with fine-grained compositional alignment, such as attribute binding, spatial relations, and object interactions. While reward-based fine-tuning improves alignment, it is susceptible to reward hacking and adapts poorly to new prompt distributions. In this work, we propose NoisEasier, a test-time scaling framework that improves T2V generation through differentiable reward-guided noise optimization without modifying the underlying model. By combining efficient short-step generators with a multi-objective reward formulation, NoisEasier enables stable and practical test-time optimization under realistic inference budgets. Our key insight is that jointly optimizing the entire stochastic trajectory accelerates reward convergence and improves compositional alignment over optimizing only the initial latent, with negligible additional computational and time cost. Experiments on VBench and T2V-CompBench demonstrate consistent improvements across multiple backbones, achieving over 10% average gains on challenging dimensions such as attribute binding, object interaction, and numeracy. Overall, NoisEasier serves as both a flexible alternative and a complementary enhancement to reward-based fine-tuning, establishing test-time scaling as an effective paradigm for controllable text-to-video generation.",
+      "authors": [
+        "Yujiang Pu",
+        "Yu Kong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-31T03:17:52+00:00",
+      "link": "https://arxiv.org/pdf/2608.30194v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Reward-guided test-time noise optimization provides a generic way to enforce custom video constraints, including physical consistency rewards",
+      "llm_evidence_cn": "通过可微奖励引导的测试时噪声优化，可向文本生成视频中加入特定约束，为实现物理一致性提供了一种可迁移手段",
+      "llm_evidence": "通过可微奖励引导的测试时噪声优化，可向文本生成视频中加入特定约束，为实现物理一致性提供了一种可迁移手段",
+      "canonical_evidence": "通过可微奖励引导的测试时噪声优化，可向文本生成视频中加入特定约束，为实现物理一致性提供了一种可迁移手段",
+      "llm_tldr_en": "NoisEasier improves compositional text-to-video alignment by differentiable reward-guided test-time noise optimization instead of model fine-tuning, yielding a generic framework for enforcing custom constraints in generated videos.",
+      "llm_tldr_cn": "文本到视频扩散模型在属性绑定、空间关系和物体交互等细粒度对齐上仍不足，奖励微调又易奖励作弊且难以适应新提示分布。为此NoisEasier提出测试期奖励引导的噪声优化框架，利用高效短步生成器和多目标奖励，在不改动模型的情况下提升对齐能力。此类方法可扩展到将物理一致性等目标作为奖励的测试时控制，进而帮助生成更符合用户约束的视频。",
+      "llm_tldr": "文本到视频扩散模型在属性绑定、空间关系和物体交互等细粒度对齐上仍不足，奖励微调又易奖励作弊且难以适应新提示分布。为此NoisEasier提出测试期奖励引导的噪声优化框架，利用高效短步生成器和多目标奖励，在不改动模型的情况下提升对齐能力。此类方法可扩展到将物理一致性等目标作为奖励的测试时控制，进而帮助生成更符合用户约束的视频。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "how to ensure physical consistency in generated videos",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.31106v1",
+      "source": "arxiv",
+      "title": "DreamX-Creator: Democratizing Native Audio-Video Generation at 2K Resolution",
+      "abstract": "Recent video generators often omit audio or synthesize it in a separate stage, limiting reciprocal modeling of visual dynamics and acoustic events. We present DreamX-Creator 1.0, a compact native joint audio-video generation system centered on a 7B generator. Conditioned on a first frame and a text prompt, the generator jointly denoises modality-specialized audio and video streams. The streams are processed independently in the first half of the network and coupled in the latter half through Gated Cross-Modal Attention, whose token- and head-wise output gates modulate each active cross-modal attention-head output. A unified Audio-Video Data System constructs and filters temporally coherent clips, produces structured multimodal annotations, and organizes clips into capability-oriented data pools. Progressive Joint Training comprises two audio-video pre-training stages followed by High-Quality Finetuning. Audio-Video Reinforcement Learning further post-trains the generator with Modality-Aware Multimodal Feedback that routes video-, audio-, and cross-modal feedback to the corresponding streams. For high-resolution output, our Autoregressive 1-Step 2K Refinement pipeline adapts a bidirectional multi-step teacher into an autoregressive multi-step refiner and distills it into a student requiring one denoising evaluation per temporal chunk. Overall, DreamX-Creator 1.0 achieves native, synchronized audio-video generation with performance competitive with state-of-the-art open-source systems. By releasing our compact 7B generator and 2K Refiner, we seek to democratize native audio-video generation and provide an accessible foundation for future research in unified audio-video generative modeling.",
+      "authors": [
+        "Jiashu Zhu",
+        "Yanhao Zheng",
+        "Ruitian Tian",
+        "Rujing Dang",
+        "Shen Zhang",
+        "Bingze Song",
+        "Jiachen Lei",
+        "Ruimin Lin",
+        "Jiahong Wu",
+        "Xiangxiang Chu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.SD"
+      ],
+      "published": "2026-08-31T17:11:05+00:00",
+      "link": "https://arxiv.org/pdf/2608.31106v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Native joint audio-video generation system producing 2K temporally coherent clips, applicable as content-generation tool for short episodic drama",
+      "llm_evidence_cn": "提供原生音视频联合生成系统，可根据首帧与文本生成2K连贯视频片段，可作为短剧/漫剧内容生成工具",
+      "llm_evidence": "提供原生音视频联合生成系统，可根据首帧与文本生成2K连贯视频片段，可作为短剧/漫剧内容生成工具",
+      "canonical_evidence": "提供原生音视频联合生成系统，可根据首帧与文本生成2K连贯视频片段，可作为短剧/漫剧内容生成工具",
+      "llm_tldr_en": "DreamX-Creator is a compact native joint audio-video generator that jointly denoises audio and video streams with gated cross-modal attention and a unified data system, enabling 2K multimodal clips for content creation.",
+      "llm_tldr_cn": "针对视频生成常忽略音频、多阶段合成难以对齐的问题，DreamX-Creator用约7B参数量生成器原生联合去噪音视频流，前半网络独立处理模态流，后半通过门控跨模态注意力耦合，并配合统一的音视频数据构建系统。基于首帧与文本提示即可生成2K分辨率的时间连贯片段。该系统可降低高质量音视频生成门槛，适合作为漫画短剧或短视频平台的自动内容生产基础。",
+      "llm_tldr": "针对视频生成常忽略音频、多阶段合成难以对齐的问题，DreamX-Creator用约7B参数量生成器原生联合去噪音视频流，前半网络独立处理模态流，后半通过门控跨模态注意力耦合，并配合统一的音视频数据构建系统。基于首帧与文本提示即可生成2K分辨率的时间连贯片段。该系统可降低高质量音视频生成门槛，适合作为漫画短剧或短视频平台的自动内容生产基础。",
+      "llm_tags": [
+        "query:manga-drama:composite"
+      ],
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation.",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.01551v1",
+      "source": "arxiv",
+      "title": "What, Where, and How: Probing Spatiotemporal Representations in Video Foundation Models",
+      "abstract": "Self-supervised video foundation models learn rich spatiotemporal representations, yet it remains unclear what visual concepts these representations encode, where they emerge across transformer layers, and how they are geometrically organized. In this work, we tackle these three questions through a systematic layer-wise analysis of V-JEPA 2 and VideoMAE-v2. We leverage lightweight probes trained to discover three temporally grounded properties: (i) camera motion understanding, (ii) intuitive physics, and (iii) anomaly detection. Both models encode camera motion, with best results ($>90$ ROC AUC) emerging at 60-70% of network depth, and achieve moderate anomaly detection performance ($>60$ ROC AUC), but remain near chance on intuitive-physics tasks, suggesting a limited encoding of deeper physical reasoning. Beyond classification, we find that temporal features from individual videos form smooth low-dimensional trajectories in representation space, suggesting that camera motion is not only linearly decodable but also geometrically organized. Based on these results, we apply geometry-aware spline-based steering in the model's latent representations to interpolate camera motion, yielding steered videos with smoother trajectories and more coherent temporal progression than linear interpolation.",
+      "authors": [
+        "Sharon S. Musa",
+        "Fereshteh Forghani",
+        "Harrish Thasarathan",
+        "Sonia Joseph",
+        "Matthew Kowal",
+        "Konstantinos G. Derpanis"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-01T17:17:04+00:00",
+      "link": "https://arxiv.org/pdf/2609.01551v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Probes intuitive physics, camera motion, and anomaly detection in video foundation models, providing evaluation evidence about physical-correctness understanding.",
+      "llm_evidence_cn": "用轻量探针评测视频基础模型对直观物理、相机运动等物理相关属性的理解，可支撑物理正确性评估",
+      "llm_evidence": "用轻量探针评测视频基础模型对直观物理、相机运动等物理相关属性的理解，可支撑物理正确性评估",
+      "canonical_evidence": "用轻量探针评测视频基础模型对直观物理、相机运动等物理相关属性的理解，可支撑物理正确性评估",
+      "llm_tldr_en": "Layer-wise probes of V-JEPA 2 and VideoMAE-v2 reveal strong camera-motion encoding (>90 ROC AUC), moderate anomaly detection (>60), but near-chance intuitive-physics decisions, exposing major gaps in physical understanding of self-supervised video representations.",
+      "llm_tldr_cn": "自监督视频模型学到的时空表示虽然很强，但很难知道其中是否编码了物理直觉以及分布在哪一层。作者对V-JEPA 2与VideoMAE-v2做逐层分析，用轻量探针诊断相机运动、直观物理和异常检测三种时间属性的编码。结果显示它们在相机运动上很强（最佳超过90%AUC）、异常检测中等（超过60%），而直观物理接近随机，说明现有基础模型在物理常识上的表示仍然薄弱，为构建物理正确的视频生成与评测提供了重要线索。",
+      "llm_tldr": "自监督视频模型学到的时空表示虽然很强，但很难知道其中是否编码了物理直觉以及分布在哪一层。作者对V-JEPA 2与VideoMAE-v2做逐层分析，用轻量探针诊断相机运动、直观物理和异常检测三种时间属性的编码。结果显示它们在相机运动上很强（最佳超过90%AUC）、异常检测中等（超过60%），而直观物理接近随机，说明现有基础模型在物理常识上的表示仍然薄弱，为构建物理正确的视频生成与评测提供了重要线索。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
