@@ -1,0 +1,185 @@
+{
+  "date": "20260905",
+  "date_label": "",
+  "generated_at": "2026-09-05 22:16:47 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.00646v1",
+      "route": "202609/05/2609.00646v1-dramachain-bench-an-end-to-end-benchmark-for-short-drama-generation",
+      "title": "DramaChain Bench: An End-to-End Benchmark for Short-Drama Generation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 10.0,
+      "evidence": "覆盖短剧生产全链路的端到端评测基准",
+      "first_seen_at": "2026-09-05 22:16:47 UTC",
+      "updated_at": "2026-09-05 22:16:47 UTC"
+    },
+    {
+      "paper_id": "2609.04200v1",
+      "route": "202609/05/2609.04200v1-principia-relational-physics-tests-for-video-models",
+      "title": "Principia: Relational Physics Tests for Video Models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 10.0,
+      "evidence": "视频物理正确性评估基准",
+      "first_seen_at": "2026-09-05 22:16:47 UTC",
+      "updated_at": "2026-09-05 22:16:47 UTC"
+    },
+    {
+      "paper_id": "2608.29621v1",
+      "route": "202609/05/2608.29621v1-cineforge-self-improving-agents-for-long-horizon-video-generation",
+      "title": "CineForge: Self-Improving Agents for Long-Horizon Video Generation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "自改进的视频制作智能体，可自动完成长叙事视频生成与跨故事迭代",
+      "first_seen_at": "2026-09-05 22:16:47 UTC",
+      "updated_at": "2026-09-05 22:16:47 UTC"
+    },
+    {
+      "paper_id": "2608.30692v1",
+      "route": "202609/05/2608.30692v1-can-video-world-models-track-unobserved-world-states",
+      "title": "Can Video World Models Track Unobserved World States?",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "Shell Game基准考察生成的貌似合理视频是否保持隐藏世界状态，与生成视频物理正确性评测直接相关",
+      "first_seen_at": "2026-09-05 22:16:47 UTC",
+      "updated_at": "2026-09-05 22:16:47 UTC"
+    },
+    {
+      "paper_id": "2609.03952v1",
+      "route": "202609/05/2609.03952v1-worldreward-reward-modeling-for-camera-conditioned-world-models",
+      "title": "WorldReward: Reward Modeling for Camera-Conditioned World Models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向相机条件世界模型的奖励建模，旨在保持指令场景变化与时间动力学的连贯性",
+      "first_seen_at": "2026-09-05 22:16:47 UTC",
+      "updated_at": "2026-09-05 22:16:47 UTC"
+    },
+    {
+      "paper_id": "2608.29910v1",
+      "route": "202609/05/2608.29910v1-matrix-game-35-enhancing-real-time-streaming-interactive-world-models-with-patch-memory",
+      "title": "Matrix-Game 3.5: Enhancing Real-Time Streaming Interactive World Models with Patch Memory",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "基于几何感知的补丁记忆在长时程视频生成中保持场景几何与动力学一致性",
+      "first_seen_at": "2026-09-05 22:16:47 UTC",
+      "updated_at": "2026-09-05 22:16:47 UTC"
+    },
+    {
+      "paper_id": "2609.02367v1",
+      "route": "202609/05/2609.02367v1-the-missing-temporal-link-temporal-context-routing-for-script-driven-audio-video-generation",
+      "title": "The Missing Temporal Link: Temporal Context Routing for Script-Driven Audio-Video Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向脚本的联合音视频生成，可控制镜头切换与对白节奏，支撑短剧类内容自动制作",
+      "first_seen_at": "2026-09-05 22:16:47 UTC",
+      "updated_at": "2026-09-05 22:16:47 UTC"
+    },
+    {
+      "paper_id": "2609.03557v1",
+      "route": "202609/05/2609.03557v1-building-pretraining-data-for-world-models-an-unreal-engine-based-pipeline-for-action-conditioned-video-generation",
+      "title": "Building Pretraining Data for World Models: An Unreal Engine-Based Pipeline for Action-Conditioned Video Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "利用实时物理仿真生成动作条件视频数据，为训练视频模型提供包含物理交互的数据集",
+      "first_seen_at": "2026-09-05 22:16:47 UTC",
+      "updated_at": "2026-09-05 22:16:47 UTC"
+    },
+    {
+      "paper_id": "2608.30450v1",
+      "route": "202609/05/2608.30450v1-flowvvton-flow-guided-mask-free-video-virtual-try-on",
+      "title": "FlowVVTON: Flow-Guided Mask-Free Video Virtual Try-On",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "利用光流作为训练期监督，在视频虚拟试穿中施加显式物理运动约束，提升跨帧时间一致性",
+      "first_seen_at": "2026-09-05 22:16:47 UTC",
+      "updated_at": "2026-09-05 22:16:47 UTC"
+    },
+    {
+      "paper_id": "2608.31025v1",
+      "route": "202609/05/2608.31025v1-analytic-dynamics-learning-physics-grounded-representation-for-fast-intrinsic-dynamics-inference-from-monocular-videos",
+      "title": "Analytic Dynamics: Learning Physics-Grounded Representation for Fast Intrinsic Dynamics Inference from Monocular Videos",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "从单目视频推断内在动力学的物理基础中间表示方法，可用于物理合理视频建模与分析。",
+      "first_seen_at": "2026-09-05 22:16:47 UTC",
+      "updated_at": "2026-09-05 22:16:47 UTC"
+    },
+    {
+      "paper_id": "2609.02531v1",
+      "route": "202609/05/2609.02531v1-spatially-aware-world-action-model-via-geometric-latent-diffusion",
+      "title": "Spatially Aware World Action Model via Geometric Latent Diffusion",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于视频扩散的世界动作模型引入三维深度与物理先验，可服务物理合理视频生成的架构改进",
+      "first_seen_at": "2026-09-05 22:16:47 UTC",
+      "updated_at": "2026-09-05 22:16:47 UTC"
+    }
+  ]
+}

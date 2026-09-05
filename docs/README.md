@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-25 ~ 2026-09-03</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-05</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 10 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 11 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>3</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>7</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>5</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>6</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-03 00:55:03 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-05 22:16:47 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>本期10篇关注视频生成与具身世界模型：精读聚焦“离流形精修”与“视觉语义事件链”两大技术，均获9分高评价。最值得关注的是用冻结世界模型引导视频生成，以及通过事件链条件增强物理合理性。建议从高分的两篇入手，快速理解“世界模型如何提升生成质量”这一当前热点。</p>
+<p>今日聚焦短视频生成与视频模型物理测试，共推荐11篇论文，其中5篇精读、6篇速读。最值得关注的是满分10分的《DramaChain Bench》短剧生成基准和《Principia》视频物理检验基准，分别对生成效果与物理常识做严格评估。建议普通读者优先浏览这两篇基准论文，快速把握当前视频模型的能力边界与短板。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -71,12 +71,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">3 篇</strong>
+    <strong class="dpr-home-dashboard-count">5 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Off-Manifold Refinement: Guiding Video Generators with a Frozen World Model">Off-Manifold Refinement: Guiding Video Generators with a Frozen World Model</span></li><li><span class="dpr-home-dashboard-paper-title" title="Physically Plausible Video Generation via Visual-Semantic Chain-of-Events Conditioning">Physically Plausible Video Generation via Visual-Semantic Chain-of-Events Conditioning</span></li><li><span class="dpr-home-dashboard-paper-title" title="CAER: Causal Action Effect Reweighting for World Model Training">CAER: Causal Action Effect Reweighting for World Model Training</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="DramaChain Bench: An End-to-End Benchmark for Short-Drama Generation">DramaChain Bench: An End-to-End Benchmark for Short-Drama Generation</span></li><li><span class="dpr-home-dashboard-paper-title" title="Principia: Relational Physics Tests for Video Models">Principia: Relational Physics Tests for Video Models</span></li><li><span class="dpr-home-dashboard-paper-title" title="CineForge: Self-Improving Agents for Long-Horizon Video Generation">CineForge: Self-Improving Agents for Long-Horizon Video Generation</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>3</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>3</strong></span><span class="dpr-home-dashboard-tag">manga-drama <strong>2</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -84,12 +84,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">7 篇</strong>
+    <strong class="dpr-home-dashboard-count">6 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="GaussianWAM: Distilling Geometry and Semantics from 3D Gaussian Fields into World-Action Models">GaussianWAM: Distilling Geometry and Semantics from 3D Gaussian Fields into World-Action Models</span></li><li><span class="dpr-home-dashboard-paper-title" title="ChainSplat: A Physics-Inspired Screw-Theoretic Model for Learning Deformable Linear Object Dynamics from Multi-View RGB Videos">ChainSplat: A Physics-Inspired Screw-Theoretic Model for Learning Deformable Linear Object Dynamics from Multi-View RGB Videos</span></li><li><span class="dpr-home-dashboard-paper-title" title="GlanceWAM: Sparse Test-Time Imagination for World-Action Models">GlanceWAM: Sparse Test-Time Imagination for World-Action Models</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Matrix-Game 3.5: Enhancing Real-Time Streaming Interactive World Models with Patch Memory">Matrix-Game 3.5: Enhancing Real-Time Streaming Interactive World Models with Patch Memory</span></li><li><span class="dpr-home-dashboard-paper-title" title="The Missing Temporal Link: Temporal Context Routing for Script-Driven Audio-Video Generation">The Missing Temporal Link: Temporal Context Routing for Script-Driven Audio-Video Generation</span></li><li><span class="dpr-home-dashboard-paper-title" title="Building Pretraining Data for World Models: An Unreal Engine-Based Pipeline for Action-Conditioned Video Generation">Building Pretraining Data for World Models: An Unreal Engine-Based Pipeline for Action-Conditioned Video Generation</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>6</strong></span><span class="dpr-home-dashboard-tag">manga-drama <strong>1</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>5</strong></span><span class="dpr-home-dashboard-tag">manga-drama <strong>1</strong></span></div>
 </section>
 </div>
 

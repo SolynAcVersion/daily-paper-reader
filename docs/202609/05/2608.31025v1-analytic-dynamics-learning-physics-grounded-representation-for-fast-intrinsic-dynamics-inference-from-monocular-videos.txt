@@ -1,0 +1,676 @@
+Title: Analytic Dynamics: Learning Physics-Grounded Representation for Fast Intrinsic Dynamics Inference from Monocular Videos
+
+URL Source: https://arxiv.org/pdf/2608.31025v1
+
+Published Time: Tue, 01 Sep 2026 03:10:08 GMT
+
+Number of Pages: 15
+
+Markdown Content:
+# Analytic Dynamics: Learning Physics-Grounded Representation for Fast Intrinsic Dynamics Inference from Monocular Videos 
+
+Jiajing Lin ∗, Jikuan Zhange ∗, Jianhua Sun †
+
+School of Artificial Intelligence, Shanghai Jiao Tong University {jiajinglin, k-u-a-n_as, gothic}@sjtu.edu.cn 
+
+Abstract 
+
+Inferring object dynamics from visual observations is essen-tial for intelligent agents to reason about and interact with the physical world, yet remains challenging due to the funda-mental gap between visual evidence and intrinsic dynamics. Existing methods either rely on costly per-scene optimiza-tion, limiting efficiency and scalability, or directly map visual evidence to intrinsic dynamics without intermediate physical abstractions, making them prone to appearance and geome-try shortcuts. To bridge this gap, we propose Analytic Dy-namics, a feed-forward dynamics inference framework that introduces an intermediate physics-grounded dynamics repre-sentation between visual observations and intrinsic dynamics. Specifically, we leverage privileged physical states, includ-ing position, displacement, and deformation gradient fields, which are available in simulation, to learn a structured dynam-ics representation that is difficult to discover from visual ob-servations alone. By aligning visual representations with this space, we equip visual models with a physics-grounded induc-tive bias, guiding them to capture dynamics-relevant patterns for material model classification and parameter regression. To facilitate this research, we develop a dynamics data generation pipeline and benchmark containing paired physical state tra-jectories, rendered videos, and ground-truth material models and parameters. Extensive experiments demonstrate that Ana-lytic Dynamics achieves efficient, accurate, and generalizable dynamics inference from monocular videos. 
+
+Introduction 
+
+Embodied agents (Duan et al. 2022b; Long et al. 2025) need to reason about how objects respond to physical interactions to make reliable decisions. This capability relies on under-standing the intrinsic dynamics of objects, including the un-derlying material models and material parameters. Humans effortlessly infer such dynamics from observed motions, en-abling them to anticipate future behaviors and interact ef-fectively with the physical world. Endowing machines with similar intuitive physics (Duan et al. 2022a) is a fundamental goal of embodied intelligence (Sun and Lu 2025). With advances in differentiable rendering (Mildenhall et al. 2021; Kerbl et al. 2023) and simulation (Jiang et al. 2016), a line of work (Li et al. 2023; Cai et al. 2024; Lin et al. 2026) formulates dynamics inference as inverse physics problems, optimizing material parameters to match simu-lated behaviors with multi-view videos. While achieving 
+
+> ∗
+
+These authors contributed equally. 
+
+> †
+
+Corresponding author. 
+
+accurate estimation, these methods require extensive sim-ulation–optimization iterations from scratch for each scene, resulting in high computational cost and limited scalability to unseen objects. Alternatively, another line of work (Zhai et al. 2024; Shuai et al. 2025; Chopra et al. 2025) explores prompting large vision-language models to reason about in-trinsic dynamics from visual observations. While offering efficient and versatile inference, these approaches primarily rely on commonsense knowledge acquired from large-scale corpora, resulting in noisy and coarse-grained predictions. To explore a better balance between inference efficiency and physical accuracy, recent works (Le et al. 2025; Huang et al. 2026; Das and Manocha 2026) leverage large-scale syn-thetic 3D asset–dynamics pairs to train feed-forward models. However, static 3D assets only provide appearance and geom-etry, which are inherently ambiguous for inferring intrinsic dynamics: visually identical objects may correspond to dif-ferent material models or parameters. In contrast, monocular videos capture how objects move and deform under physical interactions, providing behavioral evidence induced by their intrinsic dynamics. However, inferring intrinsic dynamics from monocular videos remains challenging, as videos only capture 2D projections of physical responses induced by in-trinsic dynamics, which are mixed with factors unrelated to dynamics, such as viewpoint, geometry, and appearance. Without explicit physical guidance, models can easily exploit spurious correlations rather than learning dynamics-relevant patterns, leading to poor generalization. To address the aforementioned challenges, we propose An-alytic Dynamics , a feed-forward framework for efficiently inferring constitutive material models and parameters from monocular videos. Our key insight is to introduce a physics-grounded dynamics representation between visual observa-tions and intrinsic dynamics, providing visual models with a physically meaningful learning target. Specifically, we de-velop a two-stage privileged dynamics distillation frame-work. First, we leverage privileged physical states as in-put, including position, displacement, and deformation gra-dient fields, which are only accessible in simulation, to learn a structured dynamics representation space for ma-terial model classification and parameter regression. Since these states directly describe physical responses governed by intrinsic dynamics, the learned representation naturally en-codes dynamics-related information, resulting in a physics-arXiv:2608.31025v1 [cs.CV] 31 Aug 2026 Shared Dynamics Across Shapes   
+
+> (b) Physics-Grounded Dynamics Representation (a) Direct Visual Representa;on (c) Dis;lled Dynamics Representa;on
+> Stage-I Teacher Stage-II w/ Alignment w/o Alignment
+
++𝟑𝟒%   
+
+> Regression Accuracy on OOD Shapes
+> Physics-Grounded Distillation
+> Rounded Box Rounded Cone Rounded Cylinder Shape:
+> Reliance on Geometric Cues
+
+Figure 1: Physics-grounded distillation reduces shape dependence. We use UMAP to visualize representations of elastic samples from three training shapes: Box, Cone, and Cylinder. Marker types denote object shapes, while colors indicate the ground-truth Young’s modulus E. Without alignment, direct visual representations form three shape-specific branches, revealing strong reliance on geometric cues. In contrast, the Stage I teacher organizes samples into a smooth continuum according to E,forming a shared dynamics structure across geometries. Distillation transfers this organization to Stage II, enabling the visual model to capture dynamics-relevant patterns across shapes and improving E regression accuracy by 34% on unseen shapes. grounded representation space. Second, we align monocular video with this learned dynamics space. This alignment intro-duces a physics-grounded inductive bias, guiding visual rep-resentations toward dynamics-related information reflected in object motion and deformation, and enabling more accu-rate and generalizable inference of material models and pa-rameters. To support this research, we build a simulator-based benchmark of 9,000 dynamics instances across 60 objects, covering diverse material models, parameters, and views. Each instance pairs monocular videos with physical-state tra-jectories and ground-truth material labels. Our contributions are summarized as follows: 
+
+• We propose a feed-forward dynamics inference frame-work that is the first to efficiently recover constitutive material models and parameters from monocular videos. 
+
+• We introduce a two-stage privileged dynamics distilla-tion framework that learns a physics-grounded dynam-ics representation from physical states and transfers it to the visual model, encouraging the model to capture dynamics-relevant patterns for improved generalization. 
+
+• We develop a dynamics data generation pipeline and benchmark for intrinsic dynamics inference. Extensive experiments demonstrate that Analytic Dynamics out-performs existing baselines, enabling efficient inference within 3.83 milliseconds while maintaining strong out-of-distribution generalization. 
+
+Related Work 
+
+Per-Scene Dynamics Optimization 
+
+Per-scene inverse-physics methods identify object dynam-ics from videos by optimizing physical parameters through differentiable rendering and simulation. PAC-NeRF, GIC, Spring-Gaus, and M-PhyGs (Li et al. 2023; Cai et al. 2024; Zhong et al. 2024; Wada et al. 2025) operate under prescribed material models, progressively supporting explicit geometry, heterogeneous elasticity, and multi-material objects. NeuMA and MASIV (Cao et al. 2024; Zhao et al. 2025b) relax fixed constitutive assumptions through neural constitutive mod-eling, whereas VisionLaw (Lin et al. 2026) searches for interpretable symbolic laws. PhysDreamer, DreamPhysics, Physics3D, PhysFlow, and OmniPhysGS (Zhang et al. 2024; Huang et al. 2024; Liu et al. 2024, 2025; Lin et al. 2025b) instead use video diffusion priors to optimize physical prop-erties without captured motion. Vid2Sim combines feed-forward prediction with lightweight per-scene refinement (Chen et al. 2025). Despite these advances, optimization-based methods remain computationally expensive and re-quire scene-specific fitting, limiting their scalability. 
+
+Feed-Forward Dynamics Inference 
+
+To avoid expensive scene-specific system identification, feed-forward methods directly predict physical properties from vi-sual observations. NeRF2Physics, GaussianProperty, PUGS, and PhysGS (Zhai et al. 2024; Xu et al. 2025; Shuai et al. 2025) transfer material semantics and physical priors from pretrained vision-language models (VLMs) to 3D scene rep-resentations for zero-shot property estimation; among them, PUGS improves property propagation over 3D Gaussians, while PhysGS (Chopra et al. 2025) explicitly models predic-tion uncertainty. Phys4DGen and PhysSplat (Lin et al. 2025a; Zhao et al. 2025a) extend this strategy to physics-driven 4D generation through explicit simulation. While efficient and broadly applicable, these methods are constrained by VLM commonsense priors and may produce coarse estimates. An-other line, exemplified by PIXIE (Le et al. 2025), learns feed-forward material inference from large-scale annotated 3D assets. Building on this paradigm, SLAT-Phys enables efficient single-image prediction, while UniPixie (Das and Manocha 2026; Huang et al. 2026) extends deterministic estimation to controllable material distributions. However, these methods may exploit appearance and geometry short-Material Family Geometry MPM Simulator                             
+
+> MLP MLP
+> Classification ℒ!"#
+> E𝜈 𝜎 $𝜙
+> Regression ℒ%&'
+> Stage I: Physics-Grounded Dynamics Representation Learning Stage II: Visual Dynamics Representation Distillation
+> …….
+> Projector
+> MLP MLP
+> Classification ℒ!"#
+> E𝜈 𝜎 $𝜙
+> Regression ℒ%&' …….
+> Projector
+> ℒ!"#$%
+> Mask Video Encoder Trajectory Encoder
+> Material Parameter
+> E𝜈 𝜎 $𝜙
+> Simulation Specification
+> 𝑡 !𝑡 "𝑡 #𝑡 $𝑡 %
+> 𝑡 !𝑡 "𝑡 #𝑡 $𝑡 %
+> Physical-State Trajectory: Position + Displacement + Deformation Gradient Monocular Mask Video
+> Render
+> Scalable Dynamics Data Generation and Benchmark
+> 𝑥 𝑣 𝐹 Training Only Training & Inference
+> Trajectory Mask Video Representation Representation
+
+Figure 2: Overview of Analytic Dynamics . Given sampled geometry, material family, material parameters, and external excitation, an MPM simulator generates paired tracked particle trajectories and synchronized monocular mask videos. The trajectories contain particle positions, displacements, and deformation gradients. In Stage I, a trajectory teacher learns a dynamics-relevant representation from these simulator-only states using classification and parameter-regression supervision. In Stage II, a video student learns the same inference task from mask videos while aligning its representation with the frozen teacher. At test time, only the video student is retained to predict intrinsic dynamics from readily captured monocular videos. cuts rather than learn generalizable physical regularities. 
+
+Methodology 
+
+Problem Formulation and Overview 
+
+For a dynamics instance i, let V(r) 
+
+> i
+
+denote a monocular mask video of a moving object observed from viewpoint r. Our objective is to learn a feed-forward video model MΦ that predicts the material family yi ∈ C and its corresponding material parameters θi:
+
+
+
+ˆyi, ˆθi
+
+
+
+= MΦ
+
+
+
+V(r)
+
+> i
+
+
+
+. (1) Directly learning this mapping from videos is challenging, as a monocular video provides only an indirect 2D observa-tion of the physical response. In simulation, each dynamics instance additionally provides a tracked physical-state trajec-tory Si, offering a more direct observation of the underlying physical response. We therefore use these training-only phys-ical states to guide the learning of MΦ, while relying only on video inputs at inference. To this end, we propose a two-stage privileged dynam-ics distillation framework. We first develop a data genera-tion pipeline that produces paired physical-state trajectories and monocular mask videos for each simulated dynamics instance. In Stage I, a trajectory teacher learns a physics-grounded representation predictive of the material family and its parameters. In Stage II, this representation is distilled into a video student through representation alignment and direct task supervision. The overall framework of Analytic Dynamics is illustrated in Fig. 2. 
+
+Dynamics Data Generation and Benchmark 
+
+To support privileged dynamics distillation, we construct paired physical-state trajectories and monocular videos from the same simulated dynamics instance. Each instance is de-fined by an object geometry, a material family, material pa-rameters, and an external excitation. Given these configu-rations, we use the Material Point Method (MPM) (Jiang et al. 2016; Ma et al. 2023) to simulate the object response, producing temporally evolving particle states together with a synchronized deforming surface. To construct the physical-state trajectory, we perform farthest-point sampling (FPS) only on the initial particle set and track the same particles throughout the simulation. This preserves particle identity over time and converts indepen-dent state snapshots into Lagrangian trajectories. For the k-th tracked particle, we compute its frame displacement as 
+
+∆xi,t,k =
+
+0, t = 0 ,
+
+xi,t,k − xi,t −1,k , t ≥ 1. (2) To encourage the model to focus on relative motion patterns rather than absolute displacement magnitudes, we normal-ize the displacements using their median magnitude over all tracked particles and non-initial frames: 
+
+si =median t=1 ,...,T −1
+
+ ∥∆xi,t,k ∥2
+
+ , (3) 
+
+vi,t,k = ∆xi,t,k 
+
+si
+
+. (4) The resulting physical-state trajectory Si consists of tracked particle positions xi, normalized frame displacements vi,and deformation gradients Fi.To generate the corresponding visual observations, we bind each surface-mesh vertex to nearby material particles in the initial configuration. During simulation, the mesh ver-tices are advected by interpolating the motion of their asso-ciated particles, yielding a deforming surface synchronized with the particle trajectory. We render this surface from mul-tiple viewpoints into a monocular mask video {V ri }Rr=1 .Each simulated instance therefore provides one physical-state trajectory, multiple synchronized monocular videos, and their shared material annotations: 
+
+Di =
+
+
+
+Si, {V (r) 
+
+> i
+
+}Rr=1 , y i, θ i
+
+
+
+. (5) The trajectory is used to train the Stage-I teacher, while the paired videos support Stage-II representation distillation and task supervision. 
+
+Privileged Dynamics Representation Learning 
+
+Stage I aims to learn a teacher representation from privi-leged physical-state trajectories. Unlike monocular videos, these trajectories directly capture 3D particle motion and de-formation, encouraging the model to learn dynamics-relevant patterns. Given a physical-state trajectory Si, P4Transformer (Fan, Yang, and Kankanhalli 2021) models local and long-range spatiotemporal interactions among the tracked particles. A projector then maps the pooled trajectory feature to a teacher representation zTi ∈ Rd, which defines the representation space used for subsequent visual distillation. To make this representation predictive of intrinsic dynam-ics, we train the teacher with material-family classification and parameter regression. Classification distinguishes dis-crete material families, while regression preserves continu-ous parameter variations within each family. Since different material families involve distinct parameter sets and numeri-cal scales, we normalize each parameter and compute RegL1 as the mean L1 error over the parameters defined for the ground-truth family: 
+
+LRegL1 =
+
+PBi=1 
+
+Pdmax  
+
+> j=1
+
+mi,j ˆθi,j − θi,j 
+
+PBi=1 
+
+Pdmax  
+
+> j=1
+
+mi,j 
+
+. (6) Here, θi,j and ˆθi,j denote the normalized ground-truth and predicted parameters, respectively, and mi,j indicates whether the j-th parameter is defined for sample i. Param-eter normalization places different physical quantities on a comparable scale, while the validity mask enables uni-fied optimization across material families. The classification branch is trained with standard cross-entropy Lcls . The over-all Stage-I objective is: 
+
+LStage −I = λcls Lcls + λreg LRegL1 (7) By combining direct 3D physical observations with ma-terial supervision, Stage I learns a physics-grounded repre-sentation predictive of the material family and its parame-ters. After training, the trajectory encoder and projector are frozen, and zT serves as the representation target for the paired monocular videos in Stage II. 
+
+Visual Dynamics Representation Distillation 
+
+Stage II distills the physics-grounded representation learned in Stage I into a deployable video model. Given a monocu-lar mask video V(r) 
+
+> i
+
+, a UniFormer encoder (Li et al. 2022) followed by a projector produces a visual representation 
+
+zVi,r ∈ Rd. We use mask videos to retain silhouette mo-tion and deformation while removing variations in texture and color. Meanwhile, the frozen teacher extracts the target representation zTi from the paired physical-state trajectory 
+
+Si. Different views of the same dynamics instance share the same teacher target, encouraging view-consistent visual rep-resentations. We align the visual and teacher representations using co-sine and ℓ1 distances: 
+
+Lalign = 1
+
+B
+
+> B
+
+X
+
+> i=1
+
+h
+
+1 −  ezVi,r 
+
+⊤ ezTi + α zVi,r − zTi 1
+
+i
+
+, (8) where ez = z/(∥z∥2 + ε), and α balances the two terms. The cosine term aligns the overall feature direction, while the 
+
+ℓ1 term reduces their element-wise discrepancy. The teacher remains frozen throughout Stage II, so the alignment loss up-dates only the video branch. The video model uses the same material-family classification and parameter-regression de-sign as the teacher, supervised by cross-entropy and RegL1, respectively. The overall Stage-II objective is 
+
+LStage -II = λalign Lalign + λcls Lcls + λreg LRegL1 . (9) Representation alignment guides the video model toward features learned from direct 3D motion and deformation, while task supervision keeps the visual representation pre-dictive of material families and parameters. At inference, the teacher is discarded, and the video model directly predicts intrinsic dynamics from a monocular mask video. 
+
+Experiments 
+
+Experimental Setup 
+
+Implementation Details For the Shape-OOD experi-ments, the Stage-I teacher receives 25-frame state trajectories of 1,024 tracked particles. Its input combines particle posi-tions x, displacement v, and deformation gradients F. We use a P4Transformer (Fan, Yang, and Kankanhalli 2021) en-coder with a 256-dimensional latent space, four Transformer layers, and eight attention heads. The teacher is trained for 300 epochs. In Stage II, UniFormer-XXS (Li et al. 2022) en-codes 25-frame, 128 ×128 , single-channel mask videos. The complete Stage-I teacher is frozen, while the video encoder, projection head, classifier, and material-specific regression heads are optimized for 20 epochs with a batch size of 32. Both stages are optimized using AdamW with an initial learn-ing rate of 10 −4, weight decay of 10 −4, and cosine decay to 
+
+10 −6. The Stage-II loss weights are λcls = 1 .0, λreg = 0 .2,and λalign = 0 .1. All experiments are conducted on a single NVIDIA RTX 4090 GPU. 
+
+Baselines We compare against three representative base-lines spanning two paradigms. First, following recent stud-ies (Zhai et al. 2024; Shuai et al. 2025) that leverage multi-modal large language models for physical property reasoning, Method Jelly Plasticine Sand 
+
+Acc. ↑ E ↓ ν ↓ Acc. ↑ E ↓ ν ↓ Y ield ↓ Acc. ↑ ϕ ↓
+
+Per-scene Optimization - 0.179 0.104 - 0.752 0.101 0.065 - 3.209 VLM baseline 0.633 2.163 0.134 0.367 2.007 0.052 1.115 0.000 -Video-LLM baseline 0.847 1.376 0.118 0.833 0.756 0.045 0.785 0.327 7.803 Ours (w/o alignment) 0.997 0.265 0.043 1.000 0.223 0.024 0.115 0.943 1.991 Ours (alignment only) 1.000 0.188 0.036 1.000 0.146 0.021 0.106 0.973 1.927 Ours (Full) 1.000 0.175 0.037 1.000 0.141 0.021 0.101 0.970 1.777 
+
+Table 1: Quantitative comparison on objects unseen during training. We report material classification accuracy ( ↑) and material-specific parameter errors ( ↓) for elasticity, plasticity, and sand. Young’s modulus E and yield stress σy are evaluated using log-MAE, while Poisson’s ratio ν and friction angle ϕ are evaluated using MAE. Observation VLM Ours Video-LLM JellyBall ClayCake SandChocolate 16.77 17.26 29.88 23.87 22.52 31.29 21.08 22.24 26.16 29.77 34.83 33.11         
+
+> Optimization Observation VLM Ours Video-LLM Optimization Observation VLM Ours Video-LLM Optimization
+> Time
+
+Figure 3: Visual dynamics reconstruction on unseen objects. We re-simulate each object using the intrinsic dynamics inferred by different methods. PSNR ( ↑) between the reconstructed and observed frames is reported below each sequence. we construct a VLM baseline and a Video-LLM baseline. They perform feed-forward inference of material models and parameters from an input image and video, respectively, us-ing the material commonsense priors encoded in pretrained models. The prompts are provided in the appendix. Second, we consider per-scene inverse-physics optimization (Cai et al. 2024; Li et al. 2023), which iteratively estimates the material parameters of an MPM simulator by matching the simulated dynamics to the observed video. We adopt the implementa-tion of VisionLaw (Lin et al. 2026) for this baseline. 
+
+Datasets and Metrics We construct an MPM-based paired dynamics dataset comprising 9,000 dynamics instances across three material families: jelly , plasticine , and 
+
+sand , with their constitutive formulations provided in the appendix. For jelly , we vary Young’s modulus ( E) and Poisson’s ratio ( ν); for plasticine , we additionally vary the yield stress ( σy ); and for sand , we vary only the fric-tion angle ( ϕ), the dominant material parameter governing its dynamics. The benchmark covers 60 object shapes, includ-ing hand-crafted primitives and common real-world objects from OmniObject3D (Wu et al. 2023), evenly split into 30 training and 30 test shapes. For each dynamics instance, we sample an object shape, material parameters, and external excitation, and generate synchronized particle-state trajec-tories and monocular mask videos from multiple views. To mitigate viewpoint bias, we randomly sample a fixed number of views per instance during training. We report material classification accuracy and material-specific parameter regression errors. Young’s modulus E and yield stress σy are evaluated using log-MAE, while Poisson’s ratio ν and the friction angle ϕ are evaluated using MAE. For an aggregate evaluation of parameter inference across ma-terial families and parameters, we use RegL1 described in Eq. 6. Lower RegL1 indicates more accurate parameter in-ference. Finally, we re-simulate each object using its inferred material parameters and report PSNR between the rendered reconstruction and the observed frames to assess visual dy-namics reconstruction quality. 
+
+Comparison on Unseen Objects 
+
+We first evaluate material model classification and parameter regression on objects unseen during training. As shown in Tab. 1, the full model achieves the best overall performance. VLMs and Video-LLMs achieve reasonable classification accuracy but produce substantially larger errors in material parameters. This suggests that vision-language models pos-sess coarse-grained knowledge of materials and dynamics but struggle to precisely map visual dynamics to continuous constitutive parameters. Despite its high computational cost, w/o Alignment w/ Alignment    
+
+> E=697376 E=20718 E=128294 E=289366 E=583259
+
+(b)  
+
+> I1 I2 0.75I1+0.25I2 0.5I1+0.5I2 0.25I1+0.75I2
+
+(a) Figure 4: Analysis of learned dynamics representations on unseen objects. (a) UMAP visualizations of Stage II represen-tations without and with alignment, colored by the ground-truth Young’s modulus. (b) Linear interpolation between two jelly representations from different objects with different stiffnesses. The top row shows the interpolation coefficients, and the bottom row shows the Young’s moduli decoded from the interpolated features. per-scene optimization remains competitive on several met-rics. However, material parameters are only indirectly con-strained by the final rendering loss, which entangles errors from physical simulation, 3D representation, and rendering. This makes it difficult to attribute visual discrepancies to ma-terial parameters. Under large deformations, the degradation and rendering artifacts of 3DGS further amplify this issue. The results across model variants further validate priv-ileged dynamics distillation. Alignment alone outperforms direct label supervision, indicating that the dynamics repre-sentation learned in Stage I provides the video model with a more physically meaningful learning target than material labels alone. Adding task supervision yields further gains: alignment captures dynamics-relevant information, while task supervision makes it predictive of material classes and parameters. Fig. 3 further examines whether the predicted parame-ters can reproduce the observed dynamics. Specifically, we fix the object geometry and initial conditions, simulate the object using the material model and parameters predicted by each method, and compare the resulting sequence with the observed video. The VLM and Video-LLM results are semantically plausible, but their deformation magnitudes and dynamic evolution deviate from the observations. Our method more accurately reproduces the elastic deformation of JellyBall and the flow and accumulation of SandChoco-late. On ClayCake, per-scene optimization achieves higher reconstruction accuracy, while our method produces visually comparable deformation without any test-time optimization. Overall, the quantitative results and visual dynamics re-constructions demonstrate that Analytic Dynamics effec-tively infers material models and parameters from monocular videos in 3.83 ms and generalizes to unseen objects. 
+
+Analysis of Learned Dynamics Representations 
+
+To examine whether distillation reduces the dependence of visual representations on object geometry and organizes them by intrinsic dynamics, we visualize the representation space on unseen objects. If a model relies on geometric cor-relations in the training data, its structure should break under shape changes. In contrast, a dynamics-aware representation should preserve smooth neighborhoods organized by mate-rial parameters across different shapes. As shown in Figure 4(a), the unaligned model exhibits lo-cal mixing and space folding: samples with similar Young’s modulus are scattered, while nearby points can have very different stiffness. Its representation is therefore not consis-tently organized by dynamics and remains entangled with dynamics-irrelevant factors such as shape and viewpoint, limiting cross-shape generalization. In contrast, the aligned representation varies more smoothly with Young’s modulus, and samples with similar stiffness remain close even across unseen objects. This indicates that Stage I distillation intro-duces a transferable dynamics structure and reduces reliance on object-specific geometric cues. Figure 4(b) further evaluates whether the space continu-ously encodes material variation. We select two unseen jelly samples with different stiffness, linearly interpolate their dy-namics representations, and feed them into the regression head. As the interpolation coefficient changes, the predicted 
+
+E increases monotonically from 20718 to 697376 , while the simulated deformation transitions from large to small. This shows that the learned space forms a continuous and ordered structure over material parameters. Overall, Stage I learns a representation organized by dynamics, and distillation effec-tively transfers this structure to the visual model. 
+
+Effect of Privileged Physical States 
+
+To study how privileged physical states affect representation learning and cross-modal distillation, we train Stage I teach-ers with position ( x), position and displacement ( v), position and displacement ( x + v), position and deformation gradient (x+F) and the full state ( x+v+F), and distill each represen-tation into the Stage II video model. Fig. 5 reports the RegL1 errors of parameter regression for both stages. The results show that dynamics discriminability does not always trans-late into visual transferability. Using position alone yields the worst Stage I performance. Position trajectories mainly 0.04 0.06 0.08 0.10 0.12           
+
+> RegL1 ( ↓)
+> Full
+> x+Fx+vx
+> 0.055 0.067 0.046 0.072 0.077 0.070 0.125 0.082 0.082
+> Stage1 Stage2 No-align
+
+Figure 5: Ablation of privileged physical states. We com-pare position x, displacement v, and deformation gradient 
+
+F as inputs to the Stage I teacher, and report the RegL1 ( ↓)errors of both the teacher and its corresponding Stage II stu-dent. Gray lines connect each teacher–student pair, while the dashed line denotes the Stage II baseline without distillation. preserve object geometry, making the learned representation more sensitive to shape than to dynamics-relevant informa-tion and thus less effective for guiding Stage II. When the deformation gradient ( F) is added, the Stage I error drops significantly to 0.046, indicating that the deformation gra-dient provides strong cues for intrinsic dynamics. However, the most accurate teacher does not produce the best student. Although ( x + F) performs best in Stage I, it is outperformed by ( x + v + F) in Stage II. This suggests that a useful teacher representation must not only distinguish intrinsic dynamics, but also contain cues that the video model can observe and match. Displacement provides inter-frame motion cues that are directly visible in videos, while the deformation gradient captures fine-grained material responses. Their combination balances dynamics discrimination and visual transfer, yield-ing the best Stage II performance. Accordingly, we used the full state in all experiments. 
+
+Real-World Generalization 
+
+We further test whether a model trained only on synthetic data can directly generalize to real-world scenes. We evaluate on two real scenes, Bun and Burger, from Spring-Gaus (Zhong et al. 2024). Since the ground-truth material parameters are unknown, we rely on PSNR as an indirect measure of the ac-curacy of material parameter inference. As shown in Fig. 6, our model predicts material parameters and simulates the dynamics without any fine-tuning on real videos. In contrast, per-scene optimization iteratively adjusts the parameters for each test scene. Despite this asymmetric setting, our PSNR is only 0.82 dB and 0.60 dB lower on Bun and Burger, respec-tively, while recovering deformation processes close to the observations. These results show that the dynamics learned from synthetic data can transfer to real observations, pro-viding initial evidence of the framework’s applicability to real-world scenes. We attribute the remaining gap mainly to the mismatch Observation Ours Optimization Observation Ours Optimization    
+
+> Bun 27.91 28.73 27.05 Burger 26.45
+> Time
+
+Figure 6: Real-world dynamics reconstruction. The mask color denotes the predicted Young’s modulus (E), follow-ing the right color bar. Without any fine-tuning, our method achieves performance comparable to per-scene optimization and reconstructs dynamics close to the observations. between the simulator and real-world physics. Our current simulator uses a limited set of idealized constitutive mod-els (Chaves 2013), while real objects may also exhibit damp-ing, viscoelasticity, material heterogeneity, and complex con-tact behavior. Per-scene optimization can repeatedly adjust the available parameters for each video, partly compensating for these unmodeled effects and producing simulations closer to the observations. However, the optimized parameters may not reflect the object’s true physical properties. In contrast, our feed-forward model predicts directly from the synthetic training distribution without any additional per-scene refine-ment. Incorporating richer constitutive models and more ac-curate physical modeling is therefore an important direction for improving real-world generalization. 
+
+Conclusion 
+
+We presented Analytic Dynamics , a feed-forward framework for efficiently inferring constitutive material models and pa-rameters from monocular videos. Our key idea is to exploit privileged particle states available in simulation to learn a physics-grounded dynamics representation and then distill it into a video model. By providing the visual branch with a learning target derived from direct physical responses, our framework encourages video representations to capture dynamics-relevant patterns beyond object-specific visual cor-relations. To enable systematic training and evaluation, we further developed an MPM-based data generation pipeline and benchmark that pair monocular mask videos with tracked physical-state trajectories and material annotations. Exten-sive experiments demonstrate accurate material inference, strong generalization to unseen objects, and effective trans-fer to real-world observations, with an inference time of only 3.83 ms. Nevertheless, the current framework is trained on a limited set of idealized constitutive models. Extending it to richer material behaviors and interactions is a promising direction for future work. References 
+
+Cai, J.; Yang, Y.; Yuan, W.; He, Y.; Dong, Z.; Bo, L.; Cheng, H.; and Chen, Q. 2024. Gic: Gaussian-informed continuum for physical property identification and simula-tion. Advances in Neural Information Processing Systems ,37: 75035–75063. Cao, J.; Guan, S.; Ge, Y.; Li, W.; Yang, X.; and Ma, C. 2024. Neuma: Neural material adaptor for visual ground-ing of intrinsic dynamics. Advances in Neural Information Processing Systems , 37: 65643–65669. Chaves, E. W. 2013. Notes on continuum mechanics .Springer Science & Business Media. Chen, C.; Dou, Z.; Wang, C.; Huang, Y.; Chen, A.; Feng, Q.; Gu, J.; and Liu, L. 2025. Vid2sim: Generalizable, video-based reconstruction of appearance, geometry and physics for mesh-free simulation. In Proceedings of the Computer Vision and Pattern Recognition Conference , 26545–26555. Chopra, S.; Liang, J.; Seneviratne, G.; and Manocha, D. 2025. PhysGS: Bayesian-Inferred Gaussian Splat-ting for Physical Property Estimation. arXiv preprint arXiv:2511.18570 .Das, R. J.; and Manocha, D. 2026. SLAT-Phys: Fast Material Property Field Prediction from Structured 3D Latents. arXiv preprint arXiv:2603.23973 .Duan, J.; Dasgupta, A.; Fischer, J.; and Tan, C. 2022a. A sur-vey on machine learning approaches for modelling intuitive physics. arXiv preprint arXiv:2202.06481 .Duan, J.; Yu, S.; Tan, H. L.; Zhu, H.; and Tan, C. 2022b. A survey of embodied ai: From simulators to research tasks. 
+
+IEEE Transactions on Emerging Topics in Computational Intelligence , 6(2): 230–244. Fan, H.; Yang, Y.; and Kankanhalli, M. 2021. Point 4d transformer networks for spatio-temporal modeling in point cloud videos. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 14204–14213. Huang, Q.; Huynh, Q. A.; Le, L.; Wang, C.; Chen, C.; Lu-cas, R.; Eaton, E.; and Liu, L. 2026. UniPixie: Unified and Probabilistic 3D Physics Learning via Flow Matching. arXiv preprint arXiv:2606.05399 .Huang, T.; Zhang, H.; Zeng, Y.; Zhang, Z.; Li, H.; Zuo, W.; and Lau, R. W. 2024. DreamPhysics: Learning physics-based 3D dynamics with video diffusion priors. arXiv preprint arXiv:2406.01476 .Jiang, C.; Schroeder, C.; Teran, J.; Stomakhin, A.; and Selle, A. 2016. The material point method for simulating contin-uum materials. In Acm siggraph 2016 courses , 1–52. Kerbl, B.; Kopanas, G.; Leimkühler, T.; and Drettakis, G. 2023. 3D Gaussian splatting for real-time radiance field rendering. ACM Transactions on Graphics (TOG) , 42(4): 139–1. Le, L.; Lucas, R.; Wang, C.; Chen, C.; Jayaraman, D.; Eaton, E.; and Liu, L. 2025. Pixie: Fast and generalizable super-vised learning of 3d physics from pixels. arXiv preprint arXiv:2508.17437 .Li, K.; Wang, Y.; Gao, P.; Song, G.; Liu, Y.; Li, H.; and Qiao, Y. 2022. Uniformer: Unified transformer for effi-cient spatiotemporal representation learning. arXiv preprint arXiv:2201.04676 .Li, X.; Qiao, Y.-L.; Chen, P. Y.; Jatavallabhula, K. M.; Lin, M.; Jiang, C.; and Gan, C. 2023. Pac-nerf: Physics augmented continuum neural radiance fields for geometry-agnostic system identification. arXiv preprint arXiv:2303.05512 .Lin, J.; Jiang, S.; Zeng, Q.; Wang, Z.; and Jiang, M. 2026. Visionlaw: Inferring interpretable intrinsic dynamics from visual observations via bilevel optimization. In Interna-tional Conference on Learning Representations , volume 2026, 96128–96165. Lin, J.; Wang, Z.; Xu, D.; Jiang, S.; Gong, Y.; and Jiang, M. 2025a. Phys4dgen: Physics-compliant 4d generation with multi-material composition perception. In Proceedings of the 33rd ACM International Conference on Multimedia , 10398– 10407. Lin, Y.; Lin, C.; Xu, J.; and Mu, Y. 2025b. Omniphysgs: 3d constitutive gaussians for general physics-based dynamics generation. arXiv preprint arXiv:2501.18982 .Liu, F.; Wang, H.; Yao, S.; Zhang, S.; Zhou, J.; and Duan, Y. 2024. Physics3d: Learning physical properties of 3d gaus-sians via video diffusion. arXiv preprint arXiv:2406.04338 .Liu, Z.; Ye, W.; Luximon, Y.; Wan, P.; and Zhang, D. 2025. Unleashing the potential of multi-modal foundation models and video diffusion for 4d dynamic physical scene simula-tion. In Proceedings of the Computer Vision and Pattern Recognition Conference , 11016–11025. Long, X.; Zhao, Q.; Zhang, K.; Zhang, Z.; Wang, D.; Liu, Y.; Shu, Z.; Lu, Y.; Wang, S.; Wei, X.; et al. 2025. A sur-vey: Learning embodied intelligence from physical simula-tors and world models. arXiv preprint arXiv:2507.00917 .Ma, P.; Chen, P. Y.; Deng, B.; Tenenbaum, J. B.; Du, T.; Gan, C.; and Matusik, W. 2023. Learning neural constitutive laws from motion observations for generalizable pde dynamics. In International Conference on Machine Learning , 23279– 23300. PMLR. Mildenhall, B.; Srinivasan, P. P.; Tancik, M.; Barron, J. T.; Ramamoorthi, R.; and Ng, R. 2021. Nerf: Representing scenes as neural radiance fields for view synthesis. Commu-nications of the ACM , 65(1): 99–106. Shuai, Y.; Yu, R.; Chen, Y.; Jiang, Z.; Song, X.; Wang, N.; Zheng, J.; Ma, J.; Yang, M.; Wang, Z.; et al. 2025. Pugs: Zero-shot physical understanding with gaussian splatting. In 2025 IEEE International Conference on Robotics and Automation (ICRA) , 4478–4485. IEEE. Sun, J.; and Lu, C. 2025. Digital Gene: Learning about the Physical World through Analytic Concepts. arXiv preprint arXiv:2504.04170 .Wada, N.; Yamashita, K.; Kawahara, R.; and Nishino, K. 2025. M-PhyGs: Multi-Material Object Dynamics from Video. arXiv preprint arXiv:2512.16885 .Wu, T.; Zhang, J.; Fu, X.; Wang, Y.; Ren, J.; Pan, L.; Wu, W.; Yang, L.; Wang, J.; Qian, C.; et al. 2023. Omniob-ject3d: Large-vocabulary 3d object dataset for realistic per-ception, reconstruction and generation. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 803–814. Xu, X.; Ge, W.; Qiu, D.; Chen, Z.; Yan, D.; Liu, Z.; Zhao, H.; Zhao, H.; Zhang, S.; Liang, J.; et al. 2025. Gaussianproperty: Integrating physical properties to 3d gaussians with lmms. In Proceedings of the IEEE/CVF International Conference on Computer Vision , 7231–7240. Zhai, A. J.; Shen, Y.; Chen, E. Y.; Wang, G. X.; Wang, X.; Wang, S.; Guan, K.; and Wang, S. 2024. Physical prop-erty understanding from language-embedded feature fields. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 28296–28305. Zhang, T.; Yu, H.-X.; Wu, R.; Feng, B. Y.; Zheng, C.; Snavely, N.; Wu, J.; and Freeman, W. T. 2024. Physdreamer: Physics-based interaction with 3d objects via video generation. In Eu-ropean Conference on Computer Vision , 388–406. Springer. Zhao, H.; Wang, H.; Zhao, X.; Fei, H.; Wang, H.; Long, C.; and Zou, H. 2025a. PhysSplat: Efficient Physics Simulation for 3D Scenes via MLLM-Guided Gaussian Splatting. In 
+
+Proceedings of the IEEE/CVF International Conference on Computer Vision , 5242–5252. Zhao, Y.; Chen, H.; Liu, C.; Li, Z.; Herrmann, C.; Hur, J.; Li, Y.; Yang, M.-H.; Raj, B.; and Xu, M. 2025b. Masiv: Toward material-agnostic system identification from videos. arXiv preprint arXiv:2508.01112 .Zhong, L.; Yu, H.-X.; Wu, J.; and Li, Y. 2024. Reconstruc-tion and simulation of elastic objects with spring-mass 3d gaussians. In European Conference on Computer Vision ,407–423. Springer. Overview 
+
+This appendix provides: i) additional details on dataset gen-eration implementation; ii) extended experimental results and analyses; iii) the details of the MPM algorithm; iv) the prompts used for vision-language baselines. 
+
+Additional Dataset and Benchmark Details 
+
+Simulation and Rendering Settings 
+
+We use the Material Point Method (MPM) (Jiang et al. 2016) to generate dynamics trajectories. Each normalized mesh is first converted into volumetric particles at a sampling resolu-tion of 20 . During volume sampling, we establish correspon-dences between the sampled particles and the mesh vertices, allowing the simulated particle motion to be transferred back to the surface mesh for rendering. The sampled particles are then translated into the unit simulation domain [0 , 1] 3.The simulation domain is discretized using an MPM grid of resolution 32 . We use a time step of 5 × 10 −4 and apply gravity g = 9 .8m/s 2 as the external excitation. All instances share the same ground boundary and contact settings. Each trajectory is simulated for 1,200 steps. We record the particle positions x, displacements v, and deformation gradients F
+
+throughout the simulation. We render one frame every 50 simulation steps, includ-ing the initial state, resulting in 25 frames per sequence. All observations are rendered as monocular mask videos at a resolution of 512 × 512 . During training, we randomly sam-ple four views for each dynamics instance to reduce view-point bias. These views share the same underlying trajectory, physical states, and material annotations. During evaluation, we randomly select one view as input. The complete data-generation procedure is summarized in Algorithm 1. 
+
+Object Geometries and Data Splits 
+
+Our benchmark contains 60 object geometries, including 25 synthetic shapes and 35 everyday objects selected from Om-niObject3D (Wu et al. 2023). The synthetic set consists of basic primitives and manually constructed shapes, while the OmniObject3D objects provide more diverse and geometri-cally complex structures. We consider three material fami-lies: jelly , plasticine , and sand . Their constitutive formulations, varied parameters, and sampling ranges are summarized in Tab. 4. Before particle sampling, each mesh is centered and uniformly scaled to fit within the normalized space [−0.5, 0.5] 3.The training set contains 30 geometries, comprising 10 synthetic shapes and 20 OmniObject3D objects. For each geometry and each of the three material families, we sam-ple 100 material-parameter configurations. Young’s modu-lus and yield stress are sampled uniformly in the logarith-mic domain, while Poisson’s ratio and friction angle are sampled uniformly in their original domains. This produces 
+
+30 × 3 × 100 = 9 ,000 training instances in total. We construct two evaluation splits. The seen-object split uses the same 30 geometries as the training set but contains newly sampled material parameters that are not used during training. We sample 10 parameter configurations for each Algorithm 1: Paired Dynamics Data Generation 
+
+Require: Object mesh M, material model Φ, parameters θ,and simulation configuration Ω
+
+Ensure: Physical trajectory S and multi-view videos V 
+
+> 1:
+
+x0 ← SampleParticles (M) 
+
+> 2:
+
+W ← BindMesh (M, x0) 
+
+> 3:
+
+(v0, F0) ← InitializeState  
+
+> 4:
+
+S, V ← ∅  
+
+> 5:
+
+for t = 1 to T do  
+
+> 6:
+
+(xt, vt, Ft) ← MPMStep (xt−1, vt−1, Ft−1, Φ, θ, Ω)  
+
+> 7:
+
+if t is an output frame then  
+
+> 8:
+
+S ← S ∪ { (xt, vt, Ft)} 
+
+> 9:
+
+Vt ← UpdateMesh (M, xt, W) 
+
+> 10:
+
+V ← V ∪ RenderMultiView (Vt) 
+
+> 11:
+
+end if  
+
+> 12:
+
+end for  
+
+> 13:
+
+return S, V
+
+geometry and each material family, resulting in 30 ×3×10 = 900 instances. The unseen-object split contains the remaining 30 geome-tries, comprising 15 synthetic shapes and 15 OmniObject3D objects. None of these geometries appears during training. We again sample 10 parameter configurations for each geom-etry and each material family, resulting in 30 × 3 × 10 = 900 
+
+instances. 
+
+Additional Experimental Results 
+
+Evaluation on Seen Objects 
+
+We further isolate material-parameter inference from ge-ometric generalization. Specifically, we evaluate on the same 30 geometries used for training, while sampling new material-parameter configurations that are not observed dur-ing training. As shown in Table 2, all variants achieve nearly perfect material classification, indicating that material fam-ilies can be reliably distinguished when the geometry is fa-miliar. Our full model provides the best overall regression performance, achieving the lowest errors for E and ν on both jelly and plasticine, while substantially outperforming per-scene optimization across all three material families. The gains from alignment are smaller than those observed on unseen objects, and the unaligned model remains slightly better for plastic yield stress and sand friction angle. This is expected: when test geometries have already been ob-served during training, direct supervision can partially ex-ploit geometry-correlated cues. Under cross-shape general-ization, however, these shortcuts become unreliable, mak-ing the shape-independent dynamics structure introduced by alignment more important. These results show that our method preserves strong parameter interpolation on seen ge-ometries, while it also improves generalization to unseen objects. 
+
+Privileged-State Ablation on Seen Objects 
+
+The main ablation evaluates privileged physical states on unseen geometries, where the full state achieves the best Method Jelly Plasticine Sand 
+
+Acc. ↑ E ↓ ν ↓ Acc. ↑ E ↓ ν ↓ Y ield ↓ Acc. ↑ ϕ ↓
+
+Per-scene Optimization - 0.184 0.089 - 0.501 0.092 0.069 - 3.086 Ours (w/o alignment) 1.000 0.058 0.017 1.000 0.105 0.025 0.032 1.000 0.203 
+
+Ours (alignment only) 1.000 0.073 0.009 1.000 0.071 0.019 0.049 1.000 0.728 Ours (Full) 1.000 0.053 0.008 1.000 0.062 0.018 0.035 1.000 0.327 Table 2: Quantitative comparison on seen geometries with newly sampled material parameters. The test split uses the same 30 geometries as training but contains disjoint material-parameter configurations. We report material classification accuracy (↑) and material-specific parameter errors ( ↓). Young’s modulus E and yield stress σy are evaluated using log-MAE, while Poisson’s ratio ν and friction angle ϕ are evaluated using MAE. 0.00 0.01 0.02 0.03 0.04            
+
+> RegL1 ( ↓)
+> Full
+> x+Fx+vx
+> 0.006 0.027 0.006 0.027 0.017 0.024 0.031 0.030 0.034
+> Stage1 Stage2 No-align
+
+Figure 7: Ablation of privileged physical states on seen ob-jects with newly sampled material parameters. We com-pare position x, displacement v, and deformation gradient 
+
+F as inputs to the Stage I teacher, and report the RegL1 ( ↓)errors of both the teacher and its corresponding Stage II stu-dent. Gray lines connect each teacher–student pair, while the dashed line denotes the Stage II baseline without distillation. Stage-II performance. To determine whether this advantage mainly arises from cross-geometry generalization, we repeat the same ablation on seen geometries with newly sampled material parameters. As shown in Fig. 7, all distilled students outperform the Stage-II baseline without alignment, confirming that priv-ileged physical states provide a more informative learning target than material supervision alone. For Stage I, adding the deformation gradient reduces RegL1 from 0.031 with position alone to 0.006 , demonstrating its strong dynamics discriminability. For Stage II, however, x + v achieves the lowest error of 0.024 , slightly outperforming x + F and the full state, both at 0.027 . When geometry is familiar, displace-ment provides directly observable motion cues that the video model can readily match, reducing the benefit of additional deformation information. In contrast, the full state performs best on unseen geometries, where combining visible motion with fine-grained deformation responses is more important for reducing shape dependence. These results further show that privileged-state design must balance dynamics discrim-inability with visual transferability, and that the full state primarily benefits cross-shape generalization. 
+
+Temporal OOD Generalization on Unseen Objects 
+
+We further examine whether the model remains reliable when only shorter, unseen temporal observations are avail-able. Keeping the unseen-object split fixed, we evaluate the models trained with 25-frame videos using the first 
+
+K ∈ { 24 , 22 , 18 , 15 } consecutive frames, and directly feed the resulting variable-length sequence to the video encoder. We compare the full model with its unaligned counterpart. As shown in Table 3, performance remains nearly un-changed with 24 frames but gradually degrades as the ob-servation becomes shorter, since less motion and deforma-tion evidence is available for dynamics inference. The full model consistently outperforms the unaligned baseline, with a larger advantage under shorter observations. At 15 frames, it reduces the overall RegL1 from 0.224 to 0.138 . This sug-gests that physics-grounded alignment helps the video model extract more stable dynamics cues from incomplete temporal evidence. The remaining degradation under very short ob-servations also indicates that sufficiently informative motion is still necessary for accurate material inference. 
+
+Effect of Alignment and Inference Efficiency 
+
+Figure 8(a) provides additional visual evidence for the cen-tral finding in the main paper: physics-grounded alignment reduces the dependence of visual representations on object geometry. Without alignment, samples of the same mate-rial remain separated by geometry, forming shape-specific branches. After alignment, representations from different ge-ometries cluster more compactly according to material fam-ily. This complementary visualization further confirms that distillation shifts the organization of the visual space from geometric cues toward intrinsic dynamics, consistent with the improved Shape-OOD performance reported in the main experiments. Figure 8(b) further compares the average inference time per instance. Our method requires only 3.83 ms, achiev-ing orders-of-magnitude faster inference than VLM, Video-LLM, and per-scene optimization. This efficiency comes from predicting the material model and parameters in a sin-gle forward pass, without iterative simulation or test-time optimization. Together, these results show that our method Variant Frames Jelly Plasticine Sand Overall RegL1 ↓                                                                                                                     
+
+> Acc. ↑E↓ν↓Acc. ↑E↓ν↓Y ield ↓Acc. ↑ϕ↓
+> Ours (w/o alignment) 25 †0.997 0.265 0.043 1.000 0.223 0.024 0.115 0.943 1.991 0.082 24 0.997 0.286 0.042 1.000 0.230 0.024 0.114 0.943 2.004 0.082 22 1.000 0.451 0.041 1.000 0.325 0.024 0.195 0.963 3.548 0.109 18 1.000 0.776 0.057 0.993 0.792 0.025 0.657 0.867 7.217 0.185 15 0.940 0.712 0.063 0.870 0.936 0.042 1.220 0.037 8.136 0.224 Ours (Full) 25 †1.000 0.175 0.037 1.000 0.141 0.021 0.101 0.970 1.777 0.067 24 1.000 0.180 0.035 1.000 0.146 0.021 0.099 0.970 1.803 0.068 22 1.000 0.282 0.038 0.997 0.150 0.022 0.115 0.987 2.380 0.080 18 0.993 0.519 0.047 0.973 0.296 0.025 0.283 0.963 3.550 0.117 15 0.787 0.678 0.047 0.940 0.381 0.027 0.243 0.550 4.663 0.138
+
+Table 3: Temporal OOD generalization on unseen objects under varying observation lengths. We evaluate the models using different numbers of observed frames and report material classification accuracy ( ↑), material-specific parameter errors ( ↓), and the overall RegL1 error ( ↓). The 25-frame setting, marked by † and shaded in gray, is used during training, while the remaining observation lengths are unseen during training. w/ Alignment w/o Alignment 
+
+(a) (b) 
+
+Figure 8: (a) UMAP visualizations of Stage-II representations without and with alignment. Colors denote material families, while markers denote object geometries. Without alignment, samples form geometry-dependent branches; alignment brings different geometries of the same material closer, producing more compact and material-discriminative clusters. (b) Average inference time per instance on a logarithmic scale. Our feed-forward method requires only 3.83 ms, achieving orders-of-magnitude faster inference than Video-LLM, VLM, and per-scene optimization while maintaining accurate dynamics prediction. learns a more dynamics-centered visual representation while retaining the efficiency of feed-forward inference. 
+
+Constitutive Material Families and Parameters 
+
+Within the MPM framework, each material family is defined by an elastic constitutive law and a plastic projection. Given a trial deformation gradient Ftrial , the plastic model φP first projects it onto the admissible elastic domain, after which the elastic model φE computes the Kirchhoff stress τ :
+
+F = φP
+
+ Ftrial  , τ = φE (F). (10) For a deformation gradient F = UΣV T , we define 
+
+J = det( F), ϵ = log( Σ), ˆϵ = ϵ − tr( ϵ)
+
+d I, (11) where d = 3 is the spatial dimension. The Lamé parameters are computed from Young’s modulus E and Poisson’s ratio 
+
+ν as 
+
+μ = E
+
+2(1 + ν) , λ = Eν 
+
+(1 + ν)(1 − 2ν) . (12) 
+
+Jelly Material 
+
+We model jelly using CorotatedElasticity to-gether with IdentityPlasticity . This combination describes a purely elastic material without irreversible de-formation. 
+
+Identity plasticity. The identity projection leaves the trial deformation gradient unchanged: 
+
+F = Ftrial . (13) 
+
+Corotated elasticity. Given the polar rotation 
+
+R = UV T , (14) Material Elastic model Plastic model Sampled parameters and ranges                                             
+
+> Jelly Corotated Identity E∈[1 .5×10 4,1.5×10 6],ν∈[0 .20 ,0.40]
+> Plasticine Sigma von Mises E∈[5 ×10 4,5×10 5],ν∈[0 .35 ,0.48] ,σy∈[500 ,25000]
+> Sand Sigma Drucker–Prager E= 1 ×10 5,ν= 0 .30 ,ϕf∈[10 ◦,45 ◦]
+
+Table 4: Constitutive models and parameter ranges used for each material family. The selected parameter ranges span a broad spectrum of mechanical behaviors commonly observed within these material families. Here, E and ν denote Young’s modulus and Poisson’s ratio, respectively; ϕf denotes the friction angle; and σy is the yield stress. For sand , only ϕf is varied because it is the dominant parameter governing the observed frictional dynamics, while the remaining elastic parameters are fixed. the Kirchhoff stress is 
+
+τ = 2 μ (F − R) FT + λJ (J − 1) I. (15) The mechanical behavior of jelly is therefore controlled by Young’s modulus E and Poisson’s ratio ν. Young’s mod-ulus determines material stiffness, while Poisson’s ratio con-trols volumetric deformation. 
+
+Plasticine Material 
+
+We model plasticine using SigmaElasticity to-gether with VonMisesPlasticity . The elastic model describes the recoverable response, while the von Mises pro-jection introduces irreversible deformation once the yield limit is exceeded. 
+
+Von Mises plasticity. Let 
+
+Ftrial = UΣV T , ϵ = log( Σ). (16) The plastic multiplier is defined as 
+
+δγ = ∥ˆϵ∥ − σy
+
+2μ , (17) where σy is the yield stress. The corrected singular values are 
+
+ZVM (Σ) = 
+
+
+
+Σ, δγ ≤ 0,
+
+exp 
+
+
+
+ϵ − δγ ˆϵ
+
+∥ˆϵ∥
+
+
+
+, δγ > 0. (18) The corrected deformation gradient is then 
+
+F = UZVM (Σ)VT . (19) 
+
+Sigma elasticity. For the corrected deformation gradient 
+
+F = UΣV T , the Kirchhoff stress is computed in the loga-rithmic principal-strain space: 
+
+τ = U (2 μϵ + λ tr( ϵ)I) UT . (20) The behavior of plasticine is controlled by Young’s modulus E, Poisson’s ratio ν, and yield stress σy . The first two parameters determine its elastic response, while σy de-termines the onset of permanent deformation. 
+
+Sand Material 
+
+We model sand using SigmaElasticity together with 
+
+DruckerPragerPlasticity . The elastic response fol-lows Eq. (20), while the Drucker–Prager projection models pressure-dependent yielding and frictional flow. 
+
+Drucker–Prager plasticity. Let 
+
+Ftrial = UΣV T , ϵ = log( Σ). (21) We define 
+
+α =
+
+r 232 sin ϕf
+
+3 − sin ϕf
+
+, (22) where ϕf is the friction angle. The plastic multiplier is 
+
+δγ = ∥ˆϵ∥ + α (dλ + 2 μ) tr( ϵ)2μ . (23) The corrected singular values are defined as 
+
+ZDP (Σ) = 
+
+
+
+I, tr( ϵ) > 0,
+
+Σ, δγ ≤ 0 and tr( ϵ) ≤ 0,
+
+exp 
+
+
+
+ϵ − δγ ˆϵ
+
+∥ˆϵ∥
+
+
+
+, otherwise .
+
+(24) The corrected deformation gradient is 
+
+F = UZDP (Σ)VT . (25) The friction angle ϕf controls the shear resistance and flow behavior of sand . In our benchmark, we vary only ϕf ,which is the dominant factor governing the observed sand dynamics, while keeping E and ν fixed. 
+
+Material Point Method Formulation 
+
+In continuum mechanics (Chaves 2013), material motion is governed by the conservation of mass and linear momentum: 
+
+Dρ Dt + ρ∇ · v = 0 , ρ Dv
+
+Dt = ∇ · σ + ρg, (26) where ρ is the density, v is the velocity field, g is the gravita-tional acceleration, and σ is the Cauchy stress. The stress is determined by the constitutive law, which characterizes the material response to deformation. We solve these equations using an explicit Material Point Method (MPM) solver with affine particle-in-cell trans-fers (Jiang et al. 2016). MPM represents the material using Lagrangian particles and evaluates physical interactions on a background Eulerian grid. Each particle p stores its position 
+
+xp, mass mp, reference volume V 0 
+
+> p
+
+, velocity vp, deformation gradient Fp, and affine velocity matrix Cp. Each simulation step consists of particle-to-grid transfer, grid update, and grid-to-particle transfer. Let 
+
+wtip = Ni(xtp), ∇wtip = ∇Ni(xtp), (27) denote the interpolation weight and its spatial gradient be-tween particle p and grid node i. During particle-to-grid transfer, particle mass and momentum are accumulated on the grid: 
+
+mti = X
+
+p
+
+wtip mp, (28) 
+
+pti = X
+
+p
+
+wtip mp
+
+vtp + Ctp
+
+ xi − xtp
+
+ . (29) The internal force at each grid node is computed as 
+
+f int ,t i = − X
+
+p
+
+V 0
+
+p τ tp ∇wtip , (30) where τ tp denotes the particle stress measure used by the discrete MPM solver. For grid nodes with nonzero mass, the velocity is updated according to 
+
+vti = pti
+
+mti
+
+, (31) 
+
+evt+1 
+
+i = vti + ∆ t f int ,t i
+
+mti
+
++ g
+
+!
+
+, (32) 
+
+vt+1 
+
+i = B  evt+1 
+
+i
+
+ , (33) where B applies the prescribed boundary conditions and col-lision responses. The updated grid velocities are then interpolated back to the particles: 
+
+vt+1 
+
+p = X
+
+i
+
+wtip vt+1 
+
+i , (34) 
+
+xt+1 
+
+p = xtp + ∆ t vt+1 
+
+p . (35) Using quadratic B-spline interpolation, the affine velocity matrix is updated as 
+
+Ct+1 
+
+p = 4∆x2
+
+X
+
+i
+
+wtip vt+1 
+
+i
+
+ xi − xtp
+
+T , (36) where ∆x is the grid spacing. The trial deformation gradient is subsequently computed by 
+
+Ftr 
+
+p =  I + ∆ t Ct+1 
+
+p
+
+ Ftp. (37) We then apply the plastic projection and elastic stress map-ping: 
+
+Ft+1 
+
+p = φP
+
+ Ftr 
+
+p ; θP
+
+ , (38) 
+
+τ t+1 
+
+p = φE
+
+ Ft+1 
+
+p ; θE
+
+ , (39) where φP denotes the plastic projection, φE denotes the elas-tic constitutive model, and θP and θE are their corresponding material parameters. Here, Ft+1 
+
+p denotes the projected defor-mation gradient used for stress evaluation. For purely elastic materials, φP reduces to the identity mapping. All material families share the same MPM update proce-dure and differ only in their elastic model, plastic model, and associated material parameters. 
+
+Prompts for Vision-Language Baselines 
+
+We use GPT-5.5 as the VLM baseline and Gemini 3.5 Flash as the Video-LLM baseline. GPT-5.5 receives multi-view RGB images of the target object, whereas Gemini 3.5 Flash receives a monocular RGB video captured from a single view. The system prompt for both models is set as: 
+
+You are an expert assistant in continuum mechanics and Material Point Method (MPM) simulation. 
+
+For the VLM, the user prompt is designed for static spatial analysis: 
+
+### TASK OVERVIEW Given multi-view RGB images of a single 3D object, your task is to infer its physically plausible material model and material parameters for MPM simulation. 1. First, infer the most appropriate global material model for the whole object based on its visual appearance and expected physical behavior. 2. Then, infer the most likely continuous material parameter values required by the selected material model. Treat the object as a single material body. Do not decompose it into parts. ### INPUTS * Multi-view RGB images of the target object. ### Material Model Candidates The material model must be selected from the following list: - elastic - plasticine - sand ### Material Parameters The required material parameters depend on the selected material model: - elastic: - Young’s Modulus - Poisson’s Ratio - plasticine: - Young’s Modulus - Poisson’s Ratio - yield stress - sand: - friction angle ### Parameter meaning Young’s Modulus controls stiffness. A larger value means the object is harder to deform, while a smaller value means it is softer or more flexible. Poisson’s Ratio controls lateral expansion under compression. For most solid materials, it should be between 0 and 0.5. Yield stress controls when a plastic material starts to undergo irreversible deformation. A larger value means the material resists plastic flow more strongly. Friction angle controls the internal friction of granular material. A larger value means the material forms steeper piles and resists flow more strongly. ### REQUIRED OUTPUT (JSON) You MUST output a JSON object containing: {"material": {"material_model": "elastic | plasticine | sand", "material_parameters": {"...": value }}, "reasoning": "Brief explanation of the visual cues and physical intuition used to select the material model and parameter values." }### Important Rules 1. Select exactly one material model. 2. Only output the parameters required by the selected material model. 3. Do not output parameters for unselected material models. 4. All continuous parameters must be output as single scalar values, not ranges. 5. The parameter values should be physically plausible for MPM simulation. 6. If the visual evidence is ambiguous, choose the most likely material model and output conservative parameter values. 7. Output only valid JSON. Do not include markdown, comments, or any extra text outside the JSON object. 
+
+For the Video-LLM, the user prompt is designed for temporal evolution analysis: 
+
+### TASK OVERVIEW Given a motion video of a single object, your task is to infer its physically plausible material model and material parameters for MPM simulation. You should perform the inference in two steps: 1. First, infer the most appropriate global material model for the whole object based on its observed motion, deformation behavior, and visual appearance. 2. Then, infer the most likely continuous material parameter values required by the selected material model. Treat the object as a single material body. Do not decompose it into parts. The video contain object motion caused by gravity, collision, compression. You should use the dynamic cues in the video as the primary evidence, and use visual appearance as secondary evidence when the motion is ambiguous. ### INPUTS * A motion video of the target object. ### MATERIAL MODEL CANDIDATES The material model must be selected from the following list: - elastic - plasticine - sand ### MATERIAL PARAMETERS The required material parameters depend on the selected material model: - elastic: - Young’s Modulus - Poisson’s Ratio - plasticine: - Young’s Modulus - Poisson’s Ratio - yield stress - sand: - friction angle ### PARAMETER MEANING Young’s Modulus controls stiffness. A larger value means the object is harder to deform, while a smaller value means it is softer or more flexible. Poisson’s Ratio controls lateral expansion under compression. For most solid materials, it should be between 0 and 0.5. Yield stress controls when a plastic material starts to undergo irreversible deformation. A larger value means the material resists plastic flow more strongly. Friction angle controls the internal friction of granular material. A larger value means the material forms steeper piles and resists flow more strongly. ### DYNAMIC CUES TO CONSIDER Use the object’s motion and deformation behavior in the video to guide your inference: - If the object deforms under force but recovers its original shape, bounces, oscillates, or shows reversible deformation, it is likely elastic. - If the object deforms and does not fully recover, keeps adent, flattens, spreads, or undergoes permanent shape change, it is likely plasticine. - If the object consists of many small grains, flows, piles up, collapses, avalanches, or forms a slope under gravity, it is likely sand. For elastic materials: - Larger Young’s Modulus should be assigned when the object appears stiff, deforms only slightly, rebounds quickly, or preserves its shape. - Smaller Young’s Modulus should be assigned when the object appears soft, bends strongly, compresses visibly, or oscillates slowly. - Poisson’s Ratio should be higher for nearly incompressible soft materials such as rubber-like objects. For plasticine materials: - Larger Young’s Modulus should be assigned when the object resists deformation before yielding. - Smaller Young’s Modulus should be assigned when the object is easily compressed or reshaped. - Larger yield stress should be assigned when permanent deformation starts only under strong force. - Smaller yield stress should be assigned when the object yields easily and retains deformation under weak force. For sand materials: - Larger friction angle should be assigned when the granular material forms a steep stable pile and resists flow. - Smaller friction angle should be assigned when it flows easily, spreads widely, or forms a shallow pile. ### REQUIRED OUTPUT (JSON) You MUST output a JSON object containing: {"material": {"material_model": "elastic | plasticine | sand", "material_parameters": {"...": value }}, "reasoning": "Brief explanation of the observed motion/deformation cues and physical intuition used to select the material model and parameter values." }### IMPORTANT RULES 1. Select exactly one material model. 2. Only output the parameters required by the selected material model. 3. Do not output parameters for unselected material models. 4. All continuous parameters must be output as single scalar values, not ranges. 5. The parameter values should be physically plausible for MPM simulation. 6. Use dynamic cues from the video as the primary evidence. 7. Use visual appearance only as secondary evidence when motion cues are insufficient or ambiguous. 8. If the video does not clearly show deformation or interaction, choose the most likely material model based on appearance and output conservative parameter values. 9. Output only valid JSON. Do not include markdown, comments, or any extra text outside the JSON object.

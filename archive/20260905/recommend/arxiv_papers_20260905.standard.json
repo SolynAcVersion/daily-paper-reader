@@ -1,0 +1,520 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-05T22:08:17.258783+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 5,
+    "deep_cap": 8,
+    "deep_selected": 5,
+    "quick_candidates": 6,
+    "quick_skim_target": 13,
+    "quick_selected": 6
+  },
+  "deep_dive": [
+    {
+      "id": "2609.00646v1",
+      "source": "arxiv",
+      "title": "DramaChain Bench: An End-to-End Benchmark for Short-Drama Generation",
+      "abstract": "Commercial short-drama production follows a multi-stage chain: script, storyboard, keyframe imagery, shot-level video, and the finished short drama. Most existing benchmarks evaluate solely the video-generation stage using pre-authored inputs instead of real upstream pipeline outputs. This leaves two critical questions unanswerable: whether each stage adheres to the original script intent (rather than only its immediate input prompt), and whether disparate shots remain coherent after assembly into multi-episode releases. We present DramaChain Bench, the first short-drama benchmark that evaluates every stage of the complete production chain. It is built upon three in-house systems sharing one dimension system, DramaChain Dimensions: five evaluation axes instantiated at every stage, resolving into 63 leaf dimensions. DramaChain Agent is calibrated against commercial short-drama platforms in both workflow and finished short-drama quality, enabling stage-wise fair comparison across models. DramaChain Labeling System has each of the 5,785 items scored independently by three professional annotators, with all defects spatio-temporally localised and selected from a predefined defect list. This process produces 17,488 valid scores and 255,925 traceable attribution records. The human annotations confirm that upstream defects cascade across the pipeline, demonstrating that final episode quality is not governed by video generation alone. DramaChain Agentic Judge then scores every leaf dimension automatically, gathering evidence over multiple agentic rounds before judging against a per-item checklist; it reproduces the model ranking at a mean PLCC of 0.918, enough to admit new models at no annotation cost.",
+      "authors": [
+        "Haoyuan Shi",
+        "Mingtao Chen",
+        "Shuo Jiang",
+        "Ziyan Chen",
+        "Xuyi Sheng",
+        "Yiming Liu",
+        "Ying Zhang",
+        "Miao Wang",
+        "Jianxiang Lu",
+        "Fanyang Lu",
+        "Songyuanyi Lu",
+        "Xiele Wu",
+        "Zhichao Hu",
+        "Yuhong Liu",
+        "Richeng Xuan"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-01T03:23:45+00:00",
+      "link": "https://arxiv.org/pdf/2609.00646v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "query:manga-drama",
+        "query:phys-video"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "End-to-end benchmark for the entire short-drama production chain",
+      "llm_evidence_cn": "覆盖短剧生产全链路的端到端评测基准",
+      "llm_evidence": "覆盖短剧生产全链路的端到端评测基准",
+      "canonical_evidence": "覆盖短剧生产全链路的端到端评测基准",
+      "llm_tldr_en": "DramaChain Bench is the first benchmark that evaluates every stage of commercial short-drama production, from script and storyboard to keyframes, shot-level video and final assembly, checking both script-intent adherence and cross-shot coherence.",
+      "llm_tldr_cn": "商业短剧制作通常需要经过剧本、分镜、关键帧、镜头级视频到成片的完整流程，现有基准只评测视频生成环节，难以验证各阶段是否忠于原始剧本、多镜头拼接后是否连贯。论文提出DramaChain Bench，这是首个覆盖完整短剧生产链的端到端基准。它基于三个自建系统并共享五维评测体系，对每一步都进行独立评价，同时衡量跨镜头、跨剧集的一致性。该基准为短剧生成提供了系统化的评测方法与建设基线。",
+      "llm_tldr": "商业短剧制作通常需要经过剧本、分镜、关键帧、镜头级视频到成片的完整流程，现有基准只评测视频生成环节，难以验证各阶段是否忠于原始剧本、多镜头拼接后是否连贯。论文提出DramaChain Bench，这是首个覆盖完整短剧生产链的端到端基准。它基于三个自建系统并共享五维评测体系，对每一步都进行独立评价，同时衡量跨镜头、跨剧集的一致性。该基准为短剧生成提供了系统化的评测方法与建设基线。",
+      "llm_tags": [
+        "query:manga-drama:composite"
+      ],
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation.",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.04200v1",
+      "source": "arxiv",
+      "title": "Principia: Relational Physics Tests for Video Models",
+      "abstract": "Evaluating physical reasoning in video models is difficult because absolute motion measurements depend on frame rate, object scale, and camera calibration, all of which are often ambiguous or unavailable in generated video. We propose a different approach. When two objects in the same scene obey the same physical law, their motions must satisfy predictable relationships, and these relationships hold independent of calibration. We introduce Principia, a benchmark that evaluates Newtonian physics through relational consistency between paired objects. Principia spans eight phenomena - gravity, restitution, friction, rotational inertia, projectile motion, momentum, pendulum, and mass-spring oscillation - across translational, rotational, collisional, and oscillatory dynamics, using real-world scenes recorded under controlled protocols. We also introduce a calibration-independent consistency score that quantifies physical violation directly in image space. Across thousands of generations from six state-of-the-art video generators, no model exceeds 0.42 on Principia despite all scoring around 0.8 on VBench. Vision-language models are evaluated on their ability to detect relational physics violations, with the best model achieving only 67% accuracy and most performing near chance level.",
+      "authors": [
+        "Varun Varma Thozhiyoor",
+        "Shivam Tripathi",
+        "Venkatesh Babu Radhakrishnan",
+        "Anand Bhattad"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-03T17:59:50+00:00",
+      "link": "https://arxiv.org/pdf/2609.04200v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Evaluation benchmark for physics correctness in generated videos",
+      "llm_evidence_cn": "视频物理正确性评估基准",
+      "llm_evidence": "视频物理正确性评估基准",
+      "canonical_evidence": "视频物理正确性评估基准",
+      "llm_tldr_en": "Principia is a relational physics benchmark that evaluates video models through consistency between paired objects subject to the same physical law, spanning eight Newtonian phenomena across motion types and avoiding calibration dependence.",
+      "llm_tldr_cn": "评估生成视频的物理正确性常受帧率、物体尺度和相机标定的影响，难以用绝对运动度量。为此提出Principia基准，利用同一场景中受同一物理规律支配的两个物体之间必须满足的关系一致性来检验视频模型，从而消除标定依赖。基准涵盖重力、摩擦、动量等八类经典力学现象，并跨越平移、转动、碰撞与振荡等动力学类型，能够在无外部标定条件下衡量模型是否符合牛顿物理。该方法为视频生成和视频理解的物理合理性评估提供了可靠且可复现的新途径。",
+      "llm_tldr": "评估生成视频的物理正确性常受帧率、物体尺度和相机标定的影响，难以用绝对运动度量。为此提出Principia基准，利用同一场景中受同一物理规律支配的两个物体之间必须满足的关系一致性来检验视频模型，从而消除标定依赖。基准涵盖重力、摩擦、动量等八类经典力学现象，并跨越平移、转动、碰撞与振荡等动力学类型，能够在无外部标定条件下衡量模型是否符合牛顿物理。该方法为视频生成和视频理解的物理合理性评估提供了可靠且可复现的新途径。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "benchmark for evaluating physical correctness in video generation models",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.29621v1",
+      "source": "arxiv",
+      "title": "CineForge: Self-Improving Agents for Long-Horizon Video Generation",
+      "abstract": "Long-horizon story-driven video generation requires a production agent to coordinate narrative decomposition, state tracking, shot design, prompt construction, rendering, and revision across interdependent scenes. Existing adaptive video systems primarily refine requests or reusable skills, leaving recurring production failures disconnected from persistent, stage-targeted improvements across stories. We introduce CineForge, a self-evolving video-production agent framework that couples CineForge-Produce for video generation with CineForge-Evolve for cross-story policy evolution. CineForge-Produce organizes each source story into typed narrative, character, spatial, and cinematic states, uses them to coordinate asset and clip generation, and records the process as a canonical production trajectory. CineForge-Evolve applies Case-to-Pattern-to-Policy Evolution (CPPE) to review trajectory evidence, consolidate recurrent findings into bounded stage-local patches, and deploy validated updates through structural replay and confidence-controlled paired evaluation. To measure complete story realization, we introduce CineScope, which combines a 100-script CineScope-Data suite with a human-aligned, multiscale CineScope-Metric spanning causal state, directorial orchestration, pacing and resource allocation, and character arc. Across CineScope-Data and two public benchmarks, the evolved CineForge policy improves CineScope-Metric from 4.024 to 4.380, outperforms three long-video baselines with consistent gains under ScriptAgent, and reduces review LLM calls by 37.0% on new stories. These results establish production trajectories as actionable experience for video agents that improve cumulatively across long-form storytelling tasks.",
+      "authors": [
+        "Junxiang Liu",
+        "Lin Wang",
+        "Haiyu Shi",
+        "Hongxu Ma",
+        "Xiaoyu Yang",
+        "Chunjie Chen",
+        "Xiaoxiao Xu",
+        "Kaiqiao Zhan",
+        "Boao Wang",
+        "Shuizhou Shi",
+        "Tianyun Zhu",
+        "Jie Li",
+        "Jiangtong Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-30T07:29:46+00:00",
+      "link": "https://arxiv.org/pdf/2608.29621v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "self-improving production agent for automated long-horizon story video generation",
+      "llm_evidence_cn": "自改进的视频制作智能体，可自动完成长叙事视频生成与跨故事迭代",
+      "llm_evidence": "自改进的视频制作智能体，可自动完成长叙事视频生成与跨故事迭代",
+      "canonical_evidence": "自改进的视频制作智能体，可自动完成长叙事视频生成与跨故事迭代",
+      "llm_tldr_en": "CineForge is a self-evolving video production agent pairing a Produce module for narrative, character, spatial and cinematic states with an Evolve module for cross-story policy learning, enabling automated long-horizon story-driven video generation and accumulated failure fixes; it transfers well to manga-style micro-drama production.",
+      "llm_tldr_cn": "故事型长视频生成要求制作系统在多镜头之间统筹叙事、角色、空间与镜头状态，并持续修复制作失败。CineForge 提出双模块框架：Produce 负责将故事分解为各类状态并协调资产与片段生成，Evolve 跨故事提取策略并改进制作流程。该方法让视频制作智能体可以跨故事积累并复用成功策略，减少重复性失败。对3-5分钟漫剧等自动短视频生成具有很强的迁移价值。",
+      "llm_tldr": "故事型长视频生成要求制作系统在多镜头之间统筹叙事、角色、空间与镜头状态，并持续修复制作失败。CineForge 提出双模块框架：Produce 负责将故事分解为各类状态并协调资产与片段生成，Evolve 跨故事提取策略并改进制作流程。该方法让视频制作智能体可以跨故事积累并复用成功策略，减少重复性失败。对3-5分钟漫剧等自动短视频生成具有很强的迁移价值。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "automated creation of short drama videos",
+      "matched_requirement_id": "req-20",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.30692v1",
+      "source": "arxiv",
+      "title": "Can Video World Models Track Unobserved World States?",
+      "abstract": "Video world models are increasingly used as simulators, yet visual fidelity alone does not show that a model maintains the hidden state of the world. We examine this gap with an action-conditioned video Shell Game, a visual analog of $S_5$ state tracking that decouples visual rendering from compositing the hidden state underneath. Bidirectional and autoregressive Transformers, Mamba, and linear attention restricted to nonnegative transition eigenvalues all fit the training horizon of 5 swaps and then fall toward chance on longer swap chains (extrapolation) while still rendering plausible video with additional denoising steps providing no benefit. The pixel-based diffusion target never supervises the unseen hidden state, so the generated frames cannot carry it and the state has to live inside the architecture rather than in the tokens. For a Transformer, that architectural state is only an append-only KV cache, so the model has to re-derive the hidden arrangement from the whole history at every chunk. We find two mechanisms that do extrapolate, and both carry a state across chunks and revise it in place. Linear attention succeeds once its transition eigenvalues may be negative, and TTT with a nonlinear fast weight succeeds by updating the feature map through which it reads its own state. We further examine harder cases in dynamic world exploration tasks, and discuss the broader implications for building stateful video world models.",
+      "authors": [
+        "Joonghyuk Shin",
+        "Yicong Hong",
+        "Jaesik Park",
+        "Xun Huang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-31T12:29:24+00:00",
+      "link": "https://arxiv.org/pdf/2608.30692v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Shell Game benchmark probes whether video world models track hidden world state while rendering plausible frames, directly relevant to physical correctness evaluation in generative video models",
+      "llm_evidence_cn": "Shell Game基准考察生成的貌似合理视频是否保持隐藏世界状态，与生成视频物理正确性评测直接相关",
+      "llm_evidence": "Shell Game基准考察生成的貌似合理视频是否保持隐藏世界状态，与生成视频物理正确性评测直接相关",
+      "canonical_evidence": "Shell Game基准考察生成的貌似合理视频是否保持隐藏世界状态，与生成视频物理正确性评测直接相关",
+      "llm_tldr_en": "Video world models can render plausible frames yet fail to track unobserved world states beyond training. The action-conditioned Shell Game decouples rendering from state composition; tested models fit five swaps then collapse on longer chains because pixel targets never supervise hidden state.",
+      "llm_tldr_cn": "针对视频世界模型仅追求视觉保真度而忽视隐状态的问题，作者构造动作条件下的Shell Game基准，把视觉渲染与下方隐状态合成拆开。双向及自回归Transformer、Mamba与线性注意力模型都能拟合训练中的5次交换，但在更长交换链上退化为随机，且额外去噪步数无帮助。结果表明基于像素的扩散目标从未监督不可见隐状态，生成的帧无法携带状态信息，为评测和训练物理状态一致的生成模型提供了关键诊断。",
+      "llm_tldr": "针对视频世界模型仅追求视觉保真度而忽视隐状态的问题，作者构造动作条件下的Shell Game基准，把视觉渲染与下方隐状态合成拆开。双向及自回归Transformer、Mamba与线性注意力模型都能拟合训练中的5次交换，但在更长交换链上退化为随机，且额外去噪步数无帮助。结果表明基于像素的扩散目标从未监督不可见隐状态，生成的帧无法携带状态信息，为评测和训练物理状态一致的生成模型提供了关键诊断。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "benchmark for evaluating physical correctness in video generation models",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.03952v1",
+      "source": "arxiv",
+      "title": "WorldReward: Reward Modeling for Camera-Conditioned World Models",
+      "abstract": "Camera-conditioned world models generate interactive videos in which commanded actions should induce the expected scene changes while appearance, geometry, and temporal dynamics remain coherent. Existing rewards assess these requirements separately: geometry-based rewards estimate trajectory execution but cannot judge the visual quality of the executed motion, whereas image-based rewards measure frame quality without capturing action execution or temporal dynamics. We posit that a vision-language model (VLM) offers a shared reasoning space for relating actions to their visual outcomes. However, judging a complete long video against its full action sequence creates a lengthy, noisy context in which short-lived local action evidence can be missed or diluted. We present WorldReward, a VLM-based pairwise preference reward model that unifies action-consistency and visual-quality evaluation for camera-conditioned world models. WorldReward decomposes paired videos into action-aligned chunks, organizes each chunk into structured visual evidence, and aggregates chunk-level decisions by voting into separate video-level action and visual-quality preferences. To train it, we construct a large-scale reasoning-augmented preference dataset using structured judgments generated by a frontier VLM and refined through tool-based agent auditing and targeted human review. We further introduce WorldReward-Bench, a human-annotated benchmark measuring reward-model agreement with human preferences across action consistency, appearance quality, and motion quality. WorldReward achieves the highest agreement on all three dimensions, exceeding GPT-5.5 by 3.42, 1.45, and 3.56 percentage points, respectively. When used for RL post-training of HY-WorldPlay 1.5, it consistently improves both action execution and visual quality across short- to long-term horizons.",
+      "authors": [
+        "Yibin Wang",
+        "Zehan Wang",
+        "Junshu Tang",
+        "Zhimin Li",
+        "Yujie Zhou",
+        "Jiazi Bu",
+        "Pengyang Ling",
+        "Feng Han",
+        "Zhixiong Zhang",
+        "Long Xing",
+        "Shengyuan Ding",
+        "Ziang Li",
+        "Cheng Jin",
+        "Yuhang Zang",
+        "Jiaqi Wang",
+        "Tianyu Pang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-03T14:53:53+00:00",
+      "link": "https://arxiv.org/pdf/2609.03952v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "VLM reward modeling for camera-conditioned world models to keep commanded scene changes and temporal dynamics coherent",
+      "llm_evidence_cn": "面向相机条件世界模型的奖励建模，旨在保持指令场景变化与时间动力学的连贯性",
+      "llm_evidence": "面向相机条件世界模型的奖励建模，旨在保持指令场景变化与时间动力学的连贯性",
+      "canonical_evidence": "面向相机条件世界模型的奖励建模，旨在保持指令场景变化与时间动力学的连贯性",
+      "llm_tldr_en": "Proposes a VLM-based reward model (WorldReward) for camera-conditioned world models, jointly scoring action execution, appearance, geometry and temporal dynamics instead of relying on separate trajectory or frame-quality rewards.",
+      "llm_tldr_cn": "相机条件的世界模型生成互动视频时，需要保证指令对应的场景变化与外观、几何和时序动力学保持连贯。现有奖励要么只评估几何轨迹，要么只看单帧质量，无法同时刻画动作执行与时间动态。该文提出 WorldReward，利用视觉语言模型的共享推理空间为长视频与完整动作序列建立奖励，并在相关评测中验证其优于分离式奖励。该奖励建模可直接服务于世界模型的强化学习训练，提升生成视频的动态合理性。",
+      "llm_tldr": "相机条件的世界模型生成互动视频时，需要保证指令对应的场景变化与外观、几何和时序动力学保持连贯。现有奖励要么只评估几何轨迹，要么只看单帧质量，无法同时刻画动作执行与时间动态。该文提出 WorldReward，利用视觉语言模型的共享推理空间为长视频与完整动作序列建立奖励，并在相关评测中验证其优于分离式奖励。该奖励建模可直接服务于世界模型的强化学习训练，提升生成视频的动态合理性。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "improve physical plausibility of video generation using reinforcement learning",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.29910v1",
+      "source": "arxiv",
+      "title": "Matrix-Game 3.5: Enhancing Real-Time Streaming Interactive World Models with Patch Memory",
+      "abstract": "Interactive world models extend video generation from offline clip synthesis toward persistent simulation of interactive virtual worlds, enabling applications in games, robotics, embodied agents, and XR. Achieving stable long-horizon interactive generation, however, remains challenging, as the model must simultaneously preserve scene geometry, dynamic consistency, and camera control while supporting real-time autoregressive generation. Building upon Matrix-Game 3.0, we present Matrix-Game 3.5, as shown in Figure 1, which advances real-time interactive world generation toward geometry-aware and long-horizon consistent simulation through three key improvements. First, we propose a unified geometry-aware memory framework, whose patch-memory and tiled-PRoPE components introduce no additional learnable parameters, combining explicit 3D patch retrieval with projective camera conditioning to enable geometry-consistent camera control and faithful long-horizon scene recall. Second, we introduce a static-dynamic disentangled world representation that separately models static scene geometry and dynamic subjects, preserving both geometric consistency and subject identity throughout long-horizon generation. Third, we develop a two-stage progressive real-time distillation framework that converts a bidirectional diffusion model into a few-step causal generator through Perceptual Flow Matching and curriculum based Self-Rollout DMD, enabling minute-long real-time interactive generation. Extensive experiments demonstrate that, with a unified training corpus spanning Unreal simulation environments, open-world games, and internet videos, MatrixGame 3.5 achieves strong performance in long-horizon scene recall, precise camera control, subject consistency, prompt-driven world generation, and stable real-time open-world interaction.",
+      "authors": [
+        "Runjia Qian",
+        "Zile Wang",
+        "Jihai Zhang",
+        "Kai Zou",
+        "Wei Yu",
+        "Jiaxing Li",
+        "Zexiang Liu",
+        "Yaokun Li",
+        "Fei Kang",
+        "Kaichen Huang",
+        "Mengyin An",
+        "Haobo Zhang",
+        "Biao Jiang",
+        "Jiahua Wang",
+        "Haofeng Sun",
+        "Yang Liu",
+        "Yangguang Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-30T17:11:00+00:00",
+      "link": "https://arxiv.org/pdf/2608.29910v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Geometry-aware patch memory preserves scene geometry and dynamic consistency across long-horizon generated video",
+      "llm_evidence_cn": "基于几何感知的补丁记忆在长时程视频生成中保持场景几何与动力学一致性",
+      "llm_evidence": "基于几何感知的补丁记忆在长时程视频生成中保持场景几何与动力学一致性",
+      "canonical_evidence": "基于几何感知的补丁记忆在长时程视频生成中保持场景几何与动力学一致性",
+      "llm_tldr_en": "Matrix-Game 3.5 introduces a unified geometry-aware patch-memory framework to improve real-time interactive world models, achieving more stable long-horizon consistency of scene geometry, dynamics, and camera control during autoregressive generation.",
+      "llm_tldr_cn": "交互式世界模型要把视频生成从离线片段推向可持续的虚拟世界模拟，难点在于同时维持场景几何、动态一致性和相机控制。论文在Matrix-Game 3.0基础上提出3.5版本，引入统一的几何感知记忆框架，通过补丁记忆在实时自回归生成中保持几何结构和动态演化的一致性。仿真结果表明该系统在长时程交互生成中比前代更稳定，为游戏、机器人和扩展现实领域的物理一致视频生成提供了结构化的架构改进。",
+      "llm_tldr": "交互式世界模型要把视频生成从离线片段推向可持续的虚拟世界模拟，难点在于同时维持场景几何、动态一致性和相机控制。论文在Matrix-Game 3.0基础上提出3.5版本，引入统一的几何感知记忆框架，通过补丁记忆在实时自回归生成中保持几何结构和动态演化的一致性。仿真结果表明该系统在长时程交互生成中比前代更稳定，为游戏、机器人和扩展现实领域的物理一致视频生成提供了结构化的架构改进。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "ensuring physical properties remain coherent across video frames",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.30450v1",
+      "source": "arxiv",
+      "title": "FlowVVTON: Flow-Guided Mask-Free Video Virtual Try-On",
+      "abstract": "Video virtual try-on aims to transfer a target garment onto a moving person across video frames. Current methods rely on human parsing masks or pose keypoints that frequently fail under large motions and occlusions, causing boundary artifacts and temporal inconsistency. A further limitation is that most approaches rely solely on attention mechanisms for temporal modeling, providing no explicit motion supervision. We propose FlowVVTON, a mask-free framework that eliminates parsing mask dependency entirely. Optical flow is used solely as a training-time supervision signal: a flow-warped latent loss, applied across all layers of the generation model, enforces multi-scale temporal consistency by aligning adjacent-frame features under explicit physical motion constraints. A two-stage training strategy establishes mask-free spatial alignment before introducing flow-guided temporal supervision. Experiments on TikTokDress show that FlowVVTON outperforms baselines by substantial margins, particularly in temporal consistency (5.7$\\times$ VFID-R improvement over SwiftTry), while requiring no segmentation masks, pose keypoints, or region annotations at any stage.",
+      "authors": [
+        "Shengyao Chen",
+        "Xianbing Sun",
+        "Liqing Zhang",
+        "Jianfu Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-31T08:37:47+00:00",
+      "link": "https://arxiv.org/pdf/2608.30450v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "uses optical flow as training-time supervision to enforce multi-scale temporal consistency under explicit physical motion constraints across video frames",
+      "llm_evidence_cn": "利用光流作为训练期监督，在视频虚拟试穿中施加显式物理运动约束，提升跨帧时间一致性",
+      "llm_evidence": "利用光流作为训练期监督，在视频虚拟试穿中施加显式物理运动约束，提升跨帧时间一致性",
+      "canonical_evidence": "利用光流作为训练期监督，在视频虚拟试穿中施加显式物理运动约束，提升跨帧时间一致性",
+      "llm_tldr_en": "FlowVVTON is a mask-free video virtual try-on framework that uses optical flow only as a training-time supervision signal, applying a flow-warped latent loss across layers to enforce multi-scale temporal consistency under explicit physical motion constraints.",
+      "llm_tldr_cn": "现有视频虚拟试穿依赖人体解析掩码或姿态关键点，在大幅运动和遮挡时易出现边界伪影和时间不一致，且缺乏显式运动监督。本文提出FlowVVTON，完全移除掩码依赖，仅将光流作为训练期监督信号，在生成模型各层施加流扭曲潜空间损失，以显式物理运动约束对齐相邻帧特征，实现多尺度时间一致性。实验表明该方法能有效改善大运动场景下的时序稳定性和视觉效果，为需要物理运动约束的视频生成提供了可借鉴的训练信号设计范式。",
+      "llm_tldr": "现有视频虚拟试穿依赖人体解析掩码或姿态关键点，在大幅运动和遮挡时易出现边界伪影和时间不一致，且缺乏显式运动监督。本文提出FlowVVTON，完全移除掩码依赖，仅将光流作为训练期监督信号，在生成模型各层施加流扭曲潜空间损失，以显式物理运动约束对齐相邻帧特征，实现多尺度时间一致性。实验表明该方法能有效改善大运动场景下的时序稳定性和视觉效果，为需要物理运动约束的视频生成提供了可借鉴的训练信号设计范式。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "ensuring physical properties remain coherent across video frames",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.02367v1",
+      "source": "arxiv",
+      "title": "The Missing Temporal Link: Temporal Context Routing for Script-Driven Audio-Video Generation",
+      "abstract": "Joint audio-video generation models have made substantial progress in visual quality and audio-visual synchronization. However, they still provide limited control over when shot transitions occur and dialogue is spoken. This limitation constrains their application in script-driven content creation, where timing errors can undermine narrative coherence and the viewing experience. Current joint generators align video and audio representations on a shared temporal axis, yet the precise timing of shots and dialogue specified in a structured prompt is encoded only in the prompt's text representation and remains unaligned with the temporal coordinates of either modality. Consequently, video and audio may remain synchronized with each other while both fail to follow the script timeline. This mismatch motivates us to extend temporal alignment beyond video and audio to include the structured script. We therefore introduce Temporal Context Routing (TCR), which maps the script timing onto the shared temporal axis of video and audio generation and routes each prompt's guidance to the corresponding positions in both modalities. Compared with the baseline on 200 test scripts, TCR reduces Shot Boundary MAE by 96%, from 1.11 s to 0.042 s, and raises Dialogue Acc@0.5 s from 28.3% to 84.1%. TCR achieves these improvements while maintaining visual quality and audio-visual synchronization comparable to those of the baselines. A user study further shows that participants prefer TCR on all five evaluated dimensions.",
+      "authors": [
+        "Yichen Liu",
+        "Quanwei Zhang",
+        "Haozhe Wang",
+        "Donghao Zhou",
+        "Xiaojie Li",
+        "Yang Shi",
+        "Jiaming Liu",
+        "Ruihua Huang",
+        "Yingtian Zou",
+        "Daquan Zhou"
+      ],
+      "primary_category": "cs.MM",
+      "categories": [
+        "cs.MM",
+        "cs.CV"
+      ],
+      "published": "2026-09-02T09:39:50+00:00",
+      "link": "https://arxiv.org/pdf/2609.02367v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "script-driven joint audio-video generation controlling shot transitions and dialogue timing; enables automated creation of short dramatic content",
+      "llm_evidence_cn": "面向脚本的联合音视频生成，可控制镜头切换与对白节奏，支撑短剧类内容自动制作",
+      "llm_evidence": "面向脚本的联合音视频生成，可控制镜头切换与对白节奏，支撑短剧类内容自动制作",
+      "canonical_evidence": "面向脚本的联合音视频生成，可控制镜头切换与对白节奏，支撑短剧类内容自动制作",
+      "llm_tldr_en": "Joint audio-video generators ignore timing of shots and dialogue in scripts. Temporal Context Routing aligns structured-prompt timing with both modalities, enabling coherent script-driven content such as short dramas.",
+      "llm_tldr_cn": "针对脚本驱动的音视频联合生成难以控制镜头切换与对白时间点的局限，本文提出时间上下文路由机制，将结构化提示中的时间信息显式对齐到视频与音频的时间坐标。该方法服务于剧本类叙事内容创作，能够缓解时序错误造成的叙事不连贯。实验表明它能按脚本时序生成同步的音视频内容，为自动化短剧生成提供了直接可用的建模思路。",
+      "llm_tldr": "针对脚本驱动的音视频联合生成难以控制镜头切换与对白时间点的局限，本文提出时间上下文路由机制，将结构化提示中的时间信息显式对齐到视频与音频的时间坐标。该方法服务于剧本类叙事内容创作，能够缓解时序错误造成的叙事不连贯。实验表明它能按脚本时序生成同步的音视频内容，为自动化短剧生成提供了直接可用的建模思路。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "automated creation of short drama videos",
+      "matched_requirement_id": "req-20",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.31025v1",
+      "source": "arxiv",
+      "title": "Analytic Dynamics: Learning Physics-Grounded Representation for Fast Intrinsic Dynamics Inference from Monocular Videos",
+      "abstract": "Inferring object dynamics from visual observations is essential for intelligent agents to reason about and interact with the physical world, yet remains challenging due to the fundamental gap between visual evidence and intrinsic dynamics. Existing methods either rely on costly per-scene optimization, limiting efficiency and scalability, or directly map visual evidence to intrinsic dynamics without intermediate physical abstractions, making them prone to appearance and geometry shortcuts. To bridge this gap, we propose Analytic Dynamics, a feed-forward dynamics inference framework that introduces an intermediate physics-grounded dynamics representation between visual observations and intrinsic dynamics. Specifically, we leverage privileged physical states, including position, displacement, and deformation gradient fields, which are available in simulation, to learn a structured dynamics representation that is difficult to discover from visual observations alone. By aligning visual representations with this space, we equip visual models with a physics-grounded inductive bias, guiding them to capture dynamics-relevant patterns for material model classification and parameter regression. To facilitate this research, we develop a dynamics data generation pipeline and benchmark containing paired physical state trajectories, rendered videos, and ground-truth material models and parameters. Extensive experiments demonstrate that Analytic Dynamics achieves efficient, accurate, and generalizable dynamics inference from monocular videos.",
+      "authors": [
+        "Jailing Lin",
+        "Jikuan Zhang",
+        "Jianhua Sun"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-31T16:08:04+00:00",
+      "link": "https://arxiv.org/pdf/2608.31025v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Physics-grounded intermediate representation for inferring intrinsic dynamics from monocular videos, transferable to physically consistent video modeling.",
+      "llm_evidence_cn": "从单目视频推断内在动力学的物理基础中间表示方法，可用于物理合理视频建模与分析。",
+      "llm_evidence": "从单目视频推断内在动力学的物理基础中间表示方法，可用于物理合理视频建模与分析。",
+      "canonical_evidence": "从单目视频推断内在动力学的物理基础中间表示方法，可用于物理合理视频建模与分析。",
+      "llm_tldr_en": "Introduces Analytic Dynamics, a feed-forward framework that learns an intermediate physics-grounded representation from monocular videos to infer intrinsic object dynamics, avoiding appearance shortcuts and costly per-scene optimization.",
+      "llm_tldr_cn": "针对视觉证据与内在物体动力学之间的鸿沟，已有方法要么逐场景优化代价高，要么缺少物理中间抽象而走捷径。本文提出解析动力学框架，在视觉观察与内在动力学之间引入物理基础中间表示，以单目视频为输入快速推断物体动力学。前馈式设计兼具效率与可扩展性，有效缓解外观与几何捷径。该工作为视频中的物理一致性与可解释建模提供了基础组件。",
+      "llm_tldr": "针对视觉证据与内在物体动力学之间的鸿沟，已有方法要么逐场景优化代价高，要么缺少物理中间抽象而走捷径。本文提出解析动力学框架，在视觉观察与内在动力学之间引入物理基础中间表示，以单目视频为输入快速推断物体动力学。前馈式设计兼具效率与可扩展性，有效缓解外观与几何捷径。该工作为视频中的物理一致性与可解释建模提供了基础组件。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.03557v1",
+      "source": "arxiv",
+      "title": "Building Pretraining Data for World Models: An Unreal Engine-Based Pipeline for Action-Conditioned Video Generation",
+      "abstract": "Action-conditioned video models require large-scale visual data paired with control signals that are temporally aligned with the resulting scene transitions. Such supervision is difficult to obtain from ordinary real-world video because the actions that caused each visual change are typically unknown. We present a large-scale synthetic data production pipeline built on Unreal Engine for generating action-conditioned, multi-view video. To accommodate the different execution requirements of real-time physics and high-quality offline rendering, the pipeline executes trajectory generation and final rendering in two stages: Stage I runs real physics in PIE and records per-frame character states, control inputs, and camera states into an intermediate trajectory representation; Stage II replays those trajectories in a new engine process and renders them offline with Movie Render Queue (MRQ). Around this core, we develop a distributed production system with cache-aware task partitioning, node-local slot scheduling, automated scene screening, aesthetic and luminance filtering, partial-output recovery, asynchronous upload, and continuous cluster health monitoring. The production cluster contains 25 servers with eight NVIDIA RTX 5090 GPUs per server. From 2,384 asset packs, 429 levels were retained for production together with a pool of 40 humanoid characters. The pipeline has produced 2,691 hours of 1080p video and 6,076 hours of 720p video. We describe the system architecture, the implementation decisions that emerged from production failures, and the limitations of using perceptual quality proxies for world-model data curation. The pipeline described in this report constitutes the Unreal Engine synthetic-data production component used in EchoWM.",
+      "authors": [
+        "Haoyu Wang",
+        "Songchun Zhang",
+        "Haoran Li",
+        "Haoyang Huang",
+        "Zeyue Xue",
+        "Nan Duan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-09-03T08:58:04+00:00",
+      "link": "https://arxiv.org/pdf/2609.03557v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Unreal Engine pipeline using real-time physics simulation to create action-conditioned video data for training video models",
+      "llm_evidence_cn": "利用实时物理仿真生成动作条件视频数据，为训练视频模型提供包含物理交互的数据集",
+      "llm_evidence": "利用实时物理仿真生成动作条件视频数据，为训练视频模型提供包含物理交互的数据集",
+      "canonical_evidence": "利用实时物理仿真生成动作条件视频数据，为训练视频模型提供包含物理交互的数据集",
+      "llm_tldr_en": "The paper presents a large-scale Unreal Engine-based two-stage pipeline that records character states and control inputs from real-time physics (PIE), then offline-renders multi-view action-conditioned videos, providing scalable pretraining data for world models.",
+      "llm_tldr_cn": "动作条件视频模型需要大量带有与场景变化时序对齐的控制信号的视觉数据，而自然视频很难提供这种监督。论文提出基于虚幻引擎的大规模合成数据生产流水线，用两阶段方法分离实时物理与高质量离线渲染：第一阶段在PIE中运行真实物理并逐帧记录角色状态和控制输入，第二阶段离线渲染多视角动作条件视频。由此生成的数据可为世界模型预训练提供可控且可扩展的训练语料，缓解了动作控制监督数据短缺的问题，也为物理仿真驱动的视频数据建设提供了坚实方案。",
+      "llm_tldr": "动作条件视频模型需要大量带有与场景变化时序对齐的控制信号的视觉数据，而自然视频很难提供这种监督。论文提出基于虚幻引擎的大规模合成数据生产流水线，用两阶段方法分离实时物理与高质量离线渲染：第一阶段在PIE中运行真实物理并逐帧记录角色状态和控制输入，第二阶段离线渲染多视角动作条件视频。由此生成的数据可为世界模型预训练提供可控且可扩展的训练语料，缓解了动作控制监督数据短缺的问题，也为物理仿真驱动的视频数据建设提供了坚实方案。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "datasets containing physical interactions and dynamics for training video models",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.02531v1",
+      "source": "arxiv",
+      "title": "Spatially Aware World Action Model via Geometric Latent Diffusion",
+      "abstract": "World Action Models (WAMs) leverage the capabilities of large-scale pretrained video diffusion models to jointly predict future observations and actions, inheriting rich visual and physical priors from internet-scale video. This has made them a promising paradigm for robot policy learning, yet the prevailing models operate exclusively on RGB observations and do not leverage 3D information. To bridge this gap, we introduce a Spatially Aware World Action Model (SA-WAM), which repurposes a pretrained video model for joint action, RGB, and depth prediction, enabling 3D-aware world modeling and action prediction within a single diffusion backbone. We use a nonlinear encoding that maps the unbounded depth signal into the bounded input domain expected by the frozen VAE tokenizer. This allows us to reuse the tokenizer without 3D-specific fine-tuning, incorporating geometric information without sacrificing the pretrained priors. SA-WAM achieves state-of-the-art results on the RoboCasa and LIBERO-Plus benchmarks, while simultaneously improving future-state predictions. Furthermore, SA-WAM outperforms strong baselines in real-world evaluation using a UR5 robotic arm, with strong gains in randomized environments. We analyze the correlation between world model prediction quality and rollout success, providing insights into WAM performance and avenues for its improvement.",
+      "authors": [
+        "Javier Alejandro Lopetegui Gonzalez",
+        "Paul Pacaud",
+        "Cordelia Schmid"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-09-02T12:42:37+00:00",
+      "link": "https://arxiv.org/pdf/2609.02531v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "World action model on video diffusion with explicit 3D depth and physical priors, relevant to architecture improvement for physically plausible video prediction",
+      "llm_evidence_cn": "基于视频扩散的世界动作模型引入三维深度与物理先验，可服务物理合理视频生成的架构改进",
+      "llm_evidence": "基于视频扩散的世界动作模型引入三维深度与物理先验，可服务物理合理视频生成的架构改进",
+      "canonical_evidence": "基于视频扩散的世界动作模型引入三维深度与物理先验，可服务物理合理视频生成的架构改进",
+      "llm_tldr_en": "World action models inherit physical priors from video diffusion but lack 3D awareness; SA-WAM uses a single diffusion backbone for joint action, RGB and depth prediction, boosting spatial and geometric consistency in future video modeling.",
+      "llm_tldr_cn": "现有世界动作模型虽然从大规模视频扩散模型中获得了丰富的物理先验，却只处理RGB，缺少三维空间感知。本文提出SA-WAM，在单一扩散骨干中联合预测动作、RGB与深度，用非线性编码将深度信号映射进预训练模型。该方案使世界模型具备几何与空间一致性，为物理合理的未来视频预测提供了可行路径。",
+      "llm_tldr": "现有世界动作模型虽然从大规模视频扩散模型中获得了丰富的物理先验，却只处理RGB，缺少三维空间感知。本文提出SA-WAM，在单一扩散骨干中联合预测动作、RGB与深度，用非线性编码将深度信号映射进预训练模型。该方案使世界模型具备几何与空间一致性，为物理合理的未来视频预测提供了可行路径。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
