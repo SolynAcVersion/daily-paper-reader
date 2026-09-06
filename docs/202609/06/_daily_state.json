@@ -1,0 +1,89 @@
+{
+  "date": "20260906",
+  "date_label": "",
+  "generated_at": "2026-09-06 22:24:13 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.29814v1",
+      "route": "202609/06/2608.29814v1-frameworkers-a-dynamic-multi-agent-framework-for-ai-generated-video-production",
+      "title": "FRAMEWORKERS: A Dynamic Multi-Agent Framework for AI-Generated Video Production",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "编排脚本、分镜、生成和剪辑的多智能体视频制作框架，可支撑短剧等叙事视频的自动创作",
+      "first_seen_at": "2026-09-06 22:24:13 UTC",
+      "updated_at": "2026-09-06 22:24:13 UTC"
+    },
+    {
+      "paper_id": "2609.00646v1",
+      "route": "202609/06/2609.00646v1-dramachain-bench-an-end-to-end-benchmark-for-short-drama-generation",
+      "title": "DramaChain Bench: An End-to-End Benchmark for Short-Drama Generation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向短剧生成生产链的端到端评测基准",
+      "first_seen_at": "2026-09-06 22:24:13 UTC",
+      "updated_at": "2026-09-06 22:24:13 UTC"
+    },
+    {
+      "paper_id": "2609.03673v1",
+      "route": "202609/06/2609.03673v1-do-video-generators-track-the-world-across-segments-a-benchmark-and-method-for-world-state-reasoning-in-video-continuation",
+      "title": "Do Video Generators Track the World Across Segments? A Benchmark and Method for World-State Reasoning in Video Continuation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "提出视频续写中的世界状态追踪基准与方法，评测生成器跨片段保持物体与物理状态一致性的能力，契合物理正确性基准需求",
+      "first_seen_at": "2026-09-06 22:24:13 UTC",
+      "updated_at": "2026-09-06 22:24:13 UTC"
+    },
+    {
+      "paper_id": "2608.31025v1",
+      "route": "202609/06/2608.31025v1-analytic-dynamics-learning-physics-grounded-representation-for-fast-intrinsic-dynamics-inference-from-monocular-videos",
+      "title": "Analytic Dynamics: Learning Physics-Grounded Representation for Fast Intrinsic Dynamics Inference from Monocular Videos",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "从单目视频学习物理接地动力学表征，可用于视频生成中的物理建模与一致性评测",
+      "first_seen_at": "2026-09-06 22:24:13 UTC",
+      "updated_at": "2026-09-06 22:24:13 UTC"
+    },
+    {
+      "paper_id": "2609.02886v1",
+      "route": "202609/06/2609.02886v1-solarwm-open-data-and-scalable-training-for-long-horizon-video-world-models",
+      "title": "SolarWM: Open Data and Scalable Training for Long-Horizon Video World Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "为视频世界模型构建多源数据引擎，可支持面向物理合理性生成的大规模数据准备。",
+      "first_seen_at": "2026-09-06 22:24:13 UTC",
+      "updated_at": "2026-09-06 22:24:13 UTC"
+    }
+  ]
+}

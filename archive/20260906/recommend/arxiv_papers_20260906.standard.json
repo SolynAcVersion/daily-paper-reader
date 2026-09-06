@@ -1,0 +1,254 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-06T22:20:05.443500+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 3,
+    "deep_cap": 8,
+    "deep_selected": 3,
+    "quick_candidates": 2,
+    "quick_skim_target": 13,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2608.29814v1",
+      "source": "arxiv",
+      "title": "FRAMEWORKERS: A Dynamic Multi-Agent Framework for AI-Generated Video Production",
+      "abstract": "Modern video generators excel at synthesizing individual clips, but complete video production requires coordinating a long sequence of interdependent creative steps, including scripting, storyboarding, generation, and editing. It further demands persistent asset management and dynamic task orchestration as intermediate outputs, dependencies, and execution states evolve over time. Existing automated systems typically rely on rigid pipelines that are difficult to adapt to diverse inputs and changing workflows, while general-purpose large language models (LLMs) remain unreliable for long-horizon orchestration and multimodal asset routing. We introduce FRAMEWORKERS, a task-centric and workspace-grounded multi-agent framework for open-ended video production. A central Director formulates video creation as dynamic task management, continuously editing a Task Stack to determine which subtask to execute next and which sub-agent to invoke. An Assistant serves as the execution layer, grounding each selected task in a shared Workspace, retrieving the required assets and context, invoking the assigned sub-agent, and persisting the resulting artifacts. Execution capabilities are exposed through modular sub-agents with registered descriptors, allowing new sub-agents to be integrated without redesigning the orchestration workflow. To improve orchestration reliability, we fine-tune the Director via supervised fine-tuning (SFT) followed by Group Relative Policy Optimization (GRPO) for descriptor-conditioned task routing. Experiments show that FRAMEWORKERS outperforms strong LLM planners in routing accuracy, recovers reliably from runtime failures, generalizes to unseen sub-agents without retraining, and achieves higher end-to-end video quality and broader task coverage than fixed pipelines, single-agent systems, and prior multi-agent approaches.",
+      "authors": [
+        "Zhendong Li",
+        "Lei Sun",
+        "Letian Shi",
+        "Deheng Zhang",
+        "Ruibo Ming",
+        "Mengshun Hu",
+        "Dannong Xu",
+        "Jian Wang",
+        "Danda Paudel",
+        "Luc Van Gool",
+        "Jinjin Gu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-08-30T14:28:50+00:00",
+      "link": "https://arxiv.org/pdf/2608.29814v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multi-agent framework orchestrating scripting, storyboarding, generation and editing for complete video production",
+      "llm_evidence_cn": "编排脚本、分镜、生成和剪辑的多智能体视频制作框架，可支撑短剧等叙事视频的自动创作",
+      "llm_evidence": "编排脚本、分镜、生成和剪辑的多智能体视频制作框架，可支撑短剧等叙事视频的自动创作",
+      "canonical_evidence": "编排脚本、分镜、生成和剪辑的多智能体视频制作框架，可支撑短剧等叙事视频的自动创作",
+      "llm_tldr_en": "FRAMEWORKERS is a task-centric, workspace-grounded multi-agent framework for open-ended video production. It coordinates scripting, storyboarding, generation, editing, persistent asset management and dynamic task orchestration, overcoming the rigidity of current automated pipelines and unreliable long-horizon LLM orchestration.",
+      "llm_tldr_cn": "现有自动视频制作系统多为固定流水线，难以灵活适应长程创作任务与多模态资产流转。FRAMEWORKERS提出以任务为中心、基于工作区的动态多智能体框架，将剧本、分镜、视频生成和剪辑等相互依赖的步骤统一编排，并随中间产物和状态变化持续管理任务与资产。该框架提升了开放域视频生产的长程协调可靠性，为漫画式短剧等叙事类短视频的自动化制作提供了基础设施。",
+      "llm_tldr": "现有自动视频制作系统多为固定流水线，难以灵活适应长程创作任务与多模态资产流转。FRAMEWORKERS提出以任务为中心、基于工作区的动态多智能体框架，将剧本、分镜、视频生成和剪辑等相互依赖的步骤统一编排，并随中间产物和状态变化持续管理任务与资产。该框架提升了开放域视频生产的长程协调可靠性，为漫画式短剧等叙事类短视频的自动化制作提供了基础设施。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "tool or system for generating short episodic dramas",
+      "matched_requirement_id": "req-23",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.03673v1",
+      "source": "arxiv",
+      "title": "Do Video Generators Track the World Across Segments? A Benchmark and Method for World-State Reasoning in Video Continuation",
+      "abstract": "Video generators build long videos by composing shorter parts, either by generating segments one after another or by autoregressively extending chunks. Each new part usually depends on memories of historical observations, such as recent frames, selected key frames, memory banks, or cached features. These memories preserve visible evidence from the past, but current generators do not reliably turn such evidence into a world-state interface: what holds in the video world after previous actions and how it should change under the next prompt. A past frame remains valid history, but it may not describe the state needed by the next segment; some states must instead be inferred from occluded or implicit changes rather than copied from a directly observed frame. This creates a simple but overlooked question for video continuation: given a previous video, its prompt, and a new prompt, can a model generate a continuation that reflects the state determined by both the historical video and the new prompt? To answer this question, we introduce Statebench, a benchmark that targets this gap by testing continuations over three state categories: past-visible states, occluded-process states, and complex-transition states. We further propose Stateagent, which explicitly maintains an entity-state representation, updates it under the new prompt, grounds the predicted post-action state as a future end frame, and renders the next video. Experiments show that our method improves controlled video continuation by raising the all-case state score (SCS-All) from 45.2 to 69.3, and also benefits story generation at the one-minute scale. Code is avaliable at https://github.com/AMAP-ML/StateAgent.",
+      "authors": [
+        "Yingmao Miao",
+        "Pengfei Zhang",
+        "Chaoran Xu",
+        "Meng Yu",
+        "Jing Tang",
+        "Xiangxiang Chu",
+        "Chao Shen",
+        "Chenhao Lin"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-03T11:09:46+00:00",
+      "link": "https://arxiv.org/pdf/2609.03673v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "provides a benchmark and method for world-state reasoning in video generation, testing whether generators keep object and physical state coherent across generated segments",
+      "llm_evidence_cn": "提出视频续写中的世界状态追踪基准与方法，评测生成器跨片段保持物体与物理状态一致性的能力，契合物理正确性基准需求",
+      "llm_evidence": "提出视频续写中的世界状态追踪基准与方法，评测生成器跨片段保持物体与物理状态一致性的能力，契合物理正确性基准需求",
+      "canonical_evidence": "提出视频续写中的世界状态追踪基准与方法，评测生成器跨片段保持物体与物理状态一致性的能力，契合物理正确性基准需求",
+      "llm_tldr_en": "Generators struggle to maintain world-state when composing video segments. A benchmark and method for world-state reasoning tests and improves how generators infer occluded state changes under the next prompt, supporting coherent long-form video generation.",
+      "llm_tldr_cn": "针对长视频需分段生成而现有模型不能可靠跨越片段保持世界状态的问题，论文提出视频续写中的世界状态推理基准与追踪方法。它不再只依赖可见历史帧，而是要求模型在下一提示下推断遮挡或隐含的状态变化，从而建立可更新的世界状态接口。实验显示现有生成器在该任务上的表现有限，而加入状态推理后能更好地保持物体状态与动态连续。该工作为评测和改进长视频生成中的物理一致性提供了直接途径。",
+      "llm_tldr": "针对长视频需分段生成而现有模型不能可靠跨越片段保持世界状态的问题，论文提出视频续写中的世界状态推理基准与追踪方法。它不再只依赖可见历史帧，而是要求模型在下一提示下推断遮挡或隐含的状态变化，从而建立可更新的世界状态接口。实验显示现有生成器在该任务上的表现有限，而加入状态推理后能更好地保持物体状态与动态连续。该工作为评测和改进长视频生成中的物理一致性提供了直接途径。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "benchmark for evaluating physical correctness in video generation models",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.00646v1",
+      "source": "arxiv",
+      "title": "DramaChain Bench: An End-to-End Benchmark for Short-Drama Generation",
+      "abstract": "Commercial short-drama production follows a multi-stage chain: script, storyboard, keyframe imagery, shot-level video, and the finished short drama. Most existing benchmarks evaluate solely the video-generation stage using pre-authored inputs instead of real upstream pipeline outputs. This leaves two critical questions unanswerable: whether each stage adheres to the original script intent (rather than only its immediate input prompt), and whether disparate shots remain coherent after assembly into multi-episode releases. We present DramaChain Bench, the first short-drama benchmark that evaluates every stage of the complete production chain. It is built upon three in-house systems sharing one dimension system, DramaChain Dimensions: five evaluation axes instantiated at every stage, resolving into 63 leaf dimensions. DramaChain Agent is calibrated against commercial short-drama platforms in both workflow and finished short-drama quality, enabling stage-wise fair comparison across models. DramaChain Labeling System has each of the 5,785 items scored independently by three professional annotators, with all defects spatio-temporally localised and selected from a predefined defect list. This process produces 17,488 valid scores and 255,925 traceable attribution records. The human annotations confirm that upstream defects cascade across the pipeline, demonstrating that final episode quality is not governed by video generation alone. DramaChain Agentic Judge then scores every leaf dimension automatically, gathering evidence over multiple agentic rounds before judging against a per-item checklist; it reproduces the model ranking at a mean PLCC of 0.918, enough to admit new models at no annotation cost.",
+      "authors": [
+        "Haoyuan Shi",
+        "Mingtao Chen",
+        "Shuo Jiang",
+        "Ziyan Chen",
+        "Xuyi Sheng",
+        "Yiming Liu",
+        "Ying Zhang",
+        "Miao Wang",
+        "Jianxiang Lu",
+        "Fanyang Lu",
+        "Songyuanyi Lu",
+        "Xiele Wu",
+        "Zhichao Hu",
+        "Yuhong Liu",
+        "Richeng Xuan"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-01T03:23:45+00:00",
+      "link": "https://arxiv.org/pdf/2609.00646v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "query:manga-drama",
+        "query:phys-video"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "End-to-end benchmark for short-drama generation production chain",
+      "llm_evidence_cn": "面向短剧生成生产链的端到端评测基准",
+      "llm_evidence": "面向短剧生成生产链的端到端评测基准",
+      "canonical_evidence": "面向短剧生成生产链的端到端评测基准",
+      "llm_tldr_en": "Proposes the first benchmark evaluating every stage of short-drama production - script, storyboard, keyframes, shot video and final assembly - to test script adherence and cross-shot coherence.",
+      "llm_tldr_cn": "现有关注短剧的评测只针对视频生成单个环节，使用预置输入而非真实上游结果，因而无法核对整条生产链是否忠于脚本以及多镜头剪辑后是否连贯。为此提出DramaChain Bench，首个覆盖剧本、分镜、关键帧、镜头视频到成片全部阶段的短剧端到端基准，并基于五个评测维度统一评估各阶段输出。实验显示该基准能更完整地定位流水线环节的语义漂移与跨镜头不一致，弥补商业短剧多阶段评测的空白。",
+      "llm_tldr": "现有关注短剧的评测只针对视频生成单个环节，使用预置输入而非真实上游结果，因而无法核对整条生产链是否忠于脚本以及多镜头剪辑后是否连贯。为此提出DramaChain Bench，首个覆盖剧本、分镜、关键帧、镜头视频到成片全部阶段的短剧端到端基准，并基于五个评测维度统一评估各阶段输出。实验显示该基准能更完整地定位流水线环节的语义漂移与跨镜头不一致，弥补商业短剧多阶段评测的空白。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "automated creation of short drama videos",
+      "matched_requirement_id": "req-20",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.31025v1",
+      "source": "arxiv",
+      "title": "Analytic Dynamics: Learning Physics-Grounded Representation for Fast Intrinsic Dynamics Inference from Monocular Videos",
+      "abstract": "Inferring object dynamics from visual observations is essential for intelligent agents to reason about and interact with the physical world, yet remains challenging due to the fundamental gap between visual evidence and intrinsic dynamics. Existing methods either rely on costly per-scene optimization, limiting efficiency and scalability, or directly map visual evidence to intrinsic dynamics without intermediate physical abstractions, making them prone to appearance and geometry shortcuts. To bridge this gap, we propose Analytic Dynamics, a feed-forward dynamics inference framework that introduces an intermediate physics-grounded dynamics representation between visual observations and intrinsic dynamics. Specifically, we leverage privileged physical states, including position, displacement, and deformation gradient fields, which are available in simulation, to learn a structured dynamics representation that is difficult to discover from visual observations alone. By aligning visual representations with this space, we equip visual models with a physics-grounded inductive bias, guiding them to capture dynamics-relevant patterns for material model classification and parameter regression. To facilitate this research, we develop a dynamics data generation pipeline and benchmark containing paired physical state trajectories, rendered videos, and ground-truth material models and parameters. Extensive experiments demonstrate that Analytic Dynamics achieves efficient, accurate, and generalizable dynamics inference from monocular videos.",
+      "authors": [
+        "Jailing Lin",
+        "Jikuan Zhang",
+        "Jianhua Sun"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-31T16:08:04+00:00",
+      "link": "https://arxiv.org/pdf/2608.31025v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Learns physics-grounded representations for inferring object dynamics from monocular video, relevant to physical modeling in video generation",
+      "llm_evidence_cn": "从单目视频学习物理接地动力学表征，可用于视频生成中的物理建模与一致性评测",
+      "llm_evidence": "从单目视频学习物理接地动力学表征，可用于视频生成中的物理建模与一致性评测",
+      "canonical_evidence": "从单目视频学习物理接地动力学表征，可用于视频生成中的物理建模与一致性评测",
+      "llm_tldr_en": "Proposes Analytic Dynamics, a feed-forward framework that learns a physics-grounded dynamics representation between raw monocular video and intrinsic object dynamics to infer physical properties quickly, avoiding per-scene optimization and appearance shortcuts.",
+      "llm_tldr_cn": "现有方法要么依赖逐场景优化、成本高，要么直接从视觉特征映射到内在动力学，容易受外观和几何捷径干扰。作者提出Analytic Dynamics框架，在单目视频与物体内在动力学之间引入物理接地动力学表征，用前馈网络实现快速推断而无需逐场景优化。多项实验表明该物理表征能有效缓解捷径并提升动力学推断效率。该工作为视频生成模型的物理一致性建模提供了一种可借鉴的中间表征思路。",
+      "llm_tldr": "现有方法要么依赖逐场景优化、成本高，要么直接从视觉特征映射到内在动力学，容易受外观和几何捷径干扰。作者提出Analytic Dynamics框架，在单目视频与物体内在动力学之间引入物理接地动力学表征，用前馈网络实现快速推断而无需逐场景优化。多项实验表明该物理表征能有效缓解捷径并提升动力学推断效率。该工作为视频生成模型的物理一致性建模提供了一种可借鉴的中间表征思路。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.02886v1",
+      "source": "arxiv",
+      "title": "SolarWM: Open Data and Scalable Training for Long-Horizon Video World Models",
+      "abstract": "We introduce SolarWM, a fully open foundation for building interactive video world models from data preparation through long-horizon inference. Training across heterogeneous data sources and video backbones is challenging: datasets differ in temporal scale, camera geometry, visual quality, motion, and captioning styles, while video generators use distinct representations and architectures. Naive data mixing and model-specific implementations therefore produce inconsistent supervision and make results difficult to reproduce and compare. SolarWM addresses this coupling with a reconfigurable multi-source data engine and a backbone-native adaptation framework. The engine converts 1.43 million canonical clips from 10 datasets into a unified, frame-aligned contract covering visual observations, metric camera geometry, captions, quality metadata, selection decisions, and provenance, while decoupling source processing from mixture construction. Under shared camera-conditioning, training, and inference interfaces, we instantiate four 5B--33B models based on Wan2.2, LTX-2.5, and MiniMax-H3 while preserving their native representations and objectives. A unified three-stage recipe combines bidirectional adaptation, teacher-forced autoregressive initialization, and distribution matching distillation. The resulting causal models enable real-time interaction over rollouts ranging from minutes to hours after being trained on only 5s sequences. By releasing the resulting data, pipeline, recipes, weights, and framework, SolarWM provides a reproducible and extensible foundation for interactive world-model research.",
+      "authors": [
+        "Junchao Huang",
+        "Guian Fang",
+        "Shengju Qian",
+        "Xianghao Kong",
+        "Zhuoran Zhao",
+        "Wei Huang",
+        "Yihua Du",
+        "Zixin Zhang",
+        "Justin Cui",
+        "Yuchao Gu",
+        "Yukang Chen",
+        "Xinting Hu",
+        "Tianyu He",
+        "Shaoshuai Shi",
+        "Zhuotao Tian",
+        "Xin Wang",
+        "Mike Zheng Shou",
+        "Li Jiang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-02T17:59:41+00:00",
+      "link": "https://arxiv.org/pdf/2609.02886v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multi-source data engine and scalable training for video world models; relevant to building physics-aware video generators.",
+      "llm_evidence_cn": "为视频世界模型构建多源数据引擎，可支持面向物理合理性生成的大规模数据准备。",
+      "llm_evidence": "为视频世界模型构建多源数据引擎，可支持面向物理合理性生成的大规模数据准备。",
+      "canonical_evidence": "为视频世界模型构建多源数据引擎，可支持面向物理合理性生成的大规模数据准备。",
+      "llm_tldr_en": "SolarWM unifies 1.43M clips from 10 datasets via a reconfigurable data engine and backbone-native adaptation, enabling reproducible long-horizon video world model training and inference.",
+      "llm_tldr_cn": "论文提出SolarWM，面向长时程交互式视频世界模型的开放基础框架。其可重构多源数据引擎将来自10个数据集的143万段片段统一对齐，并配合骨干网原生适配框架，解决异构视频数据与不同生成架构间的监督不一致。该工作为大规模可复现的视频世界模型训练提供了数据与训练基础设施，可推动具有物理一致性的长时程视频生成研究。",
+      "llm_tldr": "论文提出SolarWM，面向长时程交互式视频世界模型的开放基础框架。其可重构多源数据引擎将来自10个数据集的143万段片段统一对齐，并配合骨干网原生适配框架，解决异构视频数据与不同生成架构间的监督不一致。该工作为大规模可复现的视频世界模型训练提供了数据与训练基础设施，可推动具有物理一致性的长时程视频生成研究。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
