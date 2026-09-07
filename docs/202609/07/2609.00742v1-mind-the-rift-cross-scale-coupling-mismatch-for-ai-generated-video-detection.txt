@@ -1,0 +1,675 @@
+Title: Mind the Rift: Cross-Scale Coupling Mismatch for AI-Generated Video Detection
+
+URL Source: https://arxiv.org/pdf/2609.00742v1
+
+Published Time: Wed, 02 Sep 2026 00:58:31 GMT
+
+Number of Pages: 12
+
+Markdown Content:
+# Mind the Rift: Cross-Scale Coupling Mismatch for AI-Generated Video Detection ∗
+
+# Siyu Li 
+
+School of Cyber Science and Engineering Sichuan University Chengdu, Sichuan, China lisiyu_real@stu.scu.edu.cn 
+
+# Jin Yang †
+
+School of Cyber Science and Engineering Sichuan University Chengdu, Sichuan, China School of Information Science and Technology Xizang University Lhasa, Xizang, China yangjin66@scu.edu.cn 
+
+# Weiheng Liang 
+
+School of Cyber Science and Engineering Sichuan University Chengdu, Sichuan, China liangweiheng@stu.scu.edu.cn 
+
+## Abstract 
+
+As AI video generators achieve cinematic realism, reliable detec-tion becomes essential for safeguarding digital trust. We identify cross-scale coupling mismatch as a new forensic signal, where scale refers to the level of abstraction (semantic dynamics vs. pixel-level residuals): in natural videos, macro-level temporal dynamics and micro-level residual patterns are intrinsically coupled by the unified imaging physics pipeline, whereas AI generators, whose training objectives do not explicitly preserve this joint distribution, systematically violate this coupling. Detecting such mismatch is challenging because it requires independently extracting informa-tion at both scales while simultaneously quantifying their cross-scale relationship. We propose RIFT (Representation Inconsistency Forensics on Trajectories), an orthogonal forensic framework that addresses this through three interlocking components: a macro stream that builds a dynamic baseline of expected temporal evolu-tion via differential geometry and persistent homology on learned manifold trajectories, a micro stream that acts as a sensitive foren-sic probe via steganalytic filtering and temporal modeling, and a coupling divergence module that measures the conditional de-pendency between the two streams. Gram-Schmidt orthogonality guarantees the information-theoretic validity of this measurement. Experiments on two benchmarks (VidProM, 120K videos, 7 gener-ators; GenVidBench, 68K videos, 4 generators) demonstrate that RIFT achieves 99.33% and 99.72% F1-score respectively, with 97.87% unseen-generator detection rate in leave-one-out evaluation, while exhibiting encoder agnosticism: scaling from ViT-S/14 (22M) to ViT-L/14 (300M) changes F1 by less than 0.1%, and switching to a different encoder family (DINOv1) reduces F1 by only 0.73 pp. Code is available at https://github.com/Litsay/RIFT. 
+
+> ∗Accepted at the 34th ACM International Conference on Multimedia (MM ’26), Novem-ber 10–14, 2026, Rio de Janeiro, Brazil. Published under CC BY 4.0; Version of Record: https://doi.org/10.1145/3767308.3835693.
+> †Corresponding author.
+> This work is licensed under a Creative Commons Attribution 4.0 International License.
+> MM ’26, Rio de Janeiro, Brazil
+> © 2026 Copyright held by the owner/author(s). ACM ISBN 979-8-4007-2213-4/2026/11 https://doi.org/10.1145/3767308.3835693
+
+## CCS Concepts 
+
+• Computing methodologies → Computer vision ; Neural net-works ; • Security and privacy → Digital rights management .
+
+## Keywords 
+
+AI-generated video detection, cross-scale coupling mismatch, video forensics, topological data analysis 
+
+ACM Reference Format: 
+
+Siyu Li, Jin Yang, and Weiheng Liang. 2026. Mind the Rift: Cross-Scale Coupling Mismatch for AI-Generated Video Detection. In Proceedings of the 34th ACM International Conference on Multimedia (MM ’26), November 10–14, 2026, Rio de Janeiro, Brazil. ACM, New York, NY, USA, 9 pages. https://doi.org/10.1145/3767308.3835693 
+
+## 1 Introduction 
+
+Recent video generation models such as Sora [6], Pika, and CogVideo [19] have reached a fidelity level where macro-level semantic errors and temporal inconsistencies are no longer promi-nent. This progress poses a serious threat to digital trust: synthetic videos can circulate as authentic evidence, erode public confidence in visual media, and enable large-scale misinformation. Existing detection methods have pursued three largely indepen-dent paradigms. Spatial detectors [30, 34, 38, 40] identify artifacts in individual frames but ignore temporal structure. Temporal con-sistency detectors [10, 28, 42] model frame-to-frame patterns but operate at a single semantic scale. Physics-informed detectors [20, 44] leverage physical priors such as trajectory curvature in pretrained representation spaces, yet extract handcrafted statistics from one scale only. A recent line of work [17] combines macro and micro analysis through a hierarchical dual-path architecture; however, the two branches operate as sequential, independent filters with no interaction, no orthogonality guarantee, and no mechanism to measure cross-scale coupling. All these approaches share a common blind spot: they analyze signals at individual scales, missing the relationship between scales as a forensic signal in its own right. 
+
+We make a key observation: in natural videos, macro-level tem-poral dynamics (trajectory geometry in representation space) and micro-level residual patterns (pixel-domain noise fingerprints) are not independent but intrinsically coupled by the unified imaging arXiv:2609.00742v1 [cs.CV] 1 Sep 2026 MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil Siyu Li, Jin Yang, and Weiheng Liang −25 −20 −15 −10 −5 0
+
+MINE Estimate ˆ 𝐼 (zmacro , zmicro )
+
+> −1.25
+> −1.00
+> −0.75
+> −0.50
+> −0.25 0.00 0.25 0.50 0.75
+> Conditional NLL  −log  𝑃  (micro  | macro )
+> AI-Generated Real
+
+Figure 1: Empirical evidence of cross-scale coupling mis-match. Each point represents one video, plotted by its MINE-estimated mutual information ˆ𝐼 (𝒛 macro , 𝒛 micro ) (x-axis) and conditional negative log-likelihood −log 𝑃 (micro | macro )
+
+(y-axis), measured by a trained RIFT model. Real videos (blue) cluster in the high-MI, low-NLL region (tightly coupled macro dynamics and micro residuals), whereas AI-generated videos (red) scatter toward low MI and high NLL (broken coupling). The gap between the two class centroids ( ★) con-stitutes the “rift” that RIFT exploits as a forensic signal (Co-hen’s 𝑑 = 4.46 for NLL, 𝑝 < 10 −300 ; 𝑛 = 120 K videos from VidProM and DVSC2023). The separation persists across en-coder families and unseen generators (Secs. 3.4, 3.7): a robust, generator-agnostic regularity. 
+
+physics pipeline that produces both simultaneously. A camera’s sen-sor noise correlates with its motion response; compression artifacts co-vary with scene complexity. AI generators, by contrast, opti-mize for perceptual quality and temporal coherence at individual scales without explicitly preserving their cross-scale coupling. Be-cause the joint distribution of macro dynamics and micro residuals is never directly supervised during training, this coupling is sys-tematically broken. We term this phenomenon cross-scale coupling mismatch and characterize it empirically as a robust, generator-agnostic regularity: it manifests as a measurable divergence in the conditional dependency between macro and micro signals (Figure 1) and persists across encoder families, training distributions, and all evaluated generators (Secs. 3.4 and 3.7). To detect this mismatch, we propose RIFT (Representation Incon-sistency Forensics on Trajectories), an orthogonal forensic frame-work comprising three interlocking components. First, orthogonal decoupling projects the shared representation into macro and micro subspaces with Gram-Schmidt constraints, ensuring independent information extraction. The macro stream then builds a dynamic baseline of expected temporal evolution: it learns a low-dimensional manifold embedding [1, 4] on which differential geometry (curva-ture, torsion, jerk) and persistent homology characterize the ex-pected dynamic patterns, building on the insight that temporal trajectories in learned representation spaces carry discriminative geometric structure [18]. The micro stream serves as a sensitive forensic probe, extracting noise fingerprints via steganalytic fil-ters and modeling their temporal dynamics. Finally, a coupling divergence module measures 𝑃 (micro | macro ) through conditional likelihood estimation and mutual information, quantifying how far the observed macro-micro relationship deviates from the natural coupling baseline. Crucially, both streams are always active and contribute in parallel, unlike cascade approaches where one branch may be bypassed entirely. While the macro stream provides the structural backbone of detection, the coupling divergence between streams is the distinguishing mechanism: it accounts for the ma-jority of RIFT’s improvement over prior trajectory-based methods, separating the framework from single-scale approaches. 
+
+Contributions. Our main contributions are: 
+
+• We identify cross-scale coupling mismatch as a forensic sig-nal: natural videos exhibit intrinsic coupling between macro-level temporal dynamics and micro-level residual patterns governed by imaging physics, which AI generators system-atically violate. 
+
+• We propose RIFT (Representation Inconsistency Forensics on Trajectories), an orthogonal forensic framework: the macro stream builds a dynamic baseline via manifold geometry and persistent homology, the micro stream serves as a foren-sic probe, and conditional dependency analysis measures coupling divergence with Gram-Schmidt orthogonality guar-antees. 
+
+• We demonstrate encoder agnosticism: within the DINOv2 family, 14 × parameter scaling changes F1 by <0.1%; across families (DINOv1 vs. DINOv2), F1 drops by only 0.73 pp, proving that detection stems from framework design rather than encoder specifics. 
+
+• Experiments on VidProM [39] (7 generators) and GenVid-Bench [29] (4 generators) show RIFT achieves 99.33% and 99.72% F1 respectively, with 97.87% unseen-generator de-tection in leave-one-out evaluation. The entire framework trains on a single consumer GPU (RTX 3080, 10 GB). 
+
+## 2 Method 
+
+Given a video 𝑉 consisting of 𝑇 frames, our goal is to classify it as either authentic or AI-generated. The RIFT framework proceeds in five stages (Figure 2): (1) frozen backbone encoders extract multi-modal frame representations; (2) orthogonal decoupling projects these into independent macro and micro subspaces; (3) the macro stream builds a dynamic baseline characterizing expected temporal evolution; (4) the micro stream extracts fine-grained forensic signals as a sensitive probe; and (5) a coupling divergence module measures 
+
+𝑃 (micro | macro ) to quantify cross-scale mismatch. These signals are fused via learned gates for final classification. 
+
+## 2.1 Feature Extraction 
+
+We employ two frozen pretrained encoders. DINOv2 ViT-S/14 [31] processes each frame at 224 ×224 resolution, producing CLS tokens 
+
+𝒄 𝑡 ∈ R384 capturing global semantics and patch-level statistics 
+
+𝒑 𝑡 ∈ R768 summarizing local spatial structure. RAFT-Large [35] estimates dense optical flow between consecutive frames, yielding Mind the Rift: Cross-Scale Coupling Mismatch for AI-Generated Video Detection MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil DINOv2 
+
+> ViT-S/14
+> RAFT-
+> Large
+> frozen frozen
+> Orthogonal
+> Decoupling
+
+Gram-Schmidt      
+
+> Macro Stream: Dynamic Baseline
+> Differential Geometry
+> 100D
+> speed, acceleration, jerk, curvature, torsion Transformer
+> 36D 64D
+> Persistent Homology
+> 128D
+> connectivity, loops 128D
+> Micro Stream: Forensic Probe
+> SRM (30) Bayar (16) CNN+ BiGRU
+> steganalytic filtering constrained convolution temporal modeling
+> Coupling Divergence
+> P(macro|micro) conditional NLL mutual information (MINE)
+> （32 384 ）
+
+“The Rift ” 
+
+> （32 768 ）
+
+ 
+
+> （31 256 ）
+
+ 
+
+> （31 256 ）
+
+
+
+> semantic perception spatial structure
+> optical flow
+> difference signal CLS Patch stats Flow
+> Residuals
+> macro-level (128D) Micro-level (128D) macro
+
+hmicro 
+
+hcond 
+
+h
+
+> dynamic baseline (228D)
+> sensitive probe (67D) macro
+
+gmicro 
+
+g
+
+> Gated Fusion micro
+
+zmacro 
+
+z( ),macro micro    
+
+> I z z
+> MLP
+> (17D)
+> (512 →256 →128 →2)
+> Video Input
+> T = 32 frames
+> Video Input
+> T = 32 frames
+> Video Input
+> T = 32 frames
+> Real Video AI-Generated Video
+> Real Video AI-Generated Video
+> Orthogonal Decoupling Parallel Streams & Coupling Bridge Input & Extraction Gated Fusion & Classification
+
+Figure 2: Overview of the RIFT framework. Given a video, frozen encoders extract frame-level features, which are orthogonally decoupled into macro and micro subspaces. The macro stream (dynamic baseline) and micro stream (forensic probe) are analyzed independently, and their coupling divergence 𝑃 (micro | macro ) serves as the core forensic signal for classification. 
+
+encoded flow vectors 𝒇 𝑡 ∈ R256 and motion-compensated resid-ual vectors 𝒓 𝑡 ∈ R256 . Both encoders remain completely frozen throughout training, ensuring that detection performance reflects downstream architectural design rather than encoder adaptation. 
+
+## 2.2 Orthogonal Decoupling 
+
+The coupling divergence measurement (Sec. 2.5) requires that macro and micro information be extracted independently ; oth-erwise, shared information would inflate divergence estimates with self-correlation rather than genuine cross-scale coupling. To enforce this, we project the concatenated frame representations 
+
+[𝒄 𝑡 ; 𝒇 𝑡 ] and [𝒄 𝑡 ; 𝒓 𝑡 ; 𝒑 𝑡 ] through two MLP projectors 𝑔 macro and 
+
+𝑔 micro , producing 𝒛 macro 
+
+𝑡 , 𝒛 micro 
+
+𝑡 ∈ R𝑑 𝑧 (𝑑 𝑧 =128). Orthogonality is enforced through dual constraints. A soft loss penalizes the average cosine similarity across the batch: 
+
+Lortho = 1
+
+𝐵𝑇 ∑︁ 𝑏,𝑡 
+
+cos 2 (𝒛 macro 
+
+𝑏,𝑡 , 𝒛 micro 
+
+𝑏,𝑡 ). (1) A hard constraint applies Gram-Schmidt orthogonalization to the projector weight matrices every 100 training steps, preventing grad-ual drift. To ensure that orthogonality does not discard information, a decoder reconstructs the original CLS token from the concatenation 
+
+[𝒛 macro 
+
+𝑡 ; 𝒛 micro 
+
+𝑡 ]:
+
+Lrecon = 1
+
+𝐵𝑇 ∑︁ 𝑏,𝑡 
+
+∥𝒄 𝑏,𝑡 − ℎdec ([ 𝒛 macro 
+
+𝑏,𝑡 ; 𝒛 micro 
+
+𝑏,𝑡 ])∥ 2. (2) The combination of orthogonality and reconstruction ensures that macro and micro subspaces partition the CLS representation space non-redundantly, providing a necessary condition for the cou-pling divergence to reflect genuine cross-scale dependency rather than self-correlation. Reconstruction targets the CLS representa-tion (flow and patch features contribute directly to downstream losses), and the orthogonality guarantee applies to the coupling divergence measurement (Sec. 2.5); the micro stream’s temporal features (Sec. 2.4) are extracted independently from pixel-level residuals. 
+
+## 2.3 Macro Stream: Dynamic Baseline 
+
+The macro stream characterizes what normal temporal evolution looks like in representation space. It builds a dynamic baseline from two complementary perspectives on the same trajectory. 
+
+Manifold Embedding. Computing differential geometry directly in R𝑑 𝑧 is ill-conditioned: cosine similarity variance scales as 1 /𝑑 ,so at 𝑑 𝑧 =128 direction changes collapse to near-constant values regardless of actual dynamics (Var [cos 𝜃 ] ≈ 0.008). We address this through a learned embedding 𝜙 : R𝑑 𝑧 → R𝑑 𝑚 (two-layer MLP, GELU): 
+
+𝒙 𝑡 = 𝜙 (𝒛 macro 
+
+𝑡 ), 𝒙 𝑡 ∈ R𝑑 𝑚 , 𝑑 𝑚 =24 . (3) At 𝑑 𝑚 =24, angular variance increases to ≈0.042, restoring discrimi-native geometric quantities. Beyond resolving angle concentration, 
+
+𝜙 learns a coordinate system adapted to temporal dynamics, consis-tent with the manifold hypothesis [4], and absorbs encoder-specific distributional shifts, contributing to the encoder-agnostic property (Sec. 3.4). 
+
+Manifold Regularization. To ensure 𝜙 learns a faithful geometric structure, we regularize it through three complementary objectives. An isometry term preserves local distance ratios during projection, where 𝜆 iso is a learnable scalar (initialized to 1): 
+
+Liso = 1
+
+𝑇 −1∑︁ 𝑡 
+
+ ∥𝒙 𝑡 +1 − 𝒙 𝑡 ∥∥𝒛 macro 
+
+𝑡 +1 − 𝒛 macro 
+
+𝑡 ∥ + 𝜖 − 𝜆 iso 
+
+2
+
+, (4) A smoothness term, applied exclusively to real samples, penalizes discrete second-order differences to encode the inductive bias that authentic temporal evolution is smooth on the manifold: 
+
+Lsmooth = 1
+
+|B real |∑︁ 𝑏 ∈ B real 
+
+1
+
+𝑇 −2∑︁ 𝑡 
+
+∥𝒙 𝑡 +1 − 2𝒙 𝑡 + 𝒙 𝑡 −1 ∥2. (5) MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil Siyu Li, Jin Yang, and Weiheng Liang 
+
+An InfoNCE contrastive term [36] encourages temporally coher-ent geometry by clustering adjacent frames (sim: cosine similarity, 
+
+𝜏 =0.15): 
+
+Lnce = − 1
+
+𝑇 −1∑︁ 𝑡 
+
+log exp  sim (𝒙 𝑡 , 𝒙 𝑡 +1)/ 𝜏 Í𝑘 ≠𝑡 exp  sim (𝒙 𝑡 , 𝒙 𝑘 )/ 𝜏  , (6) The complete manifold loss is Lmanifold = Liso + L smooth + L nce .
+
+Local: Differential Geometry. From the embedded trajectory 
+
+𝒙 1, . . . , 𝒙 𝑇 −1, we compute six groups of differential geometry quan-tities. Let Δ𝒙 𝑡 = 𝒙 𝑡 +1 − 𝒙 𝑡 denote the discrete velocity. The Menger curvature [23] at each interior point quantifies local bending via the circumradius of three consecutive points: 
+
+𝜅 𝑡 = 2√︁ ∥Δ𝒙 𝑡 -1 ∥2 ∥Δ𝒙 𝑡 ∥2 − ( Δ𝒙 𝑡 -1 ·Δ𝒙 𝑡 )2
+
+∥Δ𝒙 𝑡 -1 ∥ ∥ Δ𝒙 𝑡 ∥ ∥ 𝒙 𝑡 +1 − 𝒙 𝑡 −1 ∥ , (7) where the numerator equals twice the triangle area of (𝒙 𝑡 −1, 𝒙 𝑡 , 𝒙 𝑡 +1);this definition is valid in any ambient dimension 𝑑 𝑚 . The dis-crete torsion measures twisting out of the local osculating plane 
+
+Π𝑡 = span (Δ𝒙 𝑡 −1, Δ𝒙 𝑡 ):
+
+𝜏 𝑡 = Δ𝒙 𝑡 +1 − proj Π𝑡 
+
+ Δ𝒙 𝑡 +1
+
+
+
+∥Δ𝒙 𝑡 ∥ , (8) capturing the component of the next velocity that is orthogonal to the current osculating plane. The direction change captures the angular deviation between successive velocities: 
+
+𝛿 𝑡 = 1 − Δ𝒙 𝑡 · Δ𝒙 𝑡 +1
+
+∥Δ𝒙 𝑡 ∥ ∥ Δ𝒙 𝑡 +1 ∥ . (9) This quantity captures the angular regularity of temporal evolu-tion: the distribution of 𝛿 𝑡 values differs systematically between natural and AI-generated videos, providing a discriminative geo-metric signal [18]. Together with speed ∥Δ𝒙 𝑡 ∥, acceleration ∥Δ2𝒙 𝑡 ∥,and jerk ∥Δ3𝒙 𝑡 ∥, these six quantities capture the complete local kinematic profile of the trajectory. Each group is summarized by six statistics (mean, std, max, min, kurtosis, spike ratio), produc-ing a 36-dimensional geometry descriptor. A Transformer encoder (4 heads, 2 layers) models temporal patterns over the full curvature sequence, producing a 64-dimensional temporal embedding. The local perspective yields 𝒉 local ∈ R100 .
+
+Global: Topological Invariants. The same 24-dimensional trajec-tory is analyzed via persistent homology [14]. We build a Vietoris– Rips filtration and compute persistence diagrams for 𝐻 0 (connected components) and 𝐻 1 (loops). These diagrams are vectorized into persistence landscapes [7] with 4 functions and 16 bins per dimen-sion ( 𝒉 global ∈ R128 ). Whereas differential geometry captures how 
+
+the trajectory bends locally, topology captures what it is globally: a spiral and a figure-eight may share similar curvature yet differ in 𝐻 1 structure. These invariants are stable under continuous de-formations. The complete dynamic baseline is the concatenation 𝒉 macro =
+
+[𝒉 local ; 𝒉 global ] ∈ R228 .
+
+## 2.4 Micro Stream: Sensitive Forensic Probe 
+
+The micro stream operates independently from the macro stream, extracting fine-grained forensic signals from pixel-level residuals that are invisible in semantic representations. 
+
+Noise Residual Extraction. For each frame 𝐼 𝑡 , we apply two com-plementary high-pass filter banks to suppress scene content while preserving generation artifacts. Steganalytic rich model (SRM) fil-ters [15] provide 30 predefined kernels {𝑲 𝑖 }30  
+
+> 𝑖 =1
+
+that extract linear and non-linear noise residuals. Bayar constrained convolutions [2] complement these with 16 learned kernels 𝑾 𝑗 whose weights sat-isfy: 
+
+𝑾 𝑗 (0, 0) = −∑︁  
+
+> (𝑖,𝑘 )≠(0,0)
+
+𝑾 𝑗 (𝑖, 𝑘 ), (10) so that each kernel acts as a prediction error filter: the center pixel is predicted from its spatial neighbors, and only the prediction residual passes through. The constraint is re-enforced after each gradient step by renormalizing the center weight. The combined per-frame forensic feature is 𝒖 𝑡 = [𝒓 srm  
+
+> 𝑡
+
+; 𝒓 bayar  
+
+> 𝑡
+
+; 𝒔 𝑡 ], where 𝒓 srm  
+
+> 𝑡
+
+and 
+
+𝒓 bayar  
+
+> 𝑡
+
+are pooled residual statistics from the respective filter banks and 𝒔 𝑡 aggregates spatial and frequency-domain statistics of the motion-compensated residual 𝒓 𝑡 from RAFT (Sec. 2.1). 
+
+Temporal Modeling. A convolutional encoder reduces the dimen-sionality of each 𝒖 𝑡 , and a bidirectional GRU models the temporal dynamics of the resulting sequence, yielding a 64-dimensional tem-poral embedding 𝒉 temp from the concatenated final hidden states. We append three scalar temporal consistency metrics computed from the frame-to-frame forensic changes 𝑑 𝑡 = ∥𝒖 𝑡 +1 − 𝒖 𝑡 ∥:
+
+𝜇 𝑑 = 1
+
+> 𝑇 −1
+
+∑︁ 𝑡 
+
+𝑑 𝑡 , 𝜎 2 
+
+> 𝑑
+
+= 1
+
+> 𝑇 −1
+
+∑︁ 𝑡 
+
+(𝑑 𝑡 −𝜇 𝑑 )2, 𝜌 𝑑 =
+
+Í𝑡 (𝑑 𝑡 −𝜇 𝑑 )( 𝑑 𝑡 +1 −𝜇 𝑑 )
+
+Í𝑡 (𝑑 𝑡 − 𝜇 𝑑 )2 .
+
+(11) These scalars capture the magnitude, regularity, and serial depen-dence of forensic signal fluctuations, respectively. The micro stream produces 𝒉 micro = [𝒉 temp ; 𝜇 𝑑 ; 𝜎 2 
+
+> 𝑑
+
+; 𝜌 𝑑 ] ∈ R67 .
+
+## 2.5 Coupling Divergence Measurement 
+
+This module is the distinguishing mechanism of RIFT: it measures the cross-scale coupling between the macro baseline and the micro probe. The hypothesis is that in natural videos, the macro temporal state constrains the distribution of micro observations through shared imaging physics; in AI-generated videos, this constraint is violated. 
+
+Conditional Prediction. An MLP predicts the expected distribu-tion of micro statistics given the macro state: 
+
+𝜇 𝑡 , log 𝜎 2 
+
+> 𝑡
+
+= 𝑓 cond (𝒛 macro  
+
+> 𝑡
+
+), NLL 𝑡 = 12
+
+ log 𝜎 2 
+
+> 𝑡
+
++ ( 𝒔 𝑡 −𝜇 𝑡 )2/𝜎 2
+
+> 𝑡
+
+, (12) where 𝒔 𝑡 denotes the micro statistics sequence from the micro stream. The per-video NLL statistics (mean, max, std) are projected to a 16-dimensional feature vector, encoding how well the macro state predicts micro behavior: low NLL indicates strong coupling, while high NLL indicates mismatch. 
+
+Mutual Information Estimation. A MINE network [3] estimates the mutual information 𝐼 (𝒛 macro ; 𝒛 micro ) by contrasting the joint distribution with a shuffled marginal: ˆ𝐼 = Ejoint [𝑇 𝜃 (𝒛 macro , 𝒛 micro )] − log Emarginal [𝑒 𝑇 𝜃 (𝒛 macro , ˜𝒛 micro ) ], (13) where ˜𝒛 micro is obtained by temporal shuffling. This scalar quan-tifies the residual statistical dependency between the orthogonal subspaces. Mind the Rift: Cross-Scale Coupling Mismatch for AI-Generated Video Detection MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil 
+
+Why Orthogonality Matters. Without the orthogonal guarantee from Sec. 2.2, the coupling divergence degenerates: shared infor-mation between 𝒛 macro and 𝒛 micro would produce artificially high MI and artificially low NLL regardless of the input’s authenticity. Orthogonality ensures that any measured coupling reflects gen-uine cross-scale dependency , which is precisely the signal that AI generators fail to replicate. The module outputs 𝒉 cond ∈ R17 (16-dimensional projected NLL features concatenated with the 1-dimensional MI estimate). 
+
+## 2.6 Gated Fusion and Classification 
+
+Two projection heads map the streams to a common 256D space. The macro path projects 𝒉 macro ∈ R228 and the micro path projects 
+
+[𝒉 micro ; 𝒉 cond ] ∈ R84 . Learned sigmoid gates 𝑔 macro , 𝑔 micro ∈ ( 0, 1)
+
+weight the two paths: 
+
+𝒉 fused = 𝑔 macro · 𝒉 ′ 
+
+> macro
+
++ 𝑔 micro · 𝒉 ′
+
+> micro
+
+. (14) The gates are independent (not softmax-normalized), allowing the model to upweight both streams simultaneously when both provide reliable signals. A 3-layer MLP classifier (512 → 256 → 128 → 2) produces the final binary prediction. 
+
+## 2.7 Training Strategy 
+
+Training proceeds in two stages to stabilize the orthogonal decom-position before joint optimization. 
+
+Stage 1: Decoupling Pretraining (30 epochs). Only the orthogonal decoupling module and its associated manifold regularization are trained, with learning rate 10 −3. This establishes well-separated macro and micro subspaces before downstream modules are intro-duced. 
+
+Stage 2: Joint Training (50 epochs). All trainable modules are optimized jointly with learning rate 3 ×10 −4, cosine annealing with warm restarts ( 𝑇 0=5, 𝑇 mult =2), and 5% linear warmup. The total loss combines five components: 
+
+L = Lfocal + 𝛼 Lortho + 𝛽 Lrecon + 𝛾 Lmanifold + 𝛿 Lcond , (15) where Lfocal is the focal loss [25] ( 𝛾 focal =2.0), Lmanifold is the mani-fold regularization defined in Sec. 2.3 (Eqs. 4–6), and Lcond is the conditional NLL applied only to real samples to learn the natural coupling distribution. Weights: 𝛼 =0.1, 𝛽 =0.5, 𝛾 =0.02, 𝛿 =0.05. We use AdamW [27] with weight decay 0 .01 and gradient clipping at norm 1 .0. Backbone parameters remain frozen; only 4.7M trainable parameters are updated. 
+
+## 3 Experiments 3.1 Experimental Setup 
+
+Dataset. We construct an evaluation set of 120K videos from VidProM [39] and DVSC2023 [32], the same public sources used by prior work [17, 20]. The real partition consists of 50K videos from DVSC2023, capturing diverse real-world content. The fake 
+
+partition contains 70K videos generated by seven text-to-video models from VidProM: Pika [22], VideoCrafter2 [11], Text2Video-Zero [21], ModelScope [37], CogVideo [19], OpenSora [46], and Show-1 ( ∼10K each). Prior VidProM evaluations typically include 4 generators; we expand coverage to all 7 available generators and adopt a 50/50 stratified train/test split with a fixed seed, holding out 10% of the training partition for validation. All baselines in Table 1 are re-evaluated under this same protocol; image-level detectors are aggregated to video-level predictions by majority voting over frame-level decisions. We additionally evaluate on GenVidBench [29], an indepen-dent benchmark of 68K videos spanning 4 generators (CogVideo, Mora, MuseV, SVD [5]) with Main (general scenes) and Plants (high-randomness) subsets, using the same 50/50 protocol. 
+
+Implementation. All features are precomputed and cached: DINOv2 ViT-S/14 CLS tokens (32 , 384 ), patch statistics (32 , 768 ),RAFT-encoded flow (31 , 256 ), and motion-compensated resid-uals (31 , 256 ) per video, totaling ∼20 GB. Topology features are precomputed via Vietoris-Rips persistent homology and cached separately. Training uses a single NVIDIA RTX 3080 (10 GB). The two-stage training procedure, all hyperparameters, and loss weights are detailed in Appendix A. Source code, pre-trained models, and Seedance 2.0 demo videos are available at https://github.com/Litsay/RIFT. 
+
+Metrics. We report Accuracy, Precision, Recall, F1-score, and AUC. F1 is the primary metric for model selection. 
+
+## 3.2 Main Results and Cross-Generator Generalization 
+
+Comparison with Prior Methods. Table 1 compares RIFT against 10 baselines from four paradigms, all reproduced under identical conditions (Sec. 3.1). Image-level detectors [13, 26, 30, 38] remain near chance level on both benchmarks (F1 ≤ 67%), confirming that per-frame analysis alone cannot capture the temporal structure essential for video-level detection. Temporal detectors [10, 16, 42] improve substantially but plateau below 93% F1. The strongest prior results come from physics-informed methods (ReStraV [20]: 97.83% F1 on VidProM, 95.88% F1 on GenVidBench) and multi-branch approaches (MPF-Net [17]: 97.03% F1 on GenVidBench). RIFT achieves state-of-the-art results on both benchmarks: 99.33% F1 on VidProM with 7 generators ( +1.50 pp over ReStraV) and 99.72% F1 on GenVidBench ( +2.69 pp over MPF-Net). Per-generator detection rates range from 100% (T2VZero, VideoCrafter2, ModelScope) to 97.24% (CogVideo) on VidProM, with full break-downs in Appendix B. 
+
+Cross-Generator Generalization. To evaluate generalization to un-seen generators, we conduct Leave-One-Generator-Out (LOGO) ex-periments across all 7 generators: one generator is entirely excluded from training, and the model is evaluated on all its test samples. Table 2 shows that RIFT maintains an average unseen-generator detection rate of 97.87%. Four generators (T2VZero, VideoCrafter2, ModelScope, Show-1) are detected at ≥99.4%, while the hardest cases (OpenSora 94.91%, CogVideo 95.47%, Pika 95.50%) still exceed 94%. 
+
+## 3.3 Ablation Study 
+
+We ablate each conceptual component of RIFT on VidProM by zeroing its features at the fusion input while retraining Stage 2 MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil Siyu Li, Jin Yang, and Weiheng Liang 
+
+Table 1: Comparison with prior methods on VidProM [39] and GenVidBench [29]. All methods are reproduced from open-source implementations under identical conditions on both benchmarks (7 generators, 50/50 stratified split on Vid-ProM; 50/50 split on GenVidBench).                                                                          
+
+> Method VidProM GenVidBench Acc F1 AUC Acc F1 AUC
+> Image-level detectors
+> CNNDetection [38] 50.41 53.82 52.63 55.81 53.31 57.94 UnivFD [30] 51.27 55.80 57.62 58.56 60.04 60.92 FreDect [13] 60.98 59.73 63.56 59.36 60.73 61.25 Gram-Net [26] 63.64 66.75 64.22 66.59 65.50 68.22
+> Temporal video detectors
+> TALL [42] 73.89 75.66 77.31 77.36 78.58 81.06 STIL [16] 75.42 75.28 76.96 74.92 73.43 76.33 DeMamba [10] 93.58 92.74 95.58 92.78 91.37 94.64
+> Physics-informed & trajectory-based
+> ReStraV [20] 97.06 97.83 98.39 96.93 95.88 98.24 NSG-VD [44] 95.37 96.41 96.37 93.27 94.98 94.63
+> Multi-branch
+> MPF-Net [17] 95.13 94.37 96.39 96.35 97.03 97.34
+> RIFT (Ours) 99.22 99.33 99.96 99.56 99.72 99.96
+
+Table 2: Leave-One-Generator-Out generalization on Vid-ProM across all 7 generators. “Unseen” denotes the detection rate on the excluded generator’s test samples.                            
+
+> Excluded Generator Unseen Det. Rate Seen Test F1 Seen Test AUC T2VZero 100.00% 98.77% 99.88% VideoCrafter2 100.00% 98.91% 99.89% ModelScope 99.78% 98.86% 99.89% Show-1 99.40% 98.84% 99.89% Pika 95.50% 98.95% 99.92% CogVideo 95.47% 99.54% 99.96% OpenSora 94.91% 98.95% 99.91%
+> Average 97.87% 98.97% 99.91%
+
+Table 3: Stream-level ablation on VidProM (50/50 test set, 
+
+∼60K samples). “Macro only” retains both local geometry and global topology; “Micro only” retains only the micro stream.                         
+
+> Configuration Acc F1 AUC ΔF1 Full RIFT 99.22 99.33 99.96 —w/o Geometry 97.78 97.96 98.89 −1.37 w/o Coupling 97.85 98.01 98.90 −1.32 Macro only 97.82 97.99 98.88 −1.34 Micro only 80.89 83.54 89.50 −15.79
+
+from a shared Stage 1 checkpoint. Table 3 reports results on the held-out test set. Three findings stand out. (1) The macro stream is the struc-tural backbone : the macro stream alone (Macro only) achieves 97.99% F1, while the micro stream in isolation reaches only 83.54% F1 
+
+Table 4: Encoder agnosticism on VidProM. Within the DI-NOv2 family, scaling from 22M to 300M parameters changes F1 by only 0.02%. Across families (DINOv1 vs. DINOv2), F1 drops by just 0.73 pp.                    
+
+> Family Encoder Params Acc F1 AUC DINOv2 ViT-S/14 22M 99.22% 99.33% 99.96% ViT-L/14 300M 99.28% 99.35% 99.98% DINOv1 ViT-S/16 21M 98.37% 98.60% 99.84%
+
+(−15.79 pp), confirming that manifold geometry and topology carry the majority of discriminative information. Notably, w/o Geometry (97.96%) performs slightly below Macro only (97.99%) despite retain-ing the micro stream and coupling module, indicating that coupling depends on a strong macro baseline: without local geometry, the macro state is too weak for reliable conditional prediction. (2) Cou-pling divergence is the key complementary signal : removing only the divergence module reduces F1 by 1.32 pp, nearly as large as the gap between Full and Macro only ( −1.34 pp). This means the micro stream’s independent contribution beyond coupling is only 0.02 pp; virtually all of its value flows through the conditional dependency 𝑃 (micro | macro ), directly validating the coupling mismatch hypothesis. Moreover, since Macro only (97.99%) barely exceeds the strongest prior method (ReStraV, 97.83%), the coupling mechanism accounts for 88% of RIFT’s total improvement over the state of the art ( +1.32 of +1.50 pp), confirming its role as the distinguishing component of the framework. Within the macro stream, adding topological invariants to local differential geometry further improves F1, confirming that persistent homology captures complementary global structure. 
+
+## 3.4 Encoder Agnosticism and Further Analysis 
+
+Encoder Ablation. A key property of RIFT is encoder agnosti-cism: detection remains strong regardless of encoder capacity or architecture family (Table 4). Within the DINOv2 family, scaling from ViT-S/14 (22M) to ViT-L/14 (300M) changes F1 by only 0.02%. Across families, replacing DINOv2 ViT-S/14 with DINOv1 [9] ViT-S/16 (a different pretraining method, patch size, and training data) reduces F1 by just 0.73 pp (99.33% → 98.60%) while AUC drops only 0.12 pp (99.96% → 99.84%). This demonstrates that the coupling mismatch signal is captured by the framework’s orthogonal de-composition and geometric analysis, not by any specific encoder’s representation power. The manifold embedding 𝜙 (Sec. 2.3) absorbs encoder-specific distributional shifts, enabling consistent geometric analysis across architecturally diverse backbones. 
+
+Handcrafted Feature Integration. To test whether handcrafted geometry features provide complementary information, we append the 21-dimensional curvature-and-distance statistics from [20] to the macro stream input. F1 drops by 0.63 pp, indicating that RIFT’s learned manifold geometry strictly subsumes these handcrafted de-scriptors, and their addition introduces redundancy into the fusion layer. 
+
+Efficiency. Table 5 reports module-level latency on a single RTX 3080 GPU. The macro stream’s Transformer encoder dominates at Mind the Rift: Cross-Scale Coupling Mismatch for AI-Generated Video Detection MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil 
+
+Table 5: Module-level latency profiling (precomputed fea-tures).                 
+
+> Module Latency (ms) % Total Orthogonal Decoupling 1.6 3.4 Macro Stream (Transformer) 40.4 86.0 Micro Stream (SRM+GRU) 1.9 4.1 Coupling Divergence 2.2 4.6 Gated Fusion 0.9 2.0
+> Post-backbone Total 47.0 100.0 gmacro gmicro
+> 0.00 0.25 0.50 0.75 1.00
+> Gate weight  27%
+> (a) Learned gate weights
+> Real Fake Real Fake 020 40 60 80
+> Mean Menger curvature
+> +52%
+> (b) Trajectory curvature
+
+Figure 3: Interpretability of RIFT. (a) Learned gate weights: 
+
+𝑔 macro remains near-saturated for both classes, while 𝑔 micro 
+
+drops 27% for AI-generated videos, showing autonomous suppression of the less reliable probe. (b) Mean Menger cur-vature: real trajectories exhibit 52% higher curvature on the learned manifold, indicating that natural videos produce richer geometric dynamics while AI-generated videos ex-hibit overly uniform trajectories. 
+
+86% of post-backbone time. Including backbone extraction, end-to-end latency is ∼182 ms (ViT-S/14) or ∼461 ms (ViT-L/14), with 4.7M trainable parameters. 
+
+## 3.5 Interpretability 
+
+Coupling Mismatch Validation. To directly validate the coupling mismatch hypothesis, we collect per-sample mutual information ˆ𝐼 (𝒛 macro , 𝒛 micro ) and conditional NLL from the trained model across all 120K videos. Real videos exhibit significantly higher MI ( −0.45 ±
+
+0.68) than AI-generated videos ( −6.25 ±5.95), with Cohen’s 𝑑 = 1.37 and 𝑝 < 10 −300 (Mann-Whitney U). (Negative MI estimates reflect MINE’s loose variational bound at low true MI, but relative class sep-aration remains valid.) The conditional NLL shows an even stronger separation: real −1.09 ± 0.30 versus fake +0.34 ± 0.34 (Cohen’s 𝑑 =
+
+4.46). The orthogonality check confirms that cos (𝒛 macro , 𝒛 micro ) ≈ 
+
+0.001 for both classes, ruling out information leakage. This sepa-ration is consistent across all 7 generators (see Appendix D), in-dicating that coupling mismatch is a robust, generator-agnostic regularity of current AI video generation rather than an artifact of specific architectures. Figure 1 visualizes this result. 
+
+Gate Weight Analysis. The macro gate remains near-saturated for both classes ( 𝑔 macro ≈ 0.96; Figure 3a), while the micro gate drops from 0 .80 (real) to 0 .58 (fake), a 27% relative suppression. This emer-gent asymmetry provides independent evidence for the coupling mismatch hypothesis: the model autonomously downweights the micro probe when cross-scale coupling is broken. 
+
+Trajectory Geometry. The Menger curvature of learned mani-fold trajectories shows a clear distributional shift (Figure 3b): real videos exhibit 52% higher mean curvature than AI-generated videos (18 .99 ± 8.12 vs. 12 .49 ± 6.73). This indicates that natural videos produce richer, more structured temporal dynamics on the learned manifold, while AI-generated videos exhibit overly uniform trajec-tories characteristic of diffusion-based synthesis. Yet the substantial distributional overlap confirms that coupling divergence, not indi-vidual geometry, provides the decisive signal. 
+
+## 3.6 Robustness Analysis 
+
+We evaluate RIFT on VidProM under 17 degradation conditions sim-ulating real-world post-processing: H.264 and H.265 re-encoding (500 kbps to 8 Mbps), Gaussian noise ( 𝜎 = 5−20), and spatial crop-ping (70%–90%). Features are re-extracted from degraded videos and evaluated with the frozen model. RIFT achieves peak robustness under H.265 re-encoding at 2 Mbps (F1 = 88.19%) and tolerates Gaussian noise well at most levels (F1 > 88% at 𝜎 ∈ { 5, 15 , 20 }), though performance varies non-monotonically across degradation intensities on the 996-sample evaluation subset. Performance degrades under aggressive spatial cropping (F1 < 0.77 at 80% crop), because cropping alters the spatial context on which patch statistics and optical flow are computed. Full per-generator results are provided in Appendix C. 
+
+## 3.7 Case Study: Zero-Shot Detection of Seedance 2.0 
+
+To evaluate whether the coupling mismatch hypothesis generalizes beyond the training distribution, we conduct a zero-shot case study on Seedance 2.0 [8], a commercial video generation model released by ByteDance in February 2026 that was entirely absent from our training data. We collect 27 videos spanning diverse content cate-gories and evaluate them with the frozen RIFT model without any fine-tuning or adaptation. 
+
+Detection and Coupling Signals. RIFT correctly classifies all 27 videos (100% detection rate; binomial 95% CI [86.8%, 100%], 𝑛 =27; mean confidence 97.5%, range 73.4%–100.0%) despite zero exposure to this generator during training. Comparing the coupling signals against the seven training generators, Seedance 2.0 exhibits even weaker cross-scale coupling in MI (ˆ 𝐼 = −17 .74 vs. fake avg −6.25) and micro gate suppression ( 𝑔 micro = 0.49 vs. 0 .58), while its condi-tional NLL ( +0.30) falls within the fake distribution ( +0.34 ± 0.34). The extreme MI value may partially reflect MINE estimator insta-bility on out-of-distribution inputs and should be read as a relative indicator of coupling breakdown. 
+
+Per-Frame Analysis. Figure 4 presents per-frame analysis of a representative video against a real-video baseline ( 𝜇 ± 𝜎 , 30 videos). The Menger curvature 𝜅 𝑡 lies consistently below the real band (mean 10 .28 vs. 18 .99), consistent with the overly uniform trajectory pattern observed across AI-generated videos. The conditional NLL reveals localized coupling breakdowns, and the direction change 
+
+𝛿 𝑡 shows unnaturally uniform temporal dynamics characteristic of diffusion-based generators. MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil Siyu Li, Jin Yang, and Weiheng Liang 𝑡 = 0 𝑡 = 5 𝑡 = 9 𝑡 = 14 𝑡 = 15 𝑡 = 31                       
+
+> 0510 15 20 25 10 20 30
+> Menger Curvature  𝜅 𝑡
+> Real ( 𝜇 ±𝜎 )Seedance 2.0
+> 0510 15 20 25 30
+> −10
+> Conditional NLL
+> −log  𝑃  (micro 𝑡  | macro 𝑡  )
+> Real ( 𝜇 ±𝜎 )Seedance 2.0
+> 0510 15 20 25
+> Effective Frame Index
+> 1.01.5
+> Direction Change  𝛿 𝑡
+> Real ( 𝜇 ±𝜎 )Seedance 2.0
+
+Figure 4: Per-frame analysis of a Seedance 2.0 video (street musician). Top: sampled frames. Bottom three rows: Menger curvature 𝜅 𝑡 , conditional NLL, and direction change 𝛿 𝑡 ,each compared against the real-video baseline ( 𝜇 ± 𝜎 , blue). Seedance 2.0 exhibits lower curvature (overly uniform dy-namics), elevated NLL (coupling breakdown), and uniform 𝛿 𝑡 
+
+(unnatural regularity). 
+
+## 4 Related Work 4.1 AI-Generated Image and Video Detection 
+
+Detection of AI-generated visual content has evolved through three largely independent paradigms. Spatial detectors [30, 34, 38, 40] identify per-frame artifacts in frequency, feature, or reconstruction space but discard temporal structure. Temporal consistency detectors ,most recently DeMamba [10], model frame-to-frame patterns but operate at a single semantic scale [16, 28, 42, 43]. Physics-informed detectors such as NSG-VD [44] and ReStraV [20] leverage physical priors such as spatiotemporal gradients or trajectory curvature [18], yet extract handcrafted statistics from one scale only. Orthogonally, recent efforts address diffusion-specific artifacts [12], cross-domain generalization to unseen forgery methods [41], grounded artifact reasoning [24], and training-free detection via second-order tempo-ral features [45]. All these paradigms analyze signals at individual scales; RIFT instead targets the cross-scale coupling relationship itself. 
+
+## 4.2 Hierarchical and Multi-Branch Detection 
+
+Recent work has begun to combine macro and micro analysis. Shuai et al. [33] propose a two-stream network that fuses localization and verification branches through multi-scale collaborative learning. MPF-Net [17] introduces a hierarchical dual-path framework with a manifold sentinel branch and a micro-temporal fluctuation branch, while Zhou et al. [47] demonstrate that frozen VFMs inherently pos-sess off-manifold detection capabilities. Three fundamental distinc-tions separate these approaches from RIFT: (1) MPF-Net’s branches operate sequentially and independently with no cross-branch inter-action, whereas RIFT runs both streams in parallel with orthogo-nal constraints ; (2) each branch answers a self-contained question, whereas RIFT measures the coupling divergence 𝑃 (micro | macro )
+
+as the core forensic evidence; and (3) MPF-Net’s performance varies across VFM backbones, whereas RIFT exhibits encoder agnosticism (<0.1% within DINOv2, 0 .73 pp across encoder families). 
+
+## 4.3 Topological Data Analysis in Temporal Modeling 
+
+Persistent homology [14] provides algebraic invariants that char-acterize the shape of data across scales: connected components (𝐻 0) capture fragmentation and merging, while loops ( 𝐻 1) capture cyclic structures. Persistence landscapes [7] offer a stable, vector-ized summary compatible with machine learning pipelines. While topological data analysis has been applied to time series classifica-tion and shape recognition, to our knowledge RIFT is the first to apply persistent homology to AI-generated video detection. In our framework, Vietoris–Rips filtrations on learned manifold trajecto-ries complement local differential geometry with global structural invariants (Sec. 2.3). 
+
+## 5 Conclusion 
+
+We have presented RIFT, an orthogonal forensic framework built on a central hypothesis: AI video generators, by optimizing perceptual quality at individual scales without explicit cross-scale supervi-sion, systematically break the cross-scale coupling that the unified imaging physics pipeline imposes on natural videos. This coupling mismatch constitutes a structural limitation of current generative architectures, because the joint distribution across scales is never explicitly optimized during generation. Our framework detects this mismatch through orthogonal macro-micro decomposition, a geo-metric and topological dynamic baseline, an independent forensic probe, and the coupling divergence between the two streams. Experimentally, RIFT achieves 99.33% F1 on VidProM (7 genera-tors) and 99.72% F1 on GenVidBench (4 generators), with 97.87% unseen-generator detection rate in leave-one-out evaluation. A key property is encoder agnosticism: 14 × parameter scaling within DI-NOv2 changes F1 by <0.1%, and switching to DINOv1 reduces F1 by only 0.73 pp. With only 4.7M trainable parameters and frozen pretrained encoders, the entire pipeline trains on a single consumer GPU (RTX 3080, 10 GB) and achieves ∼182 ms end-to-end inference latency. 
+
+Limitations and Future Work. RIFT exhibits fragility under ag-gressive spatial cropping, which alters the spatial context on which patch statistics and optical flow are computed; spatial augmenta-tion during feature extraction (random cropping) is a direct remedy. The macro Transformer accounts for 86% of post-backbone com-pute, motivating distillation into a compact student model. Finally, broader evaluation on next-generation architectures beyond the Seedance 2.0 case study (Sec. 3.7), including Sora [6] and Kling, will further assess the generality of the coupling mismatch hypothesis. 
+
+## Acknowledgments 
+
+This work was supported by the National Natural Science Foun-dation of China (Grants No. 62162057 and No. 61872254), by the Key Laboratory of Data Protection and Intelligent Management of the Ministry of Education, China (Grant No. SCUSAKFKT202402Y), Mind the Rift: Cross-Scale Coupling Mismatch for AI-Generated Video Detection MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil 
+
+and by the Open Program of Shaanxi Key Laboratory of Intelligent Policing (Independent Research Topic, Grant No. SXZJ25KF08). 
+
+## References 
+
+[1] Georgios Arvanitidis, Lars Kai Hansen, and Søren Hauberg. 2018. Latent Space Oddity: on the Curvature of Deep Generative Models. In International Conference on Learning Representations (ICLR) .[2] Belhassen Bayar and Matthew C Stamm. 2018. Constrained convolutional neural networks: A new approach towards general purpose image manipulation de-tection. IEEE Transactions on Information Forensics and Security 13, 11 (2018), 2691–2706. [3] Mohamed Ishmael Belghazi, Aristide Baratin, Sai Rajeswar, Sherjil Ozair, Yoshua Bengio, Aaron Courville, and R Devon Hjelm. 2018. Mutual information neural estimation. In International Conference on Machine Learning (ICML) . 531–540. [4] Yoshua Bengio, Aaron Courville, and Pascal Vincent. 2013. Representation Learning: A Review and New Perspectives. IEEE Transactions on Pattern Analysis and Machine Intelligence 35, 8 (2013), 1798–1828. [5] Andreas Blattmann, Tim Dockhorn, Sumith Kulal, Daniel Mendelevitch, Maciej Kilian, Dominik Lorenz, Yam Levi, Zion English, Vikram Voleti, Adam Letts, Varun Jampani, and Robin Rombach. 2023. Stable Video Diffusion: Scaling Latent Video Diffusion Models to Large Datasets. arXiv preprint arXiv:2311.15127 (2023). [6] Tim Brooks, Bill Peebles, et al. 2024. Video generation models as world simulators. 
+
+OpenAI Technical Report (2024). [7] Peter Bubenik. 2015. Statistical topological data analysis using persistence land-scapes. Journal of Machine Learning Research 16, 3 (2015), 77–102. [8] ByteDance. 2026. Seedance 2.0. Commercial video generation model, released February 2026. https://seed.bytedance.com/zh/blog/seedance-2-0-%E6%AD% A3%E5%BC%8F%E5%8F%91%E5%B8%83 [9] Mathilde Caron, Hugo Touvron, Ishan Misra, Hervé Jégou, Julien Mairal, Piotr Bojanowski, and Armand Joulin. 2021. Emerging Properties in Self-Supervised Vision Transformers. In IEEE/CVF International Conference on Computer Vision (ICCV) . 9650–9660. [10] Haoxing Chen, Yan Hong, Zizheng Huang, Zhuoer Xu, Zhangxuan Gu, Yaohui Li, Jun Lan, Huijia Zhu, Jianfu Zhang, Weiqiang Wang, and Huaxiong Li. 2026. DeMamba: AI-Generated Video Detection on Million-Scale GenVideo Benchmark. 
+
+Science China Information Sciences 69 (2026). doi:10.1007/s11432-024-4894-0 [11] Haoxin Chen, Yong Zhang, Xiaodong Cun, Menghan Xia, Xintao Wang, Chao Weng, and Ying Shan. 2024. VideoCrafter2: Overcoming data limitations for high-quality video diffusion models. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) . 7310–7320. [12] Harry Cheng, Yangyang Guo, Tianyi Wang, Liqiang Nie, and Mohan Kankan-halli. 2024. Diffusion Facial Forgery Detection. In Proceedings of the 32nd ACM International Conference on Multimedia . doi:10.1145/3664647.3680797 [13] Chandler Timm Doloriel and Ngai-Man Cheung. 2024. Frequency Masking for Universal Deepfake Detection. In IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) . 13466–13470. [14] Herbert Edelsbrunner and John Harer. 2010. Computational topology: an intro-duction . American Mathematical Society. [15] Jessica Fridrich and Jan Kodovsky. 2012. Rich models for steganalysis of digital images. IEEE Transactions on Information Forensics and Security 7, 3 (2012), 868–882. [16] Zhihao Gu, Yang Chen, Taiping Yao, Shouhong Ding, Jilin Li, Feiyue Huang, and Lizhuang Ma. 2021. Spatiotemporal Inconsistency Learning for DeepFake Video Detection. In Proceedings of the 29th ACM International Conference on Multimedia .3473–3481. doi:10.1145/3474085.3475508 [17] Xinan He, Kaiqing Lin, Yue Zhou, Jiaming Zhong, Wei Ye, Wenhui Yi, Bing Fan, Feng Ding, Haodong Li, Bo Cao, and Bin Li. 2026. MPF-Net: Exposing High-Fidelity AI-Generated Video Forgeries via Hierarchical Manifold Deviation and Micro-Temporal Fluctuations. arXiv preprint arXiv:2601.21408 (2026). [18] Olivier J Hénaff, Robbe LT Goris, and Eero P Simoncelli. 2019. Perceptual straight-ening of natural videos. Nature Neuroscience 22, 6 (2019), 984–991. [19] Wenyi Hong, Ming Ding, Wendi Zheng, Xinghan Liu, and Jie Tang. 2023. CogVideo: Large-scale pretraining for text-to-video generation via transformers. In International Conference on Learning Representations (ICLR) .[20] Christian Internò, Robert Geirhos, Markus Olhofer, Sunny Liu, Barbara Hammer, and David Klindt. 2025. AI-Generated Video Detection via Perceptual Straight-ening. In Advances in Neural Information Processing Systems (NeurIPS) .[21] Levon Khachatryan, Andranik Movsisyan, Vahram Tadevosyan, Roberto Hen-schel, Zhangyang Wang, Shant Navasardyan, and Humphrey Shi. 2023. Text2Video-Zero: Text-to-Image Diffusion Models are Zero-Shot Video Gen-erators. In IEEE/CVF International Conference on Computer Vision (ICCV) . 15954– 15964. [22] Pika Labs. 2024. Pika. Commercial video generation platform. https://pika.art [23] Jean-Christophe Léger. 1999. Menger curvature and rectifiability. Annals of Mathematics 149, 3 (1999), 831–869. [24] Yifei Li, Wenzhao Zheng, Yanran Zhang, Runze Sun, Yu Zheng, Lei Chen, Jie Zhou, and Jiwen Lu. 2026. Skyra: AI-Generated Video Detection via Grounded Artifact Reasoning. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) .[25] Tsung-Yi Lin, Priya Goyal, Ross Girshick, Kaiming He, and Piotr Dollár. 2017. Focal loss for dense object detection. In IEEE International Conference on Computer Vision (ICCV) . 2980–2988. [26] Zhengzhe Liu, Xiaojuan Qi, and Philip HS Torr. 2020. Global Texture Enhance-ment for Fake Face Detection in the Wild. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) . 8060–8069. [27] Ilya Loshchilov and Frank Hutter. 2019. Decoupled weight decay regularization. In International Conference on Learning Representations (ICLR) .[28] Long Ma, Zhiyuan Yan, Qinglang Guo, Yong Liao, Haiyang Yu, and Pengyuan Zhou. 2025. Detecting AI-Generated Video via Frame Consistency. In IEEE International Conference on Multimedia and Expo (ICME) .[29] Zhenliang Ni, Qiangyu Yan, Mouxiao Huang, Tianning Yuan, Yehui Tang, Hailin Hu, Xinghao Chen, and Yunhe Wang. 2026. GenVidBench: A 6-Million Benchmark for AI-Generated Video Detection. In Proceedings of the AAAI Conference on Artificial Intelligence , Vol. 40. 15582–15590. doi:10.1609/aaai.v40i18.38587 [30] Utkarsh Ojha, Yuheng Li, and Yong Jae Lee. 2023. Towards universal fake image detectors that generalize across generative models. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) . 24480–24489. [31] Maxime Oquab, Timothée Darcet, Théo Moutakanni, Huy Vo, Marc Szafraniec, Vasil Khalidov, Pierre Fernandez, Daniel Haziza, Francisco Massa, Alaaeldin El-Nouby, et al. 2024. DINOv2: Learning robust visual features without supervision. 
+
+Transactions on Machine Learning Research (2024). [32] Ed Pizzi, Giorgos Kordopatis-Zilos, Hiral Patel, Gheorghe Postelnicu, Sugosh Nagavara Ravindra, Akshay Gupta, Symeon Papadopoulos, Giorgos Tolias, and Matthijs Douze. 2024. The 2023 Video Similarity Dataset and Challenge. Computer Vision and Image Understanding 243 (2024), 103997. doi:10.1016/j.cviu.2024.103997 [33] Chao Shuai, Jieming Zhong, Shuang Wu, Feng Lin, Zhibo Wang, Zhongjie Ba, Zhenguang Liu, Lorenzo Cavallaro, and Kui Ren. 2023. Locate and Verify: A Two-Stream Network for Improved Deepfake Detection. In Proceedings of the 31st ACM International Conference on Multimedia . 7131–7142. doi:10.1145/3581783.3612386 [34] Chuangchuang Tan, Huan Liu, Yao Zhao, Shikui Wei, Guanghua Gu, Ping Liu, and Yunchao Wei. 2024. Rethinking the up-sampling operations in CNN-based generative network for generalizable deepfake detection. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) .[35] Zachary Teed and Jia Deng. 2020. RAFT: Recurrent All-Pairs Field Transforms for Optical Flow. In European Conference on Computer Vision (ECCV) . 402–419. [36] Aaron van den Oord, Yazhe Li, and Oriol Vinyals. 2018. Representation learning with contrastive predictive coding. arXiv preprint arXiv:1807.03748 (2018). [37] Jiuniu Wang, Hangjie Yuan, Dayou Chen, Yingya Zhang, Xiang Wang, and Shiwei Zhang. 2023. ModelScope Text-to-Video Technical Report. arXiv preprint arXiv:2308.06571 (2023). [38] Sheng-Yu Wang, Oliver Wang, Richard Zhang, Andrew Owens, and Alexei A Efros. 2020. CNN-generated images are surprisingly easy to spot... for now. In 
+
+IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) . 8695– 8704. [39] Wenhao Wang and Yi Yang. 2024. VidProM: A million-scale real prompt-gallery dataset for text-to-video diffusion models. In Advances in Neural Information Processing Systems (NeurIPS) .[40] Zhendong Wang, Jianmin Bao, Wengang Zhou, Weilun Wang, Hezhen Hu, Hong Chen, and Houqiang Li. 2023. DIRE for Diffusion-Generated Image Detection. In 
+
+IEEE/CVF International Conference on Computer Vision (ICCV) .[41] Ruiyang Xia, Dawei Zhou, Decheng Liu, Lin Yuan, Shuodi Wang, Jie Li, Nan-nan Wang, and Xinbo Gao. 2024. Advancing Generalized Deepfake Detector with Forgery Perception Guidance. In Proceedings of the 32nd ACM International Conference on Multimedia . doi:10.1145/3664647.3680713 [42] Yuting Xu, Jian Liang, Gengyun Jia, Ziming Yang, Yanhao Zhang, and Ran He. 2023. TALL: Thumbnail Layout for Deepfake Video Detection. In IEEE/CVF International Conference on Computer Vision (ICCV) . 22658–22668. [43] Rui Zhang, Hongxia Wang, Mingshan Du, Hanqing Liu, Yang Zhou, and Qiang Zeng. 2023. UMMAFormer: A Universal Multimodal-adaptive Transformer Frame-work for Temporal Forgery Localization. In Proceedings of the 31st ACM Interna-tional Conference on Multimedia . 8749–8759. doi:10.1145/3581783.3613767 [44] Shuhai Zhang, ZiHao Lian, Jiahao Yang, Daiyuan Li, Guoxuan Pang, Feng Liu, Bo Han, Shutao Li, and Mingkui Tan. 2025. Physics-Driven Spatiotemporal Modeling for AI-Generated Video Detection. In Advances in Neural Information Processing Systems (NeurIPS) .[45] Chende Zheng, Ruiqi Suo, Chenhao Lin, Zhengyu Zhao, Le Yang, Shuai Liu, Minghui Yang, Cong Wang, and Chao Shen. 2025. D3: Training-Free AI-Generated Video Detection Using Second-Order Features. In IEEE/CVF International Confer-ence on Computer Vision (ICCV) . 12852–12862. [46] Zangwei Zheng, Xiangyu Peng, Tianji Yang, Chenhui Shen, Shenggui Li, Hongxin Liu, Yukun Zhou, Tianyi Li, and Yang You. 2024. Open-Sora: Democratizing Efficient Video Production for All. arXiv preprint arXiv:2412.20404 (2024). [47] Yue Zhou, Xinan He, Kaiqing Lin, Bing Fan, Feng Ding, Jinhua Zeng, and Bin Li. 2025. Brought a Gun to a Knife Fight: Modern VFM Baselines Outgun Specialized Detectors on In-the-Wild AI Image Detection. arXiv preprint arXiv:2509.12995 
+
+(2025). MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil Siyu Li, Jin Yang, and Weiheng Liang 
+
+## A Training Details and Hyperparameters A.1 Two-Stage Training Procedure 
+
+RIFT employs a two-stage training strategy with frozen backbone encoders (DINOv2 ViT-S/14 and RAFT-Large): 
+
+Stage 1: Orthogonal Decoupling Pretraining (30 epochs). Only the orthogonal decoupling module (macro/micro projectors and re-construction decoder) and the macro stream analyzer are train-able; the fusion, conditional dependency, and micro stream mod-ules are frozen. The manifold regularization weight is elevated (𝛾 manifold = 0.2) to encourage well-structured manifold trajecto-ries before joint training. Learning rate: 10 −3 with linear warmup (5% of epochs) followed by cosine annealing. Gram-Schmidt hard orthogonalization is applied every 100 optimization steps. 
+
+Stage 2: Joint Training (50 epochs). All trainable modules are unfrozen (backbone encoders remain frozen). The manifold weight is reduced to 𝛾 manifold = 0.02 to let classification loss dominate. Learning rate: 3 × 10 −4 with linear warmup followed by cosine annealing with warm restarts ( 𝑇 0 = 5, 𝑇 mult = 2). Early stopping with patience of 20 epochs on validation F1-macro. 
+
+## A.2 Hyperparameter Settings 
+
+Table 6 summarizes all hyperparameters used in the final model. 
+
+Table 6: Complete hyperparameter settings for RIFT.                                                        
+
+> Category Parameter Value Model Orthogonal embedding 𝑑 𝑧 128 Manifold dimension 𝑑 manifold 24 Micro statistics 𝑑 stat 128 Macro temporal 𝑑 temporal 64 Micro temporal 𝑑 temporal_micro 64 Topology 𝑑 topo (4 landscapes ×16 bins ×2 dims) 128 InfoNCE temperature 𝜏 0.15 Sampling Segment length 𝐿 32 frames Spatial resolution 224 ×224
+> Segments per video (train) 1Segments per video (eval) 3Loss Weights Orthogonality 𝛼 ortho 0.1 Reconstruction 𝛽 recon 0.5 Manifold 𝛾 manifold (Stage 1 / Stage 2) 0.2 / 0.02 Conditional 𝛿 cond 0.05 Focal loss 𝛾 focal 2.0 Training Stage 1 epochs / learning rate 30 / 10 −3
+> Stage 2 epochs / learning rate 50 / 3×10 −4
+> Batch size 64 Weight decay 0.01 Gradient clipping 1.0 Gram-Schmidt interval 100 steps Regularization Fusion dropout 0.15 Conditional predictor dropout 0.2 Micro GRU dropout 0.15 Augmentation Gaussian blur prob. 0.2 Resize degradation prob. 0.3 Random crop prob. 0.3
+
+## A.3 Loss Function 
+
+The total training loss is: 
+
+L = Lfocal + 𝛼 Lortho + 𝛽 Lrecon 
+
++ 𝛾 (L iso + L smooth + L nce ) + 𝛿 Lcond (16) where Lfocal is class-balanced focal loss ( 𝛾 focal =2.0, equal class weights), Lortho penalizes cosine similarity between streams, Lrecon 
+
+reconstructs CLS tokens, Liso /Lsmooth /Lnce regularize the manifold (isometry, smoothness, contrastive), and Lcond is the conditional prediction loss (real samples only). 
+
+## B Per-Generator Detection Rates B.1 VidProM 
+
+Table 7 reports per-generator detection rates on the VidProM test set (50/50 stratified split, ∼60K samples). 
+
+Table 7: Per-generator detection on VidProM test set (50/50 stratified split). Per-generator rates use single-segment eval-uation; aggregate metrics in Table 1 of the main text use the standard multi-segment protocol. 
+
+Generator 𝑛 Detection Rate False Negatives T2VZero 4,953 100.00% 0VideoCrafter2 4,968 100.00% 0ModelScope 5,008 100.00% 0Show-1 5,012 99.90% 5Pika 5,019 99.08% 46 OpenSora 5,066 98.36% 83 CogVideo 4,970 97.24% 137 Real (FPR) 25,000 — 470 FP (1.88%) 
+
+Overall 59,996 99.23% 271 FN total 
+
+CogVideo and OpenSora are the most challenging generators (97.24% and 98.36% respectively), likely because their generation pipelines produce more temporally coherent outputs that better preserve cross-scale coupling patterns. 
+
+## B.2 GenVidBench 
+
+Table 8 reports per-generator results on GenVidBench (50/50 split, 
+
+∼34K samples). 
+
+Table 8: Per-generator detection on GenVidBench. 
+
+Subset Generator Acc F1 Det. Rate Main CogVideo 99.61% 99.80% 99.61% Mora 99.97% 99.99% 99.97% MuseV 99.95% 99.98% 99.95% SVD 99.97% 99.98% 99.97% Real 98.27% — 1.73% FPR Plants CogVideo 100.00% 100.00% 100.00% Mora 100.00% 100.00% 100.00% MuseV 100.00% 100.00% 100.00% SVD 100.00% 100.00% 100.00% Real 98.10% — 1.90% FPR 
+
+RIFT achieves near-perfect detection on all GenVidBench genera-tors, with CogVideo being the most challenging on the Main subset (99.61%), consistent with VidProM findings. The Plants subset (high visual randomness) is perfectly detected at 100% for all generators. Mind the Rift: Cross-Scale Coupling Mismatch for AI-Generated Video Detection MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil 
+
+Table 10: Per-generator coupling mismatch statistics. MI = MINE mutual information estimate; NLL = conditional nega-tive log-likelihood; cos (zmacro , zmicro ) = orthogonality check; 
+
+¯𝜅 = mean Menger curvature. Curvature statistics in this table are computed over all 119,991 videos. The main text (Sec. 3.5) reports values from a 24K interpretability subset with bal-anced per-generator sampling, which yields slightly different statistics for both classes: real 18 .99 ± 8.12 (vs. 19 .04 ± 9.43 here) and fake 12 .49 ± 6.73 (vs. 12 .49 ± 12 .59 here). The larger fake standard deviation in this table reflects cross-generator vari-ance.                                                                                                           
+
+> Source 𝑛 MI NLL |cos |¯𝜅
+> Real 49,999 −0.45 ±0.68 −1.09 ±0.30 0.0009 19 .04 ±9.43 CogVideo 10,000 −6.31 ±5.42 +0.24 ±0.30 0.0005 11 .87 ±8.43 ModelScope 10,000 −4.58 ±4.92 +0.01 ±0.47 0.0008 5.02 ±2.01 OpenSora 10,000 −4.61 ±5.10 +0.44 ±0.24 0.0021 23 .53 ±14 .95 Pika 9,993 −3.86 ±4.02 +0.55 ±0.21 0.0004 28 .87 ±17 .27 Show-1 10,000 −10 .16 ±6.25 +0.30 ±0.16 0.0021 9.74 ±5.38 T2VZero 9,999 −9.57 ±7.45 +0.31 ±0.33 0.0015 1.50 ±0.31 VideoCrafter2 10,000 −4.63 ±4.17 +0.50 ±0.24 0.0017 7.11 ±2.54
+> Fake avg 69,992 −6.25 ±5.95 +0.34 ±0.34 0.0013 12 .49 ±12 .59
+
+## C Full Robustness Results 
+
+Table 9 presents RIFT’s performance under all 17 degradation con-ditions evaluated on a 996-sample VidProM subset. Features are re-extracted from degraded videos and evaluated with the frozen model. 
+
+Table 9: Full robustness evaluation under 17 degradation conditions. Clean baseline: F1 = 99.05%.                                                                    
+
+> Category Condition Acc F1 AUC
+> Clean None 98.90 99.05 99.89 H.264 500 kbps 62.95 75.68 55.31 1 Mbps 70.08 67.82 93.00 2 Mbps 80.62 85.43 95.00 4 Mbps 74.40 81.59 85.24 8 Mbps 64.36 76.32 65.66 H.265 500 kbps 63.86 75.77 61.04 1 Mbps 75.28 81.53 86.87 2 Mbps 87.18 88.19 95.32 4 Mbps 77.60 81.19 86.98 8 Mbps 74.97 83.76 82.30 Gaussian noise
+> 𝜎 =588.45 90.09 93.95
+> 𝜎 =10 70.87 79.89 78.07
+> 𝜎 =15 88.57 90.51 94.35
+> 𝜎 =20 84.56 88.30 95.65 Spatial crop 70% 59.64 35.34 85.42 80% 70.00 76.79 87.67 90% 60.86 68.88 80.02
+
+Analysis. H.265 generally outperforms H.264 at matched bitrates, peaking at 2 Mbps (F1 = 88.19%). Gaussian noise is tolerated at most levels (F1 > 88% at 𝜎 ∈ { 5, 15 , 20 }). Some conditions exhibit non-monotonic behavior (e.g., 𝜎 =10 drops to 79.89%, H.264 1 Mbps to 67.82%), which we attribute to the limited evaluation subset ( 𝑛 =
+
+996) and the interaction between specific degradation parameters and the precomputed feature pipeline. Spatial cropping is the most damaging degradation (F1 drops to 35.34% at 70% crop), because cropping alters the spatial context upon which patch statistics and optical flow are computed, disrupting the feature extraction pipeline rather than the classifier itself. 
+
+## D Per-Generator Coupling Mismatch Statistics 
+
+Table 10 reports per-generator coupling statistics computed from the trained model across all 119,991 training+test videos. 
+
+Key Observations. (1) Universal coupling breakdown : all 7 gener-ators exhibit substantially lower MI and positive NLL compared to real videos, confirming that coupling mismatch is a universal property of current AI video generation. (2) Orthogonality is main-tained : | cos (zmacro , zmicro )| < 0.003 for all generators, confirming no information leakage between streams. (3) Generator-specific sig-natures : curvature varies widely across generators (T2VZero: 1 .50, Pika: 28 .87), reflecting different temporal dynamics. Despite this diversity, the coupling divergence signal remains consistently dis-criminative. (4) NLL is the strongest separator : Cohen’s 𝑑 = 4.46 for NLL vs. 1 .37 for MI, because NLL directly measures the conditional dependency 𝑃 (micro | macro ).
+
+## E Seedance 2.0 Full Results 
+
+Table 11 reports per-video detection results for all 27 Seedance 2.0 videos evaluated in zero-shot mode (no fine-tuning or adaptation). MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil Siyu Li, Jin Yang, and Weiheng Liang 
+
+Table 11: Per-video Seedance 2.0 zero-shot detection results. All 27 videos correctly classified as AI-generated. Coupling statistics: MI = −17 .74 , NLL = +0.30 , 𝑔 micro = 0.49 , ¯𝜅 = 10 .28 .
+
+Video Content Pred Confidence Aerial terraces Fake 97.1% Ancient architecture Fake 99.6% Animals (beach) Fake 100.0% Animals (grassland) Fake 100.0% Aurora, Iceland Fake 99.8% Calligraphy Fake 100.0% Children, playground Fake 96.1% City traffic Fake 98.8% Coffee still life Fake 89.5% Desert landscape Fake 90.8% Fireworks night Fake 100.0% Football Fake 100.0% Indoor cooking Fake 100.0% Industrial factory Fake 100.0% Macro flowers Fake 98.8% Musician Fake 99.0% Nature coastline Fake 100.0% Ocean sailboat Fake 100.0% Pastoral rice fields Fake 100.0% Rain scene Fake 100.0% Snow forest Fake 99.9% Sports person Fake 100.0% Starry timelapse Fake 89.9% Street music Fake 99.8% Tech robot Fake 99.7% Underwater ocean Fake 73.4% Waterfall jungle Fake 100.0% 
+
+Mean / All 27/27 97.5% 
+
+The lowest-confidence video is underwater ocean (73.4%), featur-ing slow-moving marine life with minimal motion structure that weakens the macro baseline’s geometric features. Nevertheless, all 27 videos are correctly classified, demonstrating that the coupling mismatch signal generalizes to unseen commercial generators. 
+
+Coupling Signal Comparison. Seedance 2.0 exhibits even weaker cross-scale coupling than the 7 training generators: MI = −17 .74 (vs. fake avg −6.25), NLL = +0.30 (within fake distribution +0.34 ± 0.34), 
+
+𝑔 micro = 0.49 (vs. fake avg 0 .58, real 0 .80), and ¯ 𝜅 = 10 .28 (vs. fake avg 12 .49, real 19 .04). The extreme MI value may partially reflect MINE estimator instability on out-of-distribution data; it should be interpreted as a relative indicator of coupling breakdown rather than a calibrated measurement.

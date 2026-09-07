@@ -1,0 +1,1280 @@
+Title: TourPhysics: Bringing Physics to World Models for Exploration and Manipulation from a Single Image
+
+URL Source: https://arxiv.org/pdf/2609.04911v1
+
+Published Time: Mon, 07 Sep 2026 00:55:04 GMT
+
+Number of Pages: 36
+
+Markdown Content:
+TourPhysics: Bringing Physics to World Models for Exploration and Manipulation from a Single Image 
+
+Xin Zhang *†1,2, Yabo Chen *2, Zixuan Duan 2,3, Haibin Huang 2, Chi Zhang 2, Feng Xu 1,
+
+Xuelong Li B21Fudan University, 2Institute of Artificial Intelligence (TeleAI), China Telecom, 3Nanjing University 
+
+> *
+
+Equal contributions. †Work done during an internship at TeleAI. BCorresponding authors. 
+
+Interactive visual world models must distinguish observation from physical intervention. Camera motion reveals new surfaces, whereas intervention changes object motion, contact, and deformation. Current video world models are largely driven by appearance priors and often lose physical or spa-tial consistency over long horizons. We present TourPhysics, an online framework initialized from a single image and a declarative physical configuration. TourPhysics extends PhysOmni, our ACM Multimedia 2026 work, from finite physics-grounded video synthesis to persistent exploration and manipulation. TourPhysics combines deterministic simulation with video generation while assigning separate roles to simulator state, geometric evidence, generator controls, and appearance memory. For each action, the simulator computes a finite physical and camera trajectory before the corre-sponding observation is generated. Accepted observations publish the terminal state and update the appearance memory and subsequent generator controls, while the committed state and simulator geometry remain fixed throughout synthesis and retry. We further separate the simulator geometry used for projection and visibility from the relative depth used to condition the generator. A reference-anchored memory retrieves accepted static appearance through geometric cross-view correspondence and incorporates it through a bounded residual that reverts to the native path when no valid corre-spondence exists. On simulator-defined camera tours and object manipulations, TourPhysics follows prescribed camera and object trajectories more closely than the evaluated baselines, preserves the input scene, and reduces appearance drift during long-horizon revisits. 
+
+Keywords: World models; Physical simulation; Video generation; Single-image scene reconstruction; Per-sistent memory; Camera control; Physical interaction 
+
+# 1 Introduction 
+
+An interactive world model must distinguish observation from intervention. Moving a camera reveals previ-ously unseen surfaces, whereas applying a force changes object positions, contacts, and deformations. Both operations produce new images, but only intervention changes the physical state; observation instead expands the knowledge that the system holds of the same scene. Recent video generators produce convincing camera motion and object dynamics, and interactive world models increasingly accept viewpoint and action controls [2, 5, 10, 11, 13, 28, 49]. Most of these systems rely on learned appearance priors, so plausible video does not guarantee a persistent or physically faithful world. A scene may change when revisited, temporal caches may carry hallucinated details forward, and learned motion may ignore a prescribed interaction. These failures arise when generated appearance is allowed to stand in for geometric evidence or physical state. Physics-aware generation methods add trajectories, forces, material controls, or simulator outputs to video synthesis [1, 18, 24]. Geometry-aware methods use camera poses, depth, or reconstructed scene evidence to improve viewpoint control and cross-view consistency [32, 48]. Combining these capabilities requires ex-plicit ownership of state. Our work builds on PhysOmni [54] and extends its single-image, physics-grounded, multi-object scene generation and real-time interaction setting to persistent exploration and manipulation. 1arXiv:2609.04911v1 [cs.CV] 4 Sep 2026 Single image Persistent exploration-and-manipulation Long-horizon tour + manipulation     
+
+> Simulate trajectory Synthesize observation Evaluate quality Atomic commit persistent state for future actions
+
+Declarative Configuration Appearance Memory accepted evidence 
+
+> Simulator/Camera States geometry remains fixed
+> Quality Gate atomic commit
+> Action execution and candidate tr ajector y gener ation
+
+Figure 1 Given a single image I0 and a declarative configuration Θ decl , TourPhysics maintains a persistent scene model for camera exploration and object manipulation. For each action, a physical transition computes a fixed physical and camera trajectory; the system then synthesizes the corresponding observation, applies a quality gate, and atomically commits the simulator state together with the accepted appearance evidence. The simulator state and geometric record remain fixed during synthesis, and the committed state supports the long-horizon tour and manipulation shown on the right. 
+
+While PhysOmni focuses on generating and interacting with a physics-grounded scene from a single image, TourPhysics maintains an explicit world state across multiple action–observation cycles. Each cycle consists of a simulator-defined physical and camera trajectory followed by observation synthesis over that fixed trajec-tory segment. A quality-gated commit then either publishes the terminal state and the accepted appearance evidence or leaves the persistent world unchanged. In this way, TourPhysics turns physics-grounded genera-tion into an online, stateful world-model loop: the simulator governs object evolution, simulator-consistent geometry governs projection and visibility, and the generator supplies appearance without altering the phys-ical scene model. Single-image initialization makes this separation especially important. An image constrains visible ap-pearance but leaves occluded geometry, scale, material parameters, and future dynamics underdetermined. TourPhysics combines the image with a user-provided declarative configuration to build one persistent, con-trollable physical hypothesis. The configuration specifies controllable objects, material families, boundary conditions, interventions, and camera actions. TourPhysics processes one committed observation window at a time. For each action, it computes a finite physical and camera trajectory and then generates an observation of that fixed segment. A quality gate either commits the terminal state and the appearance evidence together or leaves the persistent state unchanged. Generated observations may extend appearance knowledge, but they cannot modify the committed dynamics or the simulator geometry. Figure 1 summarizes this workflow, from a single image to an interactive world, and illustrates the resulting long-horizon camera exploration and object manipulation. TourPhysics assigns different roles to two depth representations. Simulator-consistent depth governs projection, visibility, correspondence, and trajectory evaluation, while relative depth conditions the video generator and may be completed from accepted observations. For long-horizon consistency, the system retains the original input image as a permanent reference and retrieves the accepted appearance through geometric cross-view correspondence. Historical evidence enters attention as a bounded residual; when no valid correspondence is available, the model follows its native reference-conditioned path. 2We evaluate TourPhysics on simulator-defined camera tours and object manipulations involving rigid, cloth, elastic, granular, and fluid proxies. The evaluation measures alignment with prescribed camera and object trajectories, event timing and deformation, input-scene similarity, and long-horizon appearance sta-bility. Our contributions are twofold: 
+
+• We formulate single-image tour-and-manipulate generation as coupled physical and epistemic transi-tions and present TourPhysics as an online world model with explicit state ownership. The simulator fixes the physical and camera trajectory before observation synthesis, while a quality-gated commit publishes the accepted state and visual evidence atomically. 
+
+• We introduce two complementary consistency mechanisms: simulator-consistent geometry is kept sep-arate from generator-facing depth, and a reference-anchored memory retrieves accepted static appear-ance through geometry-routed cross-view correspondence. Historical features enter as a confidence-bounded residual and fall back exactly to the native reference-conditioned path when correspondence is invalid. 
+
+# 2 Related Work 
+
+## 2.1 Video World Models and Interactive Environments 
+
+Diffusion models supply strong appearance and motion priors for video generation [2, 4, 5, 28, 29, 58, 60, 91], while recent analyses of foundation models summarize the scaling and conditioning trends underlying these systems [59]. Complementary AI Flow studies consider system-level AI service organization [81, 82]. Studies of temporal prediction and interpolation further reveal the need to preserve motion and appearance across adjacent frames [61, 62], whereas interactive world models synthesize observations conditioned on learned actions or compact state representations [10, 12–15, 83]. Playable Environments represents a scene from a single image through controllable camera poses and learned object actions [16], whereas Dexterous World Models conditions video diffusion on a static 3D rendering together with an egocentric hand trajectory [17]. Although these methods support action-controlled video synthesis, they generally do not distinguish obser-vation from intervention within their state updates. In TourPhysics, only the physical branch updates the simulator state, whereas camera-induced observations update appearance knowledge only after they commit. 
+
+## 2.2 Geometry-Aware Video and Persistent Scene Representations 
+
+Camera-controlled video generation relies on camera pose, depth, optical flow, or reconstructed 3D evidence to improve viewpoint control and cross-view consistency [32, 35, 36, 70, 74, 75, 93]. Persistent approaches maintain point clouds or explicit 3D/4D representations across generated views [33, 34, 37, 38, 66, 69, 71]. Single-image methods estimate camera parameters and dense geometry, or construct object-centric and scene-level representations [31, 41–47, 67, 68, 72, 73, 84, 85, 92]. CUT3R is closely related, as it maintains a shared metric pointmap as observations arrive [39]. Nevertheless, monocular scale, topology, and occlusion remain ambiguous [40]. TourPhysics uses visible geometry together with a declarative configuration to initialize a controllable physical hypothesis, reserves simulator depth for projection and visibility, and employs separate depth to condition the generator. 
+
+## 2.3 Physics-Grounded and Simulator-Guided Generation 
+
+Physics-aware generation incorporates learned dynamics, trajectories, forces, material controls, or explicit simulation into image and video synthesis [1, 18, 20–25, 90]. Related TPAMI work on physics-based genera-tive restoration couples image priors with explicit degradation constraints [76], while masked operators such as partial convolution restrict updates to the valid support during inpainting and synthesis [77]. PhysGen3D constructs an amodal, camera-centric world from user-specified initial conditions and material properties [19]. Physical Simulator In-the-Loop Video Generation reconstructs a generated template, simulates foreground trajectories, and uses simulator correspondences to guide synthesis [26]. TourPhysics instead computes each 3declared action with a rigid-body, PBD [3], or MPM [27] model before the video model observes the resulting fixed state sequence. 
+
+## 2.4 Long-Video Memory and Reference Conditioning 
+
+Long-video methods extend temporal support through sliding windows, recurrent contexts, or bounded attention caches. Related autoregressive work improves long-horizon planning, test-time correction, and attention efficiency [86–89]. Reference-conditioned and memory-based approaches transfer texture or recover long-range context through correspondence mechanisms, dynamic memory, and cross-attention [8, 9, 63]. Established surveys on visual tracking provide complementary correspondence and temporal-association baselines for maintaining identity under motion and occlusion [64, 65]. LongVie supports multimodal long-video generation [6], whereas Deep Forcing introduces a training-free cache rule to retain early context under finite attention capacity [7]. Although these mechanisms improve temporal continuity, they do not explicitly associate historical appearance with persistent geometric surfaces or committed simulator states. TourPhysics augments a finite-window video diffusion model with geometry-routed memory, in which an accepted historical key/value page is selected through cross-view visibility and incorporated as a confidence-bounded residual around the permanent real-image reference. 
+
+# 3 Problem Formulation 
+
+Given a single RGB image I0 and a declarative configuration Θ decl , we aim to construct an online world model that supports both camera exploration and physical manipulation. The desired output is a long-horizon sequence of observations that follows the declared physical–camera trajectory while maintaining appearance consistency through committed state transitions across accepted windows. The formulation is organized into three parts: Figure 2(1), Scene Lifting (One-time Preprocessing) , which constructs the persistent scene hypothesis and reference; Figure 2(2), Coupled Physical and Epistemic Transitions , which advances a single committed window; and Figure 2(3), Long-Horizon Tour-and-Manipulate Video (Output) ,which produces the resulting observation sequence. This separation makes the ownership of state explicit: the physical branch determines the simulator state and geometry, the observation branch synthesizes observations for the resulting fixed segment, and the epistemic branch publishes only accepted appearance evidence. The resulting causal order is illustrated in the bottom protocol of Figure 1: simulate the trajectory, synthesize the corresponding observation, evaluate the quality gate, and atomically commit the accepted result for subsequent actions. In particular, the committed simulator and camera states serve as the starting point for the next action, while the accepted appearance memory and tail evidence provide conditioning context for subsequent generation. 
+
+## 3.1 Scene Lifting and Persistent Reference 
+
+The input is given by 
+
+Iinit = ( I0, Θdecl ),
+
+where Θ decl specifies the controllable objects, material and physical-model assignments, boundary conditions, interventions, and camera trajectory controls. The one-time scene-lifting stage constructs an internally consistent scene hypothesis from this underdetermined input, estimates a reference camera and calibrated geometry, and preserves I0, together with any cached background plate, as permanent reference information. These reference records and the declaration remain fixed throughout online execution and are read by every subsequent operator. At the boundary preceding the execution of action an = ( cn, u n), the committed state is given by 
+
+Sn = ( Xn, C n, Kn, En).
+
+The index n counts the accepted windows. A rejected attempt is treated as a retry of the same action, indexed by r, and leaves both n and Sn unchanged; for notational simplicity, we suppress r below. 43. Long-Horizon Tour-and-Manipulate Video (Output) 
+
+z
+
+1. Scene Lifting (One-time Preprocessing) 
+
+Input Single Image Instance Masks Background Inpainting Per-object 3D Meshes Calibrated Geometry Foreground Depth Background Depth Reference Camera 
+
+(� �, � �)
+
+Estimated / refined Monocular Scale Fitting Fit (�, �) to mesh depth on visible valid pixels Cache to Disk Meshes, depths, camera background plate 
+
+User Declarative Configuration 
+
+Material / Physical Model Assignment Forces / Velocity Keyframes 
+
+> time
+
+... 
+
+Camera Trajectory 
+
+... 
+
+2. Coupled Physical and Epistemic Transitions          
+
+> view 1 view 2 view 3 view 4 view 5 view 6 view 7 view 8 view 9
+
+... 
+
+> ✓
+
+Simultaneous Free-Viewpoint Tour (Camera Steering) Physically Faithful Manipulation (Object Interaction) Photorealistic, Consistent, Long-Horizon (from a Single Image)  
+
+> ✓✓
+> Rigid MPM Elastic MPM Granular PBD Cloth MPM Fluid
+
+Physical transition 
+
+> multi-material physical trajectory joint trajectory segment fixed before synthesis
+
+derived from the trajectory segment   
+
+> �품�  + cameras masks + motion projection | visibility | evaluation
+
+Generative observation model  
+
+> real anchor
+> ��
+> generative depth
+> �품�  video prior
+
++ +
+
+> photorealistic observation under the fixed trajectory segment
+
+Observation �� 
+
+> direct decoder output no pixel replacement
+
+Novel-view depth adaptation 
+
+> updates future model control only
+
+quality gate � : accept / retry 
+
+Epistemic transition: reference-anchored causal appearance memory Generated observations never update physical state or simulator-consistent geometry.         
+
+> committed memory
+> permanent ��clean history, s < t routing with � bounded residual
+> geometry routes appearance; invalid correspondence falls back exactly to the real-reference prediction Y tail tail evidence next control
+> ��
+> ��
+> accepted ��+�
+
+Geometric record ��Figure 2 Overview of TourPhysics. (1) Scene Lifting (One-time Preprocessing) combines the input image with a declarative user configuration, including material models, force and velocity keyframes, and camera commands, to construct a persistent scene hypothesis comprising instance masks, a background plate, per-object 3D meshes, calibrated foreground and background geometry, a reference camera, and cached simulator assets. (2) Coupled Physical and Epistemic Transitions advances one action window. The orange Physical transition block fixes the multi-material physical and camera segment before synthesis; the read-only geometric record Gn supplies simulator-consistent depth, cameras, masks, and motion; and the observation model combines these controls with generator-facing depth Dgen 
+
+Wn , the real-image anchor I0, and committed appearance memory Kn to produce YWn . A quality gate publishes the accepted state and appearance atomically; only after acceptance do reference-anchored memory and novel-view depth adaptation affect subsequent appearance controls. (3) Long-Horizon Tour-and-Manipulate Video (Output) chains the accepted windows into a persistent sequence that supports free-viewpoint exploration, physically faithful manipulation, and photorealistic long-horizon consistency, while the generated RGB never replaces simulator renderings or writes back to the physical state or simulator geometry. 
+
+## 3.2 Coupled Physical and Epistemic Transitions 
+
+Physical transition and geometric record. At a committed boundary, the camera command cn and the op-tional intervention un are resolved into a framewise physical–camera trajectory before any pixels are sampled. The simulator and camera are advanced from working copies of the preceding committed checkpoint, ( eXn, eCn) = clone( Xn, C n),
+
+so that a candidate attempt produces no persistent side effects. The physical and camera trajectories, together with the associated geometric record, are then produced 5by (Xn, Cn, Gn) = Fseq 
+
+ eXn, eCn, a n; Θ decl 
+
+
+
+. (1) Here, 
+
+Xn =
+
+
+
+X(0)  
+
+> n
+
+, X (1)  
+
+> n
+
+, . . . , X (Tn)
+
+> n
+
+
+
+,
+
+Cn =
+
+
+
+C(0)  
+
+> n
+
+, C (1)  
+
+> n
+
+, . . . , C (Tn)
+
+> n
+
+
+
+denote the framewise physical and camera state sequences, respectively. The index t = 0 denotes the committed boundary state, while t = 1 , . . . , T n index the newly generated states within the candidate window: 
+
+X(0)  
+
+> n
+
+= eXn, C(0)  
+
+> n
+
+= eCn.
+
+The terminal working states are given by 
+
+X+ 
+
+> n
+
+= X(Tn) 
+
+> n
+
+, C+ 
+
+> n
+
+= C(Tn) 
+
+> n
+
+.
+
+The candidate record Gn contains simulator-consistent framewise depth, camera parameters, object masks, motion, visibility, correspondence, and validity information derived from ( Xn, Cn). 
+
+Generative observation model. Once the candidate window Wn and its geometric record have been fixed, the observation model takes as input the geometric record, the generator-facing depth Dgen  
+
+> Wn
+
+, the permanent real-image anchor I0, and the committed appearance memory Kn, and produces a candidate observation. Prior to sampling, the generator-facing depth is constructed from the fixed geometric record and the accepted tail evidence: 
+
+Dgen  
+
+> Wn
+
+= Fctrl (Gn, En) .
+
+Once constructed, the full framewise control tensor remains fixed for the duration of the current candidate window and is not recomputed during observation sampling: 
+
+YWn ∼ pθ
+
+ YWn | G n, Dgen  
+
+> Wn
+
+, I 0, Kn
+
+ . (2) Because Gn encodes the simulator-consistent framewise geometric and camera records derived from the physical and camera trajectories, the trajectory information required by the observation model is supplied implicitly through Gn. Although Dgen  
+
+> Wn
+
+is deterministically derived from Gn and En, it is supplied explicitly because it constitutes the representation consumed by the generator. The conditional form above therefore specifies the generative observation model. The real-image anchor I0 is immutable and is used solely as a conditioning reference. Regions that are not observed in I0, including regions exposed by the current camera trajectory, may be synthesized using the fixed geometric record, the accepted tail evidence, and the committed appearance memory. Simulator-derived signals may provide conditioning, geometric, and evaluation information, but simulator RGB is not used as a direct substitute for generated pixels. Consequently, the observation branch may extend the appearance knowledge through accepted generated observations, but it cannot modify Xn, Cn, or the simulator-consistent geometry that produced the current candidate window. After sampling, the candidate observation is used to construct the staged appearance memory and staged tail evidence:  bKn+1 , bEn+1 
+
+
+
+= Ustage (Kn, En, Y Wn , Gn) . (3) These staged quantities are candidate-local and remain private until the candidate window passes the quality gate. If the candidate is rejected, they are discarded together with the working trajectory, and the committed appearance memory and accepted tail evidence remain unchanged. 6Epistemic transition and quality-gated commit. The candidate appearance memory and tail evidence remain private while the current window is being evaluated. A binary quality decision is computed as 
+
+qn = Q YWn , Gn, Dgen  
+
+> Wn
+
+, Kn, En
+
+ ∈ { 0, 1}, (4) which controls the atomic state transition. Here, bKn+1 and bEn+1 denote the staged memory and tail-evidence updates proposed by the current candidate observation: 
+
+qn = 1 : Sn+1 =
+
+
+
+X+ 
+
+> n
+
+, C + 
+
+> n
+
+, bKn+1 , bEn+1 
+
+
+
+,qn = 0 : Sn remains unchanged .
+
+(5) An accepted window atomically publishes the terminal simulator and camera states together with the staged visual evidence. A rejected attempt discards its working copy and leaves the committed checkpoint 
+
+Sn unchanged. A retry retains the same action, trajectory, geometric record, generator-facing controls, and committed memory, while allowing only a new sampling seed. The epistemic branch therefore updates Kn+1 
+
+and the evidence used for future controls only after acceptance. 
+
+## 3.3 Long-Horizon Tour-and-Manipulate Video (Output) 
+
+The final output is the sequence of committed observations. To avoid duplicated boundary frames, the first frame of every subsequent window is removed prior to concatenation: 
+
+Video = concat  YW0 , Y W1 [1:] , . . . , Y WN −1 [1:]  . (6) Here, N denotes the total number of accepted windows; rejected attempts do not contribute output frames. The resulting video must support both free-viewpoint camera exploration and physically faithful object manipulation while remaining photorealistic and consistent over long horizons. These requirements are evaluated with respect to the declared trajectory and the persistent committed state, rather than through unconstrained visual continuation. The implementation of each operator is described in Section 4. 
+
+# 4 Methods 
+
+## 4.1 Overview 
+
+The method follows the causal order of scene lifting , physical/camera transition , geometric record , observation synthesis , staged update , quality gate , and atomic commit (Fig. 2). Scene lifting builds one editable hypothesis from I0 and Θ decl ; at each accepted boundary, the simulator and camera controller clone the committed state and produce the complete trajectory and the read-only record Gn. The physical segment and its geometry are fixed before RGB sampling, and a retry reuses them. The observation model then consumes Gn, a separate generator-facing depth control, the permanent image anchor, and the committed appearance context. Memory and tail-depth updates remain candidate-local until the quality gate; a passing window commits the terminal simulator/camera state and the staged evidence together, while a failing window rolls back the candidate. Generated RGB can therefore extend appearance knowledge without modifying physical state or simulator geometry. 
+
+## 4.2 Scene Lifting and Persistent Reference 
+
+Scene lifting is performed once, prior to the first interaction. Given the input image I0 and the frozen declaration Θ decl , the initializer segments the selected objects, lifts their masks to explicit meshes, removes the foreground to form a cached background plate B0, and aligns the meshes to a shared gravity-aware scene frame. A reference camera and an affine depth calibration are then fitted from the visible image evidence. These operations define a single controllable physical hypothesis; they are not repeated as online state corrections. 7Object decomposition and background. For each object selected by the user, SAM 3 and SAM 3D Objects produce an instance mask, a local triangular mesh, and an object-to-camera similarity transform. These explicit surfaces, rather than the RGB image, serve as the contact and collision interfaces used by the simulator. The selected foreground union is removed cumulatively with LaMa inpainting [62, 77] to form the cached plate B0, while the unmodified I0 is retained as the permanent appearance anchor. The plate is used only when a camera move exposes background support; it is not treated as a new physical object. The independently lifted meshes are placed in a shared gravity-aware frame. We pool the lowest 5% of vertices as provisional contact anchors (relaxed to 10% when an object has too few anchors), fit a robust ground plane, and apply one bounded rigid alignment. Small residual overlaps are corrected along the minimum-overlap bounding-box axis. These corrections belong to the initial hypothesis and are never applied online. The declaration may be authored directly or proposed by the optional vision-language initializer. In either case, the material and force-field entries are checked against the supported families, completed with defaults, exposed for editing, and frozen before the first trajectory simulation. We use the fixed projections Θ phys =Πphys (Θ decl ) and Θ cam = Π cam (Θ decl ). An online action selects a camera command and an intervention for the next finite window; it does not replace the declaration. The reference camera is refined by aligning the rendered union silhouette with the selected masks. For valid pixels, the monocular depth is placed into the simulator metric convention with a single affine fit, 
+
+Dgeo 0 (p) = α eD0(p) + β, (7) where invalid and non-finite samples are excluded. Depth/normal estimation and sparse-depth comple-tion studies motivate treating this fit as a calibrated geometric control rather than a unique reconstruc-tion [67, 68]; single-image novel-view work likewise highlights the disocclusion ambiguity that remains after calibration [70]. This calibration fixes the scale used by later projection and visibility tests. The immutable reference record is 
+
+R = ( I0, B 0, D geo 0 , V 0, Q 0, L 0, K 0, T 0). (8) Together with the initialized physical and camera states, it defines S0 = ( X0, C 0, K0, E0), where K0 contains no generated pages and E0 contains no accepted tail evidence. The reference image, its calibrated geometry, and the cached background plate remain read-only throughout online execution. Camera intrinsics Kt and the appearance memory Kn are distinct quantities. 
+
+## 4.3 Physical and Camera Transition 
+
+At the boundary of accepted window n, the committed state is Sn = ( Xn, C n, Kn, En). For action an =(cn, u n), the simulator and camera controller first clone the committed physical and camera states. The fixed candidate trajectory and its geometric record are then produced by the sequence operator already defined in Eq. (1): ( Xn, Cn, Gn) = Fseq ( eXn, eCn, a n; Θ decl ). The terminal candidates X+ 
+
+> n
+
+and C+ 
+
+> n
+
+are the endpoints of this working segment. Within this fixed segment, each simulator substep applies the declared physical map to the working state, while the camera controller advances in parallel from cn. The first substep starts at the cloned committed boundary, and the terminal candidate is taken only at the declared sampled endpoint. Keeping this boundary convention explicit ensures that a retry reproduces the same physical trajectory instead of inadvertently advancing it twice. Camera coverage along the fixed update is illustrated in Fig. 4; the point cloud is diagnostic and does not modify simulator geometry or physical state. The declaration routes rigid and articulated proxies to RBD, continuum and volumetric materials to MPM, and thin or constraint-dominated systems to PBD. Figure 3 summarizes these material families and their solver routing. Gravity, scheduled force fields, and ongoing dynamics continue even when un = ∅, so a camera-only action can still advance the physical state. RBD–MPM and RBD–PBD contacts are coupled within the same scene step. Unless overridden by the declaration, the solver step is 4 ms, with 10 substeps for rigid-only scenes and 16 for particle scenes; gravity is (0 , 0, −9.8). Constitutive equations and material-specific parameters are reported in the supplementary appendix, Sec. A.2 (“Declarative Configuration and Physical Simulation”), as they do not affect the observation transaction. 8Rigid Granular Cloth Fluid Rigid MPM MPM PBD Figure 3 Material families and solver routing used by the physical backend. The declarative configuration selects the material model and its parameters; the image is a schematic taxonomy, not a generated-video result. 
+
+At each frame, the renderer exports the simulator-consistent metric depth, valid-visible support Vn,t ,confidence Qn,t , object labels Ln,t , the foreground mask M mask  
+
+> n,t
+
+, motion U mot  
+
+> n,t
+
+, camera intrinsics, and world-to-camera extrinsics. These fields form Gn and serve as read-only conditioning and evaluation signals; they never replace decoded RGB. The reported profile uses 81 decoded frames with one shared conditioning boundary and 80 new frames. The exact simulator-to-video index convention is given in the supplementary appendix, Sec. A.4 (“Observation Generation and Transactional State”); the endpoint convention introduced there also defines X+ 
+
+> n
+
+and C+ 
+
+> n
+
+. The complete segment is held fixed during both sampling and retry. For clarity, the record used by the generator and by the later memory tests is 
+
+Gn =
+
+( Dgeo  
+
+> n,t
+
+, V n,t , Q n,t , L n,t ,M mask  
+
+> n,t
+
+, U mot  
+
+> n,t
+
+, K n,t , T n,t 
+
+)
+
+> t∈W n
+
+. (9) It is rendered once from the fixed trajectory and is never updated from generated frames. With fsim = 60 and fgen = 16, the center-of-bin mapping used in the evaluated profile is 
+
+kn(j) = on +
+
+ (2 j + 1) fsim 
+
+2fgen 
+
+
+
+, on+1 = on + 300 . (10) Thus kn(80) = kn+1 (0) is the shared boundary; X+ 
+
+> n
+
+and C+ 
+
+> n
+
+are defined at this sampled endpoint rather than at the raw origin on + 300. This convention removes the off-by-one ambiguity between simulator substeps and decoded frames. 
+
+## 4.4 Geometric Record and Generator Controls 
+
+The method keeps the simulator geometry separate from the depth representation consumed by the video generator. Dgeo  
+
+> n,t
+
+is the metric camera-space z-depth in the calibrated scene units and is written only by scene initialization and simulator rendering. It controls projection, visibility, correspondence, and trajectory evaluation. In contrast, Dbase  
+
+> Wn
+
+= Fbase (Gn; R) is a normalized relative-depth condition for the video model. This explicit split follows the broader practice of keeping metric reconstruction and appearance-oriented representation separate in point-cloud, dense-reconstruction, and radiance-field systems [66, 69, 74, 75]. For t ∈ W n, we retain the three quantities separately: 
+
+Dgeo  
+
+> n,t
+
+, Dbase  
+
+> n,t
+
+= [ Dbase  
+
+> Wn
+
+]t, Dgen  
+
+> n,t
+
+= [ Dgen  
+
+> Wn
+
+]t. (11) 9Initial view Intermediate Trajectory Full trajectory     
+
+> camera trajectory newly added points Figure 4 Point-cloud visualization of the camera update. Columns show the initial, intermediate, and full-trajectory views; red arrows denote camera motion and blue points denote newly observed support.
+
+The first is the metric camera-space z-depth in calibrated scene units. The other two are normalized con-trols with no physical units. Only the first may drive projection, visibility, correspondence, or trajectory evaluation; only the last is supplied to the video generator. Accepted tail evidence En can complete only the newly exposed, under-supported regions of the current generator control. The transferred evidence is aligned to the fixed control and applied through 
+
+Dgen  
+
+> Wn
+
+= (1 − Wn) ⊙ D base  
+
+> Wn
+
++ Wn ⊙ D Wn (En), (12) where Wn is zero outside the pointwise eligibility tests. These tests use only Gn and the evidence accepted before the current sampling call; a missing overlap, a degenerate affine fit, or a failed agreement test sets the affected weights to zero and preserves the base control exactly. Exact alignment rules and thresholds are given in the supplementary appendix, Sec. A.3 (“Separated Depth Controls”). This branch changes visual conditioning only: it never writes Dgeo , collision geometry, or physical state. Figure 5 visualizes the four terms and the point-wise routing: the fixed base control, aligned accepted tail evidence, the eligibility mask, and the fused generator control. The eligibility test is deliberately fail-closed. A candidate tail frame must achieve at least 0 .20 trusted static overlap, a Spearman agreement of at least 0 .70, a model-space NRMSE of at most 0 .08, and a metric-space NRMSE of at most 0 .12. Completion is considered only when the median newly visible fraction is at least 0 .05, the target hole fraction is at least 0 .01, and the trusted source coverage is at least 0 .20; at least two of the configured tail frames must pass. Affine alignment uses the overlap samples and is discarded when the fit is degenerate. The mask Wn is constructed after these frame-level tests and is zero on metric-supported or dynamic pixels. A temporal union followed by a small dilation yields one stable support mask for the entire 81-frame window, rather than a separately moving hole boundary in each frame. Accepted evidence stores only aligned generator-depth estimates, support indices, and confidence statistics. It is never interpreted as a new measurement of simulator depth. 10 Fixed geometric record Base depth construction      
+
+> normalized generator control fixed before sampling
+> Fail-closed eligibility mask Wn
+> static support · trusted overlap · confidence · depth agreement · newly exposed region
+> Wn= 1
+> Wn= 0
+> Accepted tail evidence
+> tail RGB frames, aligned depth, trusted support, source indices, confidence
+> Alignment and eligibility filtering
+> used only where Wn= 1
+
+Point-wise masked depth fusion 
+
+# +     
+
+> 1. Base control 2. Mask 3. Historical estimate 4. Fused control
+> Far Near
+> Far Near
+> Wn= 1
+> Wn= 0
+
+# i Only the normalized generator-depth control is updated; , simulator geometry, and physical state remain unchanged. 
+
+Wn = 0 Figure 5 Generator-facing depth update, following the reference-style routing diagram. The fixed geometric record constructs the base control; accepted tail evidence is aligned and filtered into D(En), while Wn gates the newly exposed, under-supported region. The final control is formed by point-wise fusion; outside the mask, the base control is preserved exactly. The depth maps are illustrative visualizations of the update, not additional simulator geometry. 
+
+## 4.5 Observation Synthesis and Staged Update 
+
+Once Gn and Dgen  
+
+> Wn
+
+are fixed, the finite-window diffusion model synthesizes the observation 
+
+YWn ∼ pθ
+
+ YWn | G n, Dgen  
+
+> Wn
+
+, I 0, Kn
+
+ . (13) The physical trajectory, camera poses, geometric record, and generator controls remain fixed throughout this call. The permanent image anchor fixes appearance, the current trajectory determines layout, and the committed memory supplies only accepted historical appearance. Controls are prepared at 640 ×352, while the decoded output is 832 ×480 at 16 fps. An 81-frame window contains one shared conditioning boundary and 80 new frames; consecutive windows therefore advance by 80 decoded frames. The finite native cache handles adjacent temporal continuity, whereas the geometry-routed pages described below provide sparse long-range access, complementing the temporal prediction and interpolation mechanisms used in prior video models [60, 61]. The abstract state records the long-range pages as Kn; the native cache is checkpointed together with the same observation context. Model weights, the denoising schedule, and the camera/physics controls remain frozen during this call. The conditioning record is assembled before sampling and is not recomputed from intermediate denoising states. In particular, simulator renderings serve as control and evaluation signals rather than replacement RGB. This distinction prevents a successful-looking simulator frame from silently becoming the generated observation and keeps the observation branch from acquiring physical authority. The memory branch retains reliable static support from earlier committed views. Geometry-routed correspondence uses Dgeo , camera parameters, visibility, confidence, and static-support masks to select at most one eligible source page for each target location. Moving or deforming proxies are excluded. The design is related to memory-based video segmentation and tracking systems that use explicit temporal correspondence, but here the eligibility test is additionally tied to persistent scene geometry [63, 64]. Only 11 visible, high-confidence static support enters the long-range memory: Ωt = Vt ∩ M sta  
+
+> t
+
+∩ { Qt ≥ τq } ∩ ¬ Γedge  
+
+> t
+
+, (14) where M sta  
+
+> t
+
+is derived from the declaration and the motion/deformation field, and Γ edge  
+
+> t
+
+removes unreliable depth boundaries. For a target pixel p, the metric depth back-projects it into the shared scene frame, and an earlier source view receives the corresponding projection. Here Tt denotes the world-to-camera transform, and π−1 returns a camera-frame point with the supplied metric z-depth: 
+
+xw = T −1 
+
+> t
+
+π−1(p, D geo  
+
+> t
+
+(p); Kt), (bps, bzs) = π(Tsxw; Ks). (15) The source must be in bounds, visible, static, and depth-consistent. Its confidence is 
+
+cs(p) = Qt(p)Qs(bps) exp 
+
+
+
+− |Dgeo  
+
+> s
+
+(bps) − bzs|
+
+ϵs(p)
+
+
+
+, (16) where ϵs(p) > 0 is the fixed metric-depth tolerance. The binary mask ms(p) equals one only when all tests pass. Among the earlier committed pages, we select the one with the highest score, computed from valid coverage and mean confidence; a target reads at most one page. If A0 denotes the native reference-conditioned attention output and Ahist the output after reading an eligible page, the historical read is introduced as the bounded residual 
+
+A(p) = A0(p) + gs(p)  Ahist (p) − A0(p) ,gs(p) = λmem ms(p) clip( cs(p), 0, 1) , 0 ≤ λmem ≤ 1. (17) Here ms is the binary geometry-eligibility mask, and cs combines target/source confidence with metric-depth agreement. When no valid page exists, gs = 0 and the native reference-conditioned path is recovered exactly. The denoiser exposes clean attention features Zattn  
+
+> Wn
+
+for selected source latents by re-encoding them at the clean diffusion endpoint. The stored tensor is therefore an attention-value page rather than a decoded RGB frame; the operation changes only the attention features and does not copy pixels, alter the target layout, or mix cache features with simulator visibility fields. The staged page update is 
+
+bKn+1 = Kn ⊕ Φpage 
+
+ Zattn  
+
+> Wn
+
+, Gn, ΩWn
+
+ , (18) where ⊕ appends pages under their source-frame or source-latent IDs, and Ω Wn = {Ωt : t ∈ W n} is the corresponding reliable static support. Tail evidence is staged from the configured tail RGB frames and remains private, together with the pages, until the quality gate accepts the whole window. For the evaluated profile, the tail set is Tn = {64 , 68 , 72 , 76 , 80 }. Its candidate evidence is summarized as 
+
+bEn+1 = Φ E (YWn |Tn , Gn, R) , (19) where the operator stores only the aligned generator-depth estimates, trusted support, source indices, and confidence statistics. The simulator-consistent record is passed to this operator for testing purposes only, never for overwriting. The page and tail branches are both private candidate state. A page created by the current window cannot be selected by another frame within that same window, and tail evidence cannot affect the control tensor already used to sample the current window. Their earliest possible effect occurs in the next accepted window. This ordering renders the memory causal and the depth-completion branch reproducible under retry. 
+
+## 4.6 Quality-Gated Atomic Commit 
+
+The quality gate is a fail-closed publication check applied to the decoded window. It examines the media contract together with the fixed boundary, black-frame, and frozen-motion diagnostics; the exact definitions and thresholds are given in the supplementary appendix, Sec. A.5 (“Quality Gate, Atomicity, and Retry Policy”). It is not a replacement for the simulator trajectory metrics. 12 (a) Causal Clean-Page Memory (b) Geometry-Routed Gated Read                  
+
+> 1) Private clean page
+> …
+> one latent frame; 880 spatial tokens
+> QUALITY GATE PASSES
+> ATOMIC COMMIT
+> Committed
+> …
+> 2) Native W12/S8 cache 8 reference-sink slices 4 recent slices
+> 12345678910 11 12
+> 3) Read-time key rephasing
+> Stored page temporal RoPE only
+> s → t ⁻
+> same spatial tokens; unchanged Read-time page Native cache
+> ……Current queries Native attention
+> Native read A ⁰
+> Page-augmented attention
+> History read Aʰ ⁱˢᵗ
+> validity confidence
+> …
+> Real-time page
+> …
+> …
+> …
+> invalid:
+
+Figure 6 Reference-anchored appearance memory. Historical features become accessible only after their corresponding source window is committed. Simulator-consistent geometry determines whether a target location corresponds to reliable static support in an earlier view. In the diagram, Zattn  
+
+> s
+
+denotes the stored attention-value tensor and is distinct from the geometric visibility Vs. The selected historical read is blended with the native reference-conditioned output through a bounded confidence gate. Invalid correspondence recovers the native path exactly. 
+
+Let Y0, . . . , Y 80 denote the decoded 8-bit RGB frames and Bn the last committed frame. We define 
+
+dt = δ(Yt, Y t−1) for t > 0 and compute 
+
+δ(A, B ) = 13HW 
+
+X
+
+> p,c
+
+|A(p, c ) − B(p, c )| ,eov = δ(Y0, B n),rbd = eov 
+
+max {median( d1, . . . , d 8), 10 −6} .
+
+(20) with eov = 0 for the first window. The boundary-motion ratio uses the median of the first eight adjacent-frame changes (with a 10 −6 floor). We also measure the fraction of nearly black pixels and the fraction of adjacent changes below 0 .2, denoted rblack and rfreeze , respectively. The reported decision is the conjunction 
+
+qn = 1[media] 1[eov ≤ 4] 1[rbd ≤ 3] 
+
+× 1[rblack ≤ 0.10] 1[rfreeze ≤ 0.25] χrepr . (21) where the media contract requires 81 decodable 832 ×480 frames. Here χrepr = 1 unless a pre-commit feedback-reprojection manifest is supplied, in which case it is the indicator of erepr ≤ 24. The manifest was absent in the reported runs. Simulator RGB MAE is logged as a diagnostic and is not an acceptance criterion. For qn = 1, the terminal physical and camera states, the staged appearance pages, and the staged tail evidence are published together according to Eq. (5). For qn = 0, the working simulator/camera copy, the candidate pages, and the candidate evidence are discarded, and Sn remains unchanged; the candidate native cache and the random-state checkpoint are restored as well. A retry preserves the same committed index, action, trajectory, generator controls, and committed memory; only the sampling seed may change. The next user action is released only after qn = 1, so a retry cannot advance the physical or epistemic state. Consequently, generated RGB can extend appearance knowledge only through an accepted update and never writes back to Xn, Cn, or Dgeo .The gate runs after decoding and before any candidate cache state, page, tail evidence, or terminal simulator state becomes persistent. Thresholds are fixed for the attempt and are never relaxed; an explicit retry reuses the committed checkpoint and all candidate controls, with only the sampling seed permitted to differ. Failed attempts therefore cannot advance either the state index or the history. 13 (a) Cloth: pinned curtain under wind (b) Elastic: jelly            
+
+> 5s 15s 25s 5s 15s 25s LingBot-Cam LingBot-Act Wan2.1-I2V Sora-2 MotionCtrl Tora-Initiator minWM-Wan Ours Figure 7 Full-duration key-frame comparison across all eight evaluated methods. Within each scene, methods are rows. Each complete baseline output is uniformly mapped to the corresponding 30.06 s TourPhysics duration, and columns sample t= 5 ,15 ,25 s on that matched timeline; no looping, tail padding, or per-output frame selection is used. (a) A pinned curtain under wind. (b) A jelly. Native durations and generation inputs follow Table 1. Frames are uncropped and padded to a common aspect ratio, with no color correction or replacement.
+
+# 5 Experiments 
+
+## 5.1 Experimental Setup 
+
+The experiments are organized around the four capabilities required by the problem formulation. The first experiment asks whether the generated camera and object motion follows the fixed physical and camera trajectory. The second checks whether contacts and deformations occur at the declared times and with the declared shape changes. The third examines whether long-horizon generation preserves the input scene and the intended camera motion. The final experiment isolates the persistent cache and the geometry-routed appearance memory. This order follows Figure 2: the orange physical-transition branch defines the target trajectory, the purple observation branch renders it, and the green lower loop carries visual evidence across revisits. 
+
+Benchmark and execution protocol. The benchmark contains 108 simulator-defined interaction sequences initialized from 61 source-image identities. It covers camera-only tours and manipulations of rigid, cloth, elastic, granular, and fluid proxies. Each sequence starts from the same single image and declarative config-uration used to initialize the scene hypothesis. For every action, the simulator exports a camera and object trajectory together with the geometric record and a paired simulator rendering; the video model generates 14 Table 1 Evaluation inputs and temporal support. “Int.” denotes controls derived internally from the declared simulator state, “Text” under Camera denotes prompt-only specification, and d marks a uniformly time-stretched full-timeline diagnostic. 
+
+Method Image Text Camera Depth Track Mask Physics script Native / diagnos-tic duration TourPhysics ✓ Scene Action/pose Int. Int. Int. Declarative 25.1/30.1 s LingBot-Cam ✓ Frozen Pose – – – – 25.1/30.1 s LingBot-Act ✓ Frozen Discrete action – – – – 25.1/30.1 s Wan2.1-I2V ✓ Frozen Text – – – – 10.7 s / 25–30 s d
+
+Sora-2 ✓ Frozen Text – – – – 12.2 s MotionCtrl ✓ – RT pose – – – – 1.4 s / 25–30 s d
+
+Tora-Initiator ✓ Frozen – – Oracle 2D – – 6.1 s minWM-Wan ✓ Frozen Discrete action – – – – 39.8 s Tora receives the simulator-projected initiator trajectory. Depth, track, mask, and physics-script columns are generation-time inputs. The d rows use timestamp scaling without looping or tail padding. an observation for that fixed window. The next action is released only after the observation passes the window-level commit rule. Thus, every paired comparison has a declared target trajectory and an explicit commit boundary, rather than an unconstrained video continuation. The benchmark measures agreement with this controllable hypothesis, which is the quantity needed for exploration and manipulation from one image. 
+
+Compared systems and common measurements. The comparison spans the main conditioning regimes used for controllable video and interactive world models. LingBot-Cam and LingBot-Act [49] represent camera-and action-conditioned open-source interactive world-model variants; minWM-Wan [52] represents an inter-active video world model. Wan2.1-I2V [28] and Sora-2 [2] are general image-to-video generators whose pri-mary task is appearance and motion synthesis, while MotionCtrl [50] and Tora-Initiator [51] are controllable video generators driven by poses or point trajectories. TourPhysics is the simulator-guided persistent model that receives the declarative scene and computes the physical trajectory before synthesis. Table 1 records the camera, depth, tracking, mask, and physics inputs available to each system, including native and diagnostic durations. This makes the comparison useful for the corresponding task: each method is evaluated through its supported interface, while all outputs are scored against the same simulator-defined targets. Paired object and physical metrics use 8-fps videos at 682 × 384 and the same frozen-mask CoTracker3 [30, 64, 65] pipeline; camera and appearance protocols are specified with their respective experiments below. Table 1 summarizes the method-specific generation inputs and native or diagnostic temporal support. It is an input-protocol matrix, rather than a performance table: its purpose is to make the information available to each comparison method explicit before interpreting the results. 
+
+## 5.2 Camera and Object Motion 
+
+This experiment tests the most direct consequence of fixing the trajectory before observation synthesis: the camera should execute the prescribed tour and the visible objects should follow the simulator state. It evaluates the camera path and object-motion outputs of the orange “Physical transition” branch in Figure 2, rather than judging motion only by visual smoothness. 15 Table 2 Prescribed camera- and object-motion adherence. Camera metrics compare generated and declared trajec-tories; object metrics measure image-space agreement with paired simulator-rendered sequences. Generation inputs are listed in Table 1. 
+
+Method Camera Object Motion ATE ↓ PLR → 1 T-Dir ↑ R-Dir ↑ ADE ↓ End Err. 
+
+↓
+
+S@0.05 ↑ Vis. ↑
+
+LingBot-Cam 0.1031 4.8434 88.54% 53.00% 0.0833 0.1605 18.37% 35.04% LingBot-Act 0.1235 6.3812 68.75% 61.00% 0.0834 0.1540 27.09% 50.56% Wan2.1-I2V 0.1436 3.8702 60.42% 42.00% 0.0774 0.1233 31.61% 76.43% Sora-2 0.0560 2.3898 78.52% >
+
+99 .99% 1seg 
+
+0.0721 0.1419 43.47% 81.88% MotionCtrl 0.0783 0.8517 50.35% 38.00% 0.0871 0.1474 19.74% 88.46% 
+
+Tora-Initiator N/A N/A N/A N/A 0.0462 0.0865 70.05% 80.10% minWM-Wan 0.1092 1.9820 89.58% 46.00% 0.1051 0.2213 9.46% 69.63% Ours 0.0233 1.4301 98.26% 93.00% 0.0297 ‡ 0.0524 ‡ 81.18% ‡ 75.20% ‡‡TourPhysics object metrics cover 168 objects in 93 sequences from 49 input identities after excluding trajectories with less than 15% joint visibility. Camera metrics use 49 sequences from 40 identities with runtime-exact poses. Sora R-Dir has one eligible segment and is excluded from best-result highlighting. Wan and MotionCtrl are uniformly time-stretched to full duration. Bold marks the best displayed result on each method’s valid support. 
+
+Protocol and metrics. Camera scores use the 49 sequences from 40 identities whose reference poses are exact runtime exports. ViPE camera centers are timestamp-matched to the simulator centers, and one Umeyama similarity transform is fitted over each complete sequence. ATE is the RMS camera-center deviation after this alignment, so lower values mean closer spatial tracking. PLR is the recovered-to-declared path-length ratio, with one indicating equal traveled distance. T-Dir and R-Dir are the percentages of translation-only and rotation-only schedule segments whose recovered motion points to the correct half-space. These four metrics separate absolute position error, path scaling, and action-direction correctness. Object scores use paired simulator and generated videos sampled at 8 fps and 682 × 384. Frozen initial masks seed the same CoTracker3 multi-point tracker, and an object is retained only when its centers are jointly visible for at least eight frames and 15% of the sequence. ADE is the mean normalized center error, End Err. is the error at the last jointly visible frame, S@0.05 is the fraction of objects whose ADE is within 5% of the image diagonal, and Vis. is the jointly visible fraction. TourPhysics contributes 168 tracked objects in 93 sequences from 49 identities; the baselines use the valid records listed in the table footnote. Complete alignment and support definitions are provided in the supplementary appendix, Sec. B.2 (“Camera and Object Motion”). Table 2 shows that TourPhysics has the lowest camera ATE (0.0233) and the highest translation- and rotation-direction hits (98.26% and 93.00%). It also has the lowest object ADE (0.0297) and endpoint error (0.0524), with 81.18% of retained objects within the 5% diagonal threshold. These are the measurements most closely tied to the declared action and state transition: the simulator fixes the path first, and the generated observation preserves that path when it is rendered. PLR and Vis. provide complementary information about total path scaling and track support, rather than replacing the spatial and directional adherence measures. 
+
+## 5.3 Adherence to Simulator-Defined Interactions 
+
+The second experiment asks whether a visually plausible interaction also preserves the simulator-defined event sequence. It uses the same paired simulator/generated videos and the orange physical-transition branch in Figure 2, but evaluates event timing, collision response, and deformation rather than whole-object 16 Table 3 Adherence to simulator-defined physical trajectories. Collision and deformation columns are tracked image-space proxies computed against paired simulator-rendered videos. VideoPhy-2 supplies an auxiliary perceptual diag-nostic. 
+
+Method Collision Proxies Deformation Proxies VideoPhy-2 AutoEval (Auxiliary) Contact Err. ↓
+
+Response Acc. ↑
+
+Overlap Exc. ↓
+
+Shape Err. ↓
+
+Area Drift ↓
+
+Recovery Acc. ↑
+
+SA ↑ PC ↑ Avg ↑
+
+LingBot-Cam 6.9196 s < 0.01% < 10 −4 0.0664 0.5136 50.00% 2.9444 4.4167 3.6806 LingBot-Act 7.8304 s < 0.01% < 10 −4 0.0809 0.1757 < 0.01% 2.9352 4.2315 3.5833 Wan2.1-I2V 5.1875 s 33.33% < 10 −4 0.0866 0.2763 30.00% 2.9444 4.0185 3.4815 Sora-2 4.9107 s 33.33% < 10 −4 0.1351 0.3369 33.33% 2.9630 4.2778 3.6204 MotionCtrl 7.0893 s < 0.01% < 10 −4 0.1234 0.3539 N/A 2.9352 4.7963 3.8657 
+
+Tora-Initiator 5.8839 s < 0.01% < 10 −4 0.1081 0.2249 >
+
+99 .99% 1evt 
+
+2.8660 4.2784 3.5722 minWM-Wan 4.5639 s 22.92% < 10 −4 0.1530 0.5046 < 0.01% 2.9352 4.1296 3.5324 Ours 3.3304 sC
+
+16.67% C < 10 −4C 0.0704 M 0.0866 M 64.29% R 2.9167 4.3148 3.6157 “N/A” denotes an incompatible protocol. CContact, response, and overlap cover 14/5/9 valid TourPhysics sequences from 6/3/5 input identities; Mshape and area cover 30 records in 25 sequences from 13 identities; 
+
+> R
+
+recovery covers eight events in seven sequences from two identities. Tora recovery has one eligible event and is excluded from best-result highlighting. All deterministic columns use the same frozen CoTracker3 pipeline, with method-specific support after visibility filtering; bold marks the best displayed value on that method-specific support rather than on a common subset. VideoPhy-2 covers 108 sequences (Tora: 97) and reports custom-data mean SA/PC on a 1–5 scale; Avg is their arithmetic mean. Wan and MotionCtrl are time-stretched to full duration. Zero displayed 2D overlap does not imply zero 3D penetration. centers. 
+
+Protocol and metrics. The simulator supplies the contact onset, initiator-target pair, and declared defor-mation interval for each sequence. The generated and simulator videos are tracked with the frozen-mask CoTracker3 protocol at 8 fps; records are reduced within a sequence and then averaged equally over se-quences, so a sequence with several objects or events does not dominate. Contact Err. is the timing error between the generated and simulator contact proxies. Response Acc. is the percentage of observable targets that exhibit the prescribed post-contact motion. Overlap Exc. is the excess 90th-percentile 2D hull overlap after contact. Shape Err. is the normalized Procrustes point error for a deformable object, Area Drift is the deviation of its projected area from the initial ratio, and Recovery Acc. is the percentage of declared deformation events that meet both the amplitude and post-event recovery criteria. The auxiliary SA and PC scores from VideoPhy-2 [53] measure semantic adherence and physical commonsense on a 1–5 scale; their average is a perceptual diagnostic, not a trajectory score. The event definitions and effective support for each method are given in the supplementary appendix, Sec. B.3 (“Simulation-Trajectory Adherence”). Table 3 shows the strengths of the simulator-guided branch on the deterministic interaction measures. TourPhysics reaches the lowest contact-timing error (3.3304 s), the lowest area drift (0.0866), and the highest recovery accuracy (64.29%); its shape error (0.0704) is second only to LingBot-Cam on that supported subset. The contact and deformation columns answer different parts of the same question: the first group tests when an event happens, while the second tests whether the generated object changes in the right way and returns toward its post-event state. The perceptual VideoPhy-2 columns are reported alongside these deterministic measures as an auxiliary appearance diagnostic; the deterministic columns provide the trajectory result. 17 Figure 8 TourPhysics results across several scenarios. Key frames progress from left to right and show long-horizon appearance, camera motion, and physical interactions. 
+
+## 5.4 Appearance and Camera-Control Diagnostics 
+
+The trajectory experiments establish control, while this experiment checks whether that control is accompa-nied by stable visual content. Figure 7 uses all eight systems on two representative scenes, a pinned curtain under wind and a jelly. Each complete baseline output is mapped to the 30.06-s TourPhysics timeline and sampled at 5, 15, and 25 s, with no looping, tail padding, or per-output frame selection. Figure 8 extends the view to several long-horizon camera and interaction scenarios. The quantitative diagnostics measure complementary properties of the generated observations. Input-video subject consistency measures whether the foreground appearance remains aligned with the source video, background consistency tests the static scene, and camera-motion classification accuracy measures whether the generated motion retains the intended camera-motion class. TourPhysics obtains 0.9743, 0.9791, and 0.8921 on these three quantities, respectively. These diagnostics connect the purple observation branch and the green memory loop in Figure 2 to the visible long-horizon behavior: the model can follow a physical/-camera trajectory while retaining the reference scene. The underlying masks, aggregation, and temporal normalization are specified in the supplementary appendix, Sec. B.4 (“Appearance and Long-Horizon Con-sistency”). 
+
+## 5.5 Long-Horizon Cache and Appearance Memory 
+
+The final experiment targets the failure mode that motivates persistent memory: a camera can revisit a surface after many intervening actions, and a finite temporal cache alone does not preserve its appearance. It isolates the green lower loop and long-horizon filmstrip in Figure 2 in two stages. The cache comparison uses 72 paired long videos from 27 identities and keeps the observation backbone and generator fixed while replacing an ordinary finite cache with the persistent sink cache. The memory comparison uses four devel-opment identities and an identity-disjoint held-out set of 14 dynamic identities. Each selected sequence has six windows, 481 output frames, 51 planned target latents, and revisit chunks 3–5; physical and camera tra-jectories, generator-facing depth, checkpoints, prompts, and random seeds are matched between memory-on and memory-off runs. The cache metrics are end-to-start drift and tail-to-head drift, both computed from the mean decoded 8-bit channel value, so lower values mean less long-range brightness change. The memory metrics are relative 18 Table 4 Long-horizon observation and appearance-memory diagnostics. Cache drift is measured on paired long-video sequences. Memory changes are reported relative to the same generator with appearance memory disabled; negative values denote lower error. 
+
+Variant Scope End-to-start drift 
+
+↓
+
+Tail-to-head drift 
+
+↓
+
+History error change ↓
+
+Known-region change ↓
+
+Ordinary temporal cache 72 sequences 26.33 20.38 – –Persistent sink cache 72 sequences 
+
+11.17 7.74 – –Appearance memory, development 4 identities – – −8.25% −2.99% Appearance memory, held-out 14 identities – – −2.39% −0.90% changes in historical-region error on routed, depth-consistent correspondences and known-region error on the simulator-consistent background; negative percentages indicate lower error with memory. This separation follows the distinction between temporal association and appearance filling emphasized by memory-based video segmentation and temporally-aware inpainting [62, 63]. Formula definitions, masks, aggregation, and the identity-disjoint selection protocol are provided in the supplementary appendix, Sec. B.4 (“Appearance and Long-Horizon Consistency”). Table 4 separates the two mechanisms cleanly. The persistent sink cache reduces end-to-start drift from 26.33 to 11.17 and tail-to-head drift from 20.38 to 7.74. Geometry-routed appearance memory then reduces historical-region error by 8.25% on development and 2.39% on the held-out identities, while known-region error changes by −2.99% and −0.90%. The first comparison shows why the cache is needed for long windows; the second shows that accepted, geometry-routed history improves revisits while leaving the physical and camera trajectory and generator-facing depth unchanged. 
+
+# 6 Conclusion 
+
+We presented TourPhysics, an online framework for exploring and manipulating a controllable scene hypoth-esis initialized from a single image and a declarative physical configuration. Its architecture assigns separate roles to simulator state, simulator-consistent geometry, generator controls, and accepted appearance memory. For each action, TourPhysics computes the physical and camera trajectory before generating an ob-servation. Accepted observations publish the terminal state and update later appearance memory and generator-facing depth, while the committed state and geometry remain fixed during synthesis and retry. A permanent image reference and geometry-routed memory preserve appearance when the camera revisits earlier surfaces. On simulator-defined camera tours and manipulations, TourPhysics improves alignment with prescribed camera and object trajectories, preserves the input scene, and reduces long-horizon appearance drift. Future work will study real-world physical evaluation, more complete scene geometry, and fixed-capacity memory for longer tours. 
+
+# References 
+
+[1] T. Zhang, H.-X. Yu, R. Wu, B. Y. Feng, C. Zheng, N. Snavely, J. Wu, and W. T. Freeman, “Phys-Dreamer: Physics-Based Interaction with 3D Objects via Video Generation,” 2024, arXiv:2404.13026. [2] OpenAI, “Sora 2 is here,” 2025. [Online]. Available: https://openai.com/index/sora-2/ 
+
+[3] M. M¨ uller, B. Heidelberger, M. Hennix, and J. Ratcliff, “Position Based Dynamics,” Journal 
+
+19 of Visual Communication and Image Representation , vol. 18, no. 2, pp. 109–118, 2007, doi: 10.1016/j.jvcir.2007.01.005. [4] F.-A. Croitoru, V. Hondru, R. T. Ionescu, and M. Shah, “Diffusion Models in Vision: A Survey,” 
+
+IEEE Trans. Pattern Anal. Mach. Intell. , vol. 45, no. 9, pp. 10850–10869, 2023, doi: 10.1109/T-PAMI.2023.3261988. [5] W. Kong, Q. Tian, Z. Zhang, R. Min, Z. Dai, J. Zhou, J. Xiong, X. Li, B. Wu, J. Zhang, K. Wu, Q. Lin et al., “HunyuanVideo: A Systematic Framework For Large Video Generative Models,” 2024, arXiv:2412.03603. [6] J. Gao, Z. Chen, X. Liu, J. Feng, C. Si, Y. Fu, Y. Qiao, and Z. Liu, “LongVie: Multimodal-Guided Controllable Ultra-Long Video Generation,” 2025, arXiv:2508.03694. [Online]. Available: https:// arxiv.org/abs/2508.03694 .[7] J. Yi, W. Jang, P. H. Cho, J. Nam, H. Yoon, and S. Kim, “Deep Forcing: Training-Free Long Video Generation with Deep Sink and Participative Compression,” 2025, arXiv:2512.05081. [Online]. Available: 
+
+https://arxiv.org/abs/2512.05081 .[8] Y. Jiang, K. C. K. Chan, X. Wang, C. C. Loy, and Z. Liu, “Reference-Based Image and Video Super-Resolution via C 2-Matching,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 45, no. 7, pp. 8874–8887, 2023, doi: 10.1109/TPAMI.2022.3231089. [9] W. Hu, J. T. Hoe, J. Li, H. Hu, X. Jiang, and Y.-P. Tan, “Cascaded Dynamic Memory Refinement and Semantic Alignment for Exo-to-Ego Cross-View Video Generation,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 47, no. 9, pp. 7490–7505, 2025, doi: 10.1109/TPAMI.2025.3569195. [10] J. Bruce, M. Dennis, A. Edwards, J. Parker-Holder, Y. Shi, E. Hughes, M. Lai, A. Mavalankar, R. Steigerwald, C. Apps, Y. Aytar, S. Bechtle et al., “Genie: Generative Interactive Environments,” 2024, arXiv:2402.15391. [11] Google DeepMind, “Genie 2: A Large-Scale Foundation World Model,” 2024. [Online]. Available: 
+
+https://deepmind.google/discover/blog/genie-2-a-large-scale-foundation-world-model/ 
+
+[12] S. Yang, Y. Du, K. Ghasemipour, J. Tompson, L. Kaelbling, D. Schuurmans, and P. Abbeel, “Learning Interactive Real-World Simulators,” 2023, arXiv:2310.06114. [13] Decart, J. Quevedo, Q. McIntyre, S. Campbell, X. Chen, and R. Wachen, “Oasis: A Universe in a Transformer,” 2024. [Online]. Available: https://oasis-model.github.io/ 
+
+[14] D. Valevski, Y. Leviathan, M. Arar, and S. Fruchter, “Diffusion Models Are Real-Time Game Engines,” 2025, arXiv:2408.14837. [15] H. Che, X. He, Q. Liu, C. Jin, and H. Chen, “GameGen-X: Interactive Open-world Game Video Generation,” 2024, arXiv:2411.00769. [16] W. Menapace, S. Lathuili` ere, A. Siarohin, C. Theobalt, S. Tulyakov, V. Golyanik, and E. Ricci, “Playable Environments: Video Manipulation in Space and Time,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. , 2022, pp. 3584–3593. [17] B. Kim, T. Kim, J. Lee, and H. Joo, “Dexterous World Models,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. , 2026, pp. 29663–29673. [18] S. Liu, Z. Ren, S. Gupta, and S. Wang, “PhysGen: Rigid-Body Physics-Grounded Image-to-Video Generation,” 2024, arXiv:2409.18964. [19] B. Chen, H. Jiang, S. Liu, S. Gupta, Y. Li, H. Zhao, and S. Wang, “PhysGen3D: Crafting a Miniature Interactive World from a Single Image,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. ,2025, pp. 6178–6189. 20 [20] Z. Li, R. Tucker, N. Snavely, and A. Holynski, “Generative Image Dynamics,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. , 2024, pp. 24142–24153. [21] Y. Shen, J. Xiong, T. Yu, and I. Lourentzou, “PHANTOM: Physics-Infused Video Generation via Joint Modeling of Visual and Latent Physical Dynamics,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. , 2026, pp. 11185–11194. [22] X. Ma, Y. Wang, G. Jia, X. Chen, T.-T. Wong, and C. Chen, “Consistent and Controllable Image Animation With Linear Motion Diffusion Transformers,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 48, no. 7, pp. 7436–7450, 2026, doi: 10.1109/TPAMI.2026.3664227. [23] X. Tan, Y. Jiang, X. Li, Z. Zong, T. Xie, Y. Yang, and C. Jiang, “PhysMotion: Physics-Grounded Dynamics From a Single Image,” 2024, arXiv:2411.17189. [24] C. Wang, C. Chen, Y. Huang, Z. Dou, Y. Liu, J. Gu, and L. Liu, “PhysCtrl: Generative Physics for Controllable and Physics-Grounded Video Generation,” 2025, arXiv:2509.20358. [25] N. Gillman, C. Herrmann, M. Freeman, D. Aggarwal, E. Luo, D. Sun, and C. Sun, “Force Prompt-ing: Video Generation Models Can Learn and Generalize Physics-based Control Signals,” 2025, arXiv:2505.19386. [26] L. G. Foo, M. H. Huang, A. Lattas, S. Moschoglou, T. Beeler, and C. Theobalt, “Physical Simulator In-the-Loop Video Generation,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. , 2026, pp. 4301–4311. [27] C. Jiang, C. Schroeder, J. Teran, A. Stomakhin, and A. Selle, “The Material Point Method for Simulating Continuum Materials,” in ACM SIGGRAPH 2016 Courses , 2016, pp. 1–52, doi: 10.1145/2897826.2927348. [28] Team Wan, A. Wang, B. Ai, B. Wen, C. Mao, C.-W. Xie, D. Chen, F. Yu, H. Zhao, J. Yang, J. Zeng, J. Wang et al., “Wan: Open and Advanced Large-Scale Video Generative Models,” 2025, arXiv:2503.20314. [29] A. Blattmann, T. Dockhorn, S. Kulal, D. Mendelevitch, M. Kilian, D. Lorenz, Y. Levi, Z. English, V. Voleti, A. Letts, V. Jampani, and R. Rombach, “Stable Video Diffusion: Scaling Latent Video Diffusion Models to Large Datasets,” 2023, arXiv:2311.15127. [30] N. Karaev, I. Makarov, J. Wang, N. Neverova, A. Vedaldi, and C. Rupprecht, “CoTracker3: Simpler and Better Point Tracking by Pseudo-Labelling Real Videos,” 2024, arXiv:2410.11831. [31] R. Wang, S. Xu, C. Dai, J. Xiang, Y. Deng, X. Tong, and J. Yang, “MoGe: Unlocking Accurate Monocular Geometry Estimation for Open-Domain Images with Optimal Training Supervision,” in 
+
+Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. , 2025, pp. 5261–5271. [32] W. Yu, J. Xing, L. Yuan, W. Hu, X. Li, Z. Huang, X. Gao, T.-T. Wong, Y. Shan, and Y. Tian, “ViewCrafter: Taming Video Diffusion Models for High-Fidelity Novel View Synthesis,” IEEE Transac-tions on Pattern Analysis and Machine Intelligence , pp. 1–18, 2025, doi: 10.1109/TPAMI.2025.3613256. [33] Z. Chen, Y. Wang, F. Wang, Z. Wang, F. Sun, and H. Liu, “V3D: Video Diffusion Models Are Ef-fective 3D Generators,” IEEE Trans. Pattern Anal. Mach. Intell. , pp. 1–18, 2025, doi: 10.1109/T-PAMI.2025.3581312. [34] Y. Wang, G. Liu, X. Wang, Z. Chen, J. Li, X. Liang, F. Sun, and J. Zhu, “Video4DGen: Enhancing Video and 4D Generation Through Mutual Optimization,” IEEE Trans. Pattern Anal. Mach. Intell. ,pp. 1–18, 2025, doi: 10.1109/TPAMI.2025.3550031. [35] S. Cai, D. Ceylan, M. Gadelha, C.-H. P. Huang, T. Y. Wang, and G. Wetzstein, “Generative Render-ing: Controllable 4D-Guided Video Generation with 2D Diffusion Models,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. , 2024, pp. 7611–7620. 21 [36] H. He, C. Yang, S. Lin, Y. Xu, M. Wei, L. Gui, Q. Zhao, G. Wetzstein, L. Jiang, and H. Li, “CameraCtrl II: Dynamic Scene Exploration via Camera-Controlled Video Diffusion Models,” in Proc. IEEE/CVF Int. Conf. Comput. Vis. , 2025, pp. 13416–13426. [37] X. Ren, T. Shen, J. Huang, H. Ling, Y. Lu, M. Nimier-David, T. M¨ uller, A. Keller, S. Fidler, and J. Gao, “GEN3C: 3D-Informed World-Consistent Video Generation with Precise Camera Control,” in 
+
+Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. , 2025, pp. 6121–6132. [38] Y. Zhang, C. Cao, T. Wang, X. Zuo, J. Wu, J. Zhu, and C. Guo, “WorldStereo: Bridging Camera-Guided Video Generation and Scene Reconstruction via 3D Geometric Memories,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. , 2026, pp. 40327–40339. [39] Q. Wang, Y. Zhang, A. Holynski, A. A. Efros, and A. Kanazawa, “Continuous 3D Perception Model with Persistent State,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. , 2025, pp. 10510–10522. [40] V. Arampatzakis, G. Pavlidis, N. Mitianoudis, and N. Papamarkos, “Monocular Depth Estimation: A Thorough Review,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 46, no. 4, pp. 2396–2414, 2024, doi: 10.1109/TPAMI.2023.3330944. [41] B. Park, H. Go, and C. Kim, “Bridging Implicit and Explicit Geometric Transformation for Single-Image View Synthesis,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 46, no. 9, pp. 6326–6340, 2024, doi: 10.1109/TPAMI.2024.3378757. [42] Z. Chen, G. Wang, and Z. Liu, “SceneDreamer: Unbounded 3D Scene Generation From 2D Image Collections,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 45, no. 12, pp. 15562–15576, 2023, doi: 10.1109/TPAMI.2023.3321857. [43] J. Wang, M. Chen, N. Karaev, A. Vedaldi, C. Rupprecht, and D. Novotny, “VGGT: Visual Geometry Grounded Transformer,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. , 2025, pp. 5294– 5306. [44] Q. Wu, D. Iliash, D. Ritchie, M. Savva, and A. X. Chang, “Diorama: Unleashing Zero-shot Single-view 3D Indoor Scene Modeling,” 2025, arXiv:2411.19492. [45] K. Yao, L. Zhang, X. Yan, Y. Zeng, Q. Zhang, L. Xu, W. Yang, J. Gu, and J. Yu, “CAST: Component-Aligned 3D Scene Reconstruction from an RGB Image,” ACM Trans. Graph., vol. 44, no. 4, Art. no. 86, 19 pages, Aug. 2025, doi: . [46] J. Xiang, Z. Lv, S. Xu, Y. Deng, R. Wang, B. Zhang, D. Chen, X. Tong, and J. Yang, “Structured 3D Latents for Scalable and Versatile 3D Generation,” 2025, arXiv:2412.01506. [47] T. Wu, C. Zheng, F. Guan, A. Vedaldi, and T.-J. Cham, “Amodal3R: Amodal 3D Reconstruction from Occluded 2D Images,” 2025, arXiv:2503.13439. [48] J. Seo, K. Fukuda, T. Shibuya, T. Narihira, N. Murata, S. Hu, C.-H. Lai, S. Kim, and Y. Mitsu-fuji, “GenWarp: Single Image to Novel Views with Semantic-Preserving Generative Warping,” 2024, arXiv:2405.17251. [49] Robbyant Team, Z. Gao, Q. Wang, Y. Zeng, J. Zhu, K. L. Cheng, Y. Li, H. Wang, Y. Xu, S. Ma, Y. Chen, J. Liu et al., “Advancing Open-source World Models,” 2026, arXiv:2601.20540. [50] Z. Wang, Z. Yuan, X. Wang, Y. Li, T. Chen, M. Xia, P. Luo, and Y. Shan, “MotionCtrl: A Unified and Flexible Motion Controller for Video Generation,” in ACM SIGGRAPH 2024 Conference Papers ,2024, pp. 1–11. [51] Z. Zhang, J. Liao, M. Li, Z. Dai, B. Qiu, S. Zhu, L. Qin, and W. Wang, “Tora: Trajectory-Oriented Diffusion Transformer for Video Generation,” in Proc. IEEE/CVF Conf. Computer Vision and Pattern Recognition , 2025, pp. 2063–2073. 22 [52] M. Zhao, H. Zhu, B. Yan, Z. Zhou, Y. Chen, W. Sun, K. Zheng, G. He, X. Yang, C. Li et al., “minWM: A Full-Stack Open-Source Framework for Real-Time Interactive Video World Models,” 2026, arXiv:2605.30263. [53] H. Bansal, C. Peng, Y. Bitton, R. Goldenberg, A. Grover, and K.-W. Chang, “VideoPhy-2: A Challeng-ing Action-Centric Physical Commonsense Evaluation in Video Generation,” 2025, arXiv:2503.06800. [54] X. Zhang, Y. Chen, Y. Fang, W. Qu, H. Huang, C. Zhang, F. Xu, and X. Li, “PhysOmni: Physics-Grounded Multi-Object Scene Generation from a Single Image with Real-Time Interaction,” in Proc. 34th ACM Int. Conf. Multimedia (MM) , 2026, to appear. [55] N. Carion, L. Gustafson, Y.-T. Hu et al., “SAM 3: Segment Anything with Concepts,” 2025, arXiv:2511.16719. [56] SAM 3D Team, X. Chen, F.-J. Chu et al., “SAM 3D: 3Dfy Anything in Images,” 2025, arXiv:2511.16624. [57] R. Suvorov, E. Logacheva, A. Mashikhin et al., “Resolution-Robust Large Mask Inpainting with Fourier Convolutions,” 2021, arXiv:2109.07161. [58] K. Han, Y. Wang, H. Chen, X. Chen, J. Guo, Z. Liu, Y. Tang, A. Xiao, C. Xu, Y. Xu, Z. Yang, Y. Zhang, and D. Tao, “A Survey on Vision Transformer,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 45, no. 1, pp. 87–110, 2023, doi: 10.1109/TPAMI.2022.3152247. [59] M. Awais, M. Naseer, S. Khan, R. M. Anwer, H. Cholakkal, M. Shah, M.-H. Yang, and F. S. Khan, “Foundation Models Defining a New Era in Vision: A Survey and Outlook,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 47, no. 4, pp. 2245–2264, 2025, doi: 10.1109/TPAMI.2024.3506283. [60] S. Oprea, P. Martinez-Gonzalez, A. Garcia-Garcia, J. A. Castro-Vargas, S. Orts-Escolano, J. Garcia-Rodriguez, and A. Argyros, “A Review on Deep Learning Techniques for Video Prediction,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 44, no. 6, pp. 2806–2826, 2022, doi: 10.1109/TPAMI.2020.3045007. [61] W. Bao, W.-S. Lai, X. Zhang, Z. Gao, and M.-H. Yang, “MEMC-Net: Motion Estimation and Motion Compensation Driven Neural Network for Video Interpolation and Enhancement,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 43, no. 3, pp. 933–948, 2021, doi: 10.1109/TPAMI.2019.2941941. [62] R. Szeto, X. Sun, K. Lu, and J. J. Corso, “A Temporally-Aware Interpolation Network for Video Frame Inpainting,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 42, no. 5, pp. 1053–1068, 2020, doi: 10.1109/TPAMI.2019.2951667. [63] H. Seong, J. Hyun, and E. Kim, “Video Object Segmentation Using Kernelized Memory Network With Multiple Kernels,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 45, no. 2, pp. 2595–2612, 2023, doi: 10.1109/TPAMI.2022.3163375. [64] S. Javed, M. Danelljan, F. S. Khan, M. H. Khan, M. Felsberg, and J. Matas, “Visual Object Tracking With Discriminative Filters and Siamese Networks: A Survey and Outlook,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 45, no. 5, pp. 6552–6574, 2023, doi: 10.1109/TPAMI.2022.3212594. [65] A. W. M. Smeulders, D. M. Chu, R. Cucchiara, S. Calderara, A. Dehghan, and M. Shah, “Visual Tracking: An Experimental Survey,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 36, no. 7, pp. 1442–1468, 2014, doi: 10.1109/TPAMI.2013.230. [66] Y. Guo, H. Wang, Q. Hu, H. Liu, L. Liu, and M. Bennamoun, “Deep Learning for 3D Point Clouds: A Survey,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 43, no. 12, pp. 4338–4364, 2021, doi: 10.1109/T-PAMI.2020.3005434. [67] J. Hu, C. Bao, M. Ozay, C. Fan, Q. Gao, H. Liu, and T. L. Lam, “Deep Depth Completion from Extremely Sparse Data: A Survey,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 45, no. 7, pp. 8244– 8264, 2023, doi: 10.1109/TPAMI.2022.3229090. 23 [68] X. Qi, Z. Liu, R. Liao, P. H. S. Torr, R. Urtasun, and J. Jia, “GeoNet++: Iterative Geometric Neural Network with Edge-Aware Refinement for Joint Depth and Surface Normal Estimation,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 44, no. 2, pp. 969–984, 2022, doi: 10.1109/TPAMI.2020.3020800. [69] C. Hane, C. Zach, A. Cohen, and M. Pollefeys, “Dense Semantic 3D Reconstruction,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 39, no. 9, pp. 1730–1743, 2017, doi: 10.1109/TPAMI.2016.2613051. [70] K. Rematas, C. H. Nguyen, T. Ritschel, M. Fritz, and T. Tuytelaars, “Novel Views of Objects from a Single Image,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 39, no. 8, pp. 1576–1590, 2017, doi: 10.1109/TPAMI.2016.2601093. [71] J. Huang, T. Birdal, Z. Gojcic, L. J. Guibas, and S.-M. Hu, “Multiway Non-Rigid Point Cloud Regis-tration via Learned Functional Map Synchronization,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 45, no. 2, pp. 2038–2053, 2023, doi: 10.1109/TPAMI.2022.3164653. [72] C. Wen, Y. Zhang, C. Cao, Z. Li, X. Xue, and Y. Fu, “Pixel2Mesh++: 3D Mesh Generation and Refinement From Multi-View Images,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 45, no. 2, pp. 2166–2180, 2023, doi: 10.1109/TPAMI.2022.3169735. [73] C. Luo, Z. Yang, P. Wang, Y. Wang, W. Xu, R. Nevatia, and A. Yuille, “Every Pixel Counts ++: Joint Learning of Geometry and Motion with 3D Holistic Understanding,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 42, no. 10, pp. 2624–2641, 2020, doi: 10.1109/TPAMI.2019.2930258. [74] J. Zhang, M. Ji, G. Wang, Z. Xue, S. Wang, and L. Fang, “SurRF: Unsupervised Multi-View Stereopsis by Learning Surface Radiance Field,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 44, no. 11, pp. 7912–7927, 2022, doi: 10.1109/TPAMI.2021.3116695. [75] D. Verbin, P. Hedman, B. Mildenhall, T. Zickler, J. T. Barron, and P. P. Srinivasan, “Ref-NeRF: Structured View-Dependent Appearance for Neural Radiance Fields,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 47, no. 11, pp. 9426–9437, 2025, doi: 10.1109/TPAMI.2024.3360018. [76] J. Pan, J. Dong, Y. Liu, J. Zhang, J. Ren, J. Tang, Y.-W. Tai, and M.-H. Yang, “Physics-Based Generative Adversarial Models for Image Restoration and Beyond,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 43, no. 7, pp. 2449–2462, 2021, doi: 10.1109/TPAMI.2020.2969348. [77] G. Liu, A. Dundar, K. J. Shih, T.-C. Wang, F. A. Reda, K. Sapra, Z. Yu, X. Yang, A. Tao, and B. Catanzaro, “Partial Convolution for Padding, Inpainting, and Image Synthesis,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 45, no. 5, pp. 6096–6110, 2023, doi: 10.1109/TPAMI.2022.3209702. [78] P. Wang, S. Bai, S. Tan et al., “Qwen2-VL: Enhancing Vision-Language Model’s Perception of the World at Any Resolution,” 2024, arXiv:2409.12191. [79] Genesis Authors, “Genesis: A Generative and Universal Physics Engine for Robotics and Beyond,” 2024. [Online]. Available: https://github.com/Genesis-Embodied-AI/Genesis 
+
+[80] R. Featherstone, Rigid Body Dynamics Algorithms . New York, NY, USA: Springer, 2008. [81] H. An et al., “AI Flow: Perspectives, Scenarios, and Approaches,” 2025, arXiv:2506.12479. [Online]. Available: https://arxiv.org/abs/2506.12479 .[82] J. Shao and X. Li, “AI Flow at the Network Edge,” 2025, arXiv:2411.12469. [Online]. Available: https: //arxiv.org/abs/2411.12469 .[83] Y. Chen et al., “TeleWorld: Towards Dynamic Multimodal Synthesis with a 4D World Model,” 2025, arXiv:2601.00051. [Online]. Available: https://arxiv.org/abs/2601.00051 .[84] Y. Chen et al., “Cascade-Zero123: One Image to Highly Consistent 3D with Self-Prompted Nearby Views,” 2024, arXiv:2312.04424. [Online]. Available: https://arxiv.org/abs/2312.04424 .24 [85] Y. Chen et al., “LiftImage3D: Lifting Any Single Image to 3D Gaussians with Video Generation Priors,” 2024, arXiv:2412.09597. [Online]. Available: https://arxiv.org/abs/2412.09597 .[86] X. Xiang et al., “Macro-from-Micro Planning for High-Quality and Parallelized Autoregressive Long Video Generation,” 2025, arXiv:2508.03334. [Online]. Available: https://arxiv.org/abs/2508.03334 .[87] X. Xiang et al., “Pathwise Test-Time Correction for Autoregressive Long Video Generation,” 2026, arXiv:2602.05871. [Online]. Available: https://arxiv.org/abs/2602.05871 .[88] H. Wang, Y. Chen, H. Huang, C. Zhang, and X. Li, “Directing the World: Fast Autoregressive Video Generation with Compositional Human-Camera Control,” 2026, arXiv:2606.27964. [Online]. Available: 
+
+https://arxiv.org/abs/2606.27964 .[89] X. Xiang and Q. Fan, “Make It Efficient: Dynamic Sparse Attention for Autoregressive Image Genera-tion,” 2025, arXiv:2506.18226. [Online]. Available: https://arxiv.org/abs/2506.18226 .[90] Y. Huang, Y. Chen, L. Ding, X. Zhang, W. Dai, J. Zou, H. Xiong, and Q. Tian, “IM-Zero: Instance-Level Motion Controllable Video Generation in a Zero-Shot Manner,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. , 2025, pp. 7265–7275. [91] Y. Huang, Y. Chen, Y. Liu, X. Zhang, W. Dai, H. Xiong, and Q. Tian, “DomainFusion: Generalizing to Unseen Domains with Latent Diffusion Models,” in Proc. Eur. Conf. Comput. Vis. , 2024, pp. 480–498. [92] T. Wen, J. Wang, Y. Chen, S. Xu, C. Zhang, and X. Li, “Metric-Solver: Sliding Anchored Metric Depth Estimation from a Single Image,” 2025, arXiv:2504.12103. [Online]. Available: https://arxiv. org/abs/2504.12103 .[93] T. Chen, K. Hao, Y. Chen, Z. Cheng, R. Xie, L. Song, H. Huang, C. Zhang, and X. Li, “Full-4D: Gen-erating Full-Scope 4D Scenes from a Single-View Video,” 2026, arXiv:2605.25500. [Online]. Available: 
+
+https://arxiv.org/abs/2605.25500 .25 A Implementation and Evaluation Details 
+
+This appendix summarizes implementation and evaluation details omitted from the main paper. The single-image decomposition, explicit scene alignment, and multi-physics initialization build on the corresponding components of the ACM Multimedia 2026 conference paper PhysOmni [54]. TourPhysics retains this physical front end but extends it with persistent online state, action-boundary trajectory simulation, transactional observation publication, separated geometric and generative controls, and long-horizon appearance memory. 
+
+## A.1 Single-Image Scene Construction 
+
+Instance decomposition and explicit proxies. Given the input image I0 and user-provided object descriptions, SAM 3 [55] extracts instance masks {Mi}Ni=1 . Each image–mask pair is then lifted by SAM 3D Objects [56] into an explicit triangular mesh Sloc  
+
+> i
+
+and an object-to-camera similarity transform ( si, R i, t i). A local vertex is placed in the common camera frame by 
+
+vC 
+
+> i
+
+= siRivloc  
+
+> i
+
++ ti. (A1) These explicit surfaces provide the simulator’s contact and collision interfaces. The foreground union is removed cumulatively with LaMa inpainting [57, 62, 77] to form a clean static background plate, 
+
+B0 = Finp I0,
+
+> N
+
+[
+
+> i=1
+
+Mi
+
+!
+
+. (A2) The unmodified I0 is retained separately as the permanent appearance reference. The inpainted plate is used only for camera-induced background exposure. 
+
+Gravity-aligned scene coordinates. Independently reconstructed meshes share an image-conditioned camera frame but need a stable gravity direction and ground height before simulation. Let buC be the provisional up direction. For each mesh, we select the lowest η-quantile of vertices under h(v) = vT buC , and pool these likely contact anchors into Pbase . We use η = 0 .05 by default and relax it to 0 .10 when too few anchors are available. A robust plane is then fitted as (n∗, d ∗) = arg min 
+
+> ∥n∥2=1 ,d
+
+X
+
+> p∈P base
+
+ρ nTp + d , (A3) where ρ is implemented by RANSAC inlier selection. Restricting the fit to low object anchors prevents dense vertical structures from dominating the estimated ground. A rigid transform rotates n∗ onto the world z-axis, recenters the pooled scene, and translates the lowest transformed anchor to z = 0. Small residual pairwise overlaps are corrected by bounded translations along the minimum-overlap bounding-box axis. These corrections are part of the declared initial hypothesis, not online simulator updates. 
+
+Reference-camera and depth alignment. Monocular depth and camera estimates provide the initial reference-view geometry. We refine the camera by rendering the union silhouette of the aligned meshes and maximizing its overlap with S 
+
+> i
+
+Mi. A coarse-to-fine coordinate search translates the camera and look-at point together along the forward, right, and up axes, followed by a bounded image-plane correlation refinement. For visible pixels with valid monocular and simulator depth, we fit an affine alignment using the same scale and shift (α, β ) as in the main text: 
+
+Dgeo 0 (p) = α eD0(p) + β, (A4) where Dgeo 0 denotes simulator-consistent depth. Invalid or non-finite pixels are excluded from the fit. This alignment establishes the internal scene coordinates up to the scale supported by the single-image hypothesis. The source image and its initial geometric record are stored permanently: 
+
+R = ( I0, B 0, D geo 0 , V 0, Q 0, L 0, K 0, T 0). (A5) Here, B0 is the cached inpainted background plate; V0, Q0, and L0 denote validity, confidence, and object labels, while K0 and T0 are camera intrinsics and world-to-camera extrinsics. The reference image and its geometry remain read-only during online interaction. 26 A.2 Declarative Configuration and Physical Simulation 
+
+Configuration proposal, validation, and override. TourPhysics accepts a directly authored physical declara-tion. As an optional initializer, Qwen2.5-VL-72B-Instruct [78] receives the complete image and the masked object crops and proposes a structured configuration. For object i, the record contains a material family 
+
+mi, continuous parameters θi, a boundary condition bi, and an optional initial velocity; the scene record additionally contains velocity keyframes, scheduled force fields, and action mappings: Θphys =  {mi, θ i, b i, v 0 
+
+> i
+
+}Ni=1 , U, F . (A6) The supported families cover rigid bodies; MPM elastic, elastoplastic, granular, snow, and liquid mate-rials; and PBD elastic, cloth, liquid, and particle materials. Their parameters include density, friction, Young’s modulus, Poisson ratio, yield stress or angle, compliance, relaxation, and air resistance as applica-ble. Boundary conditions include fixed objects, ground support, and particle pinning; for example, a declared top fraction of a cloth mesh can be pinned to represent a hanging attachment. Supported external fields include constant, wind, point, drag, vortex, turbulence, and noise fields, each with an activation schedule. The proposal is parsed against a material and force-field whitelist, completed with family-specific defaults, and exposed for manual editing. The resulting declaration is frozen before the first trajectory simulation, so the VLM participates only in initialization. This frozen record is Θ decl in the main paper. 
+
+Multi-physics solver routing. We use the GPU-accelerated Genesis engine [79]. Non-deformable objects and articulated agents are routed to rigid-body dynamics (RBD). In generalized coordinates, the update solves [80] 
+
+M (q)¨ q + h(q, ˙q) = τ + J(q)Tfext , (A7) where M is the inertia matrix, h collects velocity-dependent and gravitational terms, and JTfext maps contact and external forces into generalized coordinates. Continuum materials and large volumetric deformations are handled with the Material Point Method (MPM) [27]. Material state is carried by Lagrangian particles and momentum is updated on an Eulerian grid. In particular, the internal force accumulated at grid node j is 
+
+f int  
+
+> j
+
+= − X
+
+> p
+
+Vpσp∇wjp , (A8) where Vp and σp are particle volume and stress, and wjp is the particle–grid interpolation kernel. Particle-to-grid transfer, the grid momentum update, and grid-to-particle transfer naturally support elastic, plastic, granular, and fluid trajectories. Thin shells and constraint-dominated particle systems are handled with Position-Based Dynamics (PBD) [3]. For a constraint C(x) = 0, the position correction for particle i is ∆xi = −wi
+
+C(x)
+
+P 
+
+> j
+
+wj ∥∇ xj C(x)∥22 + ϵ ∇xi C(x), (A9) where wi is inverse mass. Iterative projection enforces stretch, bending, volume, density, and attachment constraints. RBD–MPM and RBD–PBD contacts are enabled through the engine coupler. The solvers advance within the same scene step, exchange contact response at their interfaces, and retain solver-native state for the next committed window. Static support uses a rigid plane placed at the aligned scene floor. Unless a scene declaration overrides them, the solver step is 4 ms, with 10 substeps for rigid-only scenes and 16 for scenes containing particle materials; gravity is (0 , 0, −9.8). The default MPM and PBD domains are [ −3, 3] 3; MPM uses particle size 0 .02 and grid density 32, whereas PBD uses particle size 0 .01. These values define the controllable scene hypothesis. 
+
+Authoritative trajectory simulation and observation sampling. For every online action an = ( cn, u n), the simulator and camera controller are advanced on a working copy of the preceding committed checkpoint before observation synthesis: (Xn, Cn, Gn) = Fseq ( eXn, eCn, a n; Θ decl ), (A10) 27 The resulting trajectory segment records the simulator state, camera pose, simulator-consistent depth, visi-bility, object labels, and geometric confidence at every observation frame. This segment remains fixed during video generation, and its terminal state is committed only after the resulting observation passes the quality gate. At each source frame, the simulator renderer exports metric depth, entity-ID segmentation, camera intrinsics and extrinsics, and the dynamic-object state used to derive visibility and motion controls. These rendered buffers populate Gn and condition observation synthesis. The video model’s decoder supplies the output RGB. The simulator control record is indexed at fsim = 60 fps, while generated observations use fgen = 16 fps. Let on be the sampling origin associated with window n, rather than the committed terminal state index. To avoid floating-point timestamp drift, generated frame j selects simulator frame 
+
+kn(j) = on +
+
+ (2 j + 1) fsim 
+
+2fgen 
+
+
+
+. (A11) The initial origin o0 follows the simulator’s frame-index convention. Set on+1 = on+300, so kn+1 (0) = kn(80). Thus, under this center-of-bin convention, the shared boundary is the sampled frame kn(80); the committed terminal states X+ 
+
+> n
+
+, C + 
+
+> n
+
+are defined at that endpoint, not at the raw origin on +300. Consecutive observations contain 81 frames and share one simulator/conditioning boundary, corresponding to an 80-frame stride; their decoded RGB boundary is checked by the overlap gate and deduplicated when windows are concatenated. The next action becomes available only after the current window is committed. The simulated trajectory, including all intervention and force-field activation indices, remains unchanged during generation and retry. 
+
+## A.3 Separated Depth Controls 
+
+Let n index committed interaction windows and t ∈ W n index frames within a window; retry attempts retain the same n. TourPhysics maintains the following per-frame quantities: 
+
+Dgeo  
+
+> n,t
+
+, Dgen  
+
+> n,t
+
+= [ Dgen  
+
+> Wn
+
+]t, Dbase  
+
+> n,t
+
+= [ Dbase  
+
+> Wn
+
+]t. (A12) Simulator-consistent depth Dgeo  
+
+> n,t
+
+is metric camera-space z-depth in calibrated scene units; Tt is world-to-camera and π−1(p, z ; Kt) returns a camera-frame point with third coordinate z. It is used for projection, visibility, object correspondence, and evaluation. Scene initialization and simulator rendering are its only writers. The base window tensor Dbase  
+
+> Wn
+
+= Fbase (Gn; R) is a normalized relative-depth condition supplied to the video model. The persistent state stores accepted tail evidence En, not a writable depth map. At the beginning of the current window, after Gn has been fixed, the generator-facing tensor is constructed as 
+
+Dgen  
+
+> Wn
+
+= Fctrl (Gn, En) = (1 − Wn) ⊙ D base  
+
+> Wn
+
++ Wn ⊙ D Wn (En), (A13) where Wn ∈ [0 , 1] |W n|× H×W selects eligible newly exposed regions inadequately covered by the current generator-facing base control. The candidate completion is estimated only from committed tail evidence and is applied only when novelty, overlap, temporal consistency, and the affine-aligned depth-agreement tests are satisfied. The reported gates are trusted fraction ≥ 0.20, Spearman ≥ 0.70, model-space NRMSE ≤ 0.08, and metric-space NRMSE ≤ 0.12, with novelty, target-hole, and source-support fractions 0 .05 , 0.01 , 0.20, respectively. These tests are pointwise after the frame-level admissibility checks; otherwise Wn(t, p ) = 0 and the base control is retained exactly at that location. Generated depth affects only visual conditioning; collision geometry, object state, and simulator-consistent depth remain unchanged. 
+
+## A.4 Observation Generation and Transactional State 
+
+The observation model is a finite-window video diffusion model trained for geometry-conditioned observation synthesis: 
+
+YWn ∼ pθ
+
+ YWn | G n, Dgen  
+
+> Wn
+
+, I 0, Kn
+
+ . (A14) 28 The physical and camera state sequence and its geometric controls remain fixed while YWn is generated. The native temporal cache is used for short-range continuity, whereas the appearance memory provides sparse long-range access to previously accepted static appearance. For a configured tail subset Tn (the reported profile uses {64 , 68 , 72 , 76 , 80 }), the candidate evidence is 
+
+bEn+1 = Φ E (YWn |Tn , Gn, R) , (A15) and remains private until the quality decision accepts the full window. The operator stores only generated-depth estimates, trusted/static support, indices, and alignment/confidence statistics; simulator-consistent geometry is never overwritten. The corresponding appearance pages are staged from clean attention features and reliable static support: 
+
+bKn+1 = Kn ⊕ Φpage 
+
+ Zattn  
+
+> Wn
+
+, Gn, ΩWn
+
+ , (A16) where Ω Wn = {Ωt : t ∈ W n} is the reliable static support defined below. The pages remain private, together with the candidate evidence, until the enclosing window commits. Candidate updates remain private during generation. If the quality decision is qn = 1, the state is committed as 
+
+Sn+1 =
+
+
+
+X+ 
+
+> n
+
+, C + 
+
+> n
+
+, bKn+1 , bEn+1 
+
+
+
+. (A17) If qn = 0, the persistent state remains unchanged and the working simulator and camera copy is discarded: 
+
+Sn+1 = Sn. (A18) In this rejection equation the n + 1 label is only a bookkeeping view; the committed index does not advance. The simulator state, memory pages, and depth evidence remain at the preceding committed boundary; a retry keeps the same committed index and uses the same action, trajectory, controls, and committed memory. If qn = 1, bEn+1 becomes the committed En+1 . After the next action fixes Gn+1 , Eq. (A13) constructs Dgen  
+
+> Wn+1
+
+;no candidate evidence can be used before that commit. 
+
+## A.5 Quality Gate, Atomicity, and Retry Policy 
+
+The quality gate is a fail-closed publication check, not an evaluation metric for physical fidelity. It runs after all 81 candidate RGB frames have been rendered and decoded, but before the candidate cache state, appearance pages, tail evidence, or terminal simulator state becomes persistent. The media contract requires exactly 81 decodable frames at 832 × 480. A contract violation rejects the candidate before any state publication. Let Y0, . . . , Y 80 be the decoded candidate frames on the 8-bit RGB scale, and let Bn be the last frame of the preceding committed window. We use the full-frame mean absolute RGB difference 
+
+δ(A, B ) = 13HW 
+
+X
+
+> p,c
+
+|A(p, c ) − B(p, c )| (A19) and adjacent-frame changes dt = δ(Yt, Y t−1), t = 1 , . . . , 80. For windows after the first, the shared-boundary error and boundary-motion ratio are 
+
+eov = δ(Y0, B n), rbd = eov 
+
+max {median( d1, . . . , d 8), 10 −6} . (A20) The first window has no preceding boundary and sets both quantities to zero. We also compute 
+
+rblack = 181 HW 
+
+X
+
+> t,p
+
+1
+
+h
+
+max  
+
+> c
+
+Yt(p, c ) ≤ 3
+
+i
+
+, (A21) 
+
+rfreeze = 180 
+
+> 80
+
+X
+
+> t=1
+
+1[dt < 0.2] . (A22) 29 Thus, black pixels and frozen transitions are defined directly on decoded 8-bit frames rather than by a learned quality model. For the reported runs, the binary decision is the conjunction 
+
+qn = 1[media contract] 1[eov ≤ 4.0] 1[rbd ≤ 3.0] 
+
+· 1[rblack ≤ 0.10] 1[rfreeze ≤ 0.25] χrepr , (A23) where χrepr = 1[erepr ≤ 24 .0] when a pre-commit feedback-reprojection manifest is available, and χrepr = 1 otherwise. No manifest was supplied in the reported video runs, so the optional field was recorded as zero and did not vary their acceptance decisions. Known-background and dynamic-foreground RGB MAE against the paired simulator render are also logged on the 0–255 scale. They are diagnostics only: simulator RGB is a conditioning reference rather than a pixel target, so these two MAEs do not enter Eq. (A23). Thresholds are fixed for an attempt and are never relaxed after a failure. If qn = 0, the staged video/cache state and candidate evidence are discarded, the working simulator/-camera copy is released, and the rejection rule together with the main-paper knowledge-transition rule leave every persistent component at the last committed boundary. The implementation performs no automatic retry. An explicit retry starts from the same checkpoint with the same committed index, action, trajectory, controls, and committed memory, although the caller may supply a different sampling seed. A later user action becomes available after a candidate passes the unchanged gate and commits. 
+
+## A.6 Reference-Anchored Appearance Memory 
+
+Only reliable static regions can enter long-term memory. The eligible support is defined as Ωt = Vt ∩ M sta  
+
+> t
+
+∩ { Qt ≥ τq } ∩ ¬ Γedge  
+
+> t
+
+, (A24) where M sta  
+
+> t
+
+is derived from the declared static support and the motion/deformation field, Γ edge  
+
+> t
+
+excludes unreliable boundaries, and τq is a fixed confidence threshold. Moving and deforming objects are excluded from long-term memory. The Kt and Tt symbols below denote the camera-intrinsic and world-to-camera fields of the corresponding geometric record. The page extraction and private publication rule follow Eq. (A16); no page is readable before the enclosing window commits. For a target pixel p, simulator-consistent depth back-projects the pixel into the shared scene coordinate system as metric camera-space z-depth, with Tt world-to-camera: 
+
+xw = T −1 
+
+> t
+
+π−1(p, D geo  
+
+> t
+
+(p); Kt). (A25) Projection into an earlier committed view s gives (ˆ ps, ˆzs) = π(Tsxw; Ks). (A26) A source view is eligible only when the projected location is valid, visible, static, and depth-consistent. The correspondence confidence is 
+
+cs(p) = Qt(p)Qs(ˆ ps) exp 
+
+
+
+− |Dgeo  
+
+> s
+
+(ˆ ps) − ˆzs|
+
+ϵs(p)
+
+
+
+. (A27) Here ϵs(p) > 0 is the metric-depth uncertainty tolerance, and the binary correspondence mask ms(p) is one exactly when the projected source passes the in-bounds, visibility, static-support, and depth-consistency tests. Let A0 denote the native reference-conditioned attention output and Ahist the output after adding an eligible historical page. Historical appearance is introduced only as a bounded residual: 
+
+A(p) = A0(p) + gs(p)  Ahist (p) − A0(p) , (A28) where 
+
+gs(p) = λmem ms(p) clip( cs(p), 0, 1) . (A29) If no valid source view exists, ms(p) = 0, and the output exactly recovers the native path A(p) = A0(p). A candidate memory page is stored in a private staging area while its observation is evaluated. It becomes readable only after the observation window commits. This rule prevents failed or rejected generations from contaminating future observations. 30 B Additional Evaluation Protocol 
+
+## B.1 Benchmark and Comparison Setting 
+
+The evaluation contains simulator-defined camera tours and object manipulations involving rigid, cloth, elastic, granular, and fluid proxies. The benchmark is initialized from 61 source-image identities and contains 108 interaction sequences. When several sequences share an input image, we report both sequence-level and identity-balanced statistics where appropriate. The benchmark evaluates agreement with a declared simulation trajectory. It does not test whether the chosen declarative parameters are the true physical parameters of the source scene. This distinction is important because single-image initialization does not uniquely determine scale, occluded geometry, density, friction, or deformation parameters. Compared methods expose different conditioning interfaces. Some methods receive only an image, while others receive an explicit camera trajectory, event description, or privileged control. Such differences are indicated in the corresponding tables. Methods producing shorter videos may be temporally normalized for generic video-quality diagnostics, but these results are not treated as equivalent to native online generation. 
+
+## B.2 Camera and Object Motion 
+
+Camera coordinates and alignment. We retain only the 49 sequences whose reference poses are exact runtime exports. For sequence s, ViPE recovers camera centers bcs,t , which are timestamp-matched to reference centers 
+
+cs,t in the internal simulator world coordinate system. One Umeyama similarity transform ( γs, R s, u s) is fitted over every valid frame of the complete sequence, never separately by window or segment: 
+
+ecs,t = γsRsbcs,t + us. (B1) If Vs is the valid timestamp set, the per-sequence absolute trajectory error (ATE) is ATE s =
+
+s 1
+
+|V s|
+
+X
+
+> t∈V s
+
+∥ecs,t − cs,t ∥22. (B2) ATE is expressed in simulator world units after alignment; those units belong to the declared scene hypothesis and are not recovered real-world meters. The path-length ratio (PLR) uses the same valid frames and transform: PLR s =
+
+P 
+
+> t
+
+∥ecs,t − ecs,t −1∥2
+
+P 
+
+> t
+
+∥cs,t − cs,t −1∥2
+
+. (B3) It is dimensionless and has ideal value one because the recovered and reference cameras then travel equal total distance. The main-paper camera/object-motion table reports equal-weight means over valid sequences for both ATE and PLR. T-Dir and R-Dir use schedule segments that are fully covered, last at least 0.5 s, and contain exclusively translation or rotation commands, respectively. For each segment we form the recovered and reference relative transforms between its endpoints. Let vpred and vref denote their translation vectors for T-Dir or their axis–angle rotation vectors for R-Dir. A direction hit is 
+
+h = 1
+
+ vpred · vref 
+
+∥vpred ∥2∥vref ∥2
+
+> 0
+
+
+
+. (B4) The test therefore checks the correct half-space, not exact-axis recovery. Hits are averaged first over eligible segments in a sequence and then equally over sequences; the table reports percentages. 
+
+Object coordinates and aggregation. The paired simulator and generated videos are sampled at 8 fps and 682 × 384. Frozen initial object masks seed the same CoTracker3 multi-point procedure in both videos, and a robust center is computed for each dynamic object. With D = √682 2 + 384 2, reference/generated centers 
+
+xs,i,t , bxs,i,t , and joint-visibility indicator vs,i,t , the normalized error is 
+
+es,i,t = ∥bxs,i,t − xs,i,t ∥2
+
+D . (B5) 31 Table 5 Effective support for the camera- and object-motion protocols. Each cell lists counts in the order specified in the table note; “–” denotes an incompatible protocol. 
+
+Method Camera Object Motion ATE/PLR T-Dir R-Dir Object Motion LingBot-Cam 49/40 70/48/40 52/25/25 74/49/27 LingBot-Act 49/40 70/48/40 52/25/25 97/51/29 Wan2.1-I2V 49/40 70/48/40 52/25/25 165/92/49 Sora-2 49/40 57/45/37 1/1/1 186/97/53 MotionCtrl 49/40 70/48/40 52/25/25 179/95/51 Tora-Initiator – – – 175/96/52 minWM-Wan 49/40 70/48/40 52/25/25 177/95/51 TourPhysics 49/40 70/48/40 52/25/25 168/93/49 ATE/PLR counts are sequences/identities; T-Dir and R-Dir counts are segments/sequences/identities; object-motion counts are objects/sequences/identities. All counts are after method-specific visibility fil-tering. Thus, the 0.05 threshold is five percent of the image diagonal in normalized image coordinates. We retain a dynamic object only if at least eight frames have jointly visible robust centers and its joint-visibility fraction is at least 0.15. For a retained object, with Ns,i = P 
+
+> t
+
+vs,i,t and last jointly visible frame t∗
+
+> s,i
+
+,ADE s,i = 1
+
+Ns,i 
+
+X
+
+> t
+
+vs,i,t es,i,t , (B6) End s,i = es,i,t ∗ 
+
+> s,i
+
+, (B7) S@0 .05 s,i = 1[ADE s,i ≤ 0.05] , (B8) Vis s,i = Ns,i /T s. (B9) Each quantity is averaged over retained objects within a sequence and then equally over sequences. ADE, End Err., S@0.05, and Vis. are dimensionless and share the same method-specific support. 
+
+Effective support. Table 5 reports the method-specific support after visibility filtering. The table note states the unit and ordering of each count; identities are distinct input-image SHA-256 values. 
+
+## B.3 Simulation-Trajectory Adherence 
+
+The six deterministic metrics use the same frozen-mask, multi-point CoTracker3 observations from paired simulator/generated RGB at 8 fps and 682 × 384. All distances below are divided by the image diagonal 
+
+D = √682 2 + 384 2. A record is first reduced within its sequence; the reported value is then an equal-weight mean over sequences. Consequently, sequences with several objects or events do not receive extra weight. 
+
+Contact Err. For initiator point set Pk and target point set Qk, the separation curve is 
+
+gk = min  
+
+> p∈Pk,q ∈Qk
+
+∥p − q∥2/D. (B10) We median-filter gk over a three-frame neighborhood and search from the declared onset through the next 8 s. At least eight valid samples and an approach amplitude of 0.002 diagonal are required. The initial level is the maximum in the early part of the search window (up to 16 samples), and the minimum level is its fifth percentile. The contact proxy is the first sample below the minimum plus 15% of the initial-to-minimum range, or the closest approach if no sample crosses that level. The simulator selects the earliest valid target, 32 and the generated video is scored against that same target. If the generated target is observable but has no valid approach, its error is the 8 s search-window penalty. Evaluation frame k is converted by tk = k/ 8seconds (equivalently, by its stored 8-fps timestamp), and the reported record is |tgen  
+
+> k
+
+− tsim  
+
+> k
+
+| in seconds. Full-duration Wan and MotionCtrl tracks use their timestamp-mapped evaluation timeline. 
+
+Response Acc. For each simulator-responsive target, a 2D linear-velocity model is fitted to its robust center from 1.0 to 0.125 s before contact. Response magnitude is the median normalized residual from that extrap-olation between 1 and 2 s after contact. A reference target is applicable only if its residual is at least 0.006. The generated response is correct when its residual is at least max(0 .006 , 0.5rsim ). An observable target with no generated approach is a failure; insufficient visibility is excluded. Response Acc. is the fraction of correct applicable targets, expressed as a percentage. 
+
+Overlap Exc. For two tracked point sets, let 
+
+ok = area(hull( Pk) ∩ hull( Qk)) min {area(hull( Pk)) , area(hull( Qk)) } . (B11) The metric is max {0, Q 0.9(ogen ) − Q0.9(osim )} over the 2 s following each sequence’s visual contact. It is a dimensionless excess 2D hull-overlap fraction; zero is not evidence of zero 3D penetration. 
+
+Shape Err. and Area Drift. For each deformable object and frame with at least six jointly tracked points, the simulator and generated point configurations are independently centered and divided by their root-mean-square radius. The generated configuration is then aligned to the simulator configuration by the optimal 2D Procrustes rotation. Shape Err. is the mean corresponding-point distance after this normalization and is dimensionless. An object record requires at least eight valid frames and averages their errors. On the same jointly visible points, let ak = Agen  
+
+> k
+
+/A sim  
+
+> k
+
+, where each Ak is the tracked-point convex-hull area. With a0 defined as the median of the first min(10 , N ) valid ratios, Area Drift is 1
+
+N
+
+> N
+
+X
+
+> k=1
+
+|ak/a 0 − 1|. (B12) It is a dimensionless projected-area proxy, not a mass-conservation score, and also requires at least eight valid frames. 
+
+Recovery Acc. For each declared deformation interval, shape distance is measured relative to the last valid pre-event frame using the same Procrustes normalization. Let p be its 90th percentile during the event and 
+
+r its 20th percentile from 0.5 to 2.5 s after the event. The recovery fraction is ρ = clip(( p − r)/p, −1, 1). An event is applicable when psim ≥ 0.015, ρsim > 0.05, and both videos have valid measurements. It is correct when 
+
+pgen ≥ 0.5psim , ρgen ≥ max {0.10 , ρ sim − 0.30 }. (B13) Recovery Acc. is the event accuracy, averaged event-first within sequence and then across sequences. VideoPhy-2 AutoEval is separate from these paired metrics. SA expands to Semantic Adherence and PC to Physical Commonsense; both are custom-data VideoPhy-2 means on a 1–5 scale using the frozen shared prompts. Avg is the arithmetic mean (SA + PC) /2, not an official VideoPhy-2 aggregate. These scores are auxiliary perceptual diagnostics and do not verify the declared trajectory. 
+
+Effective support. Table 6 lists the method-specific supports for the deterministic metrics and the auxiliary VideoPhy-2 scores. For the first six metric columns, each cell is ordered as records/sequences/identities; the final three columns are ordered as sequences/identities. The counts are taken from the existing records, and identities are distinct input-image SHA-256 values. 33 Table 6 Effective support for simulator-trajectory adherence and auxiliary VideoPhy-2 diagnostics. “–” denotes an incompatible protocol. 
+
+Method Collision Proxies Deformation Proxies VideoPhy-2 AutoEval (Auxiliary) Contact Err. Response Acc. Overlap Exc. Shape Err. Area Drift Recovery Acc. SA PC Avg LingBot-Cam 14/14/6 1/1/1 2/2/2 19/17/8 19/17/8 6/2/1 108/61 108/61 108/61 LingBot-Act 14/14/6 2/2/2 1/1/1 27/24/12 27/24/12 3/3/2 108/61 108/61 108/61 Wan2.1-I2V 14/14/6 3/3/2 6/6/5 31/26/14 31/26/14 11/5/2 108/61 108/61 108/61 Sora-2 14/14/6 7/7/3 8/8/4 31/26/14 31/26/14 4/3/2 108/61 108/61 108/61 MotionCtrl 14/14/6 8/8/3 4/4/3 31/26/14 31/26/14 – 108/61 108/61 108/61 Tora-Initiator 14/14/5 3/3/1 4/4/2 29/24/13 29/24/13 1/1/1 97/53 97/53 97/53 minWM-Wan 14/14/6 8/8/3 9/9/4 31/26/14 31/26/14 12/9/3 108/61 108/61 108/61 TourPhysics 14/14/6 5/5/3 9/9/5 30/25/13 30/25/13 8/7/2 108/61 108/61 108/61 The Contact, Response, Overlap, Shape, Area, and Recovery columns list records/sequences/identities. The SA, PC, and Avg columns list sequences/identities. Counts are after method-specific support filtering; “–” denotes an incompatible protocol. 
+
+## B.4 Appearance and Long-Horizon Consistency 
+
+We evaluate input-scene subject consistency, background consistency, temporal stability, and camera-motion classification accuracy. TourPhysics obtains input-video subject consistency of 0 .9743, input-video back-ground consistency of 0 .9791, and camera-motion classification accuracy of 0 .8921 under the reported pro-tocol. 
+
+Cache drift. For a decoded RGB video I0, . . . , I T −1, define the mean-channel luminance proxy 
+
+Lt = 13HW 
+
+X
+
+> p,c
+
+It(p, c ). (B14) It is the arithmetic mean of decoded 8-bit channels, not a gamma-corrected photometric luminance. Let 
+
+m = max {1, T − ⌊ 0.8T ⌋} . The two drift measures in the main-paper memory-diagnostics table are 
+
+Dend = |LT −1 − L0|, (B15) 
+
+Dtail = 1
+
+m 
+
+> T−1
+
+X 
+
+> t=T−m
+
+Lt − 1
+
+m
+
+> m−1
+
+X
+
+> t=0
+
+Lt . (B16) Both are unnormalized 0–255 intensity-level differences; they are not percentages. The reported entries are equal-weight sequence means over the same 72 paired ordinary-cache and persistent-sink videos. These 72 sequences come from 27 distinct input-image identities. The memory router has nonempty causal revisit targets in 70 of those sequences, covering 26 identities, but all 72 sequences contribute to the cache-only drift comparison. 
+
+Historical-region error. The frozen appearance plan associates target latent j with an earlier source latent 
+
+h(j); their decoded frame indices are 4 j and 4 h(j). Both frames are resized to the memory-token lattice, and the earlier frame is remapped by the plan’s source-coordinate field. Let Mj,p indicate a valid, visible, static, and depth-consistent historical correspondence and let κj,p ∈ [0 , 1] be its frozen confidence. With 34 Wj (·) denoting that remap, the base historical error is the confidence-weighted RGB Charbonnier error 
+
+Ehist = 1
+
+P 
+
+> j,p
+
+Mj,p κj,p 
+
+X
+
+> j,p
+
+Mj,p κj,p 
+
+· 13
+
+X
+
+> c
+
+s I4j (p, c ) − Wj (I4h(j))( p, c )255 
+
+2
+
++ 10 −6.
+
+(B17) Thus, its region is exactly the routed historical-correspondence mask, and its base error is dimensionless. 
+
+Known-region error. Let Kt,p be the simulator-consistent known-background mask ( reference bg lv , with the frozen preserve/calibration-valid mask as fallback). It excludes the tracked dynamic foreground. Against the paired simulator RGB Isim , the base error is 
+
+Eknown =
+
+P 
+
+> t,p,c
+
+Kt,p |Igen  
+
+> t
+
+(p, c ) − Isim  
+
+> t
+
+(p, c )|
+
+3 P 
+
+> t,p
+
+Kt,p 
+
+, (B18) an MAE in 0–255 intensity levels, averaged over the memory-intervention chunks. This quantity is a guardrail diagnostic, as specified in the “Window-level quality gate” paragraph of the main-paper “Quality-Gated Atomic Commit” subsection; it is not an acceptance threshold. The appearance-memory treatment and control use the same physical and camera trajectories, generator-facing depth, diffusion configuration, prompts, checkpoints, and random seeds. For a scene s, a paired percentage is ∆ s(E) = 100( Emem  
+
+> s
+
+− Eoff  
+
+> s
+
+)/E off  
+
+> s
+
+, so negative is favorable. History change is the equal-weight mean of ∆ s(Ehist ) in both subsets. The frozen development report also uses the mean of four paired ∆s(Eknown ) values. The held-out known-region guardrail uses the relative change of identity-macro MAE, 100( Emem known −Eoff known )/E off known , which yields the reported −0.90%. Stating these frozen aggregations explicitly avoids conflating a mean of percentages with a percentage of means. 
+
+Memory subsets. The four-sequence development stress set uses four distinct input identities and cov-ers rigid, cloth, and elastic content. Each selected sequence has six windows (481 output frames), 51 planned target latents, and active revisit chunks 3–5. Selection favored interpretable revisit/occlusion pres-sure, geometric-correspondence support, material diversity, and qualitative readability; earlier mechanism-screening metadata was available, so this is not an unbiased generalization set. The held-out set contains all 14 eligible dynamic input identities unused by the mechanism pilots or development set. Camera-only identities are excluded, and one scene per remaining identity is chosen as the lexicographically first eligible six-window sequence satisfying the same 481-frame, 51-target-latent, chunks-3–5 contract. This identity-disjoint selection was frozen before treatment outcomes were inspected. Consequently, the main-paper memory-diagnostics table reports four development identities and 14 held-out identities, not repeated variants of a smaller image set. 
+
+# C Additional Ablations and Limitations 
+
+## C.1 Cache and Memory Ablations 
+
+The persistent-sink cache reduces long-horizon brightness drift compared with an ordinary finite temporal cache. On the long-video subset, end-to-start drift decreases from 26 .33 to 11 .17, while tail-to-head drift decreases from 20 .38 to 7 .74. With the observation backbone and generator-facing depth fixed, geometry-routed appearance memory reduces historical-region error by 8 .25% on the development split and 2 .39% on the held-out split. Known-region error decreases by 2 .99% and 0 .90%, respectively. The smaller held-out improvement reflects variation in camera coverage and geometric correspondence quality. The fallback property is verified by disabling all valid historical correspondences. In this case, gs(p) = 0 for all p, and Eq. (A28) recovers the native observation path exactly. This test confirms that unavailable or unreliable memory does not introduce an additional visual bias. 35 C.2 Limitations 
+
+TourPhysics constructs a controllable physical hypothesis rather than a unique real-scene reconstruction. Its physical behavior depends on the supplied object proxies, material families, boundary conditions, and simulator parameters. Therefore, adherence to the prescribed simulation trajectory does not guarantee real-world physical accuracy. The current geometry is incomplete in occluded or newly exposed regions. Appearance memory also excludes moving and deforming objects, which limits its ability to preserve object-specific appearance after large physical changes. Incorrect camera or depth estimates can further reduce valid cross-view correspon-dences. Finally, finite-window diffusion is not real-time, and uncompressed historical pages grow with the number of accepted views. Future work should investigate fixed-capacity page eviction, object-local memory for deforming surfaces, real-world physical evaluation, and longer interactive tours. 36
