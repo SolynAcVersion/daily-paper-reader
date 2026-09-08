@@ -1,0 +1,41 @@
+{
+  "date": "20260908",
+  "date_label": "",
+  "generated_at": "2026-09-08 23:04:34 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.31025v1",
+      "route": "202609/08/2608.31025v1-analytic-dynamics-learning-physics-grounded-representation-for-fast-intrinsic-dynamics-inference-from-monocular-videos",
+      "title": "Analytic Dynamics: Learning Physics-Grounded Representation for Fast Intrinsic Dynamics Inference from Monocular Videos",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "基于物理的视频动力学推断可为物理交互视频自动标注内在动力学参数",
+      "first_seen_at": "2026-09-08 23:04:34 UTC",
+      "updated_at": "2026-09-08 23:04:34 UTC"
+    },
+    {
+      "paper_id": "2609.02886v1",
+      "route": "202609/08/2609.02886v1-solarwm-open-data-and-scalable-training-for-long-horizon-video-world-models",
+      "title": "SolarWM: Open Data and Scalable Training for Long-Horizon Video World Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "开源数据引擎与可扩展训练框架，面向长时程视频世界模型，可迁移到物理合理视频生成",
+      "first_seen_at": "2026-09-08 23:04:34 UTC",
+      "updated_at": "2026-09-08 23:04:34 UTC"
+    }
+  ]
+}

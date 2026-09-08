@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-07</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-08</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 6 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 2 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>5</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>2</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-07 23:24:33 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-08 23:04:34 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,9 +62,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日聚焦物理感知与世界模型，从6篇论文中精读了1篇高分工作并速读5篇相关研究。</p>
-<p>最值得关注的方向是将物理规律注入视觉世界模型（《TourPhysics》9.0分），以实现单图驱动的探索与操控；同时可参考《Analytic Dynamics》和《OctWorld》等强化物理表示与长程一致性。</p>
-<p>建议普通读者优先追踪物理增强的具身智能与视频生成检测的交叉进展，留意高质量高分研究中的实际机器人操作演示。</p>
+<p>今日速读2篇论文，暂无精读；聚焦物理感知动力学推断与长时程视频世界模型。</p>
+<p>最值得关注的是《Analytic Dynamics》（7.0分）：用物理先验从单目视频快速推断内在动力学；《SolarWM》则提供开放数据以扩展视频预测。</p>
+<p>建议优先精读高分论文，或结合两篇主题关注“视频理解+世界模型”交叉应用。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -73,12 +73,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">1 篇</strong>
+    <strong class="dpr-home-dashboard-count">0 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="TourPhysics: Bringing Physics to World Models for Exploration and Manipulation from a Single Image">TourPhysics: Bringing Physics to World Models for Exploration and Manipulation from a Single Image</span></li></ul>
+<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>1</strong></span></div>
+
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -86,12 +86,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">5 篇</strong>
+    <strong class="dpr-home-dashboard-count">2 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Analytic Dynamics: Learning Physics-Grounded Representation for Fast Intrinsic Dynamics Inference from Monocular Videos">Analytic Dynamics: Learning Physics-Grounded Representation for Fast Intrinsic Dynamics Inference from Monocular Videos</span></li><li><span class="dpr-home-dashboard-paper-title" title="OctWorld: Long-Range World-Consistent Video Generation with Octree-Based 3D Mapping">OctWorld: Long-Range World-Consistent Video Generation with Octree-Based 3D Mapping</span></li><li><span class="dpr-home-dashboard-paper-title" title="Mind the Rift: Cross-Scale Coupling Mismatch for AI-Generated Video Detection">Mind the Rift: Cross-Scale Coupling Mismatch for AI-Generated Video Detection</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Analytic Dynamics: Learning Physics-Grounded Representation for Fast Intrinsic Dynamics Inference from Monocular Videos">Analytic Dynamics: Learning Physics-Grounded Representation for Fast Intrinsic Dynamics Inference from Monocular Videos</span></li><li><span class="dpr-home-dashboard-paper-title" title="SolarWM: Open Data and Scalable Training for Long-Horizon Video World Models">SolarWM: Open Data and Scalable Training for Long-Horizon Video World Models</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>5</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>2</strong></span></div>
 </section>
 </div>
 

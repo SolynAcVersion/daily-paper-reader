@@ -1,0 +1,111 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-08T23:03:27.299293+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 0,
+    "deep_cap": 8,
+    "deep_selected": 0,
+    "quick_candidates": 2,
+    "quick_skim_target": 13,
+    "quick_selected": 2
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2608.31025v1",
+      "source": "arxiv",
+      "title": "Analytic Dynamics: Learning Physics-Grounded Representation for Fast Intrinsic Dynamics Inference from Monocular Videos",
+      "abstract": "Inferring object dynamics from visual observations is essential for intelligent agents to reason about and interact with the physical world, yet remains challenging due to the fundamental gap between visual evidence and intrinsic dynamics. Existing methods either rely on costly per-scene optimization, limiting efficiency and scalability, or directly map visual evidence to intrinsic dynamics without intermediate physical abstractions, making them prone to appearance and geometry shortcuts. To bridge this gap, we propose Analytic Dynamics, a feed-forward dynamics inference framework that introduces an intermediate physics-grounded dynamics representation between visual observations and intrinsic dynamics. Specifically, we leverage privileged physical states, including position, displacement, and deformation gradient fields, which are available in simulation, to learn a structured dynamics representation that is difficult to discover from visual observations alone. By aligning visual representations with this space, we equip visual models with a physics-grounded inductive bias, guiding them to capture dynamics-relevant patterns for material model classification and parameter regression. To facilitate this research, we develop a dynamics data generation pipeline and benchmark containing paired physical state trajectories, rendered videos, and ground-truth material models and parameters. Extensive experiments demonstrate that Analytic Dynamics achieves efficient, accurate, and generalizable dynamics inference from monocular videos.",
+      "authors": [
+        "Jailing Lin",
+        "Jikuan Zhang",
+        "Jianhua Sun"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-31T16:08:04+00:00",
+      "link": "https://arxiv.org/pdf/2608.31025v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "physics-grounded dynamics inference from videos supports automatic annotation of physical interaction clips",
+      "llm_evidence_cn": "基于物理的视频动力学推断可为物理交互视频自动标注内在动力学参数",
+      "llm_evidence": "基于物理的视频动力学推断可为物理交互视频自动标注内在动力学参数",
+      "canonical_evidence": "基于物理的视频动力学推断可为物理交互视频自动标注内在动力学参数",
+      "llm_tldr_en": "Inferring object dynamics from video is hard due to visual-to-dynamics gaps; prior methods are costly or shortcut-prone. Analytic Dynamics learns a feed-forward physics-grounded representation enabling fast intrinsic dynamics inference from monocular videos.",
+      "llm_tldr_cn": "从视频中推断物体内在动力学是智能体理解物理世界的核心挑战，但视觉证据与内在动力学之间存在鸿沟。现有方法要么逐场景优化、成本较高，要么直接映射视觉特征而缺少中间物理抽象，易受外观和几何捷径影响。该文提出Analytic Dynamics，一种前馈推断框架，在视觉观测与内在动力学之间引入物理接地表示，从而快速推断单目视频中的动力学参数。此表示可服务于视频理解与数据集标注，但其目标并非生成更符合物理规律的视频。",
+      "llm_tldr": "从视频中推断物体内在动力学是智能体理解物理世界的核心挑战，但视觉证据与内在动力学之间存在鸿沟。现有方法要么逐场景优化、成本较高，要么直接映射视觉特征而缺少中间物理抽象，易受外观和几何捷径影响。该文提出Analytic Dynamics，一种前馈推断框架，在视觉观测与内在动力学之间引入物理接地表示，从而快速推断单目视频中的动力学参数。此表示可服务于视频理解与数据集标注，但其目标并非生成更符合物理规律的视频。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "collect and annotate physical interaction datasets for video generation training",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.02886v1",
+      "source": "arxiv",
+      "title": "SolarWM: Open Data and Scalable Training for Long-Horizon Video World Models",
+      "abstract": "We introduce SolarWM, a fully open foundation for building interactive video world models from data preparation through long-horizon inference. Training across heterogeneous data sources and video backbones is challenging: datasets differ in temporal scale, camera geometry, visual quality, motion, and captioning styles, while video generators use distinct representations and architectures. Naive data mixing and model-specific implementations therefore produce inconsistent supervision and make results difficult to reproduce and compare. SolarWM addresses this coupling with a reconfigurable multi-source data engine and a backbone-native adaptation framework. The engine converts 1.43 million canonical clips from 10 datasets into a unified, frame-aligned contract covering visual observations, metric camera geometry, captions, quality metadata, selection decisions, and provenance, while decoupling source processing from mixture construction. Under shared camera-conditioning, training, and inference interfaces, we instantiate four 5B--33B models based on Wan2.2, LTX-2.5, and MiniMax-H3 while preserving their native representations and objectives. A unified three-stage recipe combines bidirectional adaptation, teacher-forced autoregressive initialization, and distribution matching distillation. The resulting causal models enable real-time interaction over rollouts ranging from minutes to hours after being trained on only 5s sequences. By releasing the resulting data, pipeline, recipes, weights, and framework, SolarWM provides a reproducible and extensible foundation for interactive world-model research.",
+      "authors": [
+        "Junchao Huang",
+        "Guian Fang",
+        "Shengju Qian",
+        "Xianghao Kong",
+        "Zhuoran Zhao",
+        "Wei Huang",
+        "Yihua Du",
+        "Zixin Zhang",
+        "Justin Cui",
+        "Yuchao Gu",
+        "Yukang Chen",
+        "Xinting Hu",
+        "Tianyu He",
+        "Shaoshuai Shi",
+        "Zhuotao Tian",
+        "Xin Wang",
+        "Mike Zheng Shou",
+        "Li Jiang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-02T17:59:41+00:00",
+      "link": "https://arxiv.org/pdf/2609.02886v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Open data engine and scalable training framework for long-horizon video world models, reusable for physics-aware video generation",
+      "llm_evidence_cn": "开源数据引擎与可扩展训练框架，面向长时程视频世界模型，可迁移到物理合理视频生成",
+      "llm_evidence": "开源数据引擎与可扩展训练框架，面向长时程视频世界模型，可迁移到物理合理视频生成",
+      "canonical_evidence": "开源数据引擎与可扩展训练框架，面向长时程视频世界模型，可迁移到物理合理视频生成",
+      "llm_tldr_en": "SolarWM introduces a reconfigurable multi-source data engine and backbone-native adaptation that unify 1.43M clips from 10 datasets as frame-aligned samples for scalable training of long-horizon video world models.",
+      "llm_tldr_cn": "不同视频数据集在时间尺度、相机几何、画质和描述风格上差异很大，朴素混合会带来不一致监督，且难以复现扩展。SolarWM提出可配置多源数据引擎和骨干原生适配框架，将10个数据集的143万条视频片段统一为帧对齐格式，支撑长时程交互式视频世界模型的训练与推理。基于该数据与训练基座，论文为从数据准备到长时程推理的开源流程提供了完整示范，可用于构建和微调物理一致性视频生成模型。该工作对物理视频数据集整理和模型规模化训练具有重要参考价值。",
+      "llm_tldr": "不同视频数据集在时间尺度、相机几何、画质和描述风格上差异很大，朴素混合会带来不一致监督，且难以复现扩展。SolarWM提出可配置多源数据引擎和骨干原生适配框架，将10个数据集的143万条视频片段统一为帧对齐格式，支撑长时程交互式视频世界模型的训练与推理。基于该数据与训练基座，论文为从数据准备到长时程推理的开源流程提供了完整示范，可用于构建和微调物理一致性视频生成模型。该工作对物理视频数据集整理和模型规模化训练具有重要参考价值。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

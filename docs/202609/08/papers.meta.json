@@ -1,0 +1,39 @@
+{
+  "label": "2026-09-08",
+  "date": "2026-09-08",
+  "generated_at": "2026-09-08T23:04:38",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202609/08/2608.31025v1-analytic-dynamics-learning-physics-grounded-representation-for-fast-intrinsic-dynamics-inference-from-monocular-videos",
+      "section": "quick",
+      "title_en": "Analytic Dynamics: Learning Physics-Grounded Representation for Fast Intrinsic Dynamics Inference from Monocular Videos",
+      "authors": "Jailing Lin, Jikuan Zhang, Jianhua Sun",
+      "date": "2026-08-31",
+      "pdf": "https://arxiv.org/pdf/2608.31025v1",
+      "score": "7.0",
+      "evidence": "基于物理的视频动力学推断可为物理交互视频自动标注内在动力学参数",
+      "tldr": "从单目视频中推断物体内在动力学，需要弥合视觉证据与物理量之间的鸿沟。现有方法依赖逐场景优化或直接回归，前者低效，后者易受外观捷径干扰。本文提出Analytic Dynamics，利用仿真中可获取的特权物理状态，如位置、位移和变形梯度场，学习物理接地的动力学表示，然后与视觉特征对齐。在包含成对轨迹视频和真实材料参数的基准上，该方法实现了高效、准确、可泛化的材料分类与参数回归，并贡献了相应数据生成流水线。",
+      "tags": "query:phys-video",
+      "abstract_en": "Inferring object dynamics from visual observations is essential for intelligent agents to reason about and interact with the physical world, yet remains challenging due to the fundamental gap between visual evidence and intrinsic dynamics. Existing methods either rely on costly per-scene optimization, limiting efficiency and scalability, or directly map visual evidence to intrinsic dynamics without intermediate physical abstractions, making them prone to appearance and geometry shortcuts. To bridge this gap, we propose Analytic Dynamics, a feed-forward dynamics inference framework that introduces an intermediate physics-grounded dynamics representation between visual observations and intrinsic dynamics. Specifically, we leverage privileged physical states, including position, displacement, and deformation gradient fields, which are available in simulation, to learn a structured dynamics representation that is difficult to discover from visual observations alone. By aligning visual representations with this space, we equip visual models with a physics-grounded inductive bias, guiding them to capture dynamics-relevant patterns for material model classification and parameter regression. To facilitate this research, we develop a dynamics data generation pipeline and benchmark containing paired physical state trajectories, rendered videos, and ground-truth material models and parameters. Extensive experiments demonstrate that Analytic Dynamics achieves efficient, accurate, and generalizable dynamics inference from monocular videos.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/08/2609.02886v1-solarwm-open-data-and-scalable-training-for-long-horizon-video-world-models",
+      "section": "quick",
+      "title_en": "SolarWM: Open Data and Scalable Training for Long-Horizon Video World Models",
+      "authors": "Junchao Huang, Guian Fang, Shengju Qian, Xianghao Kong, Zhuoran Zhao, Wei Huang, Yihua Du, Zixin Zhang, Justin Cui, Yuchao Gu, Yukang Chen, Xinting Hu, Tianyu He, Shaoshuai Shi, Zhuotao Tian, Xin Wang, Mike Zheng Shou, Li Jiang",
+      "date": "2026-09-02",
+      "pdf": "https://arxiv.org/pdf/2609.02886v1",
+      "score": "6.0",
+      "evidence": "开源数据引擎与可扩展训练框架，面向长时程视频世界模型，可迁移到物理合理视频生成",
+      "tldr": "视频世界模型的训练受限于异构数据源与不同视频生成器的不兼容表示，数据混合与监督难以统一，规模化面临困难。SolarWM 提出可重构多源数据引擎和主干原生自适应框架，将十个数据集的样例统一为帧对齐合约，并通过共享接口适配基于 Wan2.2、LTX-2.5 和 MiniMax-H3 的四个模型。配合双向自适应、教师强制自回归初始化与分布匹配蒸馏，仅用五秒序列训练即可得到支持分钟至小时级交互的因果模型。数据、代码、配方与权重全开源，为长时程视频世界模型的研究提供可复现可扩展的基础。",
+      "tags": "query:phys-video",
+      "abstract_en": "We introduce SolarWM, a fully open foundation for building interactive video world models from data preparation through long-horizon inference. Training across heterogeneous data sources and video backbones is challenging: datasets differ in temporal scale, camera geometry, visual quality, motion, and captioning styles, while video generators use distinct representations and architectures. Naive data mixing and model-specific implementations therefore produce inconsistent supervision and make results difficult to reproduce and compare. SolarWM addresses this coupling with a reconfigurable multi-source data engine and a backbone-native adaptation framework. The engine converts 1.43 million canonical clips from 10 datasets into a unified, frame-aligned contract covering visual observations, metric camera geometry, captions, quality metadata, selection decisions, and provenance, while decoupling source processing from mixture construction. Under shared camera-conditioning, training, and inference interfaces, we instantiate four 5B--33B models based on Wan2.2, LTX-2.5, and MiniMax-H3 while preserving their native representations and objectives. A unified three-stage recipe combines bidirectional adaptation, teacher-forced autoregressive initialization, and distribution matching distillation. The resulting causal models enable real-time interaction over rollouts ranging from minutes to hours after being trained on only 5s sequences. By releasing the resulting data, pipeline, recipes, weights, and framework, SolarWM provides a reproducible and extensible foundation for interactive world-model research.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
