@@ -1,0 +1,467 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-09T21:26:16.793041+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 3,
+    "deep_cap": 8,
+    "deep_selected": 3,
+    "quick_candidates": 7,
+    "quick_skim_target": 13,
+    "quick_selected": 7
+  },
+  "deep_dive": [
+    {
+      "id": "2609.08215v1",
+      "source": "arxiv",
+      "title": "PhysFlow: Physics-Aware Optical Flow for Motion Controllable Video Generation",
+      "abstract": "Video generation models have recently attracted substantial attention for their ability to generate visually compelling videos, yet ensuring physically consistent and plausible dynamics still remains a fundamental challenge, driving a growing line of research on physical realism in video generation. To address this challenge, motivated by the fact that physical regularities are primarily encoded in motion patterns, we propose PhysFlow, a novel two-stage framework for improving the physical plausibility of generated videos by decomposing video generation into motion-aware optical flow generation followed by motion-conditioned appearance synthesis. Specifically, PhysFlow consists of a physics-aware optical-flow video generator called PA-Flow and a flow-guided video generator called FlowRender. During the first stage, PA-Flow employs a physics-aware attention module to model how motion attributes and material properties influence global motion and local deformation, respectively, and generates an optical flow video as an explicit representation of motion. In the second stage, FlowRender leverages the decoupled motion representation as guidance to synthesize realistic textures and appearances, ultimately producing the final physically plausible video. To further support model training with explicit physical supervision, we construct PhysVideo, a physics-based video dataset generated with a physics engine and 3D-GS rendering, containing 10K foreground objects and 50K realistic video sequences with annotations of motion and material properties. Extensive experiments demonstrate that our proposed PhysFlow generates videos with superior physical plausibility while maintaining high visual fidelity compared with existing methods.",
+      "authors": [
+        "Cong Wang",
+        "Hanxin Zhu",
+        "Yonglin Tian",
+        "Jiayi Luo",
+        "Ruiqi Song",
+        "Boyi Sun",
+        "Long Chen",
+        "Zhibo Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-08T03:57:21+00:00",
+      "link": "https://arxiv.org/pdf/2609.08215v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "explicitly generates videos obeying physical laws by physics-aware optical flow and appearance synthesis",
+      "llm_evidence_cn": "以物理感知光流约束运动，从两阶段生成物理律一致的视频",
+      "llm_evidence": "以物理感知光流约束运动，从两阶段生成物理律一致的视频",
+      "canonical_evidence": "以物理感知光流约束运动，从两阶段生成物理律一致的视频",
+      "llm_tldr_en": "PhysFlow improves physical plausibility of video generation by first producing physics-aware optical flow and then synthesizing appearance conditioned on that motion.",
+      "llm_tldr_cn": "视频生成模型虽能生成视觉逼真的画面，但保证物理一致与动态合理仍是核心难题。作者提出PhysFlow两阶段框架，先让物理感知光流生成器PA-Flow产生运动场，再加入运动条件完成外观合成。实验表明该方法显著增强生成视频的物理合理性，并实现可控运动。该工作为视频生成融合物理先验提供了直接且有效的技术途径。",
+      "llm_tldr": "视频生成模型虽能生成视觉逼真的画面，但保证物理一致与动态合理仍是核心难题。作者提出PhysFlow两阶段框架，先让物理感知光流生成器PA-Flow产生运动场，再加入运动条件完成外观合成。实验表明该方法显著增强生成视频的物理合理性，并实现可控运动。该工作为视频生成融合物理先验提供了直接且有效的技术途径。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.08505v1",
+      "source": "arxiv",
+      "title": "Temporal State Transport in Video Generation: Diagnosing and Correcting Spectral Imbalance",
+      "abstract": "Reliable video generation requires more than high-quality frames to form a coherent story: a model must maintain a persistent state, transporting visual attributes such as identity, scene layout, motion, and fine details across time. Existing training-free methods mainly strengthen cross-frame attention or analyze local attention entropy, but these views do not reveal whether temporal interactions stay in a healthy transport regime. In this work, we study video generation through the perspective of Temporal State Transport. We introduce Spectral Tension, a signed diagnostic that compares local attention diffuseness with global spectral diversity, and use it to identify two opposite temporal failures: fragmented transport and over-mixing hotspots. Based on this diagnosis, we propose Spectral Transport Homeostasis, a training-free regulator that softly corrects pathological temporal states while largely preserving balanced ones. Experiments on pretrained video generation models show that the original model often occupies imbalanced temporal regimes, whereas our method selectively applies larger corrections to the worst temporal hotspots and improves temporal consistency and visual quality without finetuning. Code: https://github.com/lytang63/temporal-state-transport",
+      "authors": [
+        "Luyao Tang",
+        "Bingjun Luo",
+        "Dong Yi",
+        "Jialin Guo",
+        "Haoning Xi",
+        "Cheng Chen",
+        "Yizhou Yu",
+        "Chaoqi Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-09-08T09:52:10+00:00",
+      "link": "https://arxiv.org/pdf/2609.08505v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Targets temporal coherence of visual attributes across video frames via a spectral diagnostic and correction method",
+      "llm_evidence_cn": "面向生成视频中身份、布局和运动等视觉属性跨帧一致性问题，提出频谱诊断与纠正方法",
+      "llm_evidence": "面向生成视频中身份、布局和运动等视觉属性跨帧一致性问题，提出频谱诊断与纠正方法",
+      "canonical_evidence": "面向生成视频中身份、布局和运动等视觉属性跨帧一致性问题，提出频谱诊断与纠正方法",
+      "llm_tldr_en": "Introduces Spectral Tension, a signed diagnostic that identifies fragmented or over-mixed temporal transport in video generation, enabling correction that preserves identity, layout, and motion across frames.",
+      "llm_tldr_cn": "可靠的视频生成要求模型跨帧保持持续状态，但现有训练免方法无法判断时序交互是否处于健康状态。本文提出频谱张力这一有符号诊断量，从时序状态传输视角区分碎片化传输与过度混合两类失败，并利用纠正方法增强身份、场景布局和运动细节在帧间的连续性。实验验证了诊断信号与纠正策略的有效性，为提升视频生成的时间一致性提供了新工具。",
+      "llm_tldr": "可靠的视频生成要求模型跨帧保持持续状态，但现有训练免方法无法判断时序交互是否处于健康状态。本文提出频谱张力这一有符号诊断量，从时序状态传输视角区分碎片化传输与过度混合两类失败，并利用纠正方法增强身份、场景布局和运动细节在帧间的连续性。实验验证了诊断信号与纠正策略的有效性，为提升视频生成的时间一致性提供了新工具。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "ensuring physical properties remain coherent across video frames",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.07174v1",
+      "source": "arxiv",
+      "title": "PhysMAS: Physics-Grounded Multi-Agent Synthesis of Compositional 4D Gaussians",
+      "abstract": "Efficient, fully automatic, and physically plausible 4D Gaussian synthesis is an important goal for dynamic scene generation. Recent physics-based methods couple 3D Gaussians with the Material Point Method (MPM) to generate physically driven motion, but extending this paradigm to heterogeneous multi-part objects and interacting multi-object scenes remains challenging. Object-level physical assignment collapses distinct parts into a single material state, while one-shot predictions from large language models, vision-language models, or agents neither reliably bind different materials to identified parts nor verify that the resulting MPM configuration is executable. Score Distillation Sampling (SDS)-based parameter optimization, meanwhile, requires repeated per-scene score evaluations and gradient backpropagation, incurring lengthy optimization and potentially yielding suboptimal or unstable solutions. We therefore present PhysMAS, a physics-grounded multi-agent framework. From a motion prompt and four scene views, an Object-Part Scene Agent establishes persistent identities and calls a Material Reasoning Agent for part-wise profiles. It invokes solver-aware skills to bind these identities and profiles to per-particle MPM fields and execute all objects in a shared domain; the framework then screens candidate forward-simulation results. This supports heterogeneous multi-part and interacting multi-object scenes without per-scene diffusion-score backpropagation. Extensive experiments demonstrate that, compared with recent physics-based 4D Gaussian baselines that rely on SDS, PhysMAS achieves better semantic alignment and perceived physical plausibility while requiring less runtime.",
+      "authors": [
+        "Jiang Qin",
+        "Chunji Lv",
+        "Yangguang Wei",
+        "Yang Gao",
+        "Ming Liu",
+        "Lizhong Ding",
+        "Ye Yuan",
+        "Yinjie Lei",
+        "Changsheng Li"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-07T08:07:05+00:00",
+      "link": "https://arxiv.org/pdf/2609.07174v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "physics-grounded 4D Gaussian synthesis with MPM gives physically plausible multi-object dynamics",
+      "llm_evidence_cn": "基于MPM的物理驱动4D高斯生成，可得到符合物理规律的复合动态场景",
+      "llm_evidence": "基于MPM的物理驱动4D高斯生成，可得到符合物理规律的复合动态场景",
+      "canonical_evidence": "基于MPM的物理驱动4D高斯生成，可得到符合物理规律的复合动态场景",
+      "llm_tldr_en": "PhysMAS targets fully automatic physically plausible 4D Gaussian synthesis, replacing collapsing object-level material assignment with a compositional multi-agent configuration for MPM-executable heterogeneous object scenes.",
+      "llm_tldr_cn": "PhysMAS 解决异构多部件、多物体交互场景的物理合理4D动态生成。现有方法把不同部件聚合成单一材料状态，或让模型一次性预测，难以得到可执行的MPM物理配置。该方法用多智能体组合方式将材料状态分配给各部件，并与MPM求解耦合同步优化，自动生成物理上可解释的动态高斯场景。它把物理规律作为生成约束，扩展了4D内容在可交互动态场景中的合成能力。",
+      "llm_tldr": "PhysMAS 解决异构多部件、多物体交互场景的物理合理4D动态生成。现有方法把不同部件聚合成单一材料状态，或让模型一次性预测，难以得到可执行的MPM物理配置。该方法用多智能体组合方式将材料状态分配给各部件，并与MPM求解耦合同步优化，自动生成物理上可解释的动态高斯场景。它把物理规律作为生成约束，扩展了4D内容在可交互动态场景中的合成能力。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.06373v1",
+      "source": "arxiv",
+      "title": "Multi-Grid Post-Training for Long-Form Multi-Shot Video Generation",
+      "abstract": "Generating long-form multi-shot videos requires coherent within-shot motion and visually consistent narratives across shots. Existing video generators favor continuous motion and struggle to present complete shot sets when an entire narrative is packed along one temporal axis. We propose MovieGrid, a Multi-Grid Post-Training paradigm that decomposes a long video into shorter, temporally ordered chunks and arranges them on a spatial grid for joint modeling. This design reduces the number of shots handled by each temporal axis while enabling global information exchange across chunks. We construct the Multi-Grid Long Video (MGLV) dataset from 1,000 long-form videos using source video collection, hierarchical segmentation, grid video construction, and character-aware story annotation, producing 54K grid videos paired with story prompts. Our Noise-Free Random-Grid Training retains a random subset of chunks as clean visual context for denoising the remaining chunks. Grid Embedding encodes grid structure, character-aware Story Prompts link recurring entities, and Grid Boundary Loss stabilizes layouts. Under the same token budget, MovieGrid generates 6.05 times more shots than Temporal Packing in a 1,616-frame video. On a benchmark spanning five real-world categories, it achieves state-of-the-art intra-shot consistency (0.9131 versus 0.8086 for HoloCine) and inter-shot consistency (0.5914 versus 0.5384 for StoryMem). MovieGrid can further scale video length with minimal compromise through single or multiple generations.",
+      "authors": [
+        "Jiawei Mao",
+        "Haoqin Tu",
+        "Hardy Chen",
+        "Yuhan Wang",
+        "Keyang Xu",
+        "Jieru Mei",
+        "Hongliang Fei",
+        "Ruogu Fang",
+        "Wei Shao",
+        "Cihang Xie",
+        "Yuyin Zhou"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-06T04:20:32+00:00",
+      "link": "https://arxiv.org/pdf/2609.06373v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Multi-grid post-training for coherent long-form multi-shot video generation; transferable to short episodic drama video creation",
+      "llm_evidence_cn": "多网格后训练面向多镜头长叙事视频生成，可迁移用于短剧和微短剧的自动制作",
+      "llm_evidence": "多网格后训练面向多镜头长叙事视频生成，可迁移用于短剧和微短剧的自动制作",
+      "canonical_evidence": "多网格后训练面向多镜头长叙事视频生成，可迁移用于短剧和微短剧的自动制作",
+      "llm_tldr_en": "MovieGrid trains long-form video generators by decomposing a long video into temporally ordered chunks arranged on a spatial grid, enabling global information exchange across chunks; a 1000-video MGLV dataset supports more complete and coherent multi-shot narrative video generation.",
+      "llm_tldr_cn": "长视频中的多镜头叙事生成面临镜头内运动连贯与跨镜头叙事一致的双重挑战。MovieGrid提出多网格后训练范式：将长视频拆解为按时间排列的短片段，再把这些短片段排布到空间网格上联合建模，从而减少每条时间轴负责的镜头数量，同时让不同片段之间可以交换全局信息。论文还构造了来自1000条长视频的MGLV数据集。结果表明该方法能够更完整地生成成套多镜头叙事视频，为三到五分钟的微短剧自动生成提供了可扩展的方法基础。",
+      "llm_tldr": "长视频中的多镜头叙事生成面临镜头内运动连贯与跨镜头叙事一致的双重挑战。MovieGrid提出多网格后训练范式：将长视频拆解为按时间排列的短片段，再把这些短片段排布到空间网格上联合建模，从而减少每条时间轴负责的镜头数量，同时让不同片段之间可以交换全局信息。论文还构造了来自1000条长视频的MGLV数据集。结果表明该方法能够更完整地生成成套多镜头叙事视频，为三到五分钟的微短剧自动生成提供了可扩展的方法基础。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "tool or system for generating short episodic dramas",
+      "matched_requirement_id": "req-23",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.01698v1",
+      "source": "arxiv",
+      "title": "VirSqueezer: Generating Realistic Deformations and Squeezing Dynamics in VR from Fine-Grained Squeezing Controls",
+      "abstract": "Squeezing is one of the most natural forms of hand manipulation, inherently involving fine-grained, temporally evolving, per-finger flexion. In VR content creation, squeezing plays a unique role in enabling particular visual effects such as localized deformations and dynamic behaviors, e.g., bursting a Coke can or juicing a fruit, thereby expanding the expressive possibilities of VR content. However, existing techniques, such as 3D Gaussian splatting-based methods and diffusion-based video generation models, are limited in their ability to simulate fine-grained virtual squeezing effects. We introduce VirSqueezer, a framework designed to generate both localized deformations (primary effects) and complex squeezing dynamics, such as rupture and overflow (secondary effects). VirSqueezer captures squeezing control signals using a SenseGlove and provides the user with inferred resistance force feedback during the squeezing process. By estimating object contact areas, inferring physical properties, and simulating physical responses, VirSqueezer computes conditions that guide generation models for visual effect generation, ensuring both visual coherence and temporal synchronization with the simulation. Consequently, VirSqueezer enables the generation of physically realistic visual effects directly from continuous, fine-grained squeezing control signals. Our extensive evaluation demonstrates VirSqueezer's ability to reproduce realistic localized deformations, generate convincing visual dynamics, and maintain consistency in fine-grained squeezing controls.",
+      "authors": [
+        "Qian Zhang",
+        "Xiaoming Chen",
+        "Xiaorui Ma",
+        "Haisheng Li",
+        "Weidong Cai"
+      ],
+      "primary_category": "cs.HC",
+      "categories": [
+        "cs.HC"
+      ],
+      "published": "2026-09-01T16:54:42+00:00",
+      "link": "https://arxiv.org/pdf/2609.01698v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "generates realistic deformations and squeezing dynamics, a physically plausible dynamic visual behavior",
+      "llm_evidence_cn": "面向细粒度挤压交互，生成逼真形变与挤压动力学效果，涉及符合物理直觉的动态表现",
+      "llm_evidence": "面向细粒度挤压交互，生成逼真形变与挤压动力学效果，涉及符合物理直觉的动态表现",
+      "canonical_evidence": "面向细粒度挤压交互，生成逼真形变与挤压动力学效果，涉及符合物理直觉的动态表现",
+      "llm_tldr_en": "VirSqueezer generates realistic object deformations and squeezing dynamics in VR from per-finger controls, covering effects such as can bursting and fruit juicing that existing 3D Gaussians and video diffusion methods fail to produce.",
+      "llm_tldr_cn": "手部挤压包含逐指、随时间演化的精细控制，现有3D高斯与扩散视频生成难以呈现局部形变和物体动力学效果。VirSqueezer 从细粒度挤压控制出发，将局部形变与复杂挤压动力学联合生成，使VR内容能表现捏爆易拉罐、榨汁等真实感效果。它弥补了生成模型在可交互、可形变对象上的不足。这为需要物理上合理且可控的视频动态生成提供了可借鉴的交互控制范式。",
+      "llm_tldr": "手部挤压包含逐指、随时间演化的精细控制，现有3D高斯与扩散视频生成难以呈现局部形变和物体动力学效果。VirSqueezer 从细粒度挤压控制出发，将局部形变与复杂挤压动力学联合生成，使VR内容能表现捏爆易拉罐、榨汁等真实感效果。它弥补了生成模型在可交互、可形变对象上的不足。这为需要物理上合理且可控的视频动态生成提供了可借鉴的交互控制范式。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "videos depicting physically realistic behaviors and outcomes",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.07720v1",
+      "source": "arxiv",
+      "title": "Better Call CineCrew: Consistent Ultra-Long Narrative-to-Film Generation",
+      "abstract": "Long-form narrative-to-film generation requires shot-level controllability and cross-clip consistency in both visual identity and character behavior-requirements that remain difficult to satisfy with current prompt-based workflows. A core reason existing workflows remain brittle is the lack of a structured intermediate layer between scripts and video models, especially when screenplays are underspecified at key cinematic decision points. We introduce a structured orchestration layer for film-oriented script-to-video generation, implemented as a multi-agent framework that operates between scripts and off-the-shelf video generators. The layer is centered on FilmDSL, a film-oriented domain-specific language that makes cinematic constraints explicit, including shot and camera directives, asset and continuity requirements, and persona cues, so that agents coordinate through a shared structured specification for planning, generation, critique, and repair. Specifically, a generation agent constructs asset packs and storyboard keyframes that anchor composition before clip-by-clip synthesis, while a critic agent produces structured QA signals and triggers targeted refinement without retraining the base model. Experiments on TV-style segments show improved controllability and consistency over text-only and reference-only baselines.",
+      "authors": [
+        "Jiaben Chen",
+        "Sixun Dong",
+        "Qinhong Zhou",
+        "Raine Ma",
+        "Zhiyang Dou",
+        "Wojciech Matusik",
+        "Chuang Gan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.MA"
+      ],
+      "published": "2026-09-07T16:33:14+00:00",
+      "link": "https://arxiv.org/pdf/2609.07720v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multi-agent orchestration layer from screenplay to video for consistent narrative generation",
+      "llm_evidence_cn": "从剧本到视频的多代理编配系统，可服务短剧与漫剧自动生成",
+      "llm_evidence": "从剧本到视频的多代理编配系统，可服务短剧与漫剧自动生成",
+      "canonical_evidence": "从剧本到视频的多代理编配系统，可服务短剧与漫剧自动生成",
+      "llm_tldr_en": "Introduces a multi-agent framework and FilmDSL between scripts and video generators to achieve shot-level control and cross-clip consistency in ultra-long narrative-to-film generation.",
+      "llm_tldr_cn": "长叙事生成到视频需要镜头级可控性与跨片段一致性，但纯提示词流程容易出错。该文在脚本与视频模型之间加入结构化编排层，以面向电影的领域语言FilmDSL显式表达镜头、角色等约束，并由多个代理协调调用现成视频生成器。该方法在超长叙事生成中保持了视觉身份与角色行为一致。该编排思路可迁移至3-5分钟微短剧或漫剧的自动化生产方式。",
+      "llm_tldr": "长叙事生成到视频需要镜头级可控性与跨片段一致性，但纯提示词流程容易出错。该文在脚本与视频模型之间加入结构化编排层，以面向电影的领域语言FilmDSL显式表达镜头、角色等约束，并由多个代理协调调用现成视频生成器。该方法在超长叙事生成中保持了视觉身份与角色行为一致。该编排思路可迁移至3-5分钟微短剧或漫剧的自动化生产方式。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "tool or system for generating short episodic dramas",
+      "matched_requirement_id": "req-23",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.04383v1",
+      "source": "arxiv",
+      "title": "What Moves? Localized Motion Representations for Compositional Scene Control",
+      "abstract": "Real-world dynamics are inherently compositional: multiple entities move simultaneously within a shared scene, each exhibiting distinct motion patterns. Yet most existing video representations encode motion globally, without explicitly capturing localized motion for individual entities. Crucially, motion is defined relative to a global reference frame, including camera motion and scene layout. However, localized embeddings are often computed from cropped images or obtained by masking features after encoding, discarding the context needed to interpret motion. To address this, we introduce a promptable localized motion representation that produces persistent embeddings for user-specified regions defined by spatial masks. Rather than cropping the input or masking features, our model processes the full video and conditions motion encoding directly on the queried region. This yields temporally consistent, region-addressable embeddings that isolate local dynamics while retaining the global context required for disambiguation. We demonstrate object-level motion transfer, enabling controlled composition of dynamic scenes. Beyond generative control, our embeddings support localized action classification in multi-actor videos. Across both tasks, our approach improves controllability and outperforms global representations localized through cropping or post-hoc masking. Project Page: https://compvis.github.io/WhatMoves",
+      "authors": [
+        "Frank Fundel",
+        "Malek Ben Alaya",
+        "Thomas Ressler-Antal",
+        "Stefan Andreas Baumann",
+        "Björn Ommer"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-03T18:44:53+00:00",
+      "link": "https://arxiv.org/pdf/2609.04383v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Models real-world compositional dynamics by learning promptable localized motion embeddings for independent entities, supporting physically plausible multi-object scene control",
+      "llm_evidence_cn": "将真实场景中多实体独立运动表示为可提示的局部运动嵌入，支撑独立物体的动态场景组合控制，有助于生成物理上合理的多对象行为",
+      "llm_evidence": "将真实场景中多实体独立运动表示为可提示的局部运动嵌入，支撑独立物体的动态场景组合控制，有助于生成物理上合理的多对象行为",
+      "canonical_evidence": "将真实场景中多实体独立运动表示为可提示的局部运动嵌入，支撑独立物体的动态场景组合控制，有助于生成物理上合理的多对象行为",
+      "llm_tldr_en": "Real-world dynamics are compositional, but global video representations blur entity-level motion. The paper proposes promptable localized motion embeddings for masked regions that keep scene context, enabling compositional control of multiple independently moving objects.",
+      "llm_tldr_cn": "真实世界的动态本质是组合式的，同一场景中的多个实体会各自运动。针对现有视频表示将运动全局编码并丢失实体级细节的问题，本文提出可提示的局部运动表示：对用户用空间掩码指定的区域产生持续嵌入，同时保持场景上下文。这为场景内多个对象独立运动的组合控制提供了通用的视频表示基础，可望帮助视频生成和编辑更准确地塑造多实体物理动态。",
+      "llm_tldr": "真实世界的动态本质是组合式的，同一场景中的多个实体会各自运动。针对现有视频表示将运动全局编码并丢失实体级细节的问题，本文提出可提示的局部运动表示：对用户用空间掩码指定的区域产生持续嵌入，同时保持场景上下文。这为场景内多个对象独立运动的组合控制提供了通用的视频表示基础，可望帮助视频生成和编辑更准确地塑造多实体物理动态。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "videos depicting physically realistic behaviors and outcomes",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.06478v1",
+      "source": "arxiv",
+      "title": "MVWeaver: A Hierarchical Music Video Generation Agent with a Learned Song-to-Visual Bridge",
+      "abstract": "Music videos are an important form of audiovisual expression in contemporary culture. They translate and extend the expressive content of songs through deliberate visual design. Existing automatic music video (MV) generation systems can generate visually plausible shots, yet often struggle with long-form coherence and song-grounded visual development. We present MVWeaver, a music video generation agent that integrates hierarchical planning with a learned song-to-visual bridge that translates song understanding into executable shot plans. The MVWeaver architecture comprises a comprehensive song analysis module, a visual planner that constructs hierarchical plans, and downstream image and video generation models that render the planned content. To equip a general-purpose LLM with MV-specific song-to-visual knowledge, we learn a bridge between song analysis and visual planning from real-MV-derived supervision and curate 1,861 real-world song--MV pairs with structured song-side, MV-side, and teacher-inferred song-to-visual rationale annotations. Using these annotations, we perform LoRA-based supervised fine-tuning (SFT) of a large language model to predict song-to-visual bridges that guide hierarchical visual planning. Our experiments demonstrate stronger song-grounded visual translation, richer visual development, and greater conceptual and shot-to-shot coherence, while ablations support the benefits of learned bridge conditioning.",
+      "authors": [
+        "Sifei Li",
+        "Minyan Luo",
+        "Xu Li",
+        "Guodong Qi",
+        "Xincan Wang",
+        "Hanwen Wang",
+        "Chen Zhang",
+        "Pengfei Wan",
+        "Oliver Deussen",
+        "Weiming Dong"
+      ],
+      "primary_category": "cs.MM",
+      "categories": [
+        "cs.MM",
+        "cs.SD"
+      ],
+      "published": "2026-09-06T08:50:45+00:00",
+      "link": "https://arxiv.org/pdf/2609.06478v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Hierarchical agent for automatic long-form music video generation; planning-and-generation workflow is transferable to automated short-drama creation.",
+      "llm_evidence_cn": "面向长视频自动生成的层级化智能体，其规划-生成流程可迁移用于短剧自动化创作。",
+      "llm_evidence": "面向长视频自动生成的层级化智能体，其规划-生成流程可迁移用于短剧自动化创作。",
+      "canonical_evidence": "面向长视频自动生成的层级化智能体，其规划-生成流程可迁移用于短剧自动化创作。",
+      "llm_tldr_en": "MVWeaver proposes a hierarchical music video generation agent with song analysis, learned song-to-visual bridge and executable shot plans, rendering coherent shots that follow the music; the framework offers a reusable recipe for automatic multi-scene short drama generation.",
+      "llm_tldr_cn": "针对现有自动音乐视频生成系统难以保持长片段连贯性与画面随歌曲语义发展的问题，本文提出MVWeaver，将层次化镜头规划与可学习的歌曲-视觉桥接相结合，把歌曲理解转换为可执行的镜头计划，再由图像与视频生成模型渲染。该系统有望提升多镜头视频生成的叙事连贯性；其规划-生成范式也可迁移到短剧等自动化创作场景。",
+      "llm_tldr": "针对现有自动音乐视频生成系统难以保持长片段连贯性与画面随歌曲语义发展的问题，本文提出MVWeaver，将层次化镜头规划与可学习的歌曲-视觉桥接相结合，把歌曲理解转换为可执行的镜头计划，再由图像与视频生成模型渲染。该系统有望提升多镜头视频生成的叙事连贯性；其规划-生成范式也可迁移到短剧等自动化创作场景。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "automated creation of short drama videos",
+      "matched_requirement_id": "req-20",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.07107v1",
+      "source": "arxiv",
+      "title": "Beyond Sparse Rewards: A New Benchmark and Structure-Aware Graph Alignment for Micro-Drama Understanding",
+      "abstract": "Micro-dramas, characterized by ultra-short durations and hyper-dense storylines, pose unique challenges for video understanding that conventional benchmarks fail to address. To bridge this gap, we introduce M-Drama, the first large-scale bilingual benchmark for micro-drama comprehension, featuring over 35K instances across 9,138 clips. Furthermore, while reinforcement learning can enhance VLMs on complex narratives, existing reward metrics often suffer from sparse and superficial signals, failing to capture intricate character identities and temporal structures. We propose SAGA (Structure-Aware Graph Alignment), a novel graph-matching reward function that models narratives as heterogeneous graphs. SAGA computes dense, rigorous rewards via decoupled semantic triplet and structural temporal matching. Extensive experiments on Qwen3-VL-8B-Instruct demonstrate that SAGA outperforms existing baselines, delivering substantial improvements in open-ended accuracy and summary quality, while maintaining competitive out-of-domain generalization. Code is available at https://github.com/qyx1121/MDrama_SAGA.",
+      "authors": [
+        "Yixin Qin",
+        "Shi-Zhe Chen",
+        "Zhiqi Yu",
+        "Siyuan Cheng",
+        "Tao Cheng",
+        "Jinwen Luo",
+        "Zheng Wei"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-07T06:48:17+00:00",
+      "link": "https://arxiv.org/pdf/2609.07107v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Micro-drama benchmark plus structure-aware graph reward; understanding-centric but its structured reward is transferable to short-drama generation and RL",
+      "llm_evidence_cn": "提供微短剧理解基准和结构感知图奖励，虽侧重理解，其结构化奖励可迁移到短剧生成与强化学习",
+      "llm_evidence": "提供微短剧理解基准和结构感知图奖励，虽侧重理解，其结构化奖励可迁移到短剧生成与强化学习",
+      "canonical_evidence": "提供微短剧理解基准和结构感知图奖励，虽侧重理解，其结构化奖励可迁移到短剧生成与强化学习",
+      "llm_tldr_en": "Introduces M-Drama, a large bilingual benchmark for micro-drama comprehension, and SAGA, a structure-aware graph-matching reward giving dense structured supervision; though understanding-focused, the graph narrative model is useful for evaluating and improving short-drama generation.",
+      "llm_tldr_cn": "微短剧以极短时长和极密剧情著称，传统视频理解基准难以刻画角色身份与时间结构，常用的RL奖励又过于稀疏。论文构建了首个大规模中英双语微短剧理解基准M-Drama，包含9138条片段上的超3.5万个实例，并提出结构感知图对齐奖励SAGA：将叙事表示成异构图，用图匹配得到稠密的结构化奖励信号。实验显示该奖励能比稀疏监督更有效地引导模型掌握复杂人物与情节结构。这项工作不仅为微短剧理解提供新基准，其图建模思想也能迁移到短剧生成模型的质量评估和RL微调中。",
+      "llm_tldr": "微短剧以极短时长和极密剧情著称，传统视频理解基准难以刻画角色身份与时间结构，常用的RL奖励又过于稀疏。论文构建了首个大规模中英双语微短剧理解基准M-Drama，包含9138条片段上的超3.5万个实例，并提出结构感知图对齐奖励SAGA：将叙事表示成异构图，用图匹配得到稠密的结构化奖励信号。实验显示该奖励能比稀疏监督更有效地引导模型掌握复杂人物与情节结构。这项工作不仅为微短剧理解提供新基准，其图建模思想也能迁移到短剧生成模型的质量评估和RL微调中。",
+      "llm_tags": [
+        "query:manga-drama:composite"
+      ],
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation.",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.07532v1",
+      "source": "arxiv",
+      "title": "PhysReal: Learning Real-World Deformable Object Physics via Hybrid Constitutive Modeling",
+      "abstract": "Learning physically plausible dynamics from visual observations is essential for interactive world models and embodied agents. However, modeling real-world deformable objects remains challenging because their dynamics often arise from complex, spatially heterogeneous material responses. To address this challenge, we propose PhysReal, a video-driven framework for learning and simulating the underlying physics of real deformable objects. PhysReal integrates a spatially varying hybrid expert-neural constitutive model with a differentiable MPM simulator and 3DGS renderer. Analytical expert models provide interpretable physical priors, while neural constitutive residuals capture material responses beyond predefined formulations. Spatially distributed patches parameterize the constitutive field, enabling a continuous representation of local material variations. To organize the identification of this model from sparse visual observations, we adopt a progressive curriculum that sequentially optimizes global material properties, spatially varying local parameters, and neural constitutive residuals, together with complementary motion and mask supervision. Extensive experiments on diverse deformable-object interactions demonstrate that PhysReal achieves superior performance in dynamic reconstruction and future-state prediction, while showing strong potential for downstream robotic applications.",
+      "authors": [
+        "Yinan Deng",
+        "Jianqiao Song",
+        "Yisi Zhang",
+        "Yuhan Wang",
+        "Jiahui Wang",
+        "Yufeng Yue"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-07T14:11:57+00:00",
+      "link": "https://arxiv.org/pdf/2609.07532v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "physics-driven deformable object simulation from video applicable to physical consistency in generative world models",
+      "llm_evidence_cn": "面向真实可变形物体物理建模，可支撑视频生成中的帧间物理一致性",
+      "llm_evidence": "面向真实可变形物体物理建模，可支撑视频生成中的帧间物理一致性",
+      "canonical_evidence": "面向真实可变形物体物理建模，可支撑视频生成中的帧间物理一致性",
+      "llm_tldr_en": "PhysReal learns real deformable object physics from video using hybrid expert-neural constitutive modeling with differentiable MPM simulation and 3DGS rendering, giving physically plausible simulation of heterogeneous materials.",
+      "llm_tldr_cn": "针对真实世界可变形物体动力学难以从视频观测建模的问题，PhysReal提出视频驱动框架，将空间变化的混合专家-神经本构模型与可微分MPM模拟器及3DGS渲染器结合，学习并复现符合物理规律的变形过程。实验表明其能捕捉空间异质材料响应，兼具物理合理性与可解释性，为交互式世界模型与物理感知视频生成提供了可复用的模拟与监督基础。",
+      "llm_tldr": "针对真实世界可变形物体动力学难以从视频观测建模的问题，PhysReal提出视频驱动框架，将空间变化的混合专家-神经本构模型与可微分MPM模拟器及3DGS渲染器结合，学习并复现符合物理规律的变形过程。实验表明其能捕捉空间异质材料响应，兼具物理合理性与可解释性，为交互式世界模型与物理感知视频生成提供了可复用的模拟与监督基础。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

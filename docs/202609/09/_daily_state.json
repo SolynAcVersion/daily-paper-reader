@@ -1,0 +1,169 @@
+{
+  "date": "20260909",
+  "date_label": "",
+  "generated_at": "2026-09-09 21:35:48 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.08215v1",
+      "route": "202609/09/2609.08215v1-physflow-physics-aware-optical-flow-for-motion-controllable-video-generation",
+      "title": "PhysFlow: Physics-Aware Optical Flow for Motion Controllable Video Generation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "以物理感知光流约束运动，从两阶段生成物理律一致的视频",
+      "first_seen_at": "2026-09-09 21:35:48 UTC",
+      "updated_at": "2026-09-09 21:35:48 UTC"
+    },
+    {
+      "paper_id": "2609.08505v1",
+      "route": "202609/09/2609.08505v1-temporal-state-transport-in-video-generation-diagnosing-and-correcting-spectral-imbalance",
+      "title": "Temporal State Transport in Video Generation: Diagnosing and Correcting Spectral Imbalance",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "面向生成视频中身份、布局和运动等视觉属性跨帧一致性问题，提出频谱诊断与纠正方法",
+      "first_seen_at": "2026-09-09 21:35:48 UTC",
+      "updated_at": "2026-09-09 21:35:48 UTC"
+    },
+    {
+      "paper_id": "2609.07174v1",
+      "route": "202609/09/2609.07174v1-physmas-physics-grounded-multi-agent-synthesis-of-compositional-4d-gaussians",
+      "title": "PhysMAS: Physics-Grounded Multi-Agent Synthesis of Compositional 4D Gaussians",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "基于MPM的物理驱动4D高斯生成，可得到符合物理规律的复合动态场景",
+      "first_seen_at": "2026-09-09 21:35:48 UTC",
+      "updated_at": "2026-09-09 21:35:48 UTC"
+    },
+    {
+      "paper_id": "2609.06373v1",
+      "route": "202609/09/2609.06373v1-multi-grid-post-training-for-long-form-multi-shot-video-generation",
+      "title": "Multi-Grid Post-Training for Long-Form Multi-Shot Video Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "多网格后训练面向多镜头长叙事视频生成，可迁移用于短剧和微短剧的自动制作",
+      "first_seen_at": "2026-09-09 21:35:48 UTC",
+      "updated_at": "2026-09-09 21:35:48 UTC"
+    },
+    {
+      "paper_id": "2609.07720v1",
+      "route": "202609/09/2609.07720v1-better-call-cinecrew-consistent-ultra-long-narrative-to-film-generation",
+      "title": "Better Call CineCrew: Consistent Ultra-Long Narrative-to-Film Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "从剧本到视频的多代理编配系统，可服务短剧与漫剧自动生成",
+      "first_seen_at": "2026-09-09 21:35:48 UTC",
+      "updated_at": "2026-09-09 21:35:48 UTC"
+    },
+    {
+      "paper_id": "2609.01698v1",
+      "route": "202609/09/2609.01698v1-virsqueezer-generating-realistic-deformations-and-squeezing-dynamics-in-vr-from-fine-grained-squeezing-controls",
+      "title": "VirSqueezer: Generating Realistic Deformations and Squeezing Dynamics in VR from Fine-Grained Squeezing Controls",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向细粒度挤压交互，生成逼真形变与挤压动力学效果，涉及符合物理直觉的动态表现",
+      "first_seen_at": "2026-09-09 21:35:48 UTC",
+      "updated_at": "2026-09-09 21:35:48 UTC"
+    },
+    {
+      "paper_id": "2609.04383v1",
+      "route": "202609/09/2609.04383v1-what-moves-localized-motion-representations-for-compositional-scene-control",
+      "title": "What Moves? Localized Motion Representations for Compositional Scene Control",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "将真实场景中多实体独立运动表示为可提示的局部运动嵌入，支撑独立物体的动态场景组合控制，有助于生成物理上合理的多对象行为",
+      "first_seen_at": "2026-09-09 21:35:48 UTC",
+      "updated_at": "2026-09-09 21:35:48 UTC"
+    },
+    {
+      "paper_id": "2609.06478v1",
+      "route": "202609/09/2609.06478v1-mvweaver-a-hierarchical-music-video-generation-agent-with-a-learned-song-to-visual-bridge",
+      "title": "MVWeaver: A Hierarchical Music Video Generation Agent with a Learned Song-to-Visual Bridge",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向长视频自动生成的层级化智能体，其规划-生成流程可迁移用于短剧自动化创作。",
+      "first_seen_at": "2026-09-09 21:35:48 UTC",
+      "updated_at": "2026-09-09 21:35:48 UTC"
+    },
+    {
+      "paper_id": "2609.07107v1",
+      "route": "202609/09/2609.07107v1-beyond-sparse-rewards-a-new-benchmark-and-structure-aware-graph-alignment-for-micro-drama-understanding",
+      "title": "Beyond Sparse Rewards: A New Benchmark and Structure-Aware Graph Alignment for Micro-Drama Understanding",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "提供微短剧理解基准和结构感知图奖励，虽侧重理解，其结构化奖励可迁移到短剧生成与强化学习",
+      "first_seen_at": "2026-09-09 21:35:48 UTC",
+      "updated_at": "2026-09-09 21:35:48 UTC"
+    },
+    {
+      "paper_id": "2609.07532v1",
+      "route": "202609/09/2609.07532v1-physreal-learning-real-world-deformable-object-physics-via-hybrid-constitutive-modeling",
+      "title": "PhysReal: Learning Real-World Deformable Object Physics via Hybrid Constitutive Modeling",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向真实可变形物体物理建模，可支撑视频生成中的帧间物理一致性",
+      "first_seen_at": "2026-09-09 21:35:48 UTC",
+      "updated_at": "2026-09-09 21:35:48 UTC"
+    }
+  ]
+}

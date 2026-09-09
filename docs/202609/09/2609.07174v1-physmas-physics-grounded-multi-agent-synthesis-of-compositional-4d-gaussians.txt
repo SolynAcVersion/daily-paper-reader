@@ -1,0 +1,1485 @@
+Title: PhysMAS: Physics-Grounded Multi-Agent Synthesis of Compositional 4D Gaussians
+
+URL Source: https://arxiv.org/pdf/2609.07174v1
+
+Published Time: Wed, 09 Sep 2026 01:59:58 GMT
+
+Number of Pages: 24
+
+Markdown Content:
+# PhysMAS: Physics-Grounded Multi-Agent Synthesis of Compositional 4D Gaussians 
+
+# Jiang Qin 1∗, Chunji Lv 1∗, Yangguang Wei 2, Yang Gao 2, Ming Liu 2,Lizhong Ding 1, Ye Yuan 1, Yinjie Lei 3, Changsheng Li 1†
+
+> 1
+
+Beijing Institute of Technology 
+
+> 2
+
+Meituan 
+
+> 3
+
+Sichuan University 
+
+Abstract 
+
+Efficient, fully automatic, and physically plausible 4D Gaussian synthesis is an important goal for dynamic scene generation. Recent physics-based methods couple 3D Gaussians with the Material Point Method (MPM) to generate physically driven motion, but extending this paradigm to heterogeneous multi-part objects and interacting multi-object scenes remains chal-lenging. Object-level physical assignment collapses distinct parts into a single material state, while one-shot predictions from large language models, vision-language models, or agents neither reliably bind different materials to identified parts nor verify that the resulting MPM configuration is executable. Score Distillation Sampling (SDS)-based parameter optimiza-tion, meanwhile, requires repeated per-scene score evaluations and gradient backpropagation, incurring lengthy optimization and potentially yielding suboptimal or unstable solutions. We therefore present PhysMAS, a physics-grounded multi-agent framework. From a motion prompt and four scene views, an Object-Part Scene Agent establishes persistent identities and calls a Material Reasoning Agent for part-wise profiles. It invokes solver-aware skills to bind these identities and pro-files to per-particle MPM fields and execute all objects in a shared domain; the framework then screens candidate forward-simulation results. This supports heterogeneous multi-part and interacting multi-object scenes without per-scene diffusion-score backpropagation. Extensive experiments demonstrate that, compared with recent physics-based 4D Gaussian base-lines that rely on SDS, PhysMAS achieves better semantic alignment and perceived physical plausibility while requiring less runtime. 
+
+# Introduction 
+
+Efficient simulator-driven 4D Gaussian synthesis is an impor-tant goal in computer graphics and generative AI. 3D Gaus-sian Splatting (3DGS) provides an explicit representation for high-quality rendering (Kerbl et al. 2023), and physics-based methods couple its primitives with the Material Point Method (MPM) (Sulsky, Chen, and Schreyer 1994; Stomakhin et al. 2013) to generate physically driven motion (Xie et al. 2024). Yet many physics-based 4D Gaussian pipelines assign proper-ties at the object or Gaussian-field level without an explicit hierarchy linking parts to their parent objects across percep-tion and simulation. This is restrictive when objects interact 
+
+> ∗
+
+These authors contributed equally. 
+
+> †
+
+Corresponding author. 
+
+or contain parts with different structural roles and material responses. In this work, compositional refers to scene state indexed jointly by object and part. Figure 1 illustrates the resulting dynamics. This extension exposes two coupled problems. First, with-out persistent object–part identity, visual evidence cannot be bound consistently to the corresponding part and object. Object-wide assignment forces heterogeneous parts to share one material state, while co-occurring objects must remain distinct inside a shared simulation. Second, an LLM or VLM can propose labels and parameters, but a one-time predic-tion does not enforce the profiles and numerical constraints accepted by MPM. Alternatives based on Score Distillation Sampling (SDS) (Poole et al. 2023) optimize parameters with video priors, yet require repeated per-scene score evaluation and backpropagation (Huang et al. 2025; Lin et al. 2025). A practical system therefore requires compositional scene state and simulator-constrained execution without per-scene diffusion-score optimization. We propose PhysMAS , a physics-grounded multi-agent framework that receives a motion prompt, four calibrated RGB views with their aligned static 3DGS, and prescribed output cameras. An Object-Part Scene Agent grounds object instances and semantic parts, assigns compound object–part labels to the scene Gaussians, and calls a Material Rea-soning Agent for part-wise simulator profiles and physical parameters. Deterministic, solver-aware MPM skills transfer these labels and profiles to particles, execute all objects in one domain, and return execution records for validity screening. Within a shared single-velocity grid, standard MPM updates coordinate momentum exchange among objects and support the multi-object interactions evaluated in our experiments. Thus, PhysMAS automates object–part grounding, material profiling, MPM compilation, simulation, and screening with-out per-scene SDS backpropagation. In summary, our main contributions are as follows: 
+
+• We introduce persistent object–part state for representing heterogeneous parts and multiple objects in an aligned static 3DGS using four calibrated scene views. 
+
+• We formalize an auditable two-agent compiler contract around this typed state: the scene agent owns identity, planning, and acceptance; the material agent returns row-wise profile evidence; deterministic routines compile, arXiv:2609.07174v1 [cs.AI] 7 Sep 2026 Object-Part Scene Construction MPM Simulation & 4D Gaussian Rendering   
+
+> Views + aligned 3DGS
+> "falls onto cake"
+> "topples onto cake"
+> PhysMAS
+> Cake: toppings / base / plate Hammer: head / handle
+> Part-wise simulator profiles
+> MPM
+> Vertical impact
+> Gravity-driven toppling
+> t
+> Scene Inputs Persistent Object-Part State Rendered 4D Gaussian Sequences
+
+Figure 1: Overview of PhysMAS. Each run receives a motion prompt, four calibrated RGB views, their aligned static 3DGS, and prescribed output cameras. PhysMAS constructs persistent object–part state with part-wise simulator profiles; the compiled state is advanced in a shared MPM domain and rendered as a 4D Gaussian sequence. Shown are two runs of the same registered scene bundle: vertical impact and gravity-driven toppling. execute, and screen part-wise candidates. 
+
+• Across the multi-part and multi-object evaluations, Phys-MAS obtains the highest observed mean frame-wise CLIP sim and the lowest paired-reference image-plane trajectory, projected-area, and local-strain errors among the compared methods; it achieves a two-minute reported runtime and is substantially faster than the evaluated long per-scene SDS optimization baselines. 
+
+# Related Work 
+
+Generative 4D Gaussian Splatting 
+
+Dynamic Gaussian representations include 4D-GS, De-formable 3D Gaussians, Spacetime Gaussians, and L4GM (Wu et al. 2024; Yang et al. 2024; Li et al. 2024; Ren et al. 2024). Diffusion-guided 4D generation builds on DreamFu-sion and includes Align Your Gaussians, Animate3D, 4Diffu-sion, and CAT4D (Poole et al. 2023; Ling et al. 2024; Jiang et al. 2024; Zhang et al. 2024a; Wu et al. 2025). They target reconstruction or plausible animation rather than material-conditioned object–part simulation. 
+
+Physics-Grounded 4D Gaussian Splatting 
+
+Physics-grounded methods connect Gaussian appearance to MPM (Sulsky, Chen, and Schreyer 1994; Stomakhin et al. 2013); PhysGaussian provides the bridge, while Gaussian Splashing studies rotation artifacts (Xie et al. 2024; Feng et al. 2025). PhysDreamer, DreamPhysics, MotionPhysics, OmniPhysGS, PhysSplat, and PhysGM automate property inference (Zhang et al. 2024b; Huang et al. 2025; Wang et al. 2026; Lin et al. 2025; Zhao et al. 2025; Lv et al. 2026a). Feature Splatting, GaussianProperty, PhysGS, and Gaussian-Fluent address semantic or physical attributes and mixed materials (Qiu et al. 2024; Xu et al. 2025; Chopra et al. 2026; Huang et al. 2026). PAC-NeRF, GIC, Vid2Sim, FreeGave, and PhysTwin infer dynamics, properties, or simulation-ready representations from observations (Li et al. 2023; Cai et al. 2024; Chen et al. 2025b; Li et al. 2025; Jiang et al. 2025). PhysMAS introduces an object-scoped part table that remains addressable through profile proposal, particle compilation, and executable candidate screening. 
+
+Object-Part Scene Grounding and Agentic Physical Reasoning 
+
+PartSLIP and SAGA address open-vocabulary or promptable 3D segmentation (Liu et al. 2023; Cen et al. 2025); Gaussian Grouping and LangSplat attach identity or language semantics to Gaussians (Ye et al. 2024; Qin et al. 2024); Part 2GS recovers part structure (Yu et al. 2026). Physics-scene methods cover object worlds, contact, heterogeneous solvers, and multi-body evaluation (Liu et al. 2024a; Chen et al. 2025a; Wang et al. 2025; Jiang and Lee 2026; Li, Song, and Yang 2025; Liu et al. 2026; Kim et al. 2026). Language agents support programmatic interaction with environments (Ma et al. 2024); PhysAgent refines simulator force fields in the loop (Lv et al. 2026b). PhysMAS maintains typed object-scoped part state from grounding through material candidates, particle compilation, and screening; its two-agent contract assigns identity, planning, and acceptance to the scene agent, while the material agent supplies row-wise evidence. 
+
+# Method 
+
+PhysMAS receives a motion prompt y, four calibrated RGB views I with an aligned 3DGS G0, and prescribed output cameras. The scene agent maintains object–part identity, supported plans, and acceptance; the material agent supplies row-wise profiles; deterministic skills compile, simulate, screen, and repair candidates (Figure 2). 
+
+Problem Setup 
+
+Let I = {(Iv , Cv )}4 
+
+> v=1
+
+be the ordered RGB views and cal-ibrated cameras, and G0 = {g0 
+
+> i
+
+}NG 
+
+> i=1
+
+the aligned scene-level Scene Inputs   
+
+> "hammer falls onto cake"
+> PhysMAS Agents
+> Object-Part Scene Agent Material Reasoning Agent
+> Structured Scene State
+> Object-Part State Scene Plan Material Evidence
+> Solver-Aware Skill Library
+> Candidate Construction Particle Configuration MPM Interface
+> Compiled Particle State & Simulation Settings
+> MPM Simulation
+> P2G
+> Grid Update
+> G2P
+> Candidate Rollouts
+> Executable Screening
+> Rendered Rollout
+> Candidate Configuration
+> Candidate Selection
+> Selected 4D Gaussian Sequence
+> Feedback
+
+Figure 2: PhysMAS framework. The agents transform a motion prompt, four calibrated views, and an aligned static 3DGS into object–part state, a scene plan, and material evidence. Solver-aware skills compile and simulate candidates, screen their execution records, and return the accepted 4D Gaussian sequence. 3DGS, with g0 
+
+> i
+
+= ( μ0 
+
+> i
+
+, Σ0 
+
+> i
+
+, α i, hi). A fixed run specifica-tion provides bounded gravity/colliders, supported velocity or position blends, and impulses. Given y and output cam-eras {Ct
+
+> out
+
+}Tt=1 , PhysMAS advances constitutive MPM under compiled controls and returns V = {Render( Gt, Ct
+
+> out
+
+)}Tt=1 .Each Gaussian carries an object identity and object-scoped part row r = ( o, p ); semantic and residual rows form the active set Ract indexing material state. Identically named parts of different objects remain distinct, while a one-part object uses one semantic row. 
+
+Object-Part Scene Agent 
+
+The backbone proposes a serialized object–part inventory whose object IDs serve as cross-view query indices. Ground-ingDINO and SAM 2 (Liu et al. 2024b; Ravi et al. 2025) provide masks and confidences; after Gaussian assignment, the compound labels remain fixed through material proposal, particle compilation, and rendering. From the prompt and inventory, the agent forms scene plan Π using supported roles, action targets, directions, magnitudes, and active intervals. The fixed run specification supplies gravity and colliders, while a deterministic compiler canonicalizes and validates the plan. The run specification also stores asset geometry, 
+
+G0, output cameras, grid resolution, timing, step caps, and rendering settings; Π contains the structured scene actions. Let O be the detected objects and Ro the rows of object o.Perception is object-first: object evidence is aggregated over camera-valid projections, then part evidence is compared only within Ro. If Ωi contains views where Gaussian i has positive depth and projects inside the image at uiv , object assignment is 
+
+bio = X
+
+> v∈Ωi
+
+eobj  
+
+> ov
+
+(uiv ), eoi = arg max 
+
+> o∈O
+
+bio . (1) Conditioned on eoi, the within-object part assignment is 
+
+air = X
+
+> v∈Ωi
+
+epart  
+
+> rv
+
+(uiv ), ezGi = arg max 
+
+> r∈R eoi
+
+air . (2) The evidence functions combine mask confidence and spatial support. Deterministic propagation fuses (eoi, ezGi ) into zGi
+
+and adds object-scoped residual rows for complete coverage. The resulting zG is fixed before material reasoning; guards and ties are specified in the supplement. 
+
+Material Reasoning Agent 
+
+For each r ∈ R act , evidence Hr contains highlighted obser-vations, its name, and structural role. The Material Reasoning Agent combines vision–language material/branch scores with 
+
+E/ν statistics from a frozen crop-conditioned predictor (Lv et al. 2026a) to return ψr = Amat (Hr ). After row-wise vali-dation, candidate records Θ(c) 
+
+> r
+
+= ( β(c) 
+
+> r
+
+, E (c) 
+
+> r
+
+, ν (c) 
+
+> r
+
+, ρ (c) 
+
+> r
+
+) are constrained to the accepted simulator-profile domain Ksim 
+
+(Jelly, Metal, Sand, Foam, Snow, and Plasticine). Candidate construction yields a part table and controls 
+
+ {Θ(c) 
+
+> r
+
+}r , U(c)aux 
+
+ = Tc
+
+ {ψr }r ; Ksim , Π. (3) The fixed scene state Z0 contains G0, Gaussian labels, initial-ized particles, numerical settings, and output cameras. The compiler then forms the schedule and simulator input 
+
+Γ(c) = Compile(Π , U(c)aux ),
+
+C(c) =  Z0, {Θ(c) 
+
+> r
+
+}r , Γ(c). (4) Here β is the constitutive branch, while E, ν, and ρ are Young’s modulus, Poisson’s ratio, and density; profile-specific yield, hardening, and return-map constants remain fixed. Start-ing from posterior medians, fixed transforms form MAP, target-impact, support-bonded/stiff, solver-compatible, pro-jection, soft/stiff, uncertainty-quantile, and second-profile variants; applicable candidates are retained in a fixed order. Their transforms and budgets are specified in the supplement. Every candidate preserves Z0, identities, and scene actions 
+
+Π; U(c)aux contains only structure/interface controls. 
+
+Solver-Aware Shared-Domain Simulation 
+
+Let Q = {1, . . . , N Q} index the particles in Z0. The map 
+
+N (x) = Lx + d, with isotropic L = sI3 and s > 0,converts scene coordinates to normalized MPM space. The first NG particles are Gaussian means bμ0 
+
+> i
+
+= N (μ0 
+
+> i
+
+); support-filling particles retain source-object identity o(q) and source Gaussian 
+
+ι(q) = 
+
+q, q ≤ NG,
+
+arg min i: oi=o(q) ∥x0 
+
+> q
+
+− bμ0 
+
+> i
+
+∥2, q > N G, (5) The candidate is then bound to per-particle identity, parame-ters, and mass: 
+
+zQq = zGι(q), ϑ(c) 
+
+> q
+
+= Bind(Θ (c)
+
+> zQq
+
+),M (c) 
+
+> q
+
+= ρ(c) 
+
+> q
+
+V 0 
+
+> q
+
+.
+
+(6) Here V 0 
+
+> q
+
+is rest volume and Bind builds the branch record; residual rows ensure complete particle coverage. Affine Particle-In-Cell (APIC) transfers advance the MPM state (Sulsky, Chen, and Schreyer 1994; Stomakhin et al. 2013; Jiang et al. 2015; Xie et al. 2024), with parameters, gravity, and substeps defined in the coordinates induced by N .Omitting candidate superscript (c), APIC particle-to-grid (P2G) transfer at node a accumulates mass and momentum from every object: 
+
+ma = X
+
+> q
+
+waq Mq ,
+
+pa = X
+
+> q
+
+waq Mq [vq + Bq (xa − xq )] + ∆ t f int  
+
+> a
+
+.
+
+(7) The provisional grid velocity before gravity and grid-stage collider/action updates is 
+
+ua = pa/m a, ma > 0. (8) Here waq is the interpolation weight, xa the grid-node po-sition, Bq the APIC affine velocity map, and f int  
+
+> a
+
+the stress force. Gravity and collider/action updates precede G2P. Every particle samples the common field, providing grid-mediated inter-object coupling; configured collider friction handles col-lider interactions. Γ(c) schedules substep actions and output-frame projections. 
+
+Kinematic structure-preserving projection for support-like parts. For a row r selected as support-like by the fixed structural-role predicate, let Qr = {q | zQq = r} and 
+
+δ0 
+
+> qr
+
+= x0 
+
+> q
+
+− ¯x0 
+
+> r
+
+. At rendered-frame solver step nt, xq , vq , Fq ,and Bq denote position, velocity, deformation gradient, and affine velocity matrix; tildes are provisional states and bars are means over Qr . The relaxed projection is 
+
+xnt 
+
+> q
+
+= (1 − η(c) 
+
+> r
+
+)exnt 
+
+> q
+
++ η(c) 
+
+> r
+
+(e¯xnt 
+
+> r
+
++ δ0 
+
+> qr
+
+),
+
+vnt 
+
+> q
+
+= (1 − η(c) 
+
+> r
+
+)evnt 
+
+> q
+
++ η(c) 
+
+> r
+
+e¯vnt 
+
+> r
+
+. (9) The same strength relaxes the deformation gradient and affine velocity state: 
+
+F nt 
+
+> q
+
+= (1 − η(c) 
+
+> r
+
+) eF nt 
+
+> q
+
++ η(c) 
+
+> r
+
+I3,
+
+Bnt 
+
+> q
+
+= (1 − η(c) 
+
+> r
+
+) eBnt 
+
+> q
+
+. (10) With relaxation weight η(c) 
+
+> r
+
+∈ [0 , 1] supplied by Γ(c), this optional operator regularizes the provisional state toward the compiled rest-shape prior, reducing local stretch/shear associated with burr-like protrusions after Gaussian transport (Xie et al. 2024; Feng et al. 2025). An optional interface-retention projection reduces visible separation between attached parts using a fixed frame-0 “initial neighborhood.” It and Equations (9)–(10) are applied after G2P at scheduled output frames and before Gaussian transport; the corrected state seeds the next interval. Attached-part cases may activate it, whereas multi-object cases use shared-grid interaction; details are in the supplement. 
+
+Transport to dynamic Gaussians. For the Gaussian-associated particle i, let F ti, sc = L−1F nt 
+
+> i
+
+L. Since L = sI3,this equals F nt 
+
+> i
+
+; the conjugate form records the coordinate conversion. Rendering uses 
+
+μti = L−1(xnt 
+
+> i
+
+− d),
+
+Σti = F ti, sc Σ0 
+
+> i
+
+(F ti, sc )T. (11) Opacity and appearance stay fixed; the polar rotation of 
+
+F ti, sc updates spherical-harmonic viewing direction (Xie et al. 2024). Gaussian-associated particles are rendered, while filled particles support simulation. 
+
+Executable Candidate Selection 
+
+For candidate c, deterministic skills return process, numerical, artifact, and endpoint diagnostics D(c) together with rollout 
+
+G(c,t ) and video V(c). Algorithm 1 defines the bounded selection loop; Figure 2’s feedback path routes diagnostics to fixed repairs while preserving row-wise material evidence. Only the Object-Part Scene Agent may update zG and 
+
+Π, invoke tools, or accept a rollout; the Material Reasoning Agent returns ψr, while compilation, simulation, repairs, gating, and ranking are fixed. The loop uses fixed candi-date and repair budgets. Valid requires resolved actions, successful termination, stable numerical/runtime status, and fixed support, spread, and flattening criteria. Qexec combines artifact availability, confidence, material/role compatibility, numerical-range terms, and optional-projection accounting, with a fixed acceptance threshold τ . Both operations use Figure 3: PhysMAS rollouts with an input, prompt, and five synchronized frames per row. Rows 1–4 highlight part-dependent deformation; Rows 5–6 show multi-object execution. execution records and compiled candidate metadata. Final audit confirms a decodable sequence and the multi-object interface-retention policy, yielding a reproducible executabil-ity criterion. Exact budgets, threshold, weights, criteria, repair order, and ties are in the supplement; representative rollouts appear in Figure 3. 
+
+Algorithm 1 PhysMAS inference and candidate selection                                                                     
+
+> Require: prompt y, views I, aligned G0, output cameras 1: (zG,Π) ← A scene (y, I,G0)
+> 2: for each r∈ R act do
+> 3: ψr← A mat (Hr)
+> 4: end for
+> 5: C ← Build( {ψr},Π)
+> 6: E ← ∅
+> 7: for each refinement round in the fixed finite schedule do
+> 8: execute every unseen c∈ C ; add (c, D(c))to E
+> 9: A ← { c∈ E : Valid( c) = 1 ∧Qexec (c)≥τ}
+> 10: if A̸ =∅then
+> 11: bc←arg max c∈A Qexec (c)
+> 12: return (bc, V(bc))if audited; otherwise failure 13: end if
+> 14: if the current round is not the final round then
+> 15: b←RepairBase( E)
+> 16: C ← Unseen(Repair( b))
+> 17: end if
+> 18: end for
+> 19: return failure
+
+# Experiments 
+
+Implementation Details 
+
+We implement PhysMAS in PyTorch with Qwen3.7-Plus as backbone and pretrained Grounding DINO and SAM 2 for perception. Each case follows the Problem Setup; on one RTX 4090, MPM uses a 100 3 grid and at most 200,000 particles to render 50 frames at 800 × 800 . The fixed run specification supplies gravity, colliders, and numerical set-tings; the agent supplies roles, targets, and supported actions. Candidates share this action specification and are generated in-dependently of the paired reference videos used for evaluation. Further settings are in the supplement. 
+
+Datasets and Evaluation Protocol 
+
+We evaluate preconstructed static 3DGS scenes from Phys-Gaussian (Xie et al. 2024), Objaverse (Deitke et al. 2023), and PhysAssets (Lv et al. 2026a). The multi-part evaluation 
+
+uses single objects with multiple semantic parts and covers the six simulator profiles in Table 1. Profile labels serve exclusively as aggregation categories; a multi-profile case enters each applicable column, and “Avg.” is the unweighted mean of the six profile scores. The multi-object evaluation uses scenes with at least two identifiable objects and a visible impact or support interaction. It evaluates shared-grid execution for these interactions, with results aggregated jointly across scenes. Method Jelly Metal Sand Foam Snow Plasticine Avg. CLIP sim UPR CLIP sim UPR CLIP sim UPR CLIP sim UPR CLIP sim UPR CLIP sim UPR CLIP sim UPR OmniPhysGS 0.2292 8% 0.2151 6% 0.2048 9% 0.2053 7% 0.1831 11% 0.2135 7% 0.2085 8.0% PhysSplat 0.2528 17% 0.2426 15% 0.2419 13% 0.2390 16% 0.2218 17% 0.2516 19% 0.2416 16.2% DreamPhysics 0.2459 12% 0.2272 10% 0.2216 8% 0.2326 10% 0.2071 13% 0.2437 15% 0.2297 11.3% PhysGM 0.2774 28% 0.2732 29% 0.2997 34% 0.2609 23% 0.2548 27% 0.2691 25% 0.2725 27.7%               
+
+> PhysMAS (Ours) 0.2819 35% 0.2770 40% 0.3021 36% 0.2784 44% 0.2595 32% 0.2734 34% 0.2787 36.8%
+
+Table 1: Multi-part results across six material profiles. Entries are CLIP sim /UPR; “Avg.” is the six-profile macro-average. Multi-profile cases enter each applicable column. Higher is better. 
+
+Comparison with State-of-the-Art Methods 
+
+Baselines. We compare with OmniPhysGS (Lin et al. 2025), PhysSplat (Zhao et al. 2025), DreamPhysics (Huang et al. 2025), and PhysGM (Lv et al. 2026a). Each receives the same motion prompt, initial 3DGS, cameras, external ac-tion, ground, timestamps, duration, and resolution through its native interface. Every baseline retains its native input representation under this shared evaluation setup. 
+
+Perceptual metrics. Following prior evaluations (Lv et al. 2026a,b), we report CLIP similarity (CLIP sim ) and User Preference Rate (UPR). Frozen CLIP ViT-B/32 compares each frame with the complete motion prompt (Radford et al. 2021); scores are averaged by case and reported set under the fixed aggregation protocol. UPR is forced-choice preference for prompt-consistent, perceptually plausible motion from 20 CV/CG researchers; method names are hidden and positions randomized. Main results use 5AFC and ablations use a separate 3AFC, which are reported separately because their choice sets differ (full protocol in the supplement). Together, they assess prompt alignment and perceived motion quality. 
+
+Motion and deformation metrics. Against paired refer-ences reserved for evaluation, trajectory nRMSE compares image-normalized CoTracker3 tracks (Karaev et al. 2025); 
+
+area log-RMSE , mask areas; and local-strain RMSE , frame-0-neighborhood Green–Lagrange strains (Kim et al. 2026). Table 4 reports 100 times each raw RMSE, macro-averaged over multi-part profiles or multi-object cases. Together, these diagnostics provide complementary image-plane evidence of motion and deformation. 
+
+Multi-part results. Table 1 shows a clear progression among the baselines. OmniPhysGS obtains the lowest macro-average (0.2085/8.0%), DreamPhysics reaches 0.2297/11.3%, and PhysSplat improves this to 0.2416/16.2%. PhysGM is the strongest baseline at 0.2725/27.7%, whereas PhysMAS               
+
+> Method CLIP sim ↑UPR (%) ↑
+> OmniPhysGS 0.2391 8.7% PhysSplat 0.2434 13.3% DreamPhysics 0.2437 15.0% PhysGM 0.2631 25.7%
+> PhysMAS (Ours) 0.2733 37.3%
+
+Table 2: Multi-object results; higher is better. achieves 0.2787/36.8%. The profile-wise results are consis-tent: PhysMAS gives the highest CLIP sim and UPR for all six profiles rather than relying on one favorable material category. The larger UPR differences on Metal and Foam show that the improvement is also reflected in human preference, even when the corresponding CLIP sim margins are modest. 
+
+Multi-object results. Table 2 evaluates the methods sep-arately when multiple objects participate in one interaction. OmniPhysGS records 0.2391/8.7%, while PhysSplat and DreamPhysics yield similar CLIP sim values of 0.2434 and 0.2437 with UPRs of 13.3% and 15.0%. PhysGM improves both measures to 0.2631/25.7%. PhysMAS ranks first at 0.2733/37.3%, showing that its advantage extends from het-erogeneous parts within one object to scene-level interactions involving distinct object identities. 
+
+Motion, deformation, and efficiency. The two entries in each cell of Table 4 correspond to multi-part and multi-object results. For multi-part motion, PhysGM is the strongest baseline on all three diagnostics, while PhysMAS further reduces trajectory, projected-area, and local-strain error to 0.626, 2.641, and 6.654. The multi-object ranking is less uniform: DreamPhysics gives the lowest baseline trajectory and area errors, whereas OmniPhysGS gives the lowest base-line local-strain error. PhysMAS remains lowest on all three at 1.085, 3.980, and 15.361, respectively. Table 3 comple-ments these quality measures: PhysMAS matches PhysSplat’s rounded two-minute runtime, is shorter than OmniPhysGS and DreamPhysics, but slower than the sub-minute PhysGM.                
+
+> Method Runtime ↓
+> OmniPhysGS >12 hPhysSplat 2min DreamPhysics >0.5hPhysGM <1min PhysMAS (Ours) 2min
+
+Table 3: Post-reconstruction runtime per 50-frame sequence; lower is better. 
+
+Qualitative results. Figure 4 supports the quantitative trends with synchronized multi-part examples. OmniPhysGS produces the strongest global flattening, PhysSplat retains more height but still exhibits largely uniform deformation, and DreamPhysics again converges to compressed endpoints. PhysGM better preserves the overall object silhouette, whereas Method Trajectory nRMSE Area Log RMSE Local-strain RMSE OmniPhysGS 1.594/3.395 8.318/9.704 12.871/43.060 PhysSplat 1.447/3.192 7.821/9.113 15.959/46.563 DreamPhysics 1.477/3.115 7.021/7.928 14.612/58.422 PhysGM 1.028/3.387 3.428/9.693 11.993/55.959  
+
+> PhysMAS 0.626/1.085 2.641/3.980 6.654/15.361
+
+Table 4: Image-plane motion and deformation errors for multi-part/multi-object results; lower is better. PhysMAS more clearly retains the cake’s plate/layer separa-tion and the sunflower’s part-dependent bending. The broader gallery in Figure 3 separates the two settings: Rows 1–4 show material- and part-dependent responses within indi-vidual objects, while Rows 5–6 show the cake–hammer and basketball–beverage interactions with distinct objects main-tained throughout the rollout. 
+
+Figure 4: Multi-part comparisons on cake impact and sun-flower falling. Synchronized frames show part preservation across methods. 
+
+Ablation Study 
+
+Object-Part Scene Agent. This bundle ablation replaces the agent-owned object–part state and part-aware compiler with an object-level variant. The full model is higher on both metrics for every profile, and macro CLIP sim /UPR de-creases from 0.2787/42.5% to 0.2616/25.5%. Foam shows the largest profile-level change, from 0.2784/49% to 0.2184/14%, where a single object-wide assignment removes the intended distinction between its constituent regions. The strawberry sequences in Figure 5 provide the corresponding visual com-parison across landing and contact. Together, these results support the combined contribution of agent-owned object– part state and part-aware compilation. 
+
+Structure-Preserving Projection. Removing the operator package lowers macro CLIP sim /UPR to 0.2717/32.0%, with the full model remaining higher for all six profiles. The UPR differences are most pronounced on Jelly, Snow, and Foam, where the full model gains 17, 14, and 12 percentage points,                                                   
+
+> Profile w/o O-P Agent w/o S-P Projection Full
+> CLIP sim UPR CLIP sim UPR CLIP sim UPR Jelly 0.2727 31% 0.2696 26% 0.2819 43%
+> Metal 0.2693 27% 0.2703 31% 0.2770 42%
+> Sand 0.2921 27% 0.3015 35% 0.3021 38%
+> Foam 0.2184 14% 0.2684 37% 0.2784 49%
+> Snow 0.2484 26% 0.2487 30% 0.2595 44%
+> Plasticine 0.2688 28% 0.2719 33% 0.2734 39%
+> Avg. 0.2616 25.5% 0.2717 32.0% 0.2787 42.5%
+
+Table 5: Six-profile ablation; UPR is in percent and “Avg.” is the macro-average. respectively. In Figure 5, the variant without projection shows greater distortion of the pineapple’s crown–body support structure, whereas the full method maintains a more stable silhouette through landing. This isolates the projection pack-age’s contribution to visual support-shape stabilization and complements the object–part ablation above. 
+
+Figure 5: Qualitative ablation for Table 5. Each case shows the input and synchronized frames from the indicated ablation (top) and Full PhysMAS (bottom). 
+
+# Discussion 
+
+PhysMAS fills a key gap in physics-grounded 4D Gaussian synthesis by automating object–part scene organization and part-wise material assignment. Persistent object–part iden-tities and material profiles provide a structured interface between multimodal reasoning and MPM simulation, while solver-aware skills compile and screen executable candidates. Our implementation uses a 100 3 grid to balance fidelity and efficiency. Future work will combine adaptive simulation with learned execution feedback to support real-time, large-scale compositional dynamics. 
+
+# Conclusion 
+
+We introduce PhysMAS, a physics-grounded multi-agent framework for compositional 4D Gaussian synthesis. Its Object-Part Scene Agent, Material Reasoning Agent, and solver-aware skills carry persistent identities and part-wise profiles into shared-domain MPM simulation, supporting multi-part and multi-object dynamics without per-scene SDS backpropagation. Experiments demonstrate superior seman-tic alignment, perceived physical plausibility, and reference-video motion and deformation consistency among the com-pared methods while maintaining a short runtime. References 
+
+Cai, J.; Yang, Y.; Yuan, W.; He, Y.; Dong, Z.; Bo, L.; Cheng, H.; and Chen, Q. 2024. GIC: Gaussian-Informed Continuum for Physical Property Identification and Simulation. In Ad-vances in Neural Information Processing Systems , volume 37, 75035–75063. Cen, J.; Fang, J.; Yang, C.; Xie, L.; Zhang, X.; Shen, W.; and Tian, Q. 2025. Segment Any 3D Gaussians. Proceedings of the AAAI Conference on Artificial Intelligence , 39(2): 1971– 1979. Chen, B.; Jiang, H.; Liu, S.; Gupta, S.; Li, Y.; Zhao, H.; and Wang, S. 2025a. PhysGen3D: Crafting a Miniature Interactive World from a Single Image. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,6178–6189. Chen, C.; Dou, Z.; Wang, C.; Huang, Y.; Chen, A.; Feng, Q.; Gu, J.; and Liu, L. 2025b. Vid2Sim: Generalizable, Video-Based Reconstruction of Appearance, Geometry and Physics for Mesh-Free Simulation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,26545–26555. Chopra, S.; Liang, J.; Seneviratne, G.; and Manocha, D. 2026. PhysGS: Bayesian-Inferred Gaussian Splatting for Physi-cal Property Estimation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,18980–18990. Deitke, M.; Schwenk, D.; Salvador, J.; Weihs, L.; Michel, O.; VanderBilt, E.; Schmidt, L.; Ehsani, K.; Kembhavi, A.; and Farhadi, A. 2023. Objaverse: A Universe of Annotated 3D Objects. Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 13142–13153. Feng, Y.; Feng, X.; Shang, Y.; Jiang, Y.; Yu, C.; Zong, Z.; Shao, T.; Wu, H.; Zhou, K.; Jiang, C.; and Yang, Y. 2025. Gaussian Splashing: Unified Particles for Versatile Motion Synthesis and Rendering. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,518–529. Huang, B.; Chen, Y.; Lu, R.; Zeng, G.; Zha, H.; Pei, Y.; and Huang, S. 2026. GaussianFluent: Gaussian Simulation for Dynamic Scenes with Mixed Materials. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 21583–21593. Huang, T.; Zhang, H.; Zeng, Y.; Zhang, Z.; Li, H.; Zuo, W.; and Lau, R. W. H. 2025. DreamPhysics: Learning Physics-Based 3D Dynamics with Video Diffusion Priors. Proceedings of the AAAI Conference on Artificial Intelligence , 39(4): 3733–3741. Jiang, C.; Schroeder, C.; Selle, A.; Teran, J.; and Stomakhin, A. 2015. The Affine Particle-in-Cell Method. ACM Transactions on Graphics , 34(4): 1–10. Jiang, H.; Hsu, H.-Y.; Zhang, K.; Yu, H.-N.; Wang, S.; and Li, Y. 2025. PhysTwin: Physics-Informed Reconstruction and Simulation of Deformable Objects from Videos. In 
+
+Proceedings of the IEEE/CVF International Conference on Computer Vision , 7219–7230. Jiang, S.; and Lee, G. H. 2026. PhysHO: Physics-Based Dynamic 3D Gaussian Human and Object from Monocular Video. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 32507–32517. Jiang, Y.; Yu, C.; Cao, C.; Wang, F.; Hu, W.; and Gao, J. 2024. Animate3D: Animating Any 3D Model with Multi-View Video Diffusion. In Advances in Neural Information Processing Systems , volume 37, 125879–125906. Karaev, N.; Makarov, Y.; Wang, J.; Neverova, N.; Vedaldi, A.; and Rupprecht, C. 2025. CoTracker3: Simpler and Better Point Tracking by Pseudo-Labelling Real Videos. In Proceedings of the IEEE/CVF International Conference on Computer Vision ,6013–6022. Kerbl, B.; Kopanas, G.; Leimkuehler, T.; and Drettakis, G. 2023. 3D Gaussian Splatting for Real-Time Radiance Field Rendering. ACM Transactions on Graphics , 42(4): 139:1– 139:14. Kim, M.; Kim, G.; Choi, J.; Roh, W.; and Han, B. 2026. PhysGaia: A Physics-aware Benchmark with Multi-Body In-teractions for Dynamic Novel View Synthesis. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 22604–22614. Li, J.; Song, Z.; and Yang, B. 2025. TRACE: Learning 3D Gaussian Physical Dynamics from Multi-View Videos. In 
+
+Proceedings of the IEEE/CVF International Conference on Computer Vision , 8820–8829. Li, J.; Song, Z.; Zhou, S.; and Yang, B. 2025. FreeGave: 3D Physics Learning from Dynamic Videos by Gaussian Velocity. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 12433–12443. Li, X.; Qiao, Y.-L.; Chen, P. Y.; Jatavallabhula, K. M.; Lin, M. C.; Jiang, C.; and Gan, C. 2023. PAC-NeRF: Physics Augmented Continuum Neural Radiance Fields for Geometry-Agnostic System Identification. In The Eleventh International Conference on Learning Representations .Li, Z.; Chen, Z.; Li, Z.; and Xu, Y. 2024. Spacetime Gaussian Feature Splatting for Real-Time Dynamic View Synthesis. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 8508–8520. Lin, Y.; Lin, C.; Xu, J.; and Mu, Y. 2025. OmniPhysGS: 3D Constitutive Gaussians for General Physics-Based Dynamics Generation. In The Thirteenth International Conference on Learning Representations .Ling, H.; Kim, S. W.; Torralba, A.; Fidler, S.; and Kreis, K. 2024. Align Your Gaussians: Text-to-4D with Dynamic 3D Gaussians and Composed Diffusion Models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 8576–8588. Liu, C.; Wang, X.; Lin, Q.; Xiao, A.; Chen, H.; Wen, S.; Zhang, H.; Qi, L.; Yang, M.-H.; Jeni, L. A.; Xu, M.; and Zhao, Y. 2026. MOSIV: Multi-Object System Identification from Videos. In The Fourteenth International Conference on Learning Representations .Liu, M.; Zhu, Y.; Cai, H.; Han, S.; Ling, Z.; Porikli, F.; and Su, H. 2023. PartSLIP: Low-Shot Part Segmentation for 3D Point Clouds via Pretrained Image-Language Models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 21736–21746. Liu, S.; Ren, Z.; Gupta, S.; and Wang, S. 2024a. PhysGen: Rigid-Body Physics-Grounded Image-to-Video Generation. In European Conference on Computer Vision , 360–378. Liu, S.; Zeng, Z.; Ren, T.; Li, F.; Zhang, H.; Yang, J.; Jiang, Q.; Li, C.; Yang, J.; Su, H.; Zhu, J.; and Zhang, L. 2024b. Ground-ing DINO: Marrying DINO with Grounded Pre-Training for Open-Set Object Detection. In European Conference on Computer Vision .Lv, C.; Chen, Z.; Di, D.; Zhang, W.; Li, H.; Wei, C.; Lei, Y.; and Li, C. 2026a. PhysGM: Large Physical Gaussian Model for Feed-Forward 4D Synthesis. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 29855–29865. Lv, C.; Ye, J.; Jiang, Y.; Lin, R.; and Li, C. 2026b. PhysAgent: Automating Physics-Based 4D Synthesis via Trajectory-Grounded Multi-Agent Feedback. arXiv:2606.08688. Ma, Y. J.; Liang, W.; Wang, G.; Huang, D.-A.; Bastani, O.; Jayaraman, D.; Zhu, Y.; Fan, L.; and Anandkumar, A. 2024. Eureka: Human-Level Reward Design via Coding Large Language Models. In The Twelfth International Conference on Learning Representations .Poole, B.; Jain, A.; Barron, J. T.; and Mildenhall, B. 2023. DreamFusion: Text-to-3D Using 2D Diffusion. In The Eleventh International Conference on Learning Representa-tions .Qin, M.; Li, W.; Zhou, J.; Wang, H.; and Pfister, H. 2024. LangSplat: 3D Language Gaussian Splatting. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 20051–20060. Qiu, R.-Z.; Yang, G.; Zeng, W.; and Wang, X. 2024. Language-Driven Physics-Based Scene Synthesis and Editing via Feature Splatting. In European Conference on Computer Vision , 368– 383. Radford, A.; Kim, J. W.; Hallacy, C.; Ramesh, A.; Goh, G.; Agarwal, S.; Sastry, G.; Askell, A.; Mishkin, P.; Clark, J.; Krueger, G.; and Sutskever, I. 2021. Learning Transferable Visual Models From Natural Language Supervision. In 
+
+International Conference on Machine Learning , 8748–8763. Ravi, N.; Gabeur, V.; Hu, Y.-T.; Hu, R.; Ryali, C.; Ma, T.; Khedr, H.; Raedle, R.; Rolland, C.; Gustafson, L.; Mintun, E.; Pan, J.; Alwala, K. V.; Carion, N.; Wu, C.-Y.; Girshick, R.; Dollar, P.; and Feichtenhofer, C. 2025. SAM 2: Segment Any-thing in Images and Videos. In The Thirteenth International Conference on Learning Representations .Ren, J.; Xie, K.; Mirzaei, A.; Liang, H.; Zeng, X.; Kreis, K.; Liu, Z.; Torralba, A.; Fidler, S.; Kim, S. W.; and Ling, H. 2024. L4GM: Large 4D Gaussian Reconstruction Model. In Ad-vances in Neural Information Processing Systems , volume 37, 56828–56858. Stomakhin, A.; Schroeder, C.; Chai, L.; Teran, J.; and Selle, A. 2013. A Material Point Method for Snow Simulation. ACM Transactions on Graphics , 32(4): 102:1–102:10. Sulsky, D.; Chen, Z.; and Schreyer, H. L. 1994. A Particle Method for History-Dependent Materials. Computer Methods in Applied Mechanics and Engineering , 118(1–2): 179–196. Wang, M.; Zadrozny, J.; Mac Aodha, O.; and Vaxman, A. 2026. MotionPhysics: Learnable Motion Distillation for Text-Guided Simulation. Proceedings of the AAAI Conference on Artificial Intelligence , 40(12): 9993–10001. Wang, M.; Zhang, Y.; Xu, W.; Ma, R.; Zou, C.; and Morris, D. 2025. DecoupledGaussian: Object-Scene Decoupling for Physics-Based Interaction. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,11361–11372. Wu, G.; Yi, T.; Fang, J.; Xie, L.; Zhang, X.; Wei, W.; Liu, W.; Tian, Q.; and Wang, X. 2024. 4D Gaussian Splatting for Real-Time Dynamic Scene Rendering. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 20310–20320. Wu, R.; Gao, R.; Poole, B.; Trevithick, A.; Zheng, C.; Barron, J. T.; and Holynski, A. 2025. CAT4D: Create Anything in 4D with Multi-View Video Diffusion Models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 26057–26068. Xie, T.; Zong, Z.; Qiu, Y.; Li, X.; Feng, Y.; Yang, Y.; and Jiang, C. 2024. PhysGaussian: Physics-Integrated 3D Gaussians for Generative Dynamics. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,4389–4398. Xu, X.; Ge, W.; Qiu, D.; Chen, Z.; Yan, D.; Liu, Z.; Zhao, H.; Zhao, H.; Zhang, S.; Liang, J.; and Chen, Y.-C. 2025. Gaus-sianProperty: Integrating Physical Properties to 3D Gaussians with LMMs. In Proceedings of the IEEE/CVF International Conference on Computer Vision , 7231–7240. Yang, Z.; Gao, X.; Zhou, W.; Jiao, S.; Zhang, Y.; and Jin, X. 2024. Deformable 3D Gaussians for High-Fidelity Monoc-ular Dynamic Scene Reconstruction. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 20331–20341. Ye, M.; Danelljan, M.; Yu, F.; and Ke, L. 2024. Gaussian Grouping: Segment and Edit Anything in 3D Scenes. In 
+
+European Conference on Computer Vision , 162–179. Yu, T.; Shah, V.; Wahed, M.; Shen, Y.; Nguyen, K. A.; and Lourentzou, I. 2026. Part 2GS: Part-Aware Modeling of Articulated Objects using 3D Gaussian Splatting. In 
+
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 18913–18923. Zhang, H.; Chen, X.; Wang, Y.; Liu, X.; Wang, Y.; and Qiao, Y. 2024a. 4Diffusion: Multi-View Video Diffusion Model for 4D Generation. In Advances in Neural Information Processing Systems , volume 37, 15272–15295. Zhang, T.; Yu, H.-X.; Wu, R.; Feng, B. Y.; Zheng, C.; Snavely, N.; Wu, J.; and Freeman, W. T. 2024b. PhysDreamer: Physics-Based Interaction with 3D Objects via Video Generation. In 
+
+European Conference on Computer Vision , 388–406. Zhao, H.; Wang, H.; Zhao, X.; Fei, H.; Wang, H.; Long, C.; and Zou, H. 2025. PhysSplat: Efficient Physics Simulation for 3D Scenes via MLLM-Guided Gaussian Splatting. In 
+
+Proceedings of the IEEE/CVF International Conference on Computer Vision , 5242–5252. Agent Contracts and Object–Part State 
+
+Algorithm 1 in the main paper gives the complete inference and selection flow. This section expands the two agent con-tracts and the deterministic object–part lifting stage. Only the Object-Part Scene Agent can update scene identity and plan 
+
+Π, invoke tools, or accept a rollout. The Material Reasoning Agent returns row-wise evidence; candidate construction, compilation, simulation, repair generation, gating, ranking, and final audit are fixed routines. 
+
+Generalized Object-Part Scene Agent Prompt 
+
+The invariant instruction template below summarizes the prompt contract. Direction labels and calibrated cameras accompany the four-view sheet, and the aligned 3DGS is addressed through the persistent scene record.     
+
+> Role: scene-level object–part orchestrator.
+> Input: motion prompt, four direction-labeled scene views, camera records, and the registered scene state.
+> Instructions: identify objects before their parts; keep object IDs stable across views; create part IDs only within a par-ent object; preserve identically named parts from different objects as different rows; form a scene plan using only the supported action vocabulary; request material evidence in-dependently for every active row; and accept a rollout only after deterministic execution screening.
+> Output: an object inventory, object-scoped part rows, and a proposed structured scene plan. Do not emit constitutive parameters or modify fixed numerical settings.
+
+The proposed scene plan records source and target identi-ties, semantic roles, action type, direction, magnitude, and ac-tive interval. A deterministic compiler resolves the referenced rows, canonicalizes the action fields, and validates the plan before rollout. Gravity, colliders, cameras, grid resolution, and rendering settings remain in the fixed run specification rather than in the language-model output. A one-part object follows the same schema with one semantic row; a multi-object scene uses distinct object IDs while retaining one scene-level plan. 
+
+Generalized Material Reasoning Agent Prompt 
+
+The Material Reasoning Agent is called once per active object–part row. Its invariant instruction template is:           
+
+> Role: row-wise material-evidence reasoner.
+> Input: one persistent object–part key, its stored name and structural role, highlighted observations from the calibrated views, and the six accepted simulator profiles.
+> Instructions: assess visual-material evidence for the spec-ified row; distinguish the visible material label from the simulator profile; return confidence-bearing evidence for the profile and continuous E/νstatistics; preserve the supplied identity; and abstain when a required semantic row has no valid evidence.
+> Output: evidence over visual labels and simulator profiles, together with continuous Eand νstatistics where avail-able. Density is supplied by the selected visual-label prior during deterministic candidate construction. Do not change object/part identities, the scene plan, actions, cameras, or solver settings.
+
+The row evidence is serialized as ψr and validated before candidate construction. Table .6 lists the normalized records passed between the agents and fixed routines; it is the semantic schema used throughout the paper, independent of backend file names. 
+
+Perception Configuration 
+
+Perception allows at most two segmentation attempts. The initial schema query receives the front scene view; agent mode then uses one direction-labeled 2 × 2 grid of all four views for perception planning and repair. Material reasoning uses one highlighted multi-view sheet per row. Calls use deterministic inference, while pretrained Grounding DINO and SAM 2 provide object/part masks and confidence values under a fixed configuration. The front-view object inventory defines canonical query IDs. Projection-consistent Gaussian support and fixed query order provide deterministic matching for masks in the remaining views. 
+
+Object–Part Lifting, Guards, and Ties 
+
+The main paper writes object and part support as eobj  
+
+> ov
+
+and 
+
+epart  
+
+> rv
+
+. In the implementation, support is zero outside the selected mask and otherwise combines the stored mask con-fidence with normalized distance to the mask boundary. An area-normalized positive tie-break prevents exact zero scores. Multi-view-consistent neighbors regularize ambiguous as-signments, followed by a residual-label cleanup pass. Every Gaussian retains either its selected semantic row or an object-scoped residual row with a persistent part ID. We retain the main-paper notation r = ( o, p ) for a com-pound object–part row, where o and p denote its object and part components. Let Q = {1, . . . , N Q} be the particle index set and Qr = {q ∈ Q | zQq = r} the particles assigned to row r. The method input and final rollout remain scene-level as defined in the main paper. In Table .7, Ar is the accepted multi-view mask area for row r, and ncand  
+
+> r
+
+is the number of residual Gaussians eligible for its cleanup pass. Table .7 lists the frozen implementation settings used across all reported data sources. 
+
+# Material Profiles and Particle Compilation 
+
+Visual-to-Solver Mapping and Parameter Domain 
+
+Table .8 gives the visual-material priors and initial map used during material reasoning and deterministic candidate construction. The serialized E and profile-derived ρ values carry the nominal Pa and kg /m3 labels expected by the backend. After uniform geometry normalization, these values serve as canonical solver coefficients. Ordinary part rows constrain E and ν to the selected visual material’s supported domain and use the local solver ranges ν ∈ [0 .05 , 0.45] and 
+
+ρ ∈ [300 , 3000] . The explicitly listed composite transforms in Table .10 instead use the whole-object record, allowing ν up to 0.485 and a profile-density prior in [100 , 7800] . Thus Ksim 
+
+in the main paper is the union of the ordinary-row domain and these enumerated composite-transform domains, rather than the result of one contradictory global clamp. The adaptive wave-speed rule uses a minimum substep of 5×10 −5 seconds and at most 800 substeps per output frame. Record Required fields Owner / consumer Object inventory persistent object ID, name, scene role, view-linked queries Scene Agent / perception and lifting Object–part row compound key r = ( o, p ), part name, parent object, structural role, physics-group token, schema-expected visual labels, evidence references Scene Agent / Material Agent and compiler Scene plan Π action type, source/target keys, direction, magnitude, active interval Scene Agent / action compiler Material evidence ψr visual-label evidence, six-profile evidence, E/ν statistics, confidence Material Agent / candidate builder Whole-object evidence full-object visual label, mapped profile, E/ν statistics, profile-derived density prior Fixed evidence routine / candidate builder Candidate row Θ(c) 
+
+> r
+
+profile branch β(c) 
+
+> r
+
+, E(c) 
+
+> r
+
+, ν(c) 
+
+> r
+
+, ρ(c) 
+
+> r
+
+Fixed builder / particle compiler Candidate controls U(c)aux support-projection weights, interface-retention flags Fixed builder / schedule compiler Candidate metadata source-transform ID, parent candidate ID, fixed-order index Fixed builder / repair and screen Execution record D(c) process, numerical, artifact, and endpoint diagnostics Simulator skills / deterministic screen and Scene Agent audit 
+
+Table .6: Structured records and ownership in the PhysMAS inference protocol. 
+
+Setting Frozen value Interior-distance support range [0 .45 , 1.00] 
+
+Mask-confidence floor 0.05 
+
+Residual confidence cap 0.20 
+
+Area tie-break 10 −6/ max(1 , A r )
+
+Ambiguity / reliable margin 0.18 / 0.30 
+
+Neighborhood sizes 12 and 16 
+
+Residual rescue target min  ncand  
+
+> r
+
+,
+
+max(64 , round(0 .003 NG)) 
+
+Table .7: Frozen implementation settings for Gaussian object– part lifting. 
+
+Six Solver Profiles 
+
+For every particle, the compiler converts (E, ν ) to Lamé parameters 
+
+μ = E
+
+2(1 + ν) , λ = Eν 
+
+(1 + ν)(1 − 2ν) , (.12) while ρ determines particle mass through Mq = ρq V 0 
+
+> q
+
+. Ta-ble .9 lists the stress and inelastic-update branches used by the six profiles. These names identify the simulator-facing con-stitutive branches associated with the inferred visual-material evidence. 
+
+Evidence Aggregation and Continuous Parameters 
+
+For the evidence aggregation summarized by Amat in the main paper, the frozen source coefficients for schema, crop pre-dictor, VLM, role, and whole-object evidence are 0.25 , 0.35 ,
+
+0.30 , 0.10 , and 0.05 , respectively. These are unnormalized evidence coefficients—their sum need not equal one—and the resulting label scores are normalized only after all sources are accumulated. Crop records are averaged within their source. Valid VLM records are confidence-weighted and divided by their count. Reported semantic rows use validated crop and predictor evidence before aggregation, while residual rows retain a unit Plastic fallback. The same fixed in-run evidence sources are used throughout the reported evaluation. The role source scans the lowercase concatenation of the stored part name and physical role. The same vocabulary is used unchanged across all three reported data sources. Let Rr (m) be the maximum confidence assigned to la-bel m by all matching rules, or zero if none matches. The fixed lookup is: head/blade/tip/edge/impact/metal 7 →
+
+Metal at 0.75 ; handle/grip/shaft 7 → Wood at 0.55 and Plas-tic at 0.45 ; wheel/tire/tyre/sole 7 → Rubber at 0.80 ; cush-ion/pad/pillow/foam 7 → Foam at 0.75 ; cloth/fabric/lace/upper 
+
+7→ Fabric at 0.65 ; plate/bowl/ceramic 7 → Ceramic at 0.55 and Plastic at 0.35 ; and frosting/cream/cake/soft 7 → Foam at 0.55 
+
+and Plasticine at 0.35 . Multiple matching rules contribute evidence, while Rr retains the maximum per label for the guard below. Let Mvis be the 14 visual labels in Table .8, let Mexp  
+
+> r
+
+be the deduplicated schema-expected labels stored with row r,and let sr (m) be the resulting nonnegative weighted evidence. If its sum is zero, the fixed fallback replaces the score vector by a unit score at Plastic. Define Zr = P 
+
+> m∈M vis
+
+sr (m)
+
+after this fallback, so Zr > 0. The normalized posterior and selected label are 
+
+Pr (m) = sr (m)
+
+Zr
+
+,
+
+emr = arg max 
+
+> m∈M vis
+
+Pr (m). (.13) Thus Pr ∈ ∆13 , and posterior ties follow the stored evidence-insertion order. The unconstrained mode is m(0)  
+
+> r
+
+= emr . When 
+
+Mexp  
+
+> r
+
+is nonempty, let mexp  
+
+> r
+
+be its highest-posterior label, with the deduplicated expected-label order breaking ties, and Visual label Solver branch E prior range (Pa) ν bound Raw ρ
+
+Wood Metal 10 8–2×10 10 0.25–0.45 700 Metal Metal 10 9–3×10 11 0.20–0.35 7800 Plastic Metal 10 6–5×10 9 0.30–0.45 1200 Glass Metal 10 9–10 11 0.18–0.30 2500 Fabric Foam 10 4–10 8 0.20–0.45 500 Leather Foam 10 5–10 9 0.30–0.49 900 Ceramic Metal 10 8–10 11 0.15–0.35 2500 Stone Metal 10 8–10 11 0.10–0.35 2600 Rubber Jelly 10 4–10 8 0.40–0.499 1100 Paper Foam 10 5–10 9 0.20–0.45 800 Sand Sand 10 3–10 7 0.20–0.45 1600 Snow Snow 10 3–10 7 0.10–0.35 300 Plasticine Plasticine 10 3–10 7 0.25–0.49 2000 Foam Foam 10 3–10 7 0.10–0.45 100 
+
+Table .8: Exact initial mapping, visual-material E prior ranges, ν bounds, and density priors. 
+
+Profile Elastic / trial stress Inelastic deformation update Jelly Compressible Neo-Hookean None Metal Fixed-corotational elasticity None Sand Hencky trial stress with Drucker–Prager projection ( k = 0 ,
+
+α = 0 .16 )Sand return mapping Foam Hencky elasticity StVK-based viscoplastic return mapping Snow Hencky trial stress with Drucker–Prager projection ( k = 1000 ,
+
+α = 0 .16 )Stress-space projection Plasticine Hencky trial stress with Drucker–Prager projection ( k = 5000 ,
+
+α = 0 .16 )Von-Mises-with-damage return mapping 
+
+Table .9: Constitutive branches selected by the six simulator profiles. “None” means that the trial deformation gradient is retained before stress evaluation. define 
+
+Cap exp (r) = max {1.75 Pr (mexp  
+
+> r
+
+),Pr (mexp  
+
+> r
+
+) + 0 .20 } ,
+
+ExpGuard( r) = [ m(0)  
+
+> r
+
+/∈ M exp  
+
+> r
+
+] ∧ [Pr (mexp  
+
+> r
+
+) ≥ 0.18] 
+
+∧ [Pr (m(0)  
+
+> r
+
+) ≤ Cap exp (r)] ,m(1)  
+
+> r
+
+=
+
+(
+
+mexp  
+
+> r
+
+, ExpGuard( r),m(0)  
+
+> r
+
+, otherwise . (.14) For an empty expected set, ExpGuard( r) is false. Two guards then run in a fixed order. First, the multi-view VLM guard examines only records marked successful that do not abstain and provide normalized material probabilities, confidence at least 0.60 , and at least three canonical visible views. Let v be a record’s top label. The record is eligible only if its top-label probability is at least 0.75 , v ∈ M exp  
+
+> r
+
+, v̸ =
+
+m(1)  
+
+> r
+
+, Rr (v) ≥ 0.50 , Rr (v) ≥ Rr (m(1)  
+
+> r
+
+) + 0 .10 , Pr (v) ≥
+
+0.20 , Pr (m(1)  
+
+> r
+
+) ≤ 1.50 Pr (v), and Pr (m(1)  
+
+> r
+
+) − Pr (v) ≤
+
+0.18 . If eligible records exist, m(2)  
+
+> r
+
+is the label maximizing the product of VLM confidence, within-record top-label probability, and Pr (v); otherwise m(2)  
+
+> r
+
+= m(1)  
+
+> r
+
+. Record order breaks ties. Second, let Map denote the visual-label-to-branch map in Table .8, and let Mel = {m | Map( m) = Metal }. A row is structural when its normalized physics-group and role tokens contain support, supporting, structural, rigid, or loadbearing, or contain both load and bearing. A strong elastic-solid VLM record has at least three canonical visible views, confidence at least 0.60 , total probability on Mel at least 0.70 , and maximum elastic-solid probability at least 0.50 . Define the expected-label elastic-solid fraction by 
+
+f el  
+
+> r
+
+=
+
+|M exp  
+
+> r
+
+∩ M el |/|M exp  
+
+> r
+
+|, |M exp  
+
+> r
+
+| > 0,
+
+1, |M exp  
+
+> r
+
+| = 0 . (.15) If m(2)  
+
+> r
+
+/∈ M el , the row is structural, f el  
+
+> r
+
+≥ 0.50 , and such a record exists, then mr = arg max m∈M el Pr (m); otherwise 
+
+mr = m(2)  
+
+> r
+
+. Stored posterior order breaks the final tie. The stored material confidence is Pr (mr ).Residual rows with assigned Gaussians remain active dur-ing candidate construction. In the reported configuration, deserialization maps every particle to its stored active row, while the solver-compatible candidate uses its stored global profile. Ties follow active-row order. For crop proposal j of row r, the feed-forward model produces normalized means μErj , μ νrj , uncertainty terms 
+
+σE, model  
+
+> rj
+
+, σ νrj , and visual-material evidence ephys  
+
+> rj
+
+. The im-plementation decodes 
+
+bErj = 0 .1 10 2.456477 μErj +7 .387210 ,
+
+bνrj = 0 .111 μνrj + 0 .398 . (.16) The Qwen query provides discrete visual-material evidence, while continuous E and ν statistics are pooled from validated crop predictions. Each crop contributes xErj = log 10 bErj ,
+
+xνrj = bνrj , wrj = max(0 .05 , e phys  
+
+> rj
+
+(mr )) , using 0.1 when the selected-label entry is absent, and uncertainty arj =
+
+σE, model  
+
+> rj
+
+. Let LEr and Lνr contain the records finite for the E-and ν-statistics, respectively, and define W Er = P 
+
+> j∈L Er
+
+wrj 
+
+and W νr = P
+
+> j∈L νr
+
+wrj . For positive corresponding normal-izers, 
+
+¯er = ( W Er )−1 X
+
+> j∈L Er
+
+wrj xErj ,
+
+¯νr = ( W νr )−1 X
+
+> j∈L νr
+
+wrj xνrj ,ver = ( W Er )−1 X
+
+> j∈L Er
+
+wrj (xErj − ¯er )2,ser = max  0.25 , pver
+
+ . (.17) Let Edef (m), νdef (m), and ρdef (m) denote the geometric-midpoint E, midpoint ν, and raw density for visual la-bel m in Table .8. With fewer than two valid E records, 
+
+ser = 0 .25 ; with no valid E record, the implementation sets 
+
+¯er = log 10 Edef (mr ) without evaluating the E moments in Equation (.17). With no valid ν record, it independently sets ¯νr = νdef (mr ). Let clip Em and clip νm denote the E- and 
+
+ν-domain clamps of visual label m. The posterior builder then stores 
+
+epost  
+
+> r
+
+= log 10 
+
+h
+
+clip Emr (10 ¯er )
+
+i
+
+,νpost  
+
+> r
+
+= clip νmr (¯ νr ). (.18) Let ¯ar = |L Er |−1 P 
+
+> j∈L Er
+
+arj when E records exist (de-fault 0.35 otherwise), Hr = − P 
+
+> m
+
+Pr (m) log Pr (m) with 
+
+0 log 0 := 0 , and hr = min(0 .5, H r / max(1 , log 14)) . Let 
+
+¯σνr be the mean finite crop uncertainty over Lνr , with de-fault 0.06 for an empty set. These defaults provide complete residual-row records. The final dispersions are 
+
+σer = max(0 .10 , 0.50¯ ar + 0 .35 ser + 0 .15 hr ) ,σνr = max(0 .02 , ¯σνr ) . (.19) Let γmask  
+
+> r
+
+∈ [0 , 1] be the stored part-mask confidence. The lifting stage applies the positive floor in Table .7; consequently, a nonpositive serialized value is the sentinel for an unavailable confidence rather than an observed zero-confidence mask. Define 
+
+eγmask  
+
+> r
+
+=
+
+γmask  
+
+> r
+
+, γmask  
+
+> r
+
+> 0,
+
+0.7, otherwise . (.20) The stored posterior confidence used by candidate construc-tion is 
+
+γpart  
+
+> r
+
+= clip [0 ,1] 
+
+ Pr (mr )1 + σer
+
+max(0 .2, eγmask  
+
+> r
+
+)
+
+
+
+. (.21) Here clip [0 ,1] (x) = min(1 , max(0 , x )) . For independent 
+
+ξE , ξ ν ∈ { 0.15 , 0.25 , 0.50 , 0.75 , 0.85 }, the implementation uses the corresponding κξ ∈ {− 1.04 , −0.67 , 0, 0.67 , 1.04 }
+
+and computes 
+
+Er (ξE ) = clip Emr
+
+
+
+10 epost   
+
+> r+κξEσer
+
+
+
+,νr (ξν ) = clip νmr
+
+ νpost  
+
+> r
+
++ κξν σνr
+
+ . (.22) A changed visual label uses its corresponding defaults before the same constraints are applied. 
+
+Candidate Construction and Repair Transforms 
+
+The initial row is (β0 
+
+> r
+
+, E 0 
+
+> r
+
+, ν 0 
+
+> r
+
+, ρ 0 
+
+> r
+
+) =(Map( mr ), E r (0 .50) , ν r (0 .50) , clip( ρdef (mr ); 300 , 3000)) .Thus ρ0 
+
+> r
+
+comes from the selected visual label’s density prior rather than from a language-model prediction. The auxiliary whole-object record (βg , E g , ν g , ρ g ) is produced from the full-object crop by the same visual mapping and crop-conditioned E/ν predictor, with density again supplied by its selected visual-label prior and all fields passed through the backend guard. When that record is absent, the fixed fallback is (Plasticine , 5×10 5, 0.476 , 5000) . All predicate tests below are case-insensitive substring matches. Let Sr
+
+denote the candidate-construction support predicate. A support token in the concatenated name, physics-group token, and role makes Sr = 1 . Only when none matches, a soft token makes Sr = 0 ; if neither set matches, Wood, Metal, Glass, Ceramic, or Stone visual evidence makes Sr = 1 ; it is zero otherwise. The support tokens are plate, dish, tray, stand, support, holder, structural, rigid, load bearing, load-bearing, frame, shell, blade, head, tip, and impact part. The soft tokens are soft, deformable, compressible, cushion, foam, sponge, flesh, fruit, food, filling, cream, frosting, and icing. The candidate-construction cohesion predicate Cr is eval-uated only when Sr = 0 . It is one when the concatenated name, physics-group token, role, and visual label contains body, base, core, main, bulk, filling, coating, layer, cream, frosting, icing, fruit, organic, soft, deformable, foam, sponge, rubber, gel, cloth, fabric, leather, or pad. Otherwise it is one when β0 
+
+> r
+
+∈ { Foam , Plasticine , Jelly } and the visual label is not Wood, Metal, Glass, Ceramic, or Stone; it is zero in every remaining case, including Sr = 1 . No other Sand or Snow exclusion is applied during candi-date construction. The first matching rule defines ωr: it is 1.6 when Sr = 1 , 1.45 for candle/stem/stick/handle, 1.25 for fruit/strawberry/berry/decoration, 1.05 for cream/frosting/icing, and 1 otherwise. Let msec  
+
+> r
+
+be the second-ranked label in the stored posterior order and Epost  
+
+> r
+
+= 10 epost  
+
+> r
+
+. A row is alternative-feasible when 
+
+Pr (msec  
+
+> r
+
+) ≥ 0.12 and Edef (msec  
+
+> r
+
+) ≤ max(10 Epost  
+
+> r
+
+, 10 7).Among feasible rows, r† is the row with the largest Pr (msec  
+
+> r
+
+);ties use the fixed active-row order, and no alternative candidate is emitted when this set is empty. All rows begin from their posterior medians. Row r† receives msec  
+
+> r
+
+; if this differs from the stored label mr, its mapped branch and default E, ν,and density are used, whereas equality retains the posterior median. The ordinary physical and solver clamps follow in either case. The uncertainty sweep independently chooses the minimum-γpart  
+
+> r
+
+row with the fixed order as a tie-break. In Table .10, Map and the three def functions use the branch and defaults just defined. Define βcoh  
+
+> g
+
+= βg when 
+
+βg ∈ { Plasticine , Jelly , Foam }, and βcoh  
+
+> g
+
+= Plasticine 
+
+otherwise. Initial-candidate rows use Sr and Cr. A repair clones one rejected base candidate; let (β(b) 
+
+> r
+
+, E (b) 
+
+> r
+
+, ν (b) 
+
+> r
+
+, ρ (b) 
+
+> r
+
+)
+
+denote that clone’s current row before the repair. Repair rows use the evaluator predicates bSr (k) and bCr (k) defined below. Table .10 records the transforms; fields not named by a transform retain their current initial- or base-candidate values. Ordinary rows retain the local ranges above, while hard-support-bonded and solver-compatible rows use the explicitly shown whole-object ν and ρ fields. The target-impact candidate is emitted only when Π marks the interaction role as target, the supported action type spec-ifies an impact, and at least one non-residual target row satisfies Sr = 0 and Cr = 1 . Residual rows start from the same candidate quantile as other active rows but are skipped by the target-impact softening rule. The solver-compatible and hard-support-bonded candidates require at least one row with 
+
+Sr = 1 and another with Sr = 0 , C r = 1 . Solver-compatible assigns the uniquely defined βcoh  
+
+> g
+
+to every row and disables both projection and interface bonding. Active rows com-prise all non-residual rows plus residual rows with assigned Gaussians. The initial order is posterior MAP, applicable target-impact, applicable hard-support bonded, support-stiff, solver-compatible, rigid-support, soft, stiff, uncertainty sweep, and alternative material; the first six applicable candidates are retained. Every retained candidate contains every active row. “Rigid-support” and “Repair: rigid support” are serial-ized candidate names retained to match the released artifacts; both instantiate the support-shape projection. Deterministic screening diagnostics map support failure to the support re-pairs, spread or flattening to the cohesion repairs, numerical failure to solver stability, and an otherwise low score to role balancing. At most three unique repairs are emitted in a repair round. 
+
+Gaussian and Filled-Particle Initialization 
+
+The first NG particles are initialized at the normalized Gaus-sian means and retain the corresponding Gaussian indices. Additional particles provide interior support for MPM. Fill-ing is performed within an object-scoped region, so each added particle first receives a source-object identity and only then searches for its nearest Gaussian among that object’s Gaussians, as formalized by Equations (5)–(6) in the main paper. This ordering prevents a filled particle near an object boundary from inheriting the row of a different object. The source Gaussian transfers the persistent object–part row, and the selected candidate row supplies the constitutive branch and continuous coefficients. Each particle stores its initial position and rest volume 
+
+V 0 
+
+> q
+
+. Candidate-specific mass is formed as M (c) 
+
+> q
+
+= ρ(c) 
+
+> q
+
+V 0 
+
+> q
+
+;therefore candidate changes affect material state without changing the shared particle geometry. Gaussian-associated particles are transported back to dynamic 3DGS primitives for rendering, whereas filled particles contribute mass, stress, and momentum during simulation but are not rendered directly. Residual rows ensure that every associated or filled particle receives a valid candidate record. 
+
+Heterogeneous Step-Size Rule 
+
+Let RΘ contain the selected part rows together with the auxiliary whole-object row (βg , E g , ν g , ρ g ) defined above (or its stated fixed fallback), and let ∆t0 denote the base integration step. For each a ∈ RΘ, the compiler forms the elastic wave-speed proxy 
+
+Ga = Ea
+
+2(1 + νa) ,λa = Eaνa
+
+(1 + νa)(1 − 2νa) ,ca =
+
+s
+
+λa + 2 Ga
+
+ρa
+
+. (.23) Let cmax = max a∈RΘ ca, and let cref be computed from the nominal tuple (E, ν, ρ ) = (5 ×10 6, 0.35 , 2500) . With the fixed wave-speed scaling coefficient κCFL = 0 .7, the target integration step is 
+
+∆ttarget =
+
+∆t0, cmax ≤ κCFL cref ,κCFL ∆t0 cref /c max , cmax > κ CFL cref .
+
+(.24) The implementation converts this target into a ceiling-rounded number of substeps and then applies the configured minimum-step and maximum-substep caps. This CFL-inspired wave-speed scaling is the implemented substep-selection heuristic used consistently across candidates. 
+
+Structure-Preserving Projection 
+
+The main paper gives the complete implemented post-step update. Applied after each output-frame MPM update and before Gaussian transport, the operator acts on support-like rows to reduce local deformation and suppress burr-like rendering artifacts. The optional interface-retention update defined below follows it. Candidate Eligible row Final solver row/action Posterior all β = β0; (ξE , ξ ν ) = (0 .50 , 0.50) 
+
+Soft / stiff all β = β0; (ξE , ξ ν ) = (0 .25 , 0.75) / (0 .75 , 0.50) 
+
+Uncertainty sweep all selected weakest-confidence row uses (0 .15 , 0.75) ; others use (0 .50 , 0.75) 
+
+Alternative material r = r† use msec  
+
+> r
+
+; use its defaults only when msec 
+
+> r
+
+̸ = mr ;apply the ordinary physical and solver clamps Target-impact target row with Sr = 1 
+
+start from (ξE , ξ ν ) = (0 .50 , 0.50) ; β = Metal , E = 10 7;
+
+ν = clip( ν0; 0 .05 , 0.35) , ρ = max( ρ0, 1000) ;disable projection and bonding Target-impact target row with Sr =0, C r = 1 
+
+start from (0 .50 , 0.50) ;
+
+E = clip( E0; 2 ×10 4, 7.5×10 4);
+
+β = β0 if β0 ∈ { Foam , Plasticine , Jelly }, else Foam; 
+
+ν = clip( ν0; 0 .2, 0.4) ; ρ = min(450 , max(300 , ρ 0)) 
+
+Target-impact target row with Sr =
+
+Cr = 0 
+
+retain the posterior-median row and disable projection and bonding Support-stiff Sr = 1 β = Metal , E = 10 7; ν = min( ν0, 0.35) ,
+
+ρ = max( ρ0, 1000) ; no projection Hard-support bonded Sr = 1 β = Metal , (E, ν, ρ ) = (10 7, 0.35 , 2500) ; ηr = 0 .85 and enable interface retention Hard-support bonded Sr = 0 β = Plasticine , E = max( E0, ω r Eg );
+
+ν = clip( νg ; 0 .2, 0.485) , ρ = ρg
+
+Solver-compatible all β = βcoh  
+
+> g
+
+; E = clip( ωr Eg ; 0 .85 Eg , 1.7Eg );
+
+ν = clip( νg ; 0 .2, 0.485) , ρ = ρg
+
+Rigid-support all start every row from (ξE , ξ ν ) = (0 .25 , 0.75) ;for Sr = 1 , retain β and current ρ, set E = 10 7, ηr = 1 
+
+Repair: support stiffness bSr = 1 β = Metal , E = 10 7, ν = min( ν(b), 0.35) , ρ = max( ρ(b), 1000) 
+
+Repair: rigid support bSr = 1 support-stiffness repair plus ηr = 1 
+
+Repair: elastic cohesion bSr = 1 apply the support-stiffness repair Repair: elastic cohesion bSr = 0 , bCr = 1 β = Jelly , E = max( E(b), 5×10 5);
+
+ν = clip( ν(b); 0 .2, 0.42) , ρ = max( ρ(b), 500) 
+
+Repair: higher cohesion bSr = 1 apply the support-stiffness repair Repair: higher cohesion bSr = 0 , bCr = 1 retain β(b), ν (b); E = max( E(b), 5×10 5), ρ = max( ρ(b), 500) 
+
+Repair: solver stability all retain β(b), E (b); ν = min( ν(b), 0.40) , ρ = max( ρ(b), 300) 
+
+Repair: role balanced role-dependent bSr = 1 uses the support repair; bSr = 0 , bCr = 1 with 
+
+β(b) ∈ { Foam , Plasticine } uses elastic-cohesion repair; others unchanged 
+
+Table .10: Implemented material-candidate transforms. clip( x; l, u ) = min(max( x, l ), u ).
+
+# Solver-Aware Skills and Executable Screening 
+
+Supported Scene Actions 
+
+The scene plan represents object roles, action-source/target identities, and the operations in Table .11. The determinis-tic compiler canonicalizes directions, bounds magnitudes, validates targets, instantiates the actions over explicit spatial regions and intervals, and combines them with the gravity and floor/collider entries supplied by the fixed run specification. 
+
+Candidate Budget and Execution Records 
+
+Under the complete Problem Setup contract—motion prompt, four calibrated RGB views and cameras, their aligned static 
+
+G0, and prescribed output cameras—the reported evalua-tion configuration combines scene-agent-proposed object– part rows and a deterministically validated plan, Qwen3.7-Plus material evidence, and a crop-conditioned feed-forward physical-property distribution for every semantic part. After the Material Reasoning Agent returns row-wise evidence posteriors, the Object-Part Scene Agent invokes candidate construction, retains at most six initial candidates, and controls at most three candidate–execute–observe rounds. Each repair round produces at most three new candidate IDs, and fixed gate/rank rules use acceptance threshold 0.72 . The artifact au-dit requires a complete, decodable T -frame sequence; multi-object rollouts use configurations with interface bonding disabled. Hard-part structure preservation remains candidate-controlled. Each retained artifact contains the object–part records, masks, Gaussian identities, evidence records, com-plete scene-candidate configurations, execution logs, scores, selected table, runtime, and final flags. Round 0 evaluates the retained initial candidates; rounds 1 and 2, when reached, evaluate repairs of the current base. Candidates accumulate across rounds, and each candidate ID is evaluated once. At each round, gate-admitted candidates are ranked by Qexec over the accumulated set, with first appearance in the fixed candidate order breaking ties. If the admitted set is nonempty, the highest-ranked candidate is submitted to the Object-Part Scene Agent for final artifact audit: a successful audit returns that rollout, whereas a failed audit terminates the run with failure, exactly as in Algorithm 1. Only when the admitted set is empty and another round Action Implemented operation and spatial scope           
+
+> translation Enforced constant velocity on the selected object or particle region.
+> top_press Enforced downward velocity on the selected target’s top slab.
+> radial_ spread Outward horizontal velocity blend plus a bounded position increment on selected de-formable particles.
+> vertical_ compress Position blend toward a reduced vertical ex-tent, with the induced velocity capped, on the selected deformable region.
+> side_ compress Inward position and velocity blend on the contact-facing slab of the selected target.
+> drag_pair Enforced puller velocity; optional serialized flags add interface or whole-target follow ve-locities.
+> scale Opposing enforced velocities on two slabs of one object for compression or stretching.
+> impulse A short particle-force impulse, capped at four base substeps.
+> torque Bounded tangential particle-velocity field about the selected axis.
+> support_ hold Zero-velocity boundary condition on an eligi-ble support region.
+
+Table .11: Supported action vocabulary and its implemented solver operation. “Enforced velocity” denotes a bounded particle boundary condition over the action interval; position fields blend the current state toward a locally constructed deformation target. The serialized torque token denotes a rotation request implemented by a tangential velocity field, rather than a directly applied mechanical moment. remains does the current highest-ranked executed candidate supply the repair base. Repairs are emitted in this fixed order: support stiffness, rigid support, elastic cohesion, higher cohesion, solver stability, and role balancing; the first three remaining unique IDs are retained. An empty admitted set after the final round returns failure. 
+
+Initial-Neighborhood Interface Retention 
+
+For a support row r, the hard-support-bonded candidate uses support-shape weight ηr = 0 .85 and considers particles assigned to a valid compound row other than r. It computes each candidate’s initial distance to the nearest particle assigned to r, keeps distances no greater than db = 0 .045 in normalized solver coordinates, orders them by distance, and takes the first 26,000. For each retained particle, it stores δb, 0 
+
+> qr
+
+= x0 
+
+> q
+
+− ¯x0 
+
+> r
+
+.Each frame applies 
+
+xq ← (1 − ηb)xq + ηb( ¯ xr + δb, 0 
+
+> qr
+
+),
+
+vq ← (1 − ζb)vq + ζb ¯vr .
+
+with ηb = ζb = 0 .95 . Here ηr controls the support-shape projection in the main paper, whereas the distinct weights 
+
+ηb and ζb control position and velocity retention at the se-lected support–part interface. This initial-neighborhood pro-jection preserves selected support–part interfaces during single-object rollouts. Multi-object evaluation uses configura-tions with interface bonding disabled, retaining object-scoped interaction through the MPM grid. 
+
+Validity Gate, Ranking, and Tie Rules 
+
+Let nproj (k) and nbond (k) be the numbers of rows in candi-date k using support-shape projection and interface bonding, respectively. The implementation score Qexec used to rank rollout candidate k is 
+
+φ(k) = ( svid (k), ¯γk, s div (k), s role (k), s base (k),sρ(k), s solver (k)) T,
+
+w = (1 , 0.27 , 0.10 , 0.25 , 0.15 , 0.08 , 0.15) T,ℓ(k) = min(0 .12 , 0.025 nproj (k) + 0 .035 nbond (k)) ,Qexec (k) = wTφ(k) − ℓ(k). (.25) The video feature svid (k) is initialized to zero. A missing video subtracts 0.15 ; an existing video smaller than 4096 bytes subtracts 0.20 ; and an existing video of at least 4096 bytes adds 0.20 . These terms order executed candidates and repair bases. Independently of this score, the final artifact audit in Algorithm 1 requires the selected artifact to exist, decode successfully, and contain the complete T -frame se-quence, so no missing or incomplete video can be returned. When valid first/last foreground measurements exist, the score adds 0.12 , then subtracts 0.25 if foreground-box area grows above 2.0× (or 0.10 above 1.45 ×), 0.22 if height falls below 0.45 × while width exceeds 1.25 ×, and 0.08 
+
+if the dark-foreground ratio exceeds 0.18 . A nonzero pro-cess exit or a numerical/runtime-error token fails the va-lidity gate. Let Ract  
+
+> k
+
+be candidate k’s active-row set and 
+
+N part  
+
+> k
+
+= |R act  
+
+> k
+
+| > 0. Then ¯γk = ( N part  
+
+> k
+
+)−1 P
+
+> r∈R act
+> k
+
+γpart 
+
+> r
+
+averages Equation (.21), and sdiv (k) is the number of dis-tinct visual labels divided by N part  
+
+> k
+
+. Candidate construction rejects an empty part table before execution. For every initial candidate, including target-impact, sbase (k) = ¯ γk; a repair inherits this value from its base candidate. The serialized base-confidence term is inherited by repairs, while the part-confidence term summarizes aggregated part-level evidence. The role term uses a separate name-only lookup. A name containing head, blade, tip, plate, support, stand, tray, dish, shell, or frame receives 1 only when raw E ≥ 10 6 Pa and 
+
+β = Metal , and 0.35 otherwise. A name containing rubber, sole, tire, wheel, foam, or cushion receives 1 when raw 
+
+E ≤ 10 8 Pa and 0.5 otherwise. Every other row receives 0.7. The term srole (k) averages these values. The density term sρ(k) averages 0.35 below 250, 0.55 above 5000, and 1 otherwise. The evaluator uses separate frozen predicates bSr (k) and 
+
+bCr (k). A row satisfies bSr (k) = 1 when its name contains plate, dish, tray, bowl, base support, support, stand, holder, case, shell, or frame, or when its visual label is Wood, Metal, Glass, Ceramic, or Stone; it is zero otherwise. It satisfies 
+
+bCr (k) = 1 only when bSr (k) = 0 , its branch is non-granular, and either the concatenation of its stored name, physics-group token, role, and visual label contains body, base, core, filling, cream, frosting, icing, soft, cushion, pad, foam, sponge, rubber, gel, fruit, or food, or its branch is Foam, Plasticine, or Jelly and its visual label is not one of the five rigid labels above. It is zero otherwise. For rows with bCr (k) = 1 , the first matching rule gives the solver score. A Plasticine visual label whose name contains clay, putty, plasticine, or dough receives 1 for Plasticine and 0.7 otherwise. The remaining rows receive 1 for Jelly, 0.55 for Foam or Plasticine, and 0.7 otherwise. The term ssolver (k)
+
+averages this lookup over bCr (k) = 1 rows and equals 0.7 when that set is empty. Candidate admission requires a resolved scene plan; suc-cessful process termination; no numerical/runtime-error to-ken; foreground-box area growth no greater than 2.0×; and no simultaneous height ratio below 0.45 × and width ratio above 1.25 ×. In addition, when the set {r : bSr (k) = 1 } is nonempty, every such support row must have E(k) 
+
+> r
+
+≥ 10 7 Pa or the candidate must use the solver-compatible regularization transform. This support condition is vacuously satisfied when no support row exists. Candidates satisfying these gates and 
+
+Qexec (k) ≥ τ , with τ = 0 .72 , are ordered by the same score and then undergo the mandatory artifact audit above. Action references are validated by the scene-plan compiler before rollout. The fixed implementation score provides a consistent criterion for candidate admission and ordering. 
+
+# Evaluation Protocol 
+
+CLIP Similarity and Aggregation 
+
+Let ϕI and ϕT be the frozen CLIP image and text encoders, 
+
+Ic,t frame t of case c, and yc its complete motion prompt. Frame similarity and the case score are 
+
+sc,t = ϕI (Ic,t )TϕT (yc)
+
+∥ϕI (Ic,t )∥2 ∥ϕT (yc)∥2
+
+,
+
+CLIP sim (c) = 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+sc,t . (.26) For any reported set, scores are first computed per case and then averaged over its cases. A multi-part case contributes to every material-profile set represented by one of its active semantic rows; the six-profile average is the unweighted mean of those six set scores. Multi-object results are averaged once over the multi-object set without a material subdivision. 
+
+Reference-Video Motion and Deformation Metrics 
+
+The evaluation manifest fixes one synthetic MPM reference video for every case. Each reference is generated once from a preregistered, hand-authored MPM configuration using the same static 3DGS, initial pose, camera, frame count, frame time, renderer, and interaction as the compared outputs; its parameters are not changed after method videos have been scored. References are accessed only by the evaluation code—not by material reasoning, candidate construction, screening, or repair. The reported units for all three diagnostics equal 100 times the corresponding raw RMSE. Let (xt,i , y t,i )
+
+and (bxt,i , byt,i ) denote reference and predicted CoTracker3 coordinates for point i at frame t. With frame width W ,height H, and J the point–frame pairs visible in both videos, reported trajectory nRMSE is 
+
+Etraj = 100 
+
+"
+
+1
+
+|J | 
+
+X
+
+> (t,i )∈J
+
+(bxt,i − xt,i )2
+
+W 2
+
++ (byt,i − yt,i )2
+
+H2
+
+!# 1/2
+
+.
+
+(.27) The reference is tracked once from a fixed 16 × 16 query grid restricted to its eroded frame-0 target mask, and every method reuses those same frame-0 queries. A pair belongs to J only when the same initialized point is visible, remains inside the registered target mask, and has a finite track in both videos at that frame. Frames with fewer than 16 such points are excluded. Restricting the sum to jointly visible pairs prevents a missing measurement from being treated as zero displacement. The metric record is valid only when at least one frame remains; otherwise the output is recorded as invalid rather than assigned zero error. The target masks are evaluation-only visible-target silhou-ettes rendered with all scene Gaussians retained as occluders. For target-mask areas At and bAt, we compute projected-area log-RMSE as 
+
+Earea = 100 
+
+"
+
+1
+
+T
+
+> T
+
+X
+
+> t=1
+
+ log( bAt + 1) − log( At + 1) 2
+
+#1/2
+
+.
+
+(.28) The logarithm measures relative area change; the +1 term keeps an associated empty mask finite, while failed target association yields an invalid record. For local deformation, each frame-0 tracked point uses its eight nearest tracked neighbors. A least-squares local 2D deformation gradient Ft,i maps the initial neighborhood offsets to their offsets at frame t, giving Green–Lagrange strain 
+
+Et,i = 12
+
+ F T
+
+> t,i
+
+Ft,i − I2
+
+. (.29) The reference-defined eight-neighbor graph is reused for every method. The set K contains only point–frame pairs for which the center and at least four of its eight stored neighbors are jointly visible with finite tracks and the regularized local least-squares system is nondegenerate. For this jointly valid set, local-strain RMSE is 
+
+Estrain = 100 
+
+ 1
+
+|K| 
+
+X
+
+> (t,i )∈K
+
+∥ bEt,i − Et,i ∥2
+
+> F
+
+
+
+> 1/2
+
+. (.30) This removes rigid translation while retaining local stretch, compression, and shear discrepancies. The local-strain record is valid only when |K| > 0; an empty valid-neighborhood set marks the output invalid rather than assigning it zero. Invalid runs remain in the evaluation registry as failures rather than receiving an artificial zero error. The finalizer aborts rather than dropping or imputing any required invalid record; the reported reference-metric tables were finalized only after their registries contained zero invalid records. Multi-part results are averaged within each applicable profile and then macro-averaged over the six profiles. For multi-object motion, registered objects are evaluated separately, averaged with equal weight within a scene, and then averaged across scenes. Together, the three diagnostics quantify image-plane trajectory, projected deformation scale, and local strain relative to synchronized reference videos. 
+
+User Preference Evaluation 
+
+Study design. The reported UPR aggregates responses from 20 researchers with Computer Vision or Computer Graph-ics expertise. The main comparison uses a Five-Alternative Forced-Choice (5AFC) study: each trial presents synchro-nized outputs from OmniPhysGS, PhysSplat, DreamPhysics, PhysGM, and PhysMAS. The ablation uses a separate Three-Alternative Forced-Choice (3AFC) study containing the two ablated variants and the full model. Method names are hidden, and the videos are shown in randomized positions. For every case, a respondent selects exactly one video that best matches the motion prompt while exhibiting physically plausible and visually natural dynamics. Every case remains in the study through an explicit output-status card where applicable. The 5AFC and 3AFC protocols are reported separately according to their respective choice sets and chance levels. 
+
+Aggregation. Let S be a reported set of evaluation cases, 
+
+Rc the number of valid responses for case c, and Jch the method selected by respondent h for that case. The per-case preference share and the reported User Preference Rate are 
+
+uc(m) = 100 
+
+RcRcX
+
+> h=1
+
+1[Jch = m],
+
+UPR S (m) = 1
+
+|S| 
+
+X
+
+> c∈S
+
+uc(m). (.31) Thus every case receives equal weight even if valid-response counts differ. For the multi-object evaluation, S contains all evaluated multi-object cases. For a material-profile column, S
+
+contains every evaluated multi-part case carrying that profile; a case with several profiles contributes independently to each applicable set. The six-profile average is the unweighted mean of the six profile-level UPR values. UPR reports human pref-erence for prompt consistency, physically plausible motion, and visual naturalness under the stated choice protocol. 
+
+# Limitations and Future Work 
+
+Cross-View Grounding and Scene Inputs. Future work can strengthen persistent object–part assignment through occlusion-aware cross-view association, confidence-calibrated residual handling, and additional observations. 
+
+Constitutive and Interaction Coverage. New material branches, joints, and topology-aware updates can extend the six-profile interface to a broader range of part behaviors and interactions. 
+
+Spatial and Temporal Resolution. Adaptive particle/grid resolution and temporal planning can support finer interac-tions and longer action schedules while preserving the current agent–compiler interface. 
+
+# Additional Results 
+
+Figures 6–11 present 42 additional PhysMAS rollouts. Each row shows five temporally ordered frames, covering heteroge-neous multi-part objects and multi-object scenes under varied motion configurations. Figure 6: Additional results (I). Figure 7: Additional results (II). Figure 8: Additional results (III). Figure 9: Additional results (IV). Figure 10: Additional results (V). Figure 11: Additional results (VI).
