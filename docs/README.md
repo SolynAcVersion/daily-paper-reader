@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-09</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-10</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 10 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 2 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>3</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>7</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>0</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-09 21:35:48 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-10 21:42:04 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日聚焦视频生成与运动可控性研究，共读10篇论文，精读2篇高潜工作。最值得关注是《PhysFlow》以物理感知光流实现运动可控生成，以及《Temporal State Transport》诊断并校正生成中的光谱失衡问题。若感兴趣可延伸速读《Multi-Grid Post-Training》与《CineCrew》，覆盖长镜头叙事一致性方向。</p>
+<p>今日精读2篇均分8.0的论文，聚焦微短剧理解与真实世界形变物体物理建模。最值得看的是微短剧理解新基准与结构感知图对齐方法，以及PhysReal用混合本构建模学习真实物理。普通读者可关注AI理解短剧叙事和机器人操作柔软物体的进展。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -71,12 +71,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">3 篇</strong>
+    <strong class="dpr-home-dashboard-count">2 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="PhysFlow: Physics-Aware Optical Flow for Motion Controllable Video Generation">PhysFlow: Physics-Aware Optical Flow for Motion Controllable Video Generation</span></li><li><span class="dpr-home-dashboard-paper-title" title="Temporal State Transport in Video Generation: Diagnosing and Correcting Spectral Imbalance">Temporal State Transport in Video Generation: Diagnosing and Correcting Spectral Imbalance</span></li><li><span class="dpr-home-dashboard-paper-title" title="PhysMAS: Physics-Grounded Multi-Agent Synthesis of Compositional 4D Gaussians">PhysMAS: Physics-Grounded Multi-Agent Synthesis of Compositional 4D Gaussians</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Beyond Sparse Rewards: A New Benchmark and Structure-Aware Graph Alignment for Micro-Drama Understanding">Beyond Sparse Rewards: A New Benchmark and Structure-Aware Graph Alignment for Micro-Drama Understanding</span></li><li><span class="dpr-home-dashboard-paper-title" title="PhysReal: Learning Real-World Deformable Object Physics via Hybrid Constitutive Modeling">PhysReal: Learning Real-World Deformable Object Physics via Hybrid Constitutive Modeling</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>3</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">manga-drama <strong>1</strong></span><span class="dpr-home-dashboard-tag">phys-video <strong>1</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -84,12 +84,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">7 篇</strong>
+    <strong class="dpr-home-dashboard-count">0 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Multi-Grid Post-Training for Long-Form Multi-Shot Video Generation">Multi-Grid Post-Training for Long-Form Multi-Shot Video Generation</span></li><li><span class="dpr-home-dashboard-paper-title" title="Better Call CineCrew: Consistent Ultra-Long Narrative-to-Film Generation">Better Call CineCrew: Consistent Ultra-Long Narrative-to-Film Generation</span></li><li><span class="dpr-home-dashboard-paper-title" title="VirSqueezer: Generating Realistic Deformations and Squeezing Dynamics in VR from Fine-Grained Squeezing Controls">VirSqueezer: Generating Realistic Deformations and Squeezing Dynamics in VR from Fine-Grained Squeezing Controls</span></li></ul>
+<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">manga-drama <strong>4</strong></span><span class="dpr-home-dashboard-tag">phys-video <strong>3</strong></span></div>
+
 </section>
 </div>
 

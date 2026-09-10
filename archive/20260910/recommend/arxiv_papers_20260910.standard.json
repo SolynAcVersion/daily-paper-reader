@@ -1,0 +1,101 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-10T21:40:12.641021+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 2,
+    "deep_cap": 8,
+    "deep_selected": 2,
+    "quick_candidates": 0,
+    "quick_skim_target": 13,
+    "quick_selected": 0
+  },
+  "deep_dive": [
+    {
+      "id": "2609.07107v1",
+      "source": "arxiv",
+      "title": "Beyond Sparse Rewards: A New Benchmark and Structure-Aware Graph Alignment for Micro-Drama Understanding",
+      "abstract": "Micro-dramas, characterized by ultra-short durations and hyper-dense storylines, pose unique challenges for video understanding that conventional benchmarks fail to address. To bridge this gap, we introduce M-Drama, the first large-scale bilingual benchmark for micro-drama comprehension, featuring over 35K instances across 9,138 clips. Furthermore, while reinforcement learning can enhance VLMs on complex narratives, existing reward metrics often suffer from sparse and superficial signals, failing to capture intricate character identities and temporal structures. We propose SAGA (Structure-Aware Graph Alignment), a novel graph-matching reward function that models narratives as heterogeneous graphs. SAGA computes dense, rigorous rewards via decoupled semantic triplet and structural temporal matching. Extensive experiments on Qwen3-VL-8B-Instruct demonstrate that SAGA outperforms existing baselines, delivering substantial improvements in open-ended accuracy and summary quality, while maintaining competitive out-of-domain generalization. Code is available at https://github.com/qyx1121/MDrama_SAGA.",
+      "authors": [
+        "Yixin Qin",
+        "Shi-Zhe Chen",
+        "Zhiqi Yu",
+        "Siyuan Cheng",
+        "Tao Cheng",
+        "Jinwen Luo",
+        "Zheng Wei"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-07T06:48:17+00:00",
+      "link": "https://arxiv.org/pdf/2609.07107v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "first large-scale bilingual micro-drama comprehension benchmark with graph-matching reward",
+      "llm_evidence_cn": "首个大规模双语微短剧理解基准与图匹配奖励",
+      "llm_evidence": "首个大规模双语微短剧理解基准与图匹配奖励",
+      "canonical_evidence": "首个大规模双语微短剧理解基准与图匹配奖励",
+      "llm_tldr_en": "Addressing micro-drama understanding, this paper introduces M-Drama, the first large-scale bilingual micro-drama benchmark with 35K+ instances over 9,138 clips, plus SAGA, a graph-matching reward modeling narratives as heterogeneous graphs for dense RL signals.",
+      "llm_tldr_cn": "微短剧以超短时长和高度密集的剧情带来独特理解挑战，传统基准难以应对。论文提出首个大规模双语微短剧理解基准M-Drama，涵盖逾3.5万实例与9138个片段，并针对强化学习奖励稀疏问题提出结构感知图对齐奖励SAGA，将叙事建模为异构图以产生稠密信号。结果证明该基准与奖励能更准确捕捉角色身份与时间结构。为短剧内容的理解与生成评测奠定基础。",
+      "llm_tldr": "微短剧以超短时长和高度密集的剧情带来独特理解挑战，传统基准难以应对。论文提出首个大规模双语微短剧理解基准M-Drama，涵盖逾3.5万实例与9138个片段，并针对强化学习奖励稀疏问题提出结构感知图对齐奖励SAGA，将叙事建模为异构图以产生稠密信号。结果证明该基准与奖励能更准确捕捉角色身份与时间结构。为短剧内容的理解与生成评测奠定基础。",
+      "llm_tags": [
+        "query:manga-drama:composite"
+      ],
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation.",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.07532v1",
+      "source": "arxiv",
+      "title": "PhysReal: Learning Real-World Deformable Object Physics via Hybrid Constitutive Modeling",
+      "abstract": "Learning physically plausible dynamics from visual observations is essential for interactive world models and embodied agents. However, modeling real-world deformable objects remains challenging because their dynamics often arise from complex, spatially heterogeneous material responses. To address this challenge, we propose PhysReal, a video-driven framework for learning and simulating the underlying physics of real deformable objects. PhysReal integrates a spatially varying hybrid expert-neural constitutive model with a differentiable MPM simulator and 3DGS renderer. Analytical expert models provide interpretable physical priors, while neural constitutive residuals capture material responses beyond predefined formulations. Spatially distributed patches parameterize the constitutive field, enabling a continuous representation of local material variations. To organize the identification of this model from sparse visual observations, we adopt a progressive curriculum that sequentially optimizes global material properties, spatially varying local parameters, and neural constitutive residuals, together with complementary motion and mask supervision. Extensive experiments on diverse deformable-object interactions demonstrate that PhysReal achieves superior performance in dynamic reconstruction and future-state prediction, while showing strong potential for downstream robotic applications.",
+      "authors": [
+        "Yinan Deng",
+        "Jianqiao Song",
+        "Yisi Zhang",
+        "Yuhan Wang",
+        "Jiahui Wang",
+        "Yufeng Yue"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-07T14:11:57+00:00",
+      "link": "https://arxiv.org/pdf/2609.07532v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "learns physically plausible dynamics of real deformable objects from video",
+      "llm_evidence_cn": "从视频学习真实可变形物体的物理合理动力学",
+      "llm_evidence": "从视频学习真实可变形物体的物理合理动力学",
+      "canonical_evidence": "从视频学习真实可变形物体的物理合理动力学",
+      "llm_tldr_en": "PhysReal learns physically plausible dynamics of real deformable objects from video by combining hybrid expert-neural constitutive models with a differentiable MPM simulator and 3DGS renderer, capturing heterogeneous material responses beyond predefined formulations.",
+      "llm_tldr_cn": "现有方法难以从视觉观测中建模真实可变形物体复杂且空间异质的材料响应。本文提出 PhysReal，将空间变化的专家-神经混合本构模型与可微分 MPM 模拟器及 3DGS 渲染器结合，用解析专家模型提供可解释先验、用神经残差捕捉超出预定义公式的响应。该框架能学习并模拟真实物体的物理动力学，为交互式世界模型和具身智能体提供物理合理的仿真基础。",
+      "llm_tldr": "现有方法难以从视觉观测中建模真实可变形物体复杂且空间异质的材料响应。本文提出 PhysReal，将空间变化的专家-神经混合本构模型与可微分 MPM 模拟器及 3DGS 渲染器结合，用解析专家模型提供可解释先验、用神经残差捕捉超出预定义公式的响应。该框架能学习并模拟真实物体的物理动力学，为交互式世界模型和具身智能体提供物理合理的仿真基础。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": []
+}
