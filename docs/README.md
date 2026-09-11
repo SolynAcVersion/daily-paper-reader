@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-10</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-11</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 2 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 5 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>0</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>4</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-10 21:42:04 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-11 21:56:21 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日精读2篇均分8.0的论文，聚焦微短剧理解与真实世界形变物体物理建模。最值得看的是微短剧理解新基准与结构感知图对齐方法，以及PhysReal用混合本构建模学习真实物理。普通读者可关注AI理解短剧叙事和机器人操作柔软物体的进展。</p>
+<p>今日精读1篇、速读4篇，共5篇论文，聚焦视频生成与理解评测。最值得看的是9.0分的EgoGenEval，它跳出画质评价、转向自我运动下的物理一致性，另有微短剧理解基准与视频生成模型&quot;边想边看&quot;推理评测可参考。普通读者可优先了解EgoGenEval的评测思路，再按兴趣浏览速读论文。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -71,12 +71,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">2 篇</strong>
+    <strong class="dpr-home-dashboard-count">1 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Beyond Sparse Rewards: A New Benchmark and Structure-Aware Graph Alignment for Micro-Drama Understanding">Beyond Sparse Rewards: A New Benchmark and Structure-Aware Graph Alignment for Micro-Drama Understanding</span></li><li><span class="dpr-home-dashboard-paper-title" title="PhysReal: Learning Real-World Deformable Object Physics via Hybrid Constitutive Modeling">PhysReal: Learning Real-World Deformable Object Physics via Hybrid Constitutive Modeling</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Beyond Visual Quality: Evaluating Physical Consistency under Ego-Motion with EgoGenEval">Beyond Visual Quality: Evaluating Physical Consistency under Ego-Motion with EgoGenEval</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">manga-drama <strong>1</strong></span><span class="dpr-home-dashboard-tag">phys-video <strong>1</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>1</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -84,12 +84,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">0 篇</strong>
+    <strong class="dpr-home-dashboard-count">4 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Beyond Sparse Rewards: A New Benchmark and Structure-Aware Graph Alignment for Micro-Drama Understanding">Beyond Sparse Rewards: A New Benchmark and Structure-Aware Graph Alignment for Micro-Drama Understanding</span></li><li><span class="dpr-home-dashboard-paper-title" title="From Evaluation to Enhancement: Benchmarking and Improving Think-with-Video Reasoning for Video Generative Models">From Evaluation to Enhancement: Benchmarking and Improving Think-with-Video Reasoning for Video Generative Models</span></li><li><span class="dpr-home-dashboard-paper-title" title="MotionBlind: Probing the Illusion of Motion Understanding in Video-LLMs">MotionBlind: Probing the Illusion of Motion Understanding in Video-LLMs</span></li></ul>
   </div>
-
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">manga-drama <strong>2</strong></span><span class="dpr-home-dashboard-tag">phys-video <strong>2</strong></span></div>
 </section>
 </div>
 

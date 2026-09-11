@@ -1,0 +1,89 @@
+{
+  "date": "20260911",
+  "date_label": "",
+  "generated_at": "2026-09-11 21:56:21 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.11172v1",
+      "route": "202609/11/2609.11172v1-beyond-visual-quality-evaluating-physical-consistency-under-ego-motion-with-egogeneval",
+      "title": "Beyond Visual Quality: Evaluating Physical Consistency under Ego-Motion with EgoGenEval",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "评测视觉生成器自我运动下物理一致性的基准",
+      "first_seen_at": "2026-09-11 21:56:21 UTC",
+      "updated_at": "2026-09-11 21:56:21 UTC"
+    },
+    {
+      "paper_id": "2609.07107v1",
+      "route": "202609/11/2609.07107v1-beyond-sparse-rewards-a-new-benchmark-and-structure-aware-graph-alignment-for-micro-drama-understanding",
+      "title": "Beyond Sparse Rewards: A New Benchmark and Structure-Aware Graph Alignment for Micro-Drama Understanding",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "微短剧理解的基准与奖励方法",
+      "first_seen_at": "2026-09-11 21:56:21 UTC",
+      "updated_at": "2026-09-11 21:56:21 UTC"
+    },
+    {
+      "paper_id": "2609.11242v1",
+      "route": "202609/11/2609.11242v1-from-evaluation-to-enhancement-benchmarking-and-improving-think-with-video-reasoning-for-video-generative-models",
+      "title": "From Evaluation to Enhancement: Benchmarking and Improving Think-with-Video Reasoning for Video Generative Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "评估视频模型是否遵循物理规律的基准",
+      "first_seen_at": "2026-09-11 21:56:21 UTC",
+      "updated_at": "2026-09-11 21:56:21 UTC"
+    },
+    {
+      "paper_id": "2609.09528v1",
+      "route": "202609/11/2609.09528v1-motionblind-probing-the-illusion-of-motion-understanding-in-video-llms",
+      "title": "MotionBlind: Probing the Illusion of Motion Understanding in Video-LLMs",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向物理基础运动理解的对比基准",
+      "first_seen_at": "2026-09-11 21:56:21 UTC",
+      "updated_at": "2026-09-11 21:56:21 UTC"
+    },
+    {
+      "paper_id": "2609.10943v1",
+      "route": "202609/11/2609.10943v1-campilot-a-multi-agent-cinematic-assistant-for-camera-controlled-movie-generation",
+      "title": "CamPilot: A Multi-Agent Cinematic Assistant for Camera-Controlled Movie Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向电影生成的多智能体相机控制框架",
+      "first_seen_at": "2026-09-11 21:56:21 UTC",
+      "updated_at": "2026-09-11 21:56:21 UTC"
+    }
+  ]
+}

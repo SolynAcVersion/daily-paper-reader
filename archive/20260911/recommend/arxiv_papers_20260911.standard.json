@@ -1,0 +1,240 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-11T21:53:03.426831+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 1,
+    "deep_cap": 8,
+    "deep_selected": 1,
+    "quick_candidates": 4,
+    "quick_skim_target": 13,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2609.11172v1",
+      "source": "arxiv",
+      "title": "Beyond Visual Quality: Evaluating Physical Consistency under Ego-Motion with EgoGenEval",
+      "abstract": "Recent visual generators produce high-fidelity images yet often violate physical consistency under ego-motion, limiting their use for spatial reasoning and embodied planning. Existing benchmarks largely focus on isolated images or single-step quality, leaving this challenge underexplored. We introduce EgoGenEval, a geometry-grounded, pose-free benchmark designed to evaluate the physical consistency of visual generators under ego-motion, and organize our study into two parts. (1) EgoGenEval contains 1,400 cases and 2,360 target views spanning single-step and multi-step ego-motion. It separately measures Camera Motion Grounding (CMG) and Scene State Preservation (SSP), with both metrics validated against blinded human judgments. Evaluating 16 pose-free generators together with two pose-conditioned references reveals that current models struggle to execute camera motion while maintaining scene state, and that no system performs well on both axes at once. (2) To examine whether benchmark-derived data can improve these capabilities, we build EgoGen-Train from the same geometry-grounded pipeline and run controlled SFT studies. These show that pairwise supervision does not reliably improve camera-motion grounding and scene-state preservation together: even at the full training pool and the longest budget, scene preservation gains a fraction of what camera motion does. This points to the pairwise teacher-forced objective itself as the binding constraint, motivating a trajectory-centric paradigm that couples self-conditioned rollouts with explicit pose and visibility supervision.",
+      "authors": [
+        "Yilin Long",
+        "Chenming Zhu",
+        "Zitang Gou",
+        "Jingli Lin",
+        "Tai Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-10T07:19:50+00:00",
+      "link": "https://arxiv.org/pdf/2609.11172v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "benchmark evaluating physical consistency of visual generators under ego-motion",
+      "llm_evidence_cn": "评测视觉生成器自我运动下物理一致性的基准",
+      "llm_evidence": "评测视觉生成器自我运动下物理一致性的基准",
+      "canonical_evidence": "评测视觉生成器自我运动下物理一致性的基准",
+      "llm_tldr_en": "EgoGenEval is a geometry-grounded, pose-free benchmark that evaluates physical consistency of visual generators under ego-motion, with 1400 cases measuring camera motion grounding and scene state preservation.",
+      "llm_tldr_cn": "该论文指出现有视觉生成器虽能产出高保真画面，但在自我运动下常违反物理一致性，限制其用于空间推理与具身规划，而现有基准多聚焦孤立图像或单步质量。为此提出EgoGenEval，一个基于几何、无需位姿的基准，包含1400个案例与2360个目标视角，覆盖单步与多步自我运动，并分别度量相机运动定位与场景状态保持，两个指标均经盲评人类判断验证。该基准为评测生成视频的物理一致性提供了新的标准化工具。",
+      "llm_tldr": "该论文指出现有视觉生成器虽能产出高保真画面，但在自我运动下常违反物理一致性，限制其用于空间推理与具身规划，而现有基准多聚焦孤立图像或单步质量。为此提出EgoGenEval，一个基于几何、无需位姿的基准，包含1400个案例与2360个目标视角，覆盖单步与多步自我运动，并分别度量相机运动定位与场景状态保持，两个指标均经盲评人类判断验证。该基准为评测生成视频的物理一致性提供了新的标准化工具。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.07107v1",
+      "source": "arxiv",
+      "title": "Beyond Sparse Rewards: A New Benchmark and Structure-Aware Graph Alignment for Micro-Drama Understanding",
+      "abstract": "Micro-dramas, characterized by ultra-short durations and hyper-dense storylines, pose unique challenges for video understanding that conventional benchmarks fail to address. To bridge this gap, we introduce M-Drama, the first large-scale bilingual benchmark for micro-drama comprehension, featuring over 35K instances across 9,138 clips. Furthermore, while reinforcement learning can enhance VLMs on complex narratives, existing reward metrics often suffer from sparse and superficial signals, failing to capture intricate character identities and temporal structures. We propose SAGA (Structure-Aware Graph Alignment), a novel graph-matching reward function that models narratives as heterogeneous graphs. SAGA computes dense, rigorous rewards via decoupled semantic triplet and structural temporal matching. Extensive experiments on Qwen3-VL-8B-Instruct demonstrate that SAGA outperforms existing baselines, delivering substantial improvements in open-ended accuracy and summary quality, while maintaining competitive out-of-domain generalization. Code is available at https://github.com/qyx1121/MDrama_SAGA.",
+      "authors": [
+        "Yixin Qin",
+        "Shi-Zhe Chen",
+        "Zhiqi Yu",
+        "Siyuan Cheng",
+        "Tao Cheng",
+        "Jinwen Luo",
+        "Zheng Wei"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-07T06:48:17+00:00",
+      "link": "https://arxiv.org/pdf/2609.07107v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "benchmark and reward for micro-drama understanding",
+      "llm_evidence_cn": "微短剧理解的基准与奖励方法",
+      "llm_evidence": "微短剧理解的基准与奖励方法",
+      "canonical_evidence": "微短剧理解的基准与奖励方法",
+      "llm_tldr_en": "The paper introduces M-Drama, a large-scale bilingual benchmark for micro-drama comprehension with 35K instances across 9,138 clips, and SAGA, a structure-aware graph-matching reward that models narratives as heterogeneous graphs for dense RL signals.",
+      "llm_tldr_cn": "微短剧时长短、情节密度高，传统视频理解基准难以覆盖，现有强化学习奖励信号稀疏且流于表面。作者构建了M-Drama，首个大规模双语微短剧理解基准，包含9138个片段、逾3.5万条实例。同时提出SAGA结构感知图对齐奖励，把叙事建模为异构图以计算稠密奖励。该工作为短剧内容理解与评估提供了基准和方法，契合短剧生成与理解主题。",
+      "llm_tldr": "微短剧时长短、情节密度高，传统视频理解基准难以覆盖，现有强化学习奖励信号稀疏且流于表面。作者构建了M-Drama，首个大规模双语微短剧理解基准，包含9138个片段、逾3.5万条实例。同时提出SAGA结构感知图对齐奖励，把叙事建模为异构图以计算稠密奖励。该工作为短剧内容理解与评估提供了基准和方法，契合短剧生成与理解主题。",
+      "llm_tags": [
+        "query:manga-drama:composite"
+      ],
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation.",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.09528v1",
+      "source": "arxiv",
+      "title": "MotionBlind: Probing the Illusion of Motion Understanding in Video-LLMs",
+      "abstract": "Video large language models (Video-LLMs) are increasingly used as the perceptual front end of world models, a role that assumes they can read motion: how fast something moves, which way it travels, how hard it is pushed. We show they cannot. A Video-LLM can watch two clips of the same person in the same room, name every object in both, and still fail to say which clip moves faster. We introduce MotionBlind, a contrastive benchmark of self-recorded video for physically grounded motion(speed, magnitude, and direction), the variables a world model must predict. Each instance is a pair of near-identical clips that differ only in motion. Each clip carries two complementary yes/no questions, giving four items per instance, and a model earns credit only if all four are correct. We report Instance Accuracy(IAcc), which has a 6.25% chance floor. Single-frame, appearance, and language-only shortcuts all collapse to it. MotionBlind complements the recent TimeBlind benchmark. We run a controlled study of six open and two frontier Video-LLMs, varying whether the video is present, whether frames are shown in the correct temporal order, and how frames are sampled (1 to 24 frames, four selection strategies). Open models sit near the 6.25% floor, and scale does not help. Removing the video drops every model to zero IAcc, and shuffling frames collapses IAcc to chance, so the task genuinely needs video in order. Neither more frames nor smarter frame selection closes the gap, because these change which frames are seen, not whether motion is read. Only Gemini3.1 Pro clears the benchmark overall, and even it fails on speed. A frontend that cannot tell two speeds of the same action apart is not yet a trustworthy source of supervision, reward, or evaluation for a world model.",
+      "authors": [
+        "Dhairya Bhatia",
+        "Bishoy Galoaa",
+        "Oliver Fritsche",
+        "Shahid Kamal",
+        "Muhammad Obaidullah Abdul Salam",
+        "Umer Saleem",
+        "Om Rastogi",
+        "Frania Felix Chettiar",
+        "Nesli Erdogmus",
+        "Sarah Ostadabbas"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-08T23:15:20+00:00",
+      "link": "https://arxiv.org/pdf/2609.09528v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "contrastive benchmark for physically grounded motion understanding",
+      "llm_evidence_cn": "面向物理基础运动理解的对比基准",
+      "llm_evidence": "面向物理基础运动理解的对比基准",
+      "canonical_evidence": "面向物理基础运动理解的对比基准",
+      "llm_tldr_en": "MotionBlind is a contrastive benchmark of self-recorded videos probing whether Video-LLMs can judge physically grounded motion speed, magnitude and direction, showing they largely cannot.",
+      "llm_tldr_cn": "视频大模型常被当作世界模型的感知前端，默认其能理解运动的速度、方向与力度，但作者证明它们并不能。为此提出MotionBlind，一个基于自录制视频的对比基准，每例由仅运动不同的近似成对片段组成，并配以互补的问答项，模型需正确判断运动速度、幅度与方向才能得分。该基准聚焦物理基础的运动理解评测，与衡量生成视频物理正确性的评测需求相关，但对象是视频理解而非生成。",
+      "llm_tldr": "视频大模型常被当作世界模型的感知前端，默认其能理解运动的速度、方向与力度，但作者证明它们并不能。为此提出MotionBlind，一个基于自录制视频的对比基准，每例由仅运动不同的近似成对片段组成，并配以互补的问答项，模型需正确判断运动速度、幅度与方向才能得分。该基准聚焦物理基础的运动理解评测，与衡量生成视频物理正确性的评测需求相关，但对象是视频理解而非生成。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.11242v1",
+      "source": "arxiv",
+      "title": "From Evaluation to Enhancement: Benchmarking and Improving Think-with-Video Reasoning for Video Generative Models",
+      "abstract": "Video generation has advanced to produce visually compelling and temporally coherent results. Yet, whether these models can genuinely think with video--executing symbolic rules, respecting physical laws, and pursuing intentional goals--remains an open question. Existing benchmarks only partially address this, often conflating visual quality with cognitive correctness. We introduce VWG-Bench (Video World Generalist Benchmark), a comprehensive benchmark spanning 9 reasoning dimensions and 38 fine-grained tasks. To enable precise diagnosis, we design a three-level VLM-as-Judge protocol that independently assesses video-level fluency, task-level rule adherence, and sample-level goal realization. Evaluations of leading models reveal a striking gap: while models achieve strong rendering scores, they consistently fail on logic-heavy and rule-constrained tasks. To address this, we propose Vid-PRE (Video Prompt Reasoner and Enhancer), a model-agnostic prompt rewriter that offloads the cognitive burden of reasoning to a dedicated VLM. Trained via reinforcement learning with purely text-based rewards, Vid-PRE produces concise, constraint-aware prompts without the instability of video-level reward signals. Experiments show that Vid-PRE yields substantial reasoning improvements across multiple generators without architectural modifications. Together, VWG-Bench and Vid-PRE offer a rigorous diagnostic lens and a scalable path toward true think-with-video capabilities. All data and code are publicly available at https://huggingface.co/datasets/KlingTeam/VWG-Bench.",
+      "authors": [
+        "Meng Luo",
+        "Yicheng Liu",
+        "Jiahao Wang",
+        "Yuanxing Zhang",
+        "Xin Tao",
+        "Pengfei Wan",
+        "Kun Gai",
+        "Hao Fei"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-10T08:40:58+00:00",
+      "link": "https://arxiv.org/pdf/2609.11242v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "benchmark evaluating whether video models respect physical laws",
+      "llm_evidence_cn": "评估视频模型是否遵循物理规律的基准",
+      "llm_evidence": "评估视频模型是否遵循物理规律的基准",
+      "canonical_evidence": "评估视频模型是否遵循物理规律的基准",
+      "llm_tldr_en": "VWG-Bench is a comprehensive benchmark spanning 9 reasoning dimensions and 38 tasks to evaluate whether video generative models respect physical laws and symbolic rules, using a three-level VLM-as-Judge protocol.",
+      "llm_tldr_cn": "论文指出视频生成虽已能产出视觉连贯的结果，但模型能否真正思维推理、执行符号规则并遵循物理规律仍不清楚，而现有基准常将视觉质量与认知正确性混为一谈。为此提出综合基准VWG-Bench，覆盖9个推理维度与38项细粒度任务，并设计三级VLM-as-Judge协议分别评估视频流畅度、任务级规则遵循与样本级目标达成。评估揭示了模型在物理与规则推理上的不足并指向改进方向，直接服务于物理正确性视频生成评估。",
+      "llm_tldr": "论文指出视频生成虽已能产出视觉连贯的结果，但模型能否真正思维推理、执行符号规则并遵循物理规律仍不清楚，而现有基准常将视觉质量与认知正确性混为一谈。为此提出综合基准VWG-Bench，覆盖9个推理维度与38项细粒度任务，并设计三级VLM-as-Judge协议分别评估视频流畅度、任务级规则遵循与样本级目标达成。评估揭示了模型在物理与规则推理上的不足并指向改进方向，直接服务于物理正确性视频生成评估。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.10943v1",
+      "source": "arxiv",
+      "title": "CamPilot: A Multi-Agent Cinematic Assistant for Camera-Controlled Movie Generation",
+      "abstract": "The integration of large language models (LLMs) into video generation has enabled rapid text-to-video creation and improved visual quality. However, it still falls short of professional filmmaking, where cinematographic language is less refined than human-crafted camera work and multi-shot continuity remains challenging. To address these limitations, we introduce CamPilot, a multi-agent framework that integrates cinematographic planning and camera-work control to produce more coherent, logically structured, and human-aesthetic movies. CamPilot adopts a GRPO-based learning paradigm to learn camera work planning from 14K real-world professional movies, internalizing motion patterns and composition principles that support reasoning over shooting techniques (e.g., camera angle, motion, and focal behavior) and cross-shot relationships for controllable camera-viewpoint generation. Multiple agents further collaborate and evolve to improve overall output quality. To support this work and further studies in this domain, we establish CamEval, a benchmark for evaluating camera work quality and cinematic engagement. Empirical results show that CamPilot outperforms state-of-the-art text-to-movie generation methods on cinematographic control and quality, highlighting the impact of professional camera design on movie generation.",
+      "authors": [
+        "Yang Wu",
+        "Stefano Petrangeli",
+        "Ishita Dasgupta",
+        "Yu Shen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-10T01:06:14+00:00",
+      "link": "https://arxiv.org/pdf/2609.10943v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-agent framework for camera-controlled movie generation",
+      "llm_evidence_cn": "面向电影生成的多智能体相机控制框架",
+      "llm_evidence": "面向电影生成的多智能体相机控制框架",
+      "canonical_evidence": "面向电影生成的多智能体相机控制框架",
+      "llm_tldr_en": "CamPilot is a multi-agent framework that integrates cinematographic planning and camera-work control to generate coherent, logically structured movies, using GRPO-based learning from 14K professional films.",
+      "llm_tldr_cn": "该论文针对LLM驱动的视频生成缺乏专业电影摄影语言、多镜头连贯性不足的问题，提出CamPilot多智能体框架，将电影摄影规划与镜头控制结合以生成更连贯、有逻辑且具人类审美的影片。方法上采用基于GRPO的学习范式，从1.4万部真实专业电影中学习镜头运动模式与构图原则。实验显示其在镜头规划与多镜头连续性上优于现有方案，为自动化影视内容生成提供了可复用工具。",
+      "llm_tldr": "该论文针对LLM驱动的视频生成缺乏专业电影摄影语言、多镜头连贯性不足的问题，提出CamPilot多智能体框架，将电影摄影规划与镜头控制结合以生成更连贯、有逻辑且具人类审美的影片。方法上采用基于GRPO的学习范式，从1.4万部真实专业电影中学习镜头运动模式与构图原则。实验显示其在镜头规划与多镜头连续性上优于现有方案，为自动化影视内容生成提供了可复用工具。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "automated creation of short drama videos",
+      "matched_requirement_id": "req-20",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
