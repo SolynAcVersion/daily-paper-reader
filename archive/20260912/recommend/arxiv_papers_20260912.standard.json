@@ -1,0 +1,139 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-12T21:32:22.318454+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 3,
+    "deep_cap": 8,
+    "deep_selected": 3,
+    "quick_candidates": 0,
+    "quick_skim_target": 13,
+    "quick_selected": 0
+  },
+  "deep_dive": [
+    {
+      "id": "2609.06207v1",
+      "source": "arxiv",
+      "title": "PhysWeep: Does a Video Generator Realize the Physics You Ask For?",
+      "abstract": "Image-to-video generators are often credited with absorbing physical dynamics as implicit world models, a claim the community currently checks with plausibility scores that ask whether a clip looks consistent with real-world motion. Plausibility is the wrong test on its own, because a clip can look natural while encoding the wrong value of the governing physical parameter, and no existing benchmark measures this gap directly. PhysWeep closes it with a fixed, label-free audit, treating a frozen generator as a black box, recovering the realized parameter from generated pixels, and reporting how often generation is trackable at all, how far the realized value sits from the requested one, and which, if either, of the literature's two proposed failure mechanisms the data support. A deterministic-simulator positive control confirms every score is exactly checkable. Applied to three open generators across six sweep axes, PhysWeep finds a specific, reproducible, previously undocumented failure. Conditional on producing trackable motion, two of the three generate confident, well-fit dynamics that converge to one of a small number of fixed, wrong values selected by the sampling seed rather than by the request, reproducing across two independent model families, two physical systems, and an independent tracker. It matches neither the prior reversion nor the case-based clamping the literature anticipates, because the reversion target is seed-conditional rather than a single global default, and a leave-one-out selection rule rejects both; the in-range faithfulness slope is statistically indistinguishable from zero wherever a response is estimable at all. A benchmark averaging over seeds would never see this: each sample is confidently locked to a wrong constant, exactly the failure a plausibility score is structurally blind to. We release the protocol, suite, and analysis code.",
+      "authors": [
+        "Rasul Khanbayov",
+        "Hasan Kurban"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-05T17:52:46+00:00",
+      "link": "https://arxiv.org/pdf/2609.06207v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "label-free benchmark auditing whether video generators realize requested physical parameters",
+      "llm_evidence_cn": "无需标注的基准，审计生成视频是否实现所要求的物理参数",
+      "llm_evidence": "无需标注的基准，审计生成视频是否实现所要求的物理参数",
+      "canonical_evidence": "无需标注的基准，审计生成视频是否实现所要求的物理参数",
+      "llm_tldr_en": "PhysWeep argues plausibility scores are insufficient because a clip can look natural yet encode the wrong physical parameter. It provides a fixed, label-free audit that treats a frozen image-to-video generator as a black box, recovers the realized parameter from pixels, and measures tracking rate and deviation from the requested value.",
+      "llm_tldr_cn": "论文指出仅用合理性评分检验视频生成器物理能力并不充分，因为画面自然却可能编码了错误的物理参数。为此提出 PhysWeep，一种固定、无需标注的审计基准，将冻结的图像到视频生成器视为黑盒，从生成像素中反推实际实现的物理参数。实验报告生成的可追踪率、参数偏差及可能的失效机制，为衡量生成视频的物理正确性提供了直接度量。",
+      "llm_tldr": "论文指出仅用合理性评分检验视频生成器物理能力并不充分，因为画面自然却可能编码了错误的物理参数。为此提出 PhysWeep，一种固定、无需标注的审计基准，将冻结的图像到视频生成器视为黑盒，从生成像素中反推实际实现的物理参数。实验报告生成的可追踪率、参数偏差及可能的失效机制，为衡量生成视频的物理正确性提供了直接度量。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.07107v1",
+      "source": "arxiv",
+      "title": "Beyond Sparse Rewards: A New Benchmark and Structure-Aware Graph Alignment for Micro-Drama Understanding",
+      "abstract": "Micro-dramas, characterized by ultra-short durations and hyper-dense storylines, pose unique challenges for video understanding that conventional benchmarks fail to address. To bridge this gap, we introduce M-Drama, the first large-scale bilingual benchmark for micro-drama comprehension, featuring over 35K instances across 9,138 clips. Furthermore, while reinforcement learning can enhance VLMs on complex narratives, existing reward metrics often suffer from sparse and superficial signals, failing to capture intricate character identities and temporal structures. We propose SAGA (Structure-Aware Graph Alignment), a novel graph-matching reward function that models narratives as heterogeneous graphs. SAGA computes dense, rigorous rewards via decoupled semantic triplet and structural temporal matching. Extensive experiments on Qwen3-VL-8B-Instruct demonstrate that SAGA outperforms existing baselines, delivering substantial improvements in open-ended accuracy and summary quality, while maintaining competitive out-of-domain generalization. Code is available at https://github.com/qyx1121/MDrama_SAGA.",
+      "authors": [
+        "Yixin Qin",
+        "Shi-Zhe Chen",
+        "Zhiqi Yu",
+        "Siyuan Cheng",
+        "Tao Cheng",
+        "Jinwen Luo",
+        "Zheng Wei"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-07T06:48:17+00:00",
+      "link": "https://arxiv.org/pdf/2609.07107v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "benchmark and reward for micro-drama understanding",
+      "llm_evidence_cn": "微短剧理解的基准与奖励方法",
+      "llm_evidence": "微短剧理解的基准与奖励方法",
+      "canonical_evidence": "微短剧理解的基准与奖励方法",
+      "llm_tldr_en": "M-Drama is the first large-scale bilingual benchmark for micro-drama comprehension with 35K instances, and SAGA is a structure-aware graph-matching reward that gives dense signals for reinforcement learning on complex micro-drama narratives.",
+      "llm_tldr_cn": "微短剧以超短时长和高密度剧情著称，给视频理解带来独特挑战，而现有基准难以覆盖。本文提出M-Drama，首个大规模双语微短剧理解基准，包含逾35K实例、覆盖9138个片段；并针对强化学习中奖励信号稀疏、浅表的问题，提出SAGA结构感知图对齐奖励，将叙事建模为异构图并计算稠密奖励。实验表明该奖励能更好刻画人物身份与时间结构，显著提升视觉语言模型在复杂微短剧叙事上的理解能力，为短剧内容分析与生成研究奠定数据与方法基础。",
+      "llm_tldr": "微短剧以超短时长和高密度剧情著称，给视频理解带来独特挑战，而现有基准难以覆盖。本文提出M-Drama，首个大规模双语微短剧理解基准，包含逾35K实例、覆盖9138个片段；并针对强化学习中奖励信号稀疏、浅表的问题，提出SAGA结构感知图对齐奖励，将叙事建模为异构图并计算稠密奖励。实验表明该奖励能更好刻画人物身份与时间结构，显著提升视觉语言模型在复杂微短剧叙事上的理解能力，为短剧内容分析与生成研究奠定数据与方法基础。",
+      "llm_tags": [
+        "query:manga-drama:composite"
+      ],
+      "matched_query_tag": "query:manga-drama:composite",
+      "matched_query_text": "Papers central to 漫剧生成，3-5分钟短剧, especially work that connects or combines: automated creation of short drama videos; production process for manga-style short dramas; creating micro dramas with a duration of three to five minutes; tool or system for generating short episodic dramas; drama content designed for short video platforms; find the best tools for micro drama creation.",
+      "matched_requirement_id": "req-composite-manga-drama",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.07532v1",
+      "source": "arxiv",
+      "title": "PhysReal: Learning Real-World Deformable Object Physics via Hybrid Constitutive Modeling",
+      "abstract": "Learning physically plausible dynamics from visual observations is essential for interactive world models and embodied agents. However, modeling real-world deformable objects remains challenging because their dynamics often arise from complex, spatially heterogeneous material responses. To address this challenge, we propose PhysReal, a video-driven framework for learning and simulating the underlying physics of real deformable objects. PhysReal integrates a spatially varying hybrid expert-neural constitutive model with a differentiable MPM simulator and 3DGS renderer. Analytical expert models provide interpretable physical priors, while neural constitutive residuals capture material responses beyond predefined formulations. Spatially distributed patches parameterize the constitutive field, enabling a continuous representation of local material variations. To organize the identification of this model from sparse visual observations, we adopt a progressive curriculum that sequentially optimizes global material properties, spatially varying local parameters, and neural constitutive residuals, together with complementary motion and mask supervision. Extensive experiments on diverse deformable-object interactions demonstrate that PhysReal achieves superior performance in dynamic reconstruction and future-state prediction, while showing strong potential for downstream robotic applications.",
+      "authors": [
+        "Yinan Deng",
+        "Jianqiao Song",
+        "Yisi Zhang",
+        "Yuhan Wang",
+        "Jiahui Wang",
+        "Yufeng Yue"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-07T14:11:57+00:00",
+      "link": "https://arxiv.org/pdf/2609.07532v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "learning physically plausible dynamics of real deformable objects from video",
+      "llm_evidence_cn": "从视频学习真实可变形物体的物理可信动力学",
+      "llm_evidence": "从视频学习真实可变形物体的物理可信动力学",
+      "canonical_evidence": "从视频学习真实可变形物体的物理可信动力学",
+      "llm_tldr_en": "PhysReal is a video-driven framework that learns and simulates the physics of real deformable objects by combining a spatially varying hybrid expert-neural constitutive model with a differentiable MPM simulator and 3DGS renderer.",
+      "llm_tldr_cn": "针对真实可变形物体动力学来自复杂且空间异质材料响应、难以建模的问题，本文提出PhysReal视频驱动框架。它将空间变化的专家-神经混合本构模型与可微MPM模拟器和3DGS渲染器结合，用解析专家模型提供可解释物理先验，用神经本构残差捕捉超出预设公式的材料响应。该工作可从真实视频中学习并模拟物理可信的物体动力学，为交互式世界模型和具身智能体提供支撑。",
+      "llm_tldr": "针对真实可变形物体动力学来自复杂且空间异质材料响应、难以建模的问题，本文提出PhysReal视频驱动框架。它将空间变化的专家-神经混合本构模型与可微MPM模拟器和3DGS渲染器结合，用解析专家模型提供可解释物理先验，用神经本构残差捕捉超出预设公式的材料响应。该工作可从真实视频中学习并模拟物理可信的物体动力学，为交互式世界模型和具身智能体提供支撑。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "videos depicting physically realistic behaviors and outcomes",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": []
+}

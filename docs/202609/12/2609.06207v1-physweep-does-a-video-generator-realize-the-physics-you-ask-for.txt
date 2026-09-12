@@ -1,0 +1,762 @@
+Title: PhysWeep: Does a Video Generator Realize the Physics You Ask For?
+
+URL Source: https://arxiv.org/pdf/2609.06207v1
+
+Published Time: Wed, 09 Sep 2026 01:06:31 GMT
+
+Number of Pages: 25
+
+Markdown Content:
+> arXiv:2609.06207v1 [cs.CV] 5 Sep 2026 P R E P R I N T
+
+# PhysWeep: Does a Video Generator Realize the Physics You Ask For? 
+
+Rasul Khanbayov 1 Hasan Kurban 1,  
+
+> 1
+
+College of Science and Engineering, Hamad Bin Khalifa University, Doha, Qatar Correspondence: hkurban@hbku.edu.qa 
+
+> A B S T R A C T
+
+Image-to-video generators are often credited with absorbing physical dynamics as implicit world models, a claim the community currently checks with plausibility scores that ask whether a clip looks consistent with real-world motion. Plausibility is the wrong test on its own, because a clip can look natural while encoding the wrong value of the governing physical parameter, and no existing benchmark measures this gap directly. PhysWeep closes it with a fixed, label-free audit, treating a frozen generator as a black box, recovering the realized parameter from generated pixels, and reporting how often generation is trackable at all, how far the realized value sits from the requested one, and which, if either, of the literature’s two proposed failure mechanisms the data support. A deterministic-simulator positive control confirms every score is exactly checkable. Applied to three open generators across six sweep axes, PhysWeep finds a specific, reproducible, previously undocumented failure. Conditional on producing trackable motion, two of the three generate confident, well-fit dynamics that converge to one of a small number of fixed, wrong values selected by the sampling seed rather than by the request, reproducing across two independent model families, two physical systems, and an independent tracker. It matches neither the prior reversion nor the case-based clamping the literature anticipates, because the reversion target is seed-conditional rather than a single global default, and a leave-one-out selection rule rejects both; the in-range faithfulness slope is statistically indistinguishable from zero wherever a response is estimable at all. A benchmark averaging over seeds would never see this: each sample is confidently locked to a wrong constant, exactly the failure a plausibility score is structurally blind to. We release the protocol, suite, and analysis code as a reusable, model-agnostic audit for generators that claim physics controllability. 
+
+1 Introduction 
+
+Progress in video generation has revived an old hope: that a model trained only to predict pixels will, as a by-product, learn the laws that govern how the world moves [1, 2]. The community has accordingly invested in measuring the physical plausibility of generated video, through benchmarks that ask human raters or VLM auto-raters whether motion looks right [3–8]. Plausibility is the wrong target on its own. A generator can produce a clip that is visually flawless yet encodes an incorrect value of the relevant parameter: a ball can fall along a smooth    
+
+> Preprint • Kurban Intelligence Lab • https://github.com/KurbanIntelligenceLab/physweep 1PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+
+arc whose implied gravitational acceleration is simply wrong, and no plausibility rater will object, because the arc is locally consistent. The meaningful question is whether a generator realizes the 
+
+specific physics implied by its conditioning, and whether that realization extends past the values the model saw most often in training. The second clause matters because a model that has internalized a law should treat the controlling parameter as a free variable, whereas one that has memorized typical motions falls back on what it has seen once pushed away from the common case. Recent roadmaps name this gap directly: surveys identify intrinsic faithfulness and controllability 
+
+as the frontier and note that metrics for them remain scarce [9, 10], judge-based scores are hard to audit because a judge’s weights and APIs drift while a parameter recovered by a fixed estimator does not (Sec. 2), and the gap is not incidental, since generators optimized for media prioritize visual smoothness over physical fidelity [11]. What is missing is a fixed, auditable measurement of whether a conditioned parameter is realized in the pixels. We turn “physical understanding” of a pretrained generator into a falsifiable measurement. Treat the frozen model as a black-box map from a conditioned parameter 𝜃 to a trajectory, recover the realized ̂ 𝜃 from generated pixels with no human labels, and quantify faithfulness, out-of-range behavior, and the form of any failure. PhysWeep also adjudicates between the two mechanisms the literature proposes: collapse to a single global default, or case-based mimicry of the nearest seen value. Our delta against the closest prior art (Sec. 2) is a conjunction: a swept control parameter rather than a fixed default, on frozen black-box models, over six axes rather than gravity alone, with a continuous parameter-recovery readout rather than a binary or judge score. We do not claim to be first to recover physics from generated pixels. What is new is the determinant : the sampling seed is known to fix a generator’s appearance [12], and we show it also fixes the physics, overriding an explicit request for it. 
+
+> K E Y T A K E A W A Y
+
+The sampling seed, not the request, picks the physics. A benchmark that averages over seeds reports a smooth mean and hides that each individual sample is confidently locked to a wrong constant. 
+
+> Contributions.
+
+1. A reusable audit artifact. PhysWeep ships deterministic parameterized systems with ground-truth 𝜃 , a fixed label-free estimator, and analysis code (Sec. 5), validated by a simulator-video positive control. The estimator is fixed rather than learned, so the measurement is auditable by construction (unlike evolving VLM-judge scores [13]), and it applies to any generator accepting one of our two conditioning channels, including ones claiming physics controllability. 2. Label-free metrics and a mechanism adjudication. A trackability rate, a Parameter Re-covery Error ( PRE ) with its Extrapolation Gap ( EG ) and a monotonicity score, two competing failure-form indices, Prior-Reversion ( PRI ) and Case-Based ( CBI ), and a leave-one-out rule that lets the data choose between global-default collapse and nearest-value mimicry, or reject both (Sec. 4) — together turning “did the generator learn physics” into a falsifiable, pre-registered test rather than a qualitative impression. 3. A formal account of the failure we find, and the statistic that identifies it. We define seed-
+
+> 2
+
+PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab                        
+
+> (a) CogVideoX-5B-I2V, projectile
+> two seeds, two fixed gravities, neither the one requested 579.8 12 15 0510 15 requested 𝑔 (m/s 2)recovered  |̂ 𝑔|
+> faithful =positive control (simulator video) 𝛽=1.0001
+> seed A: 11.4 ± 0.03
+> seed B: 7.1 ± 0.2 80% of clips trackable; shaded bands are the within-seed spread, narrower than the markers
+> (b) DynamiCrafter 512 , bouncing ball
+> same signature, different architecture and different law 0.6 0.7 0.8 0.9 0.6 0.7 0.8 0.9 1.0 requested restitution 𝑒
+> recovered ̂𝑒
+> faithful
+> every gated seed in [0.97, 1.00]
+> gap at  𝑒=0.6 25.0% trackable, clip fit 𝑅 2=1.000
+> “always almost perfectly elastic”: the request moves 0.6 → 0.9 , the realized value does not
+> (c) Which response shape?
+> schematic: the two shapes Eq. (3) allows, and ours in-range out-of-range requested 𝜃
+> recovered ̂ 𝜃 𝜃 0𝜃 edge
+> faithful
+> ours : seed-conditional case clamping prior reversion
+> ours , a different seed
+
+Figure 1 The seed picks the physics, and it is not tracking noise. (a) CogVideoX-5B-I2V, projectile, in-range grid, text conditioning: recovered |̂ 𝑔| is flat in the request and separated by sampling seed , with within-seed spread narrower than the plotted markers, while the same tracker and fitter recover the swept parameter from simulator video at slope 1.0001 . Each point is a mean over that seed’s gated clips at that 𝑔 
+
+(80% trackable in-range), not a single clip. (b) The same signature in a different architecture on a different law: DynamiCrafter returns near-perfect elasticity whatever restitution is asked for, at a fit quality that rules out a tracking artifact ( 25.0% trackable in-range; one fitter-degenerate outlier, ̂𝑒 > 1 , physically impossible for a restitution coefficient, is excluded from the plotted line). (c) Schematic, drawn to obey Eq. (3): case clamping tracks the identity until 𝜃 edge then goes flat, prior reversion is a straight line of slope 𝛼 crossing the identity at 𝜃 0, both defined in Sec. 4 as functions of 𝜃 alone, so neither can express a response flat in 
+
+𝜃 and offset by seed, which is why the selection rule rejects both (Theorem 3). Sign convention in (a) is downward-negative; magnitudes are plotted. 
+
+conditional defaults and prove they force PRI → 1 with a vanishing held-out 𝑅 2 (so rejecting both prior hypotheses is a derived prediction, not an unexplained negative), and that the same signature arises from noise, so PRI alone cannot establish the mechanism, and give a Seed Determination Index that can (Sec. 4.1). This closes a real gap in how the field reports results: an experiment that is not seed-resolved cannot tell seed-locking apart from a well-behaved generator with noisy output, and we show that distinction is exactly what is at stake here. We report what the index isolates on three frozen generators (Sec. 6), extending the known imprint of the sampling seed on generated appearance [12] to generated dynamics .
+
+2 Related work 
+
+A large family of benchmarks scores whether generated video looks physical: human and learned raters of physical commonsense [3, 4], broader law taxonomies [5, 8], real footage [6], conservation-law metrics [7], first-principles organization [14], likelihood on valid-versus-invalid pairs [15], and Physics and Controllability scored by VLM proxies [16, 17]. These ask whether a clip looks right, not whether it realizes a requested parameter. Lin et al. [13] argue such judges are hard to reproduce because they evolve, and an evaluation on real systems reports a fine-tuned judge scoring clean recordings only moderately [18]; our plausibility contrast is an independent instance on synthetic stimuli. Closer to our own readout, Li et al. [19] measure falling dynamics in generated video to drive physics post-training, and Thozhiyoor et al. [20] recover an effective gravity from pixels, show that current generators under-accelerate toward a fixed sub-Earth value, and eliminate metric-scale and frame-rate confounds with a unit-free two-object timing test; Le et al. [21] use a similar readout as a verifiable post-training reward. This is the closest prior art and we do not claim priority over it, 
+
+3PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab 
+
+but all three fix the target law to gravity and characterize a model’s default behavior, whereas our question is orthogonal and complementary: given a parameter the user asks for , across six sweep axes, does the realized value move with the request. Their fixed-𝜃 result and our swept-𝜃 result answer different halves of the same worry. A separate line establishes that the initial noise fixed by the sampling seed leaves a strong, recoverable imprint on what a diffusion model produces [12], but for generated appearance ; The-orem 2 extends this to dynamics , and to our knowledge the seed has not previously been shown to fix a quantitative physical parameter. A further wave of 2025–2026 methods claims physics controllability through editable simulation, latent dynamics, geometry guidance, force-vector or explicit-parameter conditioning, and inference-time extrapolation [22–29]; PhysWeep asks what a frozen model does beforehand and supplies the fixed measurement against which such claims can be re-checked without training access. Sec. F extends this section with the mechanism literature [30, 31], adjacent property-readout and VLM-based work [32–36], and classic prediction/planning benchmarks [37–40]. 
+
+3 Problem: plausibility versus parameter faithfulness 
+
+Let a system be governed by a known law 𝑓 with scalar control parameter 𝜃 ∈ Θ ⊂ ℝ (the framework extends to vector 𝜃 ; we sweep scalars for clean identifiability). Given 𝑠 0 the true trajectory is 𝜏 𝜃 = 𝑓 (𝑠 0, 𝜃) . A generator 𝐺 receives conditioning 𝑐(𝑠 0, 𝜃) rendered from 𝜏 𝜃 and produces 𝑣 = 𝐺(𝑐(𝑠 0, 𝜃)) ; we assume no access to its weights, data, or activations. An external estimator 𝑅 maps generated pixels to ̂ 𝜃 = 𝑅(𝑣) by tracking the object and fitting 𝑓 .
+
+Definition 1 Parameter faithfulness . 𝐺 is 𝜖 -faithful on a sweep 𝑆 ⊆ Θ if 𝔼 𝑠 0 |𝑅(𝐺(𝑐(𝑠 0, 𝜃))) − 𝜃| ≤ 𝜖 for all 𝜃 ∈ 𝑆 .Plausibility, by contrast, is a property of 𝑣 alone: a rater 𝑃(𝑣) scores whether 𝑣 looks physical on some fixed scale (we use 1–5), independent of 𝜃 . The two come apart precisely when 𝑣 is locally smooth but encodes the wrong 𝜃 . 
+
+> Two hypotheses for out-of-range failure.
+
+The literature offers two accounts of what a generator does when 𝜃 leaves the common range 𝑆 in , predicting different ̂ 𝜃 that a sweep can separate. Under 
+
+prior reversion ,̂ 𝜃 ≈ 𝛼𝜃+(1−𝛼)𝜃 0 with a single fixed default 𝜃 0 such as Earth gravity, independent of where in 𝑆 out the request lies. Under case clamping [30], ̂ 𝜃 sticks at the nearest in-range value seen, 𝜃 edge . The two coincide only when 𝜃 0 = 𝜃 edge . Both assume ̂ 𝜃 is a function of 𝜃 alone; Sec. 4.1 shows our data violate that assumption and derives the consequence. 
+
+4 Metrics 
+
+Fix a system with sweep grid {𝜃 𝑖 }𝑛 𝑖=1 partitioned into an in-range set 𝑆 in (values common in natural video) and an out-of-range set 𝑆 out (values rare or absent). For each 𝜃 𝑖 we draw 𝑚 seeded initial conditions and generations and obtain recovered values {̂𝜃 𝑖𝑗 }𝑚 𝑗=1 .  
+
+> 4PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+> Parameter Recovery Error and Extrapolation Gap.
+
+The normalized recovery error on a set 𝑆 , with small 𝛿 > 0 for stability, and the gap between splits, are 
+
+PRE(𝑆) = 1|𝑆| ∑
+
+> 𝜃 𝑖 ∈𝑆
+
+1𝑚 
+
+> 𝑚
+
+∑
+
+> 𝑗=1
+
+|̂𝜃 𝑖𝑗 − 𝜃 𝑖 ||𝜃 𝑖 | + 𝛿 , (1) 
+
+EG = PRE(𝑆 out ) − PRE(𝑆 in ). (2) Lower PRE is better and PRE = 0 is perfect faithfulness; EG ≈ 0 means the model extrapolates as well as it interpolates.  
+
+> Trackability rate.
+
+Not every generation contains motion a law can be fitted to. We report the fraction of clips clearing the fit gate ( 𝑅 2 ≥ 0.8 ) as a metric in its own right, not a silent exclusion: it is label-free and Sec. 6 shows it carries information an automated plausibility rater does not.  
+
+> Faithfulness slope and monotonicity.
+
+𝛽 is the least-squares slope of ̂ 𝜃 on 𝜃 over 𝑆 in : a faithful model has 𝛽 ≈ 1 , one ignoring the conditioning 𝛽 ≈ 0 . Because the response may be nonlinear we also report Spearman’s 𝜌 , capturing whether the ordering of requested values survives when the scale is off.  
+
+> Two failure-form indices and a selection rule.
+
+To adjudicate between the hypotheses of Sec. 3 we fit both to the out-of-range data: prior reversion: ̂ 𝜃 = 𝛼𝜃 + (1 − 𝛼)𝜃 0 + 𝜀, (3) case clamping: ̂ 𝜃 = min(𝜃, 𝜃 edge ) + 𝜀, PRI = 1 −̂𝛼, CBI = 1 − RSS clamp /RSS null .PRI = 0 means the request is followed, PRI = 1 means the output ignores it and returns 𝜃 0, and 
+
+CBI is the out-of-range variance explained by clamping at the edge. We select by leave-one-𝜃 -out 
+
+𝑅 2 and ΔAIC, reporting neither when both fail the held-out test. 𝜃 0 and 𝜃 edge are reported, not assumed.  
+
+> Stochasticity, scale, and uncertainty.
+
+Generators are sampled with 𝑚 ≥ 5 seeds per condition. We separate the bias 𝔼[̂𝜃] − 𝜃 from the within-condition dispersion std(̂𝜃) , so an unbiased-but-noisy model is not confused with a biased-but-consistent one. Because we render the conditioning, spatial and temporal scales are fixed within a clip and all metrics use the ratio ̂ 𝜃/𝜃 , invariant to a common rescaling; a scale-invariance ablation checks this. Metric-scale ambiguity is a known confound for physics readouts from generated video [20] and this is our defense against it. All metrics carry 95% 
+
+bootstrap CIs over (𝜃 𝑖 , seed ) pairs. 
+
+> Well-definedness of
+
+̂ 𝜃 . The metrics mean something only if 𝑅 recovers a well-defined quantity; Sec. B gives the two regularity conditions (trackability, identifiability) under which ̂ 𝜃 converges in probability to the realized parameter, a claim about the estimator , not the generator, and discloses one small bias this exposes for the damped pendulum. When the motion is not well described by 
+
+𝑓 the residual is large, so we gate at 𝑅 2 ≥ 0.8 and treat low-fit generations as non-physical rather than forcing a ̂ 𝜃 .  
+
+> 5PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+> 4.1 Seed-conditional defaults
+
+Both hypotheses assume the realized value is a function of 𝜃 alone. Our data are not, so we state the general model and derive what it implies for the indices rather than treating the resulting “neither” as an unexplained negative. This is our only novel formal claim.   
+
+> Definition 2 Seed-conditional default .
+
+Let the sweep be run as a crossed design, every grid value with every seed, so that the seed is independent of 𝜃 . 𝐺 has a seed-conditional default on 𝑆 
+
+if there is a non-constant 𝑐 ∶  → Θ with ̂ 𝜃(𝜃, 𝑧) = 𝑐(𝑧) + 𝜀 , where 𝜀 has mean 0 and variance 
+
+𝜎 2𝜀 and is independent of (𝜃, 𝑧) , and 𝜎 2𝑐 = Var 𝑧 [𝑐(𝑧)] > 0 . Prior reversion with a single global 𝜃 0 is the special case 𝜎 2𝑐 = 0 , 𝑐 ≡ 𝜃 0, so the model nests it. The map 𝑐 is the dynamical analogue of the appearance imprint the seed is known to carry [12].   
+
+> Proposition 3 The indices are misspecified, predictably .
+
+Under Theorem 2: (i) the pooled least-squares prior-reversion fit has ̂𝛼 → 0 in probability, so PRI → 1 ; (ii) its implied default converges in probability to 𝔼 𝑧 [𝑐(𝑧)] , a population mean that no individual generation realizes; and (iii) every predictor that is a function of 𝜃 alone has population 𝑅 2 = 0 , so its leave-one-𝜃 -out 𝑅 2 converges in probability to 0 and, for any fixed margin 𝜏 > 0 , a selection rule accepting only 𝑅 2LOO > 𝜏 returns 
+
+neither with probability tending to one. Statements (i)–(iii) hold verbatim when 𝜎 2𝑐 = 0 and 𝜎 2𝜀 is large, so PRI and the selection outcome cannot distinguish a seed-conditional default from unstructured noise.  
+
+> Proof sketch.
+
+The crossed design gives ̂ 𝜃 ⟂ 𝜃 , hence Cov(𝜃,̂ 𝜃) = 0 , which yields (i) and, through the intercept, (ii). For (iii) the best 𝜃 -only predictor is the marginal mean, so the population 𝑅 2 is 
+
+0 and the held-out estimate converges to it. The final sentence follows because none of the three arguments uses 𝜎 2𝑐 > 0 . Full proof in Sec. C. The margin in (iii) is not a detail: with 𝑅 2LOO centered on zero its sign is noise, so a rule accept-ing any positive value would admit unstructured data as prior reversion (our rule uses 𝜏 = 0.1 ;justification and a smoke-test check in Sec. C). The proposition’s last sentence is why a further statistic is needed: separating the regimes requires one that conditions on the seed.  
+
+> Seed Determination Index.
+
+Decompose Var(̂𝜃) over the design’s two factors: FDI is the share from the requested 𝜃 , SDI the share from the seed, the latter a one-way random-effects intraclass correlation so it is not upward-biased at this design size. Under Theorem 2, FDI → 0 and SDI → 𝜎 2𝑐 /(𝜎 2𝑐 + 𝜎 2𝜀 ) in probability; when instead ̂ 𝜃 = 𝜃 + 𝜀 with 𝜀 independent of the seed, the two swap. On synthetic ground truth the released implementation returns SDI = 0.999 for a seed-locked generator against 0.000 faithful, 0.000 pure noise and 0.060 single global default, and refuses rather than guessing below two seeds. 
+
+5 Suite, pipeline, and protocol 
+
+Each system is a deterministic renderer producing conditioning frames, ground-truth 𝜃 , and one interpretable sweep axis. Scenes are simple and high-contrast so the tracker is robust and the identifiability conditions above hold easily, keeping the measurement rather than the perception in            
+
+> 6PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+> Table 1 The PhysWeep suite. Five deterministic renderers give six sweep axes, each with a closed-form map from a tracked statistic to the parameter, so recovery is exact and label-free. Units: 𝑔 m/s 2,𝜔 rad/s, 𝑘
+> N/m; 𝑒, 𝜁 , 𝜇 dimensionless. Rendering settings and per-pair seed counts are in Sec. D.
+> System
+
+𝜃 Recovered statistic Sweep grid: in-range / out-of-range 
+
+Projectile 𝑔 parabola curvature {5, 7, 9.8, 12, 15} / {1.6, 3, 20, 25} 
+
+Damped pendulum 𝜔 zero-crossing period {2, 3, 4, 5} / {0.5, 1, 8, 12} 𝜁 envelope decay {.02, .05, .1} / {.3, .6, .9} 
+
+Bouncing ball 𝑒 bounce-height ratio {.6, .7, .8, .9} / {.2, .35, .97} 
+
+Spring–mass 𝑘 oscillation period {20, 40, 60, 80} / {5, 10, 200, 400} 
+
+Inclined slide 𝜇 along-slope acceleration {.1, .2, .3, .4} / {.01, .7, 1.0} 
+
+focus. That has a cost Sec. 7 takes seriously: minimalist synthetic scenes sit far from every tested model’s training distribution. Five systems supply six axes, the pendulum contributing two.  
+
+> Pipeline.
+
+Fig. 2 sketches the loop described here. For each grid value 𝜃 𝑖 and seed 𝑧 𝑗 we render conditioning frames, generate a continuation, track the observable and fit 𝑓 in closed form to obtain (̂𝜃 𝑖𝑗 , 𝑅 2𝑖𝑗 ); clips with 𝑅 2𝑖𝑗 < 0.8 are marked non-physical and excluded from PRE , and that rate is reported alongside every result. A VLM rater scores the same clips. Rendering uses a small deterministic 2D engine with no external assets; tracking is color-blob centroiding, with CoTracker3 [41] as an independent second tracker in ablation. Pseudocode is in Sec. A. The pipeline is inference-only, run on a shared NVIDIA A100-SXM4 (40 GB), not a single consumer GPU (CogVideoX’s 25.3 GB peak, with tiling, exceeds a 24 GB budget), for an estimated ∼ 57 total GPU-hours across all runs; the estimate’s derivation and per-model figures are in Sec. D.    
+
+> How 𝜃 is conditioned.
+
+Models accept different inputs, so we treat the channel as a controlled axis. 
+
+Frame-implied conditioning supplies rendered frames whose motion already implies 𝜃 and asks the model to continue, isolating dynamics from semantics. Text-specified conditioning supplies a first frame plus a prompt naming the regime, for example on the Moon versus on Jupiter, testing whether a named control moves the realized parameter. Sec. 6 reports which channel each result uses, since only one model admits both.  
+
+> Protocol.
+
+We tested three frozen open generators, each within reach of a single high-end GPU (VRAM figures in Sec. D): LTX-Video [42], CogVideoX-5B-I2V [43], DynamiCrafter 512 [44]. Stable Video Diffusion [45] was dropped before any run because its pipeline accepts no text prompt; a quantized Wan [46] was considered and not run. Plausibility is contrasted against, not used as, the main metric via one VLM auto-rater [47]; no human subset and no VBench-2.0 score were collected . Before running we pre-committed which of four outcomes would confirm or refute each hypothesis, whatever the sweep actually showed: (1) faithful in-range, fails out-of-range, prior reversion or case clamping selected — the field’s own anticipated headline; (2) no conditioning effect ( 𝛽 ≈ 0 ); (3) faithful even out-of-range ( EG ≈ 0 ), a surprising positive result reported as such; or (4) neither hypothesis fits. Whichever occurred would drive the abstract, title, and contributions;   
+
+> 7PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+> Figure 2
+
+The measurement pipeline. A known 𝜃 drives a deterministic renderer, whose conditioning frames are handed to the frozen generator under audit; the resulting clip is tracked and fit in closed form to recover ̂ 𝜃 , which is compared back against the known 𝜃 to compute every metric in Sec. 4. The fit-quality gate ( 𝑅 2 ≥ 0.8 ) is the only point where a generation can be excluded, and it is excluded as non-physical , not silently dropped. Only the generator (dark box) is untrusted; every other stage is exact and label-free by construction. 
+
+Sec. 6 names which two of the four the sweep produced. We use 𝑚 ≥ 5 seeds per (𝜃 𝑖 , model ), report 
+
+95% bootstrap CIs and effect sizes rather than 𝑝 -values alone, test PRE(𝑆 out ) > PRE(𝑆 in ) by paired bootstrap, and report held-out 𝑅 2 and ΔAIC for selection. Model repositories and licenses are in Sec. D, which also discloses that no explicit commit/revision was pinned when loading any model, so each resolved to that repository’s default-branch head at run time; Sec. E is the reproducibility checklist. 
+
+6 Results 
+
+Two protocol deviations are stated once and carried through. First , every result except the conditioning-channel ablation uses text-specified conditioning : LTXConditionPipeline, the 
+
+diffusers component giving first-and-last-frame conditioning for LTX-Video, never computes the scheduler’s required shift parameter in the release used here and, once patched, still produces incoherent output regardless of resolution or scene content, confirmed against the working single-image pipeline on an identical input; CogVideoX’s official pipeline accepts only one conditioning image. Second , DynamiCrafter 512 replaced Stable Video Diffusion as above.  
+
+> The instrument works: simulator-video positive control.
+
+Ground-truth simulator continuations, not model output, through the identical tracker and fitter, pooled across all six axes and both splits ( 203 measurements), give PRE(𝑆 in ) = 0.0031 (CI [0.0019, 0.0045] ), slope 𝛽 = 1.0001 (CI 
+
+[1.00008, 1.00023] ), and mean fit 𝑅 2 = 0.986 . The estimator recovers a swept parameter when one is present, so a null slope on model output is a property of the model or the stimulus, not the pipeline.   
+
+> 8PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+> Table 2
+
+Coverage on the three axes short clips can identify at all : fraction of in-range clips whose tracked trajectory clears the 𝑅 2 ≥ 0.8 fit gate, under text conditioning. Shading is proportional to trackability, gray marks a measured zero (CogVideoX, inclined slide), and bold marks the five cells yielding enough gated clips for a slope. The remaining three axes are frame-budget-bound rather than a conditioning result (Sec. 7) and are omitted here.    
+
+> Trackability (%) proj. slide ball
+
+LTX-Video 𝟐𝟎 𝟑𝟓 5
+
+CogVideoX 𝟖𝟎 0 5
+
+DynamiCrafter 𝟔𝟒 𝟖𝟎 25  
+
+> Conditioning does not move the realized parameter.
+
+Table 2 shows the three axes short clips can identify at all; trackability never exceeds 80% there. The nine cells on the other three, frame-budget-bound axes (not shown in the table) are a separate, architectural 0% (Sec. 7), so ten of all eighteen model-axis pairs measure 0% trackability in total, for two different reasons. Only five cells support a slope estimate, and every one is indistinguishable from zero while excluding 
+
+𝛽 = 1 : LTX-Video projectile −0.015 [−0.090 , 0.039 ] and inclined slide −0.464 [−1.751 , 1.097 ]†;CogVideoX projectile 0.070 [−0.168 , 0.305 ]; DynamiCrafter projectile −0.025 [−0.466 , 0.480 ] and inclined slide 0.521 [−6.185 , 6.850 ]†. The two marked † also contain 𝛽 = 1 , showing lack of power rather than absence, so we do not count them as evidence for the null; the remaining three are inconsistent with faithful conditioning. Recovery error is correspondingly large on the projectile cells ( PRE(𝑆 in ) = 0.853 , 2.016 , 0.781 for LTX-Video, CogVideoX, DynamiCrafter, against 0.0031 for the positive control), and rank order fares no better: Spearman’s 𝜌 over the full projectile sweep is 
+
+−0.268 (LTX-Video) and 0.046 (CogVideoX), so not even the ordering of requested values survives.  
+
+> The failure is seed-locked, not untrackable noise.
+
+The three models reach the same null slope through visibly different behavior, confirmed by frame inspection. LTX-Video mostly fails to generate any real fall: the conditioned disk stays near its initial position regardless of the requested 
+
+𝑔 or how the prompt describes it, tested up to “extremely strong gravity, like Jupiter, violent rapid acceleration downward.” CogVideoX and DynamiCrafter instead generate confident, well-tracked motion that is simply the wrong amount, with recovered ̂𝑔 clustering tightly by sampling seed and close to independent of the request: on CogVideoX one seed gives ̂𝑔 ≈ −11.4 ± 0.03 across every in-range 𝑔 ∈ {5, 7, 9.8, 12, 15} and another gives −7.1 ± 0.2 (Fig. 1), reproducing out-of-range on the same seeds. That second mode also rules out the reading that the trackability rate invites, that these models simply cannot render minimalist synthetic scenes and the survivors are flukes: if the stimulus were merely un-renderable, the recovered values clearing the gate would be scattered, not tight. They are not (within-seed dispersion 0.03 –0.13 , individual-clip fit 𝑅 2 up to 1.000 , clusters reappearing under an independent tracker). Confident, well-fit, seed-locked motion is what a model ignoring 
+
+𝜃 produces, not what one failing to render produces, so we state the headline conditionally: con-ditional on producing physically trackable motion, none of the three models detectably honors a text-specified physical parameter. Trackability bounds the coverage of that claim, not its validity.   
+
+> 9PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+> The signature crosses architectures and physical systems.
+
+The pattern is not specific to the pro-jectile. LTX-Video’s near-total-inertia failure generalizes, with four of its five remaining axes below 
+
+6% trackable. CogVideoX’s seed-determined convergence generalizes only where clips survive the gate, which fails entirely on spring-mass and inclined slide; on bouncing-ball, every gated seed converges to a recovered restitution in [0.97, 1.00] regardless of the request, and DynamiCrafter independently reproduces the identical signature on the same system ( ̂𝑒 = 0.99 –1.00 across the full grid, individual-clip 𝑅 2 = 1.000 ): two architectures landing on the same wrong-but-confident behavior. Three of DynamiCrafter’s axes ( 𝜔 , 𝜁 , spring-mass) are separately bounded by its fixed 
+
+16 -frame output, too short for one oscillation period, a capability ceiling we keep distinct from a conditioning failure throughout.  
+
+> A third variant: a split, not a single, default.
+
+DynamiCrafter’s inclined slide adds a variant the two-hypothesis framework does not name. One seed behaves like the single-default cases above, at ̂𝜇 ≈ 1.80 across the whole grid; a second shows two tight clusters, ̂𝜇 ≈ 4.7 (std = 0.04 ) in-range and ≈ 7.6 (std = 0.13 ) out-of-range. That is neither ignoring 𝜃 nor a single global default. We name it the split-default pattern.  
+
+> Neither existing hypothesis explains it, exactly as predicted.
+
+We adjudicated every model-axis pair with at least four gated out-of-range points, yielding 8 of 18 pairs (Table 3), all labeled neither :AIC prefers the prior-reversion shape over clamping throughout and PRI is high, yet held-out 𝑅 2 is negative for both hypotheses on every pair. By Theorem 3 that is exactly what a seed-conditional default predicts. SDI (Table 3) establishes that reading rather than inferring it, decisively supporting seed-locking on five of the eight pairs but not the remaining three, so we report the signature as established only where SDI says so. The paired-bootstrap test is computable for six pairs and exactly two intervals exclude zero, in opposite directions (Sec. D): CogVideoX/projectile shows the predicted worse-out-of-range pattern, while DynamiCrafter/inclined-slide shows a lower out-of-range PRE , a consequence of the split-default pattern rather than faithfulness. Holm-corrected across all six, only CogVideoX/projectile survives at 𝛼 = 0.05 (adjusted 𝑝 = 0.033 ; every other pair’s adjusted 𝑝 ≥ 0.53 ). Ten pairs stay unadjudicated: three hit DynamiCrafter’s 16-frame ceiling, the other seven a near-zero gated yield. Of the four pre-committed outcomes (Sec. 5), the sweep produced a mix of the second ( no conditioning effect , on the projectile and inclined-slide cells whose slope CIs exclude 𝛽 = 1 ) and the fourth ( neither hypothesis fits , on all eight adjudicated pairs above), not the field’s anticipated headline story or a surprising positive result.  
+
+> A plausibility rater sees none of this.
+
+Qwen2.5-VL-7B-Instruct [47] rated all 630 saved gener-ality clips 1–5. Pooled mean 𝑃 is low for every model (LTX-Video 2.20 , DynamiCrafter 1.76 ,CogVideoX 1.26 ), which looks consistent with the hypothesis on its face, but it never assigned a 4 and CogVideoX’s scores are bimodal ( 1 or 5, never 2–4). Checked against what it should track, the correlation between tracker fit 𝑅 2 and 𝑃 is 0.075 , 0.019 and −0.164 respectively, indistinguish-able from zero: a CogVideoX clip whose trajectory collapses into texture noise ( 𝑅 2 = 0.48 ) scored 
+
+5/5 while a cleanly tracked LTX-Video fall ( 𝑅 2 = 0.99 ) scored 1/5 (truncation, parsing failure and file corruption ruled out). This rater does not track physical coherence here, which is why we report trackability as a separate metric.   
+
+> 10 PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+> Table 3
+
+Mechanism adjudication , every model-axis pair with ≥ 4 gated out-of-range points; all eight select as neither prior reversion nor case clamping, as Theorem 3 predicts. EG = PRE(𝑆 out ) − PRE(𝑆 in ),undefined (—) on the bouncing-ball rows since 𝜃 enters PRE ’s denominator and the in-range grid never clears the gate at a stable point. PRI = 1 means the output ignores the request; ΔAIC < 0 favours prior reversion over clamping; both use out-of-range data only. SDI is the column that decides the mechanism (read in text above). 
+
+Extrapolation Mechanism Model Axis 𝑛 out EG [95% CI] PRI ΔAIC SDI 
+
+## LTX-Video projectile 7 0.985 [−0.33 , 2.73 ] 1.000 −4.0 0.995 
+
+## LTX-Video bouncing ball 4 — 1.000 −9.8 0.985 
+
+## LTX-Video inclined slide 4 0.264 [−0.51 , 1.00 ] 0.514 −11.3 0.511 
+
+## CogVideoX projectile 12 1.068 [0.27 , 1.89 ]∗ 0.974 −47.9 0.919 
+
+## CogVideoX bouncing ball 9 — 0.999 −100.4 0.997 
+
+## DynamiCrafter projectile 17 0.050 [−0.22 , 0.34 ] 0.988 −22.2 0.343 
+
+## DynamiCrafter bouncing ball 6 −0.761 [−2.74 , 0.34 ] 0.223 −0.6 0.997 
+
+## DynamiCrafter inclined slide 20 −0.939 [−1.57 , −0.35 ]‡ 1.000 −16.0 0.176     
+
+> ∗Excludes zero in the hypothesized direction ( 𝑝 = 0.0055 ). ‡Excludes zero in the opposite direction, which is not faithfulness.
+> The result survives every nuisance parameter we varied.
+
+(a) Tracker swap. CoTracker3 [41] re-run on every clip agrees strongly where both trackers clear the gate (LTX-Video projectile 𝑟 = 0.984 ,inclined slide 𝑟 = 0.997 ); DynamiCrafter agreement is strong on the reported seed cluster but dis-agrees in sign on a second seed, so the phenomenon replicates under an independent tracker while one cluster’s value is tracker-sensitive. (b) Nuisance parameters. Across five disk-size and frame-rate rescalings, four guidance values, two prompt templates and two conditioning resolutions, the in-range slope stays small and unstable in sign (LTX-Video −0.26 to +1.38 over 13 variants; Dynam-iCrafter −0.25 to +0.12 over 7, since neither guidance nor resolution applies to it); CogVideoX’s columns are uninformative rather than confirmatory, since no clip clears the gate at this sweep’s shorter frame budget. (c) Gate sensitivity. The null does not flip at any threshold from 0.5 to 0.95 . 
+
+> Changing the conditioning channel does not rescue it.
+
+We ran frame-implied conditioning on DynamiCrafter, the one model with a reachable official multi-frame checkpoint, on the three axes where its text-channel data is usable (projectile conditioned on first and middle frame, since its true last frame is degenerate by construction and the middle frame’s height is confirmed to vary with 𝑔 ). It does not recover faithfulness: every gated projectile clip converges to ̂ 𝑔 ≈ 0 (slope 
+
+0.017 , CI [−0.008, 0.047] ), so where the text channel gave seed-diverse defaults, the frame channel collapses to one near-universal default of no fall, not a degenerate-conditioning artifact. Inclined slide is starker still, ̂𝜇 near 1.7 –1.8 while true 𝜇 runs from 0.01 to 1.00 . Dropped rates (pooled, from  
+
+> 11 PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+
+a separate, larger-seed-count run than Table 2) are lower under the frame channel on all three axes (10% vs. 30% projectile, 23% vs. 29% inclined slide, 63% vs. 86% bouncing ball), so the two channels are not directly comparable cell-for-cell against Table 2, but neither one is faithful. 
+
+7 Limitations 
+
+Trackability bounds coverage. Trackability never exceeds 80% and is 0% on ten of eighteen pairs. Sec. 6 argues from the survivors’ seed-locked tightness that this is not simply un-renderable output, which is why the headline is conditional, but what these models do where nothing clears the gate remains open: a contemporaneous study recovering gravity from current generators on photorealistic stimuli obtained usable trajectories where we largely do not [20]. 
+
+Model currency. The gap is specific rather than generic: we test LTX-Video and CogVideoX-5B while later releases in both families exist, and omit the open models most often credited with physically coherent motion. It also looks closable, since Wan reports an 8.19 GB text-to-video variant at 1.3 B [46] plausibly inside our budget, though not the image-to-video checkpoint we would need. 
+
+Design gaps, closed and remaining. The pipeline has a positive control (simulator-video recovery at 𝛽 = 1.0001 ) and now a negative one: permuting 𝜃 labels within each model-axis pair and refitting 𝛽 , 10,000 times on the five slope-estimable pairs, places every observed 𝛽 well inside its own null distribution (two-sided permutation 𝑝 from 0.56 to 0.91 ), calibrating “indistinguishable from zero” against an actual null. A TOST against a pre-specified smallest effect 𝜖 = 0.2 at 𝛼 = 0.05 (SE backed out from each pair’s bootstrap CI) shows only LTX-Video/projectile is formally equivalent to zero ( 𝑝 TOST < 0.001 ); the other four, including the two inclined-slide pairs whose CIs also contain 
+
+𝛽 = 1 , do not clear the bar ( 𝑝 TOST from 0.14 to 0.64 ), consistent with underpowered estimates rather than a plausible large effect. So “no detectable response” is absence of evidence, not evidence of absence, at four of these five pairs; only LTX-Video/projectile is positively established. Native clip length is still confounded with model identity ( 24 , 49 trimmed to 24 , 16 frames), so cross-model trackability comparisons are not clean. 
+
+Channel, coverage, ceilings. All results but the channel ablation use text conditioning; frame-implied conditioning is untested for LTX-Video and CogVideoX for the pipeline reasons above. Adjudication covers 8 of 18 pairs, DynamiCrafter’s 16-frame output makes three axes untestable for reasons unrelated to conditioning, and a joint (𝜔, 𝜁 ) pendulum sweep returned 0% trackability (best 𝑅 2 = 0.14 ), which we report as uninformative rather than negative. 
+
+Plausibility contrast and realism. One rater on one prompt does not track physical coherence here, and we tested no other prompt, larger VLM or human raters. The suite also trades ecological validity for identifiability, so conclusions concern controllable low-dimensional dynamics. 
+
+8 Conclusion 
+
+We reframe learning physics from video, for a generator, as a falsifiable label-free question of parameter faithfulness, and supply a black-box diagnostic, three metrics with a stated identifiability condition, a controllable suite, and a protocol separating plausibility from correctness. Applied to three frozen open generators it finds that, conditional on producing trackable motion, none detectably honors a text-specified parameter, and that the failure is not merely absent signal: two  
+
+> 12 PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+
+of three converge to a few fixed, wrong values selected by the sampling seed rather than the request, reproducibly across model families, axes and trackers. The seed is already known to fix a generator’s appearance [12]; here it fixes the physics. A benchmark averaging over seeds reports a smooth mean and hides that each sample is locked to a wrong constant, so seed-resolved reporting is not optional. The next targets are whether the signature survives on photorealistic stimuli and on current generators. 
+
+> R E P R O D U C I B I L I T Y
+
+All systems are procedurally generated by a seeded deterministic engine, models are public, trackers and fitting are off-the-shelf or closed-form, and no labels are used; the analysis code and system generators are released as anonymized supplementary material. Every generation is keyed to an explicit integer seed, with 𝑚 ≥ 5 seeds per grid point recorded per clip. The full checklist is Sec. E; grids, seed counts, model repositories, licences and compute are in Sec. D. 
+
+> D A T A A N D C O D E A V A I L A B I L I T Y
+
+The analysis code and system generators are available at https://github.com/KurbanIntelligenceLab/p hysweep ; All models used are public and frozen; repositories and licences are listed in Sec. D. 
+
+> C O M P E T I N G I N T E R E S T S
+
+No human-subjects data was collected and the diagnostic is meant to prevent overclaiming about video gen-erators as physical simulators, which has safety relevance in robotics and science. Per WACV’s LLM policy: an assistant drafted the initial consistency proof (Sec. B), the physics-recovery fitters and prose throughout. Both were verified by the authors before use, the proof by hand against its three stated assumptions (tracka-bility, identifiability, regularity; Sec. B), which surfaced the 𝜔 -versus-𝜔 𝑑 correction and one latent code bug, and every fitter against closed-form trajectories with a passing smoke test. A careful line-by-line check of both supplementary proofs (Theorem 3 and the appendix’s consistency and misspecification proofs, Sec. B and Sec. C) was performed during finalization, independently re-deriving the crossed-design independence argument, the OLS-slope and population-𝑅 2 convergence steps, the SDI formula against the standard ICC(1) estimator, and the Theorem 2 nesting claim, with no error found. The assistant did not choose hypotheses, design grids or interpret results, and the authors take responsibility for all content. 
+
+References 
+
+[1] Tim Brooks, Bill Peebles, Connor Holmes, Will DePue, Yufei Guo, Li Jing, David Schnurr, Joe Taylor, Troy Luhman, Eric Luhman, Clarence Ng, Ricky Wang, and Aditya Ramesh. Video generation models as world simulators. OpenAI technical report, 2024. URL https://openai.com/research/video-gen eration-models-as-world-simulators .[2] Niket Agarwal, Arslan Ali, Maciej Bala, Yogesh Balaji, Erik Barker, Tiffany Cai, et al. Cosmos world foundation model platform for physical ai, 2025. URL https://arxiv.org/abs/2501.03575 .[3] Hritik Bansal, Zongyu Lin, Tianyi Xie, Zeshun Zong, Michal Yarom, Yonatan Bitton, Chenfanfu Jiang, Yizhou Sun, Kai-Wei Chang, and Aditya Grover. Videophy: Evaluating physical commonsense for video generation. In International Conference on Learning Representations , volume 2025, pages 102075–102121, 2025. [4] Hritik Bansal, Clark Peng, Yonatan Bitton, Roman Goldenberg, Aditya Grover, and Kai-Wei Chang.  
+
+> 13 PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+
+Videophy-2: A challenging action-centric physical commonsense evaluation in video generation. In 
+
+International Conference on Learning Representations , volume 2026, pages 118456–118470, 2026. [5] Fanqing Meng, Jiaqi Liao, Xinyu Tan, Wenqi Shao, Quanfeng Lu, Kaipeng Zhang, Yu Cheng, Dianqi Li, Yu Qiao, and Ping Luo. Towards world simulator: Crafting physical commonsense-based benchmark for video generation. arXiv preprint arXiv:2410.05363 , 2024. [6] Saman Motamed, Laura Culp, Kevin Swersky, Priyank Jaini, and Robert Geirhos. Do generative video models understand physical principles? In 2026 IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) , pages 948–958. IEEE, 2026. [7] Chenyu Zhang, Daniil Cherniavskii, Antonios Tragoudaras, Antonios Vozikis, Thijmen Nijdam, Derck WE Prinzhorn, Mark Bodracska, Nicu Sebe, Andrii Zadaianchuk, and Efstratios Gavves. Mor-pheus: Benchmarking physical reasoning of video generative models with real physical experiments. arXiv preprint, 2025. [8] Jing Gu, Xian Liu, Yu Zeng, Ashwin Nagarajan, Fangrui Zhu, Daniel Hong, Yue Fan, Qianqi Yan, Kaiwen Zhou, Ming-Yu Liu, et al. 𝑝ℎ𝑦𝑤𝑜𝑟𝑙𝑑𝑏𝑒𝑛𝑐ℎ : A comprehensive evaluation of physical realism in text-to-video models. In International Conference on Learning Representations , volume 2026, pages 75130–75164, 2026. [9] Jingtong Yue, Ziqi Huang, Zhaoxi Chen, Xintao Wang, Pengfei Wan, and Ziwei Liu. Simulating the visual world with artificial intelligence: A roadmap. arXiv preprint arXiv:2511.08585 , 2025. [10] Teng Hu, Jiangning Zhang, Hongrui Huang, Ran Yi, Zihan Su, Jieyu Weng, Zhucun Xue, Lizhuang Ma, Ming-Hsuan Yang, and Dacheng Tao. Evolution of video generative foundations. arXiv preprint arXiv:2604.06339 , 2026. [11] Authors of arXiv:2601.15282. Rethinking video generation model for the embodied world, 2026. [12] Katherine Xu, Lingzhi Zhang, and Jianbo Shi. Good seed makes a good crop: Discovering secret seeds in text-to-image diffusion models. In Proceedings of the Winter Conference on Applications of Computer Vision (WACV) , pages 3024–3034, 2025. [13] Juyi Lin, Arash Akbari, Yumei He, Lin Zhao, Haichao Zhang, Arman Akbari, Xingchen Xu, Zoe Y Lu, Enfu Nan, Hokin Deng, et al. Phyground: Benchmarking physical reasoning in generative world models. arXiv preprint arXiv:2605.10806 , 2026. [14] Xuyang Guo, Jiayan Huo, Zhenmei Shi, Zhao Song, Jiahao Zhang, and Jiale Zhao. T2vphysbench: A first-principles benchmark for physical consistency in text-to-video generation. arXiv preprint arXiv:2505.00337 , 2025. [15] Jianhao Yuan, Fabio Pizzati, Francesco Pinto, Lars Kunze, Ivan Laptev, Paul Newman, Philip Torr, and Daniele De Martini. Likephys: Evaluating intuitive physics understanding in video diffusion models via likelihood preference. In International Conference on Learning Representations , volume 2026, pages 129700–129722, 2026. [16] Dian Zheng, Ziqi Huang, Hongbo Liu, Kai Zou, Yinan He, Fan Zhang, Lulu Gu, Yuanhan Zhang, Jingwen He, Wei-Shi Zheng, et al. Vbench-2.0: Advancing video generation benchmark suite for intrinsic faithfulness. arXiv preprint arXiv:2503.21755 , 2025. [17] Authors of arXiv:2607.16401. Apple-𝜋 : Benchmarking thinking with video towards law-grounded physical intelligence, 2026. [18] Authors of arXiv:2504.02918. Evaluating newtonian mechanics in video generative models with real physical systems, 2026. [19] Chenyu Li, Oscar Michel, Xichen Pan, Sainan Liu, Mike Roberts, and Saining Xie. PISA experiments: Exploring physics post-training for video diffusion models by watching stuff drop. In International Conference on Machine Learning , pages 35685–35709, 2025.  
+
+> 14 PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+
+[20] Varun Varma Thozhiyoor, Shivam Tripathi, Venkatesh Babu Radhakrishnan, and Anand Bhattad. Ob-jects in generated videos are slower than they appear: Models suffer sub-earth gravity and don’t know galileo’s principle...for now. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Findings , pages 3830–3839, 2026. [21] Minh-Quan Le, Yuanzhi Zhu, Vicky Kalogeiton, and Dimitris Samaras. What about gravity in video generation? post-training newton’s laws with verifiable rewards, 2025. [22] Haoze Zhang, Tianyu Huang, Zichen Wan, Xiaowei Jin, Hongzhi Zhang, Hui Li, and Wangmeng Zuo. Physchoreo: Physics-controllable video generation with part-aware semantic grounding. arXiv preprint arXiv:2511.20562 , 2025. [23] Ying Shen, Jerry Xiong, Tianjiao Yu, and Ismini Lourentzou. Phantom: Physics-infused video gen-eration via joint modeling of visual and latent physical dynamics. arXiv preprint arXiv:2604.08503 ,2026. [24] Cong Wang, Hanxin Zhu, Xiao Tang, Jiayi Luo, Xin Jin, Long Chen, and Zhibo Chen. Orthophys: Physically plausible video generation with orthogonal-view geometry guidance. arXiv preprint arXiv:2603.18639 , 2026. [25] Sriram Narayanan, Ziyu Jiang, Srinivasa Narasimhan, and Manmohan Chandraker. Phyco: Learning controllable physical priors for generative motion. arXiv preprint arXiv:2604.28169 , 2026. [26] Tianshuo Xu, Zhifei Chen, Leyi Wu, Hao Lu, and Ying-cong Chen. Motion forcing: A decoupled framework for robust video generation in motion dynamics. arXiv preprint arXiv:2603.10408 , 2026. [27] Authors of arXiv:2607.18924. Learning explicit physical parameter control and benchmarking for video generation, 2026. [28] Nate Gillman, Charles Herrmann, Michael Freeman, Daksh Aggarwal, Evan Luo, Deqing Sun, and Chen Sun. Force prompting: Video generation models can learn and generalize physics-based control signals. In Advances in Neural Information Processing Systems , 2025. [29] Zhongxin Yang, Yuanwei Bin, Xiang I. A. Yang, and Shiyi Chen. Least-action-guided diffusion for physical extrapolation, 2026. URL https://arxiv.org/abs/2606.11277 .[30] Bingyi Kang, Yang Yue, Rui Lu, Zhijie Lin, Yang Zhao, Kaixin Wang, Gao Huang, and Jiashi Feng. How far is video generation from world model: A physical law perspective. arXiv preprint arXiv:2411.02385 ,2024. [31] Juyeop Kim, Songkuk Kim, and Jong-Seok Lee. How diffusion models memorize, 2025. URL https: //arxiv.org/abs/2509.25705 .[32] Guanqi Zhan, Xianzheng Ma, Weidi Xie, and Andrew Zisserman. Inferring dynamic physical properties from video foundation models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 5214–5224, 2026. [33] Parsa Esmati, Somjit Nath, Katja Hofmann, Derek Nowrouzezahrai, Samira Ebrahimi Kahou, and Majid Mirmehdi. The invisible hand of physics: When video diffusion models know more than they show. 
+
+arXiv preprint arXiv:2606.05328 , 2026. [34] Xindi Yang, Baolu Li, Yiming Zhang, Zhenfei Yin, Lei Bai, Liqian Ma, Zhiyong Wang, Jianfei Cai, Tien-Tsin Wong, Huchuan Lu, and Xu Jia. Vlipp: Towards physically plausible video generation with vision and language informed physical prior, 2025. URL https://arxiv.org/abs/2503.23368 .[35] Saman Motamed, Minghao Chen, Luc Van Gool, and Iro Laina. Travl: A recipe for making video-language models better judges of physics implausibility. arXiv preprint arXiv:2510.07550 , 2025. [36] Dezhi Luo, Yijiang Li, Maijunxian Wang, Tianwei Zhao, Bingyang Wang, Siheng Wang, Pinyuan Feng, Pooyan Rahmanzadehgervi, Ziqiao Ma, and Hokin Deng. Vision language models cannot reason about physical transformation, 2026. URL https://arxiv.org/abs/2603.07109 . 
+
+> 15 PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+
+[37] Daniel M. Bear, Elias Wang, Damian Mrowca, Felix J. Binder, Hsiao-Yu Fish Tung, R. T. Pramod, Cameron Holdaway, Sirui Tao, Kevin Smith, Fan-Yun Sun, Li Fei-Fei, Nancy Kanwisher, Joshua B. Tenenbaum, Daniel L. K. Yamins, and Judith E. Fan. Physion: Evaluating physical prediction from vision in humans and machines, 2022. URL https://arxiv.org/abs/2106.08261 .[38] Anton Bakhtin, Laurens van der Maaten, Justin Johnson, Laura Gustafson, and Ross Girshick. Phyre: A new benchmark for physical reasoning. Advances in Neural Information Processing Systems , 32, 2019. [39] Thomas Unterthiner, Sjoerd Van Steenkiste, Karol Kurach, Raphael Marinier, Marcin Michalski, and Sylvain Gelly. Towards accurate generative models of video: A new metric & challenges. arXiv preprint arXiv:1812.01717 , 2018. [40] Ziqi Huang, Yinan He, Jiashuo Yu, Fan Zhang, Chenyang Si, Yuming Jiang, Yuanhan Zhang, Tianxing Wu, Qingyang Jin, Nattapol Chanpaisit, et al. Vbench: Comprehensive benchmark suite for video generative models. In 2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) ,pages 21807–21818. IEEE, 2024. [41] Nikita Karaev, Ignacio Rocco, Benjamin Graham, Natalia Neverova, Andrea Vedaldi, and Christian Rupprecht. Cotracker: It is better to track together, 2024. URL https://arxiv.org/abs/2307.07635 .[42] Yoav HaCohen, Nisan Chiprut, Benny Brazowski, Daniel Shalem, Dudu Moshe, Eitan Richardson, Eran Levin, Guy Shiran, Nir Zabari, Ori Gordon, Poriya Panet, Sapir Weissbuch, Victor Kulikov, Yaki Bitterman, Zeev Melumian, and Ofir Bibi. Ltx-video: Realtime video latent diffusion, 2024. URL 
+
+> https://arxiv.org/abs/2501.00103
+
+.[43] Zhuoyi Yang, Jiayan Teng, Wendi Zheng, Ming Ding, Shiyu Huang, Jiazheng Xu, Yuanming Yang, Wenyi Hong, Xiaohan Zhang, Guanyu Feng, Da Yin, Yuxuan Zhang, Weihan Wang, Yean Cheng, Bin Xu, Xiaotao Gu, Yuxiao Dong, and Jie Tang. Cogvideox: Text-to-video diffusion models with an expert transformer, 2025. URL https://arxiv.org/abs/2408.06072 .[44] Jinbo Xing, Menghan Xia, Yong Zhang, Haoxin Chen, Wangbo Yu, Hanyuan Liu, Xintao Wang, Tien-Tsin Wong, and Ying Shan. Dynamicrafter: Animating open-domain images with video diffusion priors, 2023. URL https://arxiv.org/abs/2310.12190 .[45] Andreas Blattmann, Tim Dockhorn, Sumith Kulal, Daniel Mendelevitch, Maciej Kilian, Dominik Lorenz, Yam Levi, Zion English, Vikram Voleti, Adam Letts, Varun Jampani, and Robin Rombach. Stable video diffusion: Scaling latent video diffusion models to large datasets, 2023. URL https://arxiv.org/abs/ 2311.15127 .[46] Team Wan, Ang Wang, Baole Ai, Bin Wen, Chaojie Mao, Chen-Wei Xie, Di Chen, Feiwu Yu, Haiming Zhao, Jianxiao Yang, Jianyuan Zeng, Jiayu Wang, Jingfeng Zhang, Jingren Zhou, Jinkai Wang, Jixuan Chen, Kai Zhu, Kang Zhao, Keyu Yan, Lianghua Huang, Mengyang Feng, Ningyi Zhang, Pandeng Li, Pingyu Wu, Ruihang Chu, Ruili Feng, Shiwei Zhang, Siyang Sun, Tao Fang, Tianxing Wang, Tianyi Gui, Tingyu Weng, Tong Shen, Wei Lin, Wei Wang, Wei Wang, Wenmeng Zhou, Wente Wang, Wenting Shen, Wenyuan Yu, Xianzhong Shi, Xiaoming Huang, Xin Xu, Yan Kou, Yangyu Lv, Yifei Li, Yijing Liu, Yiming Wang, Yingya Zhang, Yitong Huang, Yong Li, You Wu, Yu Liu, Yulin Pan, Yun Zheng, Yuntao Hong, Yupeng Shi, Yutong Feng, Zeyinzi Jiang, Zhen Han, Zhi-Fan Wu, and Ziyu Liu. Wan: Open and advanced large-scale video generative models, 2025. URL https://arxiv.org/abs/2503.20314 .[47] Shuai Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wenbin Ge, Sibo Song, Kai Dang, Peng Wang, Shijie Wang, Jun Tang, Humen Zhong, Yuanzhi Zhu, Mingkun Yang, Zhaohai Li, Jianqiang Wan, Pengfei Wang, Wei Ding, Zheren Fu, Yiheng Xu, Jiabo Ye, Xi Zhang, Tianbao Xie, Zesen Cheng, Hang Zhang, Zhibo Yang, Haiyang Xu, and Junyang Lin. Qwen2.5-vl technical report, 2025. URL 
+
+> https://arxiv.org/abs/2502.13923
+
+.  
+
+> 16 PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+> Algorithm 1
+
+PhysWeep measurement, one system and one model  
+
+> Input:
+
+frozen generator 𝐺 ; sweep grid {𝜃 𝑖 }; seeds {𝑧 𝑗 }; law 𝑓 ; tracker 𝑇 ; fit-quality gate 𝜌 ; VLM rater 𝑃  
+
+> Output:
+
+metrics, gate-dropped rate, plausibility pairs  
+
+> 1
+
+for each 𝜃 𝑖 and seed 𝑧 𝑗 do  
+
+> 2
+
+𝑐 𝑖𝑗 ← Render (𝑠 0(𝑧 𝑗 ), 𝜃 𝑖 ) 
+
+> 3
+
+𝑣 𝑖𝑗 ← 𝐺(𝑐 𝑖𝑗 ) ⊳ inference only, weights frozen  
+
+> 4
+
+𝑜 𝑖𝑗 ← 𝑇 (𝑣 𝑖𝑗 ) ⊳ blob centroid or CoTracker3  
+
+> 5
+
+(̂𝜃 𝑖𝑗 , 𝑅 2𝑖𝑗 ) ← Fit (𝑓 , 𝑜 𝑖𝑗 ) 
+
+> 6
+
+if 𝑅 2𝑖𝑗 < 𝜌 then  
+
+> 7
+
+mark 𝑣 𝑖𝑗 non-physical ; exclude from PRE  
+
+> 8
+
+end if  
+
+> 9
+
+𝑝 𝑖𝑗 ← 𝑃(𝑣 𝑖𝑗 ) ⊳ plausibility contrast  
+
+> 10
+
+end for  
+
+> 11
+
+compute PRE , slope 𝛽 , Spearman 𝜌 𝑠 , EG , PRI , CBI  
+
+> 12
+
+bootstrap 95% CIs over (𝜃 𝑖 , seed ) pairs  
+
+> 13
+
+return metrics, gate-dropped rate, plausibility pairs 
+
+> APPENDIX
+
+A Measurement pipeline and failure-form estimation 
+
+Alg. 1 gives the full measurement loop referenced from Sec. 5.  
+
+> Prior reversion (shrinkage,
+
+PRI ). Given pairs (𝜃 𝑖 ,̂ 𝜃 𝑖𝑗 ), fit ̂ 𝜃 = 𝛼𝜃 + (1 − 𝛼)𝜃 0 by least squares with 
+
+𝜃 0 either fixed to the physically typical value or estimated jointly; PRI = 1 −̂𝛼 , clipped to [0, 1] .
+
+> Case clamping (
+
+CBI ). Fit ̂ 𝜃 = min(𝜃, 𝜃 edge ) with 𝜃 edge at the in-range boundary or estimated; 
+
+CBI = 1 − RSS clamp /RSS null . 
+
+> Selection.
+
+Compare prior reversion and case clamping by leave-one-𝜃 -out 𝑅 2 and by ΔAIC. A hypothesis is selected only if its held-out 𝑅 2 is positive; if both fail that test the pair is reported as 
+
+neither and the observed behavior is described without forcing a label. This is what happens on all eight adjudicated pairs in Table 3, for the reason given there. All confidence intervals use the paired bootstrap over (𝜃 𝑖 , seed ). 
+
+> When
+
+CBI is not identifiable. The released smoke test records a limitation of CBI as defined. If an out-of-range grid lies entirely on one side of the in-range band, the clamp prediction min(𝜃, 𝜃 edge )
+
+is constant across 𝑆 out and is therefore indistinguishable from the null mean model, so CBI ≈ 0 
+
+and clamping cannot be adjudicated at any sample size. Pendulum damping is the axis where this specific degeneracy applies: its out-of-range grid {0.3, 0.6, 0.9} lies entirely above the in-range grid; no result in the main paper depends on this, because every pendulum row is gate-dropped at 96.7 –
+
+100% and carries no adjudication. A two-sided damping grid would be needed to test clamping on that axis. Separately, select_mechanism ’s default edge ( 𝜃 edge = min(𝑆 out )) is a crude choice even  
+
+> 17 PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+
+on our two-sided axes: on data whose recovered values are seed-clustered rather than clamped, this default can still fit only slightly worse than the null mean and clip to CBI ≈ 0 rather than surface the (often more negative) fit quality a properly chosen edge would show. This does not change any adjudication in the main paper, since clamping is rejected on every pair either way (its held-out 𝑅 2 is non-positive throughout, on all eight adjudicated pairs in Table 3), but it means a near-zero CBI on our data should be read as “clamping does not fit,” not as evidence the edge choice was well-identified. 
+
+B Consistency of the recovery estimator: full statement and proof 
+
+We restate the main paper’s consistency proposition with explicit regularity conditions and give the argument in full. The claim concerns only the estimator 𝑅 , not the generator 𝐺 . 
+
+> Setup.
+
+Fix a system with law 𝑓 and scalar parameter 𝜃 ∈ Θ , with Θ a compact interval. A clip of 𝑇 frames at a given resolution yields a tracked observable 𝑜 ∈ ℝ 𝑑 (object centers, angles, or contact times). Write the population fitting statistic as  (𝜃) ∈ ℝ 𝑘 : for the projectile, the quadratic coefficient of height against time; for the pendulum, the mean zero-crossing interval; for the bouncing ball, the successive height ratio. The estimator forms an empirical statistic ̂  from 𝑜 and returns ̂ 𝜃 = 𝑔(̂  ), where 𝑔 =  −1 on the range of  . 
+
+> Assumptions.
+
+(Trackability) the tracker returns ̂𝑜 = 𝑜 ⋆ + 𝜀 with 𝔼[𝜀] = 0 and Var(𝜀) = 𝜎 2Σ for a fixed positive-definite Σ, and 𝜎 2 → 0 as 𝑇 and the resolution grow. (Identifiability)  ∶ Θ →  (Θ) 
+
+is injective and continuously differentiable with ‖ ′(𝜃)‖ ≥ 𝑐 > 0 on Θ. (Regularity) the empirical statistic is a continuous functional ̂  = Φ(̂ 𝑜) with Φ continuous at 𝑜 ⋆ and Φ(𝑜 ⋆) =  (𝜃) .  
+
+> Proposition Consistency of
+
+𝑅 , restating the main paper . Under trackability, identifiability, and regularity, ̂ 𝜃 = 𝑔(Φ(̂ 𝑜)) 𝑝 
+
+−→ 𝜃 as 𝜎 2 → 0 . 
+
+> Proof.
+
+By identifiability,  is a continuous injection on the compact set Θ, so its inverse 𝑔 =  −1 
+
+is continuous on  (Θ) : a continuous bijection from a compact space to a Hausdorff space is a homeomorphism. By trackability, Var(̂ 𝑜) = 𝜎 2Σ → 0 with mean 𝑜 ⋆, so ̂ 𝑜 → 𝑜 ⋆ in mean square and hence in probability. By regularity, Φ is continuous at 𝑜 ⋆, so the continuous mapping theorem gives ̂  = Φ(̂ 𝑜) 𝑝 
+
+−→ Φ(𝑜 ⋆) =  (𝜃) . Applying the continuous mapping theorem again with the continuous 𝑔 yields ̂ 𝜃 = 𝑔(̂  ) 𝑝 
+
+−→ 𝑔(  (𝜃)) = 𝜃 . 
+
+> Per-system check of identifiability and regularity.
+
+Projectile.  (𝜃) = −𝜃/2 is linear, hence in-jective with  ′ = −1/2 , and Φ is ordinary least squares on a quadratic basis, continuous in the data. 
+
+Pendulum, and a bias this exposes. For the undamped case 𝜁 = 0 ,  (𝜔) = 2𝜋/𝜔 on 𝜔 > 0 is strictly monotone with nonvanishing derivative on any Θ bounded away from 0, and zero-crossing interpolation is continuous where crossings are simple. Our pendulum is damped ( 𝜁 > 0 throughout, Sec. D), so the statistic realized by zero-crossing spacing is  (𝜔, 𝜁 ) = 2𝜋/(𝜔 √1 − 𝜁 2), the damped 
+
+frequency 𝜔 𝑑 , not the natural frequency 𝜔 . The map remains injective in 𝜔 for fixed 𝜁 , so Sec. B still guarantees consistent recovery of 𝜔 𝑑 ; the reported ̂𝜔 is therefore a slightly biased estimate of 
+
+𝜔 whenever 𝜁 > 0 . Verified numerically, the bias is < 1.3% at the in-range 𝜁 grid {0.02, 0.05, 0.1} , 
+
+> 18 PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+
+grows with 𝜁 , and is materially larger at the out-of-range grid {0.3, 0.6, 0.9} . We did not correct for it post hoc, since doing so would change every already-reported ̂𝜔 ; we state it so the recovery is not mistaken for exact, and note it compounds with the heavily-damped, few-peaks low-fidelity regime for this axis. In practice this caveat has little effect on the reported results, because every pendulum row in the main paper is gate-dropped at 96.7 –100% and carries no slope estimate. 
+
+Bouncing ball. The map 𝑒 ↦ 𝑒 2 from restitution to successive height ratio is injective and smooth on (0, 1] .The fit-quality gate ( 𝑅 2 < 𝜌 ) excludes generations on which Φ is ill-posed, for example when the object morphs or vanishes, so regularity is enforced operationally rather than assumed. 
+
+C Seed-conditional defaults: full statement and proof 
+
+This section proves Theorem 3 and records the estimator for the Seed Determination Index.  
+
+> Model.
+
+The sweep is a crossed design: every grid value 𝜃 𝑖 is run with every seed 𝑧 𝑗 , so the seed is independent of 𝜃 by construction. Under a seed-conditional default, ̂ 𝜃 𝑖𝑗 = 𝑐(𝑧 𝑗 ) + 𝜀 𝑖𝑗 with 𝔼[𝜀] = 0 ,
+
+Var(𝜀) = 𝜎 2𝜀 , 𝜀 ⟂ (𝜃, 𝑧) , and 𝜎 2𝑐 = Var 𝑧 [𝑐(𝑧)] > 0 . The crossing assumption is load bearing and we flag it for anyone reusing the protocol. If seeds were confounded with grid position, so that 𝑐 varied systematically with 𝜃 , statement (i) fails and the failure is not subtle: in simulation a generator whose output is entirely seed-determined, with no response to 𝜃 whatsoever, returns ̂ 𝛼 = 1.006 
+
+and PRI = −0.006 under a confounded design, which reads as perfect faithfulness . Crossing seeds with grid values is therefore a correctness requirement of the measurement, not a convenience.   
+
+> Proposition Restatement of Theorem 3 .
+
+Under this model: (i) the pooled OLS fit of ̂ 𝜃 = 𝛼𝜃 + 𝑏 
+
+satisfies ̂ 𝛼 𝑝 
+
+−→ 0 , so PRI → 1 ; (ii) ̂ 𝑏 𝑝 
+
+−→ 𝔼 𝑧 [𝑐(𝑧)] and the implied ̂ 𝜃 0 =̂ 𝑏/(1 −̂𝛼) 𝑝 
+
+−→ 𝔼 𝑧 [𝑐(𝑧)] ; (iii) any measurable ℎ(𝜃) has population 𝑅 2 = 0 for predicting ̂ 𝜃 , its leave-one-𝜃 -out estimate satisfies 
+
+𝑅 2LOO 𝑝 
+
+−→ 0 , and for any fixed 𝜏 > 0 a rule accepting only 𝑅 2LOO > 𝜏 returns neither with probability tending to one. None of (i)–(iii) uses 𝜎 2𝑐 > 0 , so all three hold verbatim when 𝜎 2𝑐 = 0 and 𝜎 2𝜀 is large. Proof of Theorem 3. (i) Cov(𝜃,̂ 𝜃) = Cov(𝜃, 𝑐(𝑧)) + Cov(𝜃, 𝜀) = 0: the first term vanishes be-cause the crossed design makes 𝑧 independent of 𝜃 , the second because 𝜀 ⟂ 𝜃 . The OLS slope is ⎡Cov(𝜃,̂ 𝜃)/ ⎡ Var(𝜃) , which converges in probability to 0/ Var(𝜃) = 0 by the weak law, with 
+
+Var(𝜃) > 0 since the grid is non-degenerate. Hence PRI = 1 −̂𝛼 → 1 .(ii) ̂ 𝑏 =̂ 𝜃 −̂𝛼̄ 𝜃 𝑝 
+
+−→ 𝔼[̂𝜃] = 𝔼 𝑧 [𝑐(𝑧)] , and dividing by 1 −̂𝛼 → 1 gives the same limit. This limit is a population average: when 𝑐 takes two well-separated values it need not lie near either, so the fitted “default” describes no individual generation. (iii) For any measurable ℎ, 𝔼[(̂𝜃 − ℎ(𝜃)) 2] = Var(̂𝜃) + 𝔼[(𝔼[̂𝜃] − ℎ(𝜃)) 2], the cross term vanishing by ̂ 𝜃 ⟂ 𝜃 . This is minimized at ℎ ≡ 𝔼[̂𝜃] with value Var(̂𝜃) , so the population 𝑅 2 is 0. The leave-one-𝜃 -out numerator and denominator are averages of i.i.d. terms converging in probability to 
+
+Var(̂𝜃) > 0 , so their ratio converges to 1 and 𝑅 2LOO 𝑝 
+
+−→ 0 by the continuous mapping theorem. Consequently Pr[𝑅 2LOO > 𝜏] → 0 for any fixed 𝜏 > 0 , which is the claim. Finally, no step above invokes 𝜎 2𝑐 > 0 ; the argument uses only ̂ 𝜃 ⟂ 𝜃 , which also holds when 𝑐 is constant and the variance is carried entirely by 𝜀 . 
+
+> 19 PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+
+Remark 4 What is deliberately not claimed . We do not claim 𝔼[𝑅 2LOO ] < 0 . Simulation under this model gives a mean of −0.024 at a 5 × 5 design shrinking to −0.001 at 20 × 20 , so the expectation does appear non-positive and to vanish with sample size, but 𝑅 2LOO is a ratio of dependent random variables and we have not discharged the argument rigorously. Nothing in the paper depends on it: convergence in probability to 0, together with the fixed margin, is what statement (iii) and the released selection rule actually use. We record it here as an observation rather than a result. 
+
+Remark 5 Why a margin is required in the selection rule . Because 𝑅 2 
+
+> LOO
+
+is centred on zero under this model, its sign is noise. An acceptance test of the form 𝑅 2 
+
+> LOO
+
+> 0 therefore labels unstruc-tured data as prior reversion with probability approaching 1/2 . The released select_mechanism 
+
+requires 𝑅 2 
+
+> LOO
+
+> 0.1 ; the smoke test contains a synthetic sample on which the bare sign test returns 
+
+prior_reversion (𝑅 2 
+
+> LOO
+
+= 0.035 ) while the margin rule correctly returns neither , and asserts both, so the margin cannot be removed silently.   
+
+> Estimating SDI .
+
+With 𝑘 seeds, 𝑁 gated clips and mean group size 𝑛 0 = 𝑁 /𝑘 , let MS 𝑏 and MS 𝑤 be the between- and within-seed mean squares of ̂ 𝜃 . We report the one-way random-effects estimate 
+
+SDI = MS 𝑏 − MS 𝑤 
+
+MS 𝑏 + (𝑛 0 − 1) MS 𝑤 
+
+, (A1) clipped to [0, 1] , which is consistent for 𝜎 2𝑐 /(𝜎 2𝑐 + 𝜎 2𝜀 ). The uncorrected variance share is strongly upward-biased at this design size, returning about 0.18 in simulation where the truth is 0, which is precisely the regime in which a false positive would be most damaging; the corrected estimate returns about 0.07 there. FDI is the analogous share for the grid factor. Both return NaN , never a number, when fewer than two seeds are present, when ̂ 𝜃 is constant, or when there is no within-seed replication. 
+
+D System grids, seed counts, and rendering 
+
+All scenes are rendered by a seeded deterministic 2D engine at 256 × 256 over 𝑇 =24 frames at 
+
+24 fps, with a single high-contrast disk (radius 8 px) on a plain background and a fixed ground line. Only the swept parameter and the seeded initial condition vary within a system. Spatial and temporal scales are held fixed within a clip and all metrics use the ratio ̂ 𝜃/𝜃 , so the result is invariant to a common rescaling. The in-range split is centered on values common in natural video; the out-of-range split probes rare or absent values. These are the grids fixed in the released config and used for every reported result.  
+
+> Seed counts.
+
+The main paper refers to this section for the exact seed counts behind each re-ported cell, including the targeted follow-up batch run on the two model-axis pairs closest to 
+
+select_mechanism ’s four-point leave-one-out threshold.   
+
+> Plausibility prompt (verbatim, identical for all 630 ratings).
+
+“You are watching a short video clip of a physics simulation (a ball or similar object moving under some physical process such as falling, swinging, bouncing, or sliding). Rate how PHYSI-CALLY PLAUSIBLE the motion looks, on a scale from 1 to 5, where 1 means the motion looks clearly unnatural, broken, or impossible (e.g. teleporting, morphing, floating with no cause),   
+
+> 20 PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+> Table A1
+
+Sweep grids per system. Each row has one swept axis; 𝑚 ≥ 5 seeded initial conditions per grid point. 
+
+## System 𝜃 In-range grid Out-of-range grid 
+
+# Projectile 𝑔 {5, 7, 9.8, 12, 15} {1.6, 3, 20, 25} 
+
+# Damped pendulum 𝜔 {2, 3, 4, 5} rad/s {0.5, 1, 8, 12} 𝜁 {0.02, 0.05, 0.1} {0.3, 0.6, 0.9} 
+
+# Bouncing ball 𝑒 {0.6, 0.7, 0.8, 0.9} {0.2, 0.35, 0.97} 
+
+# Spring–mass 𝑘 {20, 40, 60, 80} N/m {5, 10, 200, 400} 
+
+# Inclined slide 𝜇 {0.1, 0.2, 0.3, 0.4} {0.01, 0.7, 1.0} 
+
+and 5 means the motion looks completely natural and physically believable, like something you could film in the real world. Respond with ONLY a single digit from 1 to 5, nothing else.”  
+
+> Prompt-phrasing ablation templates.
+
+Both variants are per-system, per-𝜃 templates (not a single fixed string), evaluated against the same default template used for every other result. The terse 
+
+variant states only the parameter name and numeric value with no qualitative anchor phrase, e.g. for projectile: “a dark ball, acceleration { 𝜃 :.2f} meters per second squared”. The verbose variant appends redundant physical-accuracy framing to the default prompt: “{default prompt}, precise physically accurate simulation, exact numerical value, photorealistic rendering, laboratory measurement setup”.  
+
+> Classifier-free guidance values swept.
+
+1.0 , 1.5 , 4.5 , 9.0 , on the projectile system, for LTX-Video and CogVideoX; skipped for DynamiCrafter, whose guidance scale is hardcoded inside its own inference subprocess call and not exposed as a pass-through parameter.  
+
+> Compute.
+
+All generation and analysis ran on NVIDIA A100-SXM4 GPUs (40 GB) on a shared cluster, inference-only throughout (no training or fine-tuning at any point). Peak VRAM at load: LTX-Video 14.25 GB (fits a 24 GB consumer card); CogVideoX-5B-I2V 25.3 GB with VAE tiling en-abled (does not). Approximate wall-clock generation time per clip: LTX-Video ∼ 2 –6 s; CogVideoX 
+
+∼ 2.3 –5.9 min, varying with clip length across systems; DynamiCrafter ∼ 70 –85 s (a fresh subprocess per clip, so this is dominated by per-call checkpoint load, not sampling time alone). 
+
+Total wall-clock GPU-hours: ∼ 57 (estimated, not a full audit). 54.4 h is a direct sum over the 69 of ∼ 134 result files that log their own elapsed_seconds per run, covering the large majority of clips generated across the project. The remaining ∼ 95 clips (the CogVideoX and DynamiCrafter projectile pilots, which predate this project’s practice of logging per-job timing) are estimated at 
+
+∼ 2.6 h by applying each model’s own measured mean seconds-per-clip (from the 69 logged files: LTX 3.96 s/clip, CogVideoX 122.45 s/clip, DynamiCrafter 79.19 s/clip) to the un-logged clip counts. The VLM plausibility-scoring pass ( 630 clips scored in one job) is estimated separately at ∼ 0.3 h from that job’s own log-file timestamps (start to last output write, since it did not log elapsed_seconds  
+
+> 21 PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+
+either). This total does not include retry/gap-fill overhead from failed job attempts (several jobs across the project failed on environment or timeout bugs before a working configuration was found, and were re-run) — those wasted GPU-hours are not reconstructable from the final result files, which only reflect the successful run. 
+
+E Reproducibility checklist 
+
+WACV’s author guide points to the Reproducibility Checklist as a guide rather than a mandated form, and encourages voluntary code submission. We record the substantive items here. 
+
+Code. Metrics, bootstrap CIs, mechanism selection, and the synthetic smoke test ( physweep_metrics.py ), the system generators ( physweep/render.py ), the tracker ( physweep/track.py , both blob-centroid and the CoTracker3 wrapper), and every experiment driver script ( experiments/*.py ,one per experiment plus the consolidated plausibility-and-robustness harness) exist in the project repository. 
+
+Data. Fully procedural, no external assets, no human annotation, seeded and deterministic. 
+
+Models. All public, all frozen, inference only. No training or fine-tuning was performed at any point. 
+
+Randomness. Every generation is keyed to an explicit integer seed; 𝑚 ≥ 5 seeds per grid point; seeds are recorded per clip. 
+
+Statistics. All intervals are 95% paired bootstraps over (𝜃 𝑖 , seed ); effect sizes are reported along-side 𝑝 -values; multiplicity across the six paired-bootstrap extrapolation tests is handled by a Holm correction. 
+
+Raw outputs. Per-clip records (model, system, seed, 𝜃 ,̂ 𝜃 , fit 𝑅 2, in/out-of-range split, and, for the plausibility pass, the VLM score) exist as JSON files in the project’s results/ directory, one file per model-system pair plus the plausibility-scored variants — every number in this paper and its supplementary tables was recomputed directly from these files during finalization, not carried forward from memory. 
+
+F Extended related work 
+
+This section extends Sec. 2 with material not central enough to the paper’s own contribution to justify main-text space, but relevant to situating it.  
+
+> Mechanism and memorization.
+
+Kang et al. [30] find in-distribution success with out-of-distribution case-based behavior (the source of the case-clamping hypothesis we test), and the memorization literature links such collapse to overestimated training modes amplified by classifier-free guidance [31]; we turn these into a testable dichotomy (Sec. 3) and a guidance-scale ablation (Sec. 6).  
+
+> Adjacent but distinct measurement approaches.
+
+Property-readout work recovers physical quan-tities from input videos via internal features [32] or probes diffusion states [33], characterizing the 
+
+encoder where we measure generation without weights or activations. VLMs are separately used to plan plausible generation [34] and judge implausibility [35], and recent analyses question whether they reason about physical transformations at all [36] — consistent with our own finding (Sec. 6)  
+
+> 22 PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+
+that a VLM plausibility rater does not track physical coherence on our stimuli. Classic benchmarks [37, 38] evaluate prediction or planning rather than generation, and quality metrics [39, 40] are orthogonal to all of the above: they score visual fidelity, not parameter faithfulness.   
+
+> 23 PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+> Table A2
+
+Seed counts and clip yields per model-axis pair. “seeds/pt (in/out)” is the number of seeds run at each in-range and out-of-range grid value respectively; most pairs use the base 5 seeds on both splits, but pairs close to select_mechanism ’s four-gated-point leave-one-out threshold received a larger targeted follow-up batch on the out-of-range split only (LTX-Video/pendulum-𝜔 : extended to 55 seeds/point, i.e. 110 out-of-range attempts across its two out-of-range grid values, still yielding only 1 gated clip; CogVideoX/bouncing-ball: extended to 33 seeds/point). No in-range seed count was extended beyond the base 5, since the out-of-range split is what select_mechanism ’s adjudication gate requires. 
+
+Model Axis seeds/pt (in/out) clips gen. clips gated 
+
+## LTX-Video projectile 5/10 55 12 
+
+## LTX-Video pendulum 𝜔 5/55 130 1
+
+## LTX-Video pendulum 𝜁 5/15 60 0
+
+## LTX-Video bouncing ball 5/15 65 5
+
+## LTX-Video spring-mass 5/15 80 0
+
+## LTX-Video inclined slide 5/5 35 11 
+
+## CogVideoX projectile 5/5 40 32 
+
+## CogVideoX pendulum 𝜔 5/13 46 0
+
+## CogVideoX pendulum 𝜁 5/13 54 0
+
+## CogVideoX bouncing ball 5/33 119 10 
+
+## CogVideoX spring-mass 5/13 72 0
+
+## CogVideoX inclined slide 5/13 59 0
+
+## DynamiCrafter projectile 5/10 55 33 
+
+## DynamiCrafter pendulum 𝜔 5/5 30 0
+
+## DynamiCrafter pendulum 𝜁 5/5 30 1
+
+## DynamiCrafter bouncing ball 5/10 50 11 
+
+## DynamiCrafter spring-mass 5/5 40 0
+
+## DynamiCrafter inclined slide 5/10 50 36  
+
+> 24 PHYSWEEP: PARAMETER FAITHFULNESS IN VIDEO GENERATORS Kurban Intelligence Lab
+
+Table A3 Every model used, all frozen and inference-only, loaded with no explicit commit/revision pin — each resolved to that repository’s default-branch head at run time, a gap against bit-for-bit reproducibility we disclose rather than paper over.    
+
+> Model Repository Licence Loaded via
+
+LTX-Video Lightricks/LTX-Video LTX-Video Open Weights (custom) diffusers==0.39.0 
+
+CogVideoX-5B-I2V zai-org/CogVideoX-5b-I2V CogVideoX custom licence a diffusers==0.39.0 
+
+DynamiCrafter 512 Doubiiu/DynamiCrafter_512 weights: research/non-commercial b standalone repo, subprocess Qwen2.5-VL-7B-Instruct Qwen/Qwen2.5-VL-7B-Instruct Apache 2.0 transformers==4.57.6 
+
+CoTracker3 facebookresearch/co-tracker CC-BY-NC 4.0 c torch.hub.load 
+
+> a
+
+Free for academic/research use; commercial use needs separate registration. bWeights are research/non-commercial; the companion code repo is separately Apache-2.0 (inference here uses the weights). cNon-commercial; some unused sub-components carry MIT or Apache 2.0 instead. 
+
+25

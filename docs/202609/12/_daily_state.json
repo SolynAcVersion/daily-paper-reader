@@ -1,0 +1,57 @@
+{
+  "date": "20260912",
+  "date_label": "",
+  "generated_at": "2026-09-12 21:34:44 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.06207v1",
+      "route": "202609/12/2609.06207v1-physweep-does-a-video-generator-realize-the-physics-you-ask-for",
+      "title": "PhysWeep: Does a Video Generator Realize the Physics You Ask For?",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "无需标注的基准，审计生成视频是否实现所要求的物理参数",
+      "first_seen_at": "2026-09-12 21:34:44 UTC",
+      "updated_at": "2026-09-12 21:34:44 UTC"
+    },
+    {
+      "paper_id": "2609.07107v1",
+      "route": "202609/12/2609.07107v1-beyond-sparse-rewards-a-new-benchmark-and-structure-aware-graph-alignment-for-micro-drama-understanding",
+      "title": "Beyond Sparse Rewards: A New Benchmark and Structure-Aware Graph Alignment for Micro-Drama Understanding",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "manga-drama"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "微短剧理解的基准与奖励方法",
+      "first_seen_at": "2026-09-12 21:34:44 UTC",
+      "updated_at": "2026-09-12 21:34:44 UTC"
+    },
+    {
+      "paper_id": "2609.07532v1",
+      "route": "202609/12/2609.07532v1-physreal-learning-real-world-deformable-object-physics-via-hybrid-constitutive-modeling",
+      "title": "PhysReal: Learning Real-World Deformable Object Physics via Hybrid Constitutive Modeling",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "从视频学习真实可变形物体的物理可信动力学",
+      "first_seen_at": "2026-09-12 21:34:44 UTC",
+      "updated_at": "2026-09-12 21:34:44 UTC"
+    }
+  ]
+}

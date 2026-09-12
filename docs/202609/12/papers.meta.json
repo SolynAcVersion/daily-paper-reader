@@ -1,0 +1,54 @@
+{
+  "label": "2026-09-12",
+  "date": "2026-09-12",
+  "generated_at": "2026-09-12T21:34:46",
+  "count": 3,
+  "papers": [
+    {
+      "paper_id": "202609/12/2609.06207v1-physweep-does-a-video-generator-realize-the-physics-you-ask-for",
+      "section": "deep",
+      "title_en": "PhysWeep: Does a Video Generator Realize the Physics You Ask For?",
+      "authors": "Rasul Khanbayov, Hasan Kurban",
+      "date": "2026-09-05",
+      "pdf": "https://arxiv.org/pdf/2609.06207v1",
+      "score": "9.0",
+      "evidence": "无需标注的基准，审计生成视频是否实现所要求的物理参数",
+      "tldr": "视频生成器常被认为内化了物理规律，但现有评估只用“看起来是否合理”的plausibility分数，无法发现画面自然却参数错误的失败。PhysWeep提出固定、免标注的黑盒审计协议，从生成像素中反解实际物理参数，检验可追踪性、参数偏离度与已有两种失败机制假说。在三个开源生成器、六条参数扫描轴上，发现两个模型在可追踪时会把动力学锁定到由采样种子决定而非请求决定的少数固定错误值，且跨模型家族、物理系统与独立追踪器复现。",
+      "tags": "query:phys-video",
+      "abstract_en": "Image-to-video generators are often credited with absorbing physical dynamics as implicit world models, a claim the community currently checks with plausibility scores that ask whether a clip looks consistent with real-world motion. Plausibility is the wrong test on its own, because a clip can look natural while encoding the wrong value of the governing physical parameter, and no existing benchmark measures this gap directly. PhysWeep closes it with a fixed, label-free audit, treating a frozen generator as a black box, recovering the realized parameter from generated pixels, and reporting how often generation is trackable at all, how far the realized value sits from the requested one, and which, if either, of the literature's two proposed failure mechanisms the data support. A deterministic-simulator positive control confirms every score is exactly checkable. Applied to three open generators across six sweep axes, PhysWeep finds a specific, reproducible, previously undocumented failure. Conditional on producing trackable motion, two of the three generate confident, well-fit dynamics that converge to one of a small number of fixed, wrong values selected by the sampling seed rather than by the request, reproducing across two independent model families, two physical systems, and an independent tracker. It matches neither the prior reversion nor the case-based clamping the literature anticipates, because the reversion target is seed-conditional rather than a single global default, and a leave-one-out selection rule rejects both; the in-range faithfulness slope is statistically indistinguishable from zero wherever a response is estimable at all. A benchmark averaging over seeds would never see this: each sample is confidently locked to a wrong constant, exactly the failure a plausibility score is structurally blind to. We release the protocol, suite, and analysis code.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/12/2609.07107v1-beyond-sparse-rewards-a-new-benchmark-and-structure-aware-graph-alignment-for-micro-drama-understanding",
+      "section": "deep",
+      "title_en": "Beyond Sparse Rewards: A New Benchmark and Structure-Aware Graph Alignment for Micro-Drama Understanding",
+      "authors": "Yixin Qin, Shi-Zhe Chen, Zhiqi Yu, Siyuan Cheng, Tao Cheng, Jinwen Luo, Zheng Wei",
+      "date": "2026-09-07",
+      "pdf": "https://arxiv.org/pdf/2609.07107v1",
+      "score": "8.0",
+      "evidence": "微短剧理解的基准与奖励方法",
+      "tldr": "微短剧时长极短、剧情高密度，现有视频理解基准难以覆盖。作者提出首个大规模双语微短剧理解基准 M-Drama，含 9,138 个片段、超 35K 实例。又针对强化学习中奖励稀疏表浅的问题，提出结构感知图对齐 SAGA，将叙事建模为异构图，用解耦语义三元组与结构时序匹配生成稠密奖励。在 Qwen3-VL-8B-Instruct 上，SAGA 提升开放式准确率与摘要质量，并保持域外泛化。",
+      "tags": "query:manga-drama",
+      "abstract_en": "Micro-dramas, characterized by ultra-short durations and hyper-dense storylines, pose unique challenges for video understanding that conventional benchmarks fail to address. To bridge this gap, we introduce M-Drama, the first large-scale bilingual benchmark for micro-drama comprehension, featuring over 35K instances across 9,138 clips. Furthermore, while reinforcement learning can enhance VLMs on complex narratives, existing reward metrics often suffer from sparse and superficial signals, failing to capture intricate character identities and temporal structures. We propose SAGA (Structure-Aware Graph Alignment), a novel graph-matching reward function that models narratives as heterogeneous graphs. SAGA computes dense, rigorous rewards via decoupled semantic triplet and structural temporal matching. Extensive experiments on Qwen3-VL-8B-Instruct demonstrate that SAGA outperforms existing baselines, delivering substantial improvements in open-ended accuracy and summary quality, while maintaining competitive out-of-domain generalization. Code is available at https://github.com/qyx1121/MDrama_SAGA.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/12/2609.07532v1-physreal-learning-real-world-deformable-object-physics-via-hybrid-constitutive-modeling",
+      "section": "deep",
+      "title_en": "PhysReal: Learning Real-World Deformable Object Physics via Hybrid Constitutive Modeling",
+      "authors": "Yinan Deng, Jianqiao Song, Yisi Zhang, Yuhan Wang, Jiahui Wang, Yufeng Yue",
+      "date": "2026-09-07",
+      "pdf": "https://arxiv.org/pdf/2609.07532v1",
+      "score": "8.0",
+      "evidence": "从视频学习真实可变形物体的物理可信动力学",
+      "tldr": "真实可变形物体物理建模因材料响应复杂且空间异质而困难。PhysReal 是视频驱动框架，将空间变化的专家-神经混合本构模型与可微 MPM 模拟器、3DGS 渲染器结合，用专家先验和神经残差刻画局部材料。它通过渐进课程从稀疏视觉观测辨识全局参数、空间局部参数与神经残差。实验在多种交互中取得更优动态重建与未来状态预测，并展现机器人应用潜力。",
+      "tags": "query:phys-video",
+      "abstract_en": "Learning physically plausible dynamics from visual observations is essential for interactive world models and embodied agents. However, modeling real-world deformable objects remains challenging because their dynamics often arise from complex, spatially heterogeneous material responses. To address this challenge, we propose PhysReal, a video-driven framework for learning and simulating the underlying physics of real deformable objects. PhysReal integrates a spatially varying hybrid expert-neural constitutive model with a differentiable MPM simulator and 3DGS renderer. Analytical expert models provide interpretable physical priors, while neural constitutive residuals capture material responses beyond predefined formulations. Spatially distributed patches parameterize the constitutive field, enabling a continuous representation of local material variations. To organize the identification of this model from sparse visual observations, we adopt a progressive curriculum that sequentially optimizes global material properties, spatially varying local parameters, and neural constitutive residuals, together with complementary motion and mask supervision. Extensive experiments on diverse deformable-object interactions demonstrate that PhysReal achieves superior performance in dynamic reconstruction and future-state prediction, while showing strong potential for downstream robotic applications.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
