@@ -1,0 +1,111 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-13T21:12:23.273319+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 1,
+    "deep_cap": 8,
+    "deep_selected": 1,
+    "quick_candidates": 1,
+    "quick_skim_target": 13,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2609.07107v1",
+      "source": "arxiv",
+      "title": "Beyond Sparse Rewards: A New Benchmark and Structure-Aware Graph Alignment for Micro-Drama Understanding",
+      "abstract": "Micro-dramas, characterized by ultra-short durations and hyper-dense storylines, pose unique challenges for video understanding that conventional benchmarks fail to address. To bridge this gap, we introduce M-Drama, the first large-scale bilingual benchmark for micro-drama comprehension, featuring over 35K instances across 9,138 clips. Furthermore, while reinforcement learning can enhance VLMs on complex narratives, existing reward metrics often suffer from sparse and superficial signals, failing to capture intricate character identities and temporal structures. We propose SAGA (Structure-Aware Graph Alignment), a novel graph-matching reward function that models narratives as heterogeneous graphs. SAGA computes dense, rigorous rewards via decoupled semantic triplet and structural temporal matching. Extensive experiments on Qwen3-VL-8B-Instruct demonstrate that SAGA outperforms existing baselines, delivering substantial improvements in open-ended accuracy and summary quality, while maintaining competitive out-of-domain generalization. Code is available at https://github.com/qyx1121/MDrama_SAGA.",
+      "authors": [
+        "Yixin Qin",
+        "Shi-Zhe Chen",
+        "Zhiqi Yu",
+        "Siyuan Cheng",
+        "Tao Cheng",
+        "Jinwen Luo",
+        "Zheng Wei"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-07T06:48:17+00:00",
+      "link": "https://arxiv.org/pdf/2609.07107v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "large-scale benchmark for micro-drama comprehension with RL reward alignment",
+      "llm_evidence_cn": "面向微短剧理解的大规模基准与强化学习奖励对齐",
+      "llm_evidence": "面向微短剧理解的大规模基准与强化学习奖励对齐",
+      "canonical_evidence": "面向微短剧理解的大规模基准与强化学习奖励对齐",
+      "llm_tldr_en": "This paper introduces M-Drama, the first large-scale bilingual benchmark for micro-drama comprehension with 35K instances across 9,138 clips, and proposes SAGA, a graph-matching reward that models narratives as heterogeneous graphs for reinforcement learning on VLMs.",
+      "llm_tldr_cn": "微短剧时长极短、剧情高度密集，现有基准难以评估其理解。作者构建了首个大规模双语微短剧理解基准M-Drama，包含9138个片段、超3.5万实例，并针对强化学习中奖励稀疏浅薄的问题提出SAGA结构感知图对齐奖励，将叙事建模为异构图以计算稠密奖励。该工作为微短剧内容理解与评估提供了基准与新的奖励机制。",
+      "llm_tldr": "微短剧时长极短、剧情高度密集，现有基准难以评估其理解。作者构建了首个大规模双语微短剧理解基准M-Drama，包含9138个片段、超3.5万实例，并针对强化学习中奖励稀疏浅薄的问题提出SAGA结构感知图对齐奖励，将叙事建模为异构图以计算稠密奖励。该工作为微短剧内容理解与评估提供了基准与新的奖励机制。",
+      "llm_tags": [
+        "query:manga-drama"
+      ],
+      "matched_query_tag": "query:manga-drama",
+      "matched_query_text": "creating micro dramas with a duration of three to five minutes",
+      "matched_requirement_id": "req-22",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.10540v1",
+      "source": "arxiv",
+      "title": "Programmable World Model",
+      "abstract": "Recent video world models generate increasingly realistic and interactive visual experiences, yet lack reliable mechanisms for maintaining persistent world state and enforcing programmable rules over extended interactions. We introduce Programmable World Model, a framework that decouples world-state evolution from visual observation generation. An agent translates natural-language instructions into executable programs that specify entity states and state-transition rules, enabling direct control over individual entities and their interactions. A lightweight engine executes these programs to update and maintain an explicit, persistent global world state, including off-screen entities and non-visual attributes. To connect world state with visual generation, we introduce state-augmented 3D oriented bounding boxes (OBBs) as an intermediate representation. This representation, together with the target camera trajectory, is deterministically compiled into pixel-aligned spatiotemporal conditioning signals for a pretrained video model serving as the generative renderer. This design allows users to create playable games with predefined mechanics, direct control over individual entities, and persistent world state throughout gameplay. We further introduce CombatStateBench, a benchmark for evaluating programmable world models. On CombatStateBench, our method achieves 94% Count Accuracy and 98% State Accuracy, substantially outperforming existing interactive video world models while supporting coherent long-horizon generation. These results demonstrate the effectiveness of separating explicit state evolution from generative rendering for building persistent, programmable worlds.",
+      "authors": [
+        "Zheng-Hui Huang",
+        "Guixu Lin",
+        "Jiacheng Lin",
+        "Yi-Chuan Huang",
+        "Ruihan Yu",
+        "Muyao Niu",
+        "Siqi Yang",
+        "Yu-Lun Liu",
+        "Yung-Yu Chuang",
+        "Kaipeng Zhang",
+        "Zhixiang Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-09T17:59:32+00:00",
+      "link": "https://arxiv.org/pdf/2609.10540v1",
+      "tags": [
+        "keyword:manga-drama",
+        "keyword:phys-video",
+        "keyword:psd",
+        "query:manga-drama",
+        "query:phys-video",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "executable programs govern entity states and interactions with persistent world state",
+      "llm_evidence_cn": "用可执行程序控制实体状态与交互并维持持久世界状态",
+      "llm_evidence": "用可执行程序控制实体状态与交互并维持持久世界状态",
+      "canonical_evidence": "用可执行程序控制实体状态与交互并维持持久世界状态",
+      "llm_tldr_en": "Programmable World Model decouples world-state evolution from visual generation, letting agents translate natural-language instructions into executable programs that govern entity states and interactions for persistent, rule-based video world models.",
+      "llm_tldr_cn": "现有视频世界模型虽能生成逼真交互画面，却缺乏维持持久世界状态与执行可编程规则的能力。论文提出可编程世界模型，将世界状态演化与视觉观测生成解耦：由智能体把自然语言指令翻译为可执行程序，显式定义实体状态与状态转移规则，再由轻量引擎维护全局状态。该框架支持对实体及其交互的直接控制，并引入状态增强的三维表示连接状态与视觉生成，为可约束、可解释的交互式世界建模提供新范式，与物理规律约束的视频生成主题相关。",
+      "llm_tldr": "现有视频世界模型虽能生成逼真交互画面，却缺乏维持持久世界状态与执行可编程规则的能力。论文提出可编程世界模型，将世界状态演化与视觉观测生成解耦：由智能体把自然语言指令翻译为可执行程序，显式定义实体状态与状态转移规则，再由轻量引擎维护全局状态。该框架支持对实体及其交互的直接控制，并引入状态增强的三维表示连接状态与视觉生成，为可约束、可解释的交互式世界建模提供新范式，与物理规律约束的视频生成主题相关。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

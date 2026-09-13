@@ -1,0 +1,39 @@
+{
+  "label": "2026-09-13",
+  "date": "2026-09-13",
+  "generated_at": "2026-09-13T21:13:59",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202609/13/2609.07107v1-beyond-sparse-rewards-a-new-benchmark-and-structure-aware-graph-alignment-for-micro-drama-understanding",
+      "section": "deep",
+      "title_en": "Beyond Sparse Rewards: A New Benchmark and Structure-Aware Graph Alignment for Micro-Drama Understanding",
+      "authors": "Yixin Qin, Shi-Zhe Chen, Zhiqi Yu, Siyuan Cheng, Tao Cheng, Jinwen Luo, Zheng Wei",
+      "date": "2026-09-07",
+      "pdf": "https://arxiv.org/pdf/2609.07107v1",
+      "score": "8.0",
+      "evidence": "面向微短剧理解的大规模基准与强化学习奖励对齐",
+      "tldr": "微短剧时长极短、剧情高度密集，现有视频理解基准难以覆盖这类叙事。作者提出首个大规模双语微短剧理解基准 M-Drama，含 9,138 个片段、超 35K 实例；并提出 SAGA，将叙事建模为异构图，通过解耦的语义三元组与结构时序匹配生成稠密奖励。在 Qwen3-VL-8B-Instruct 上，SAGA 在开放式准确率与摘要质量上显著超越基线，并保持有竞争力的域外泛化。",
+      "tags": "query:manga-drama",
+      "abstract_en": "Micro-dramas, characterized by ultra-short durations and hyper-dense storylines, pose unique challenges for video understanding that conventional benchmarks fail to address. To bridge this gap, we introduce M-Drama, the first large-scale bilingual benchmark for micro-drama comprehension, featuring over 35K instances across 9,138 clips. Furthermore, while reinforcement learning can enhance VLMs on complex narratives, existing reward metrics often suffer from sparse and superficial signals, failing to capture intricate character identities and temporal structures. We propose SAGA (Structure-Aware Graph Alignment), a novel graph-matching reward function that models narratives as heterogeneous graphs. SAGA computes dense, rigorous rewards via decoupled semantic triplet and structural temporal matching. Extensive experiments on Qwen3-VL-8B-Instruct demonstrate that SAGA outperforms existing baselines, delivering substantial improvements in open-ended accuracy and summary quality, while maintaining competitive out-of-domain generalization. Code is available at https://github.com/qyx1121/MDrama_SAGA.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/13/2609.10540v1-programmable-world-model",
+      "section": "quick",
+      "title_en": "Programmable World Model",
+      "authors": "Zheng-Hui Huang, Guixu Lin, Jiacheng Lin, Yi-Chuan Huang, Ruihan Yu, Muyao Niu, Siqi Yang, Yu-Lun Liu, Yung-Yu Chuang, Kaipeng Zhang, Zhixiang Wang",
+      "date": "2026-09-09",
+      "pdf": "https://arxiv.org/pdf/2609.10540v1",
+      "score": "6.0",
+      "evidence": "用可执行程序控制实体状态与交互并维持持久世界状态",
+      "tldr": "近期视频世界模型视觉逼真且可交互，却难以维持持久世界状态并执行可编程规则。本文提出 Programmable World Model，将世界状态演化与视觉观测生成解耦：智能体把自然语言转为可执行程序，轻量引擎维护显式全局状态，再经 state-augmented 3D OBBs 编译为条件信号驱动视频渲染。在 CombatStateBench 上取得 94% 计数准确率与 98% 状态准确率，支持长时程连贯生成，为持久可编程世界提供新范式。",
+      "tags": "query:phys-video",
+      "abstract_en": "Recent video world models generate increasingly realistic and interactive visual experiences, yet lack reliable mechanisms for maintaining persistent world state and enforcing programmable rules over extended interactions. We introduce Programmable World Model, a framework that decouples world-state evolution from visual observation generation. An agent translates natural-language instructions into executable programs that specify entity states and state-transition rules, enabling direct control over individual entities and their interactions. A lightweight engine executes these programs to update and maintain an explicit, persistent global world state, including off-screen entities and non-visual attributes. To connect world state with visual generation, we introduce state-augmented 3D oriented bounding boxes (OBBs) as an intermediate representation. This representation, together with the target camera trajectory, is deterministically compiled into pixel-aligned spatiotemporal conditioning signals for a pretrained video model serving as the generative renderer. This design allows users to create playable games with predefined mechanics, direct control over individual entities, and persistent world state throughout gameplay. We further introduce CombatStateBench, a benchmark for evaluating programmable world models. On CombatStateBench, our method achieves 94% Count Accuracy and 98% State Accuracy, substantially outperforming existing interactive video world models while supporting coherent long-horizon generation. These results demonstrate the effectiveness of separating explicit state evolution from generative rendering for building persistent, programmable worlds.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
