@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-14</span>
+      <span class="dpr-home-dashboard-kicker">2026-08-17 ~ 2026-09-15</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 0 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 11 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>0</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>4</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>7</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-14 22:45:03 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-15 03:37:06 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日无新推荐，系统未产出可展示论文。</p>
+<p>2026-08-17至09-15共筛出11篇视频生成与理解论文，精读4篇、速读7篇。最值得关注的是Stream4D用4D一致性改进流式自回归扩散视频模型（8.0/10），以及MotionPhys借光流轨迹的物理一致性检测AI生成视频（8.0/10）。普通读者可优先看这两篇，再顺带浏览长视频生成与视频基础模型时空表征的速读文章。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -71,12 +71,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">0 篇</strong>
+    <strong class="dpr-home-dashboard-count">4 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Stream4D: 4D-Consistency for Streaming Autoregressive Diffusion Video Models">Stream4D: 4D-Consistency for Streaming Autoregressive Diffusion Video Models</span></li><li><span class="dpr-home-dashboard-paper-title" title="MotionPhys: Detecting AI-Generated Videos via Physical Consistency of Optical-Flow Trajectories">MotionPhys: Detecting AI-Generated Videos via Physical Consistency of Optical-Flow Trajectories</span></li><li><span class="dpr-home-dashboard-paper-title" title="Principia: Relational Physics Tests for Video Models">Principia: Relational Physics Tests for Video Models</span></li></ul>
   </div>
-
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>3</strong></span><span class="dpr-home-dashboard-tag">video-gen-rl <strong>1</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -84,12 +84,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">0 篇</strong>
+    <strong class="dpr-home-dashboard-count">7 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Following Motion for Sequential Modeling in Video Frame Interpolation">Following Motion for Sequential Modeling in Video Frame Interpolation</span></li><li><span class="dpr-home-dashboard-paper-title" title="RECAP-Forcing: Retaining Content Appearances for Long Video Generation">RECAP-Forcing: Retaining Content Appearances for Long Video Generation</span></li><li><span class="dpr-home-dashboard-paper-title" title="What, Where, and How: Probing Spatiotemporal Representations in Video Foundation Models">What, Where, and How: Probing Spatiotemporal Representations in Video Foundation Models</span></li></ul>
   </div>
-
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">video-gen-rl <strong>3</strong></span><span class="dpr-home-dashboard-tag">frame-dist <strong>2</strong></span><span class="dpr-home-dashboard-tag">phys-video <strong>2</strong></span></div>
 </section>
 </div>
 
