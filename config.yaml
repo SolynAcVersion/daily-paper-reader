@@ -343,6 +343,36 @@ subscriptions:
           source: manual
           note: ''
       updated_at: '2026-09-15T02:18:27.441Z'
+    - tag: frame-dist
+      description: 建模视频帧与帧之间的分布关系
+      enabled: true
+      paper_sources:
+        - arxiv
+      keywords:
+        - keyword: inter-frame distribution
+          keyword_cn: 帧间分布
+          query: distribution relationships between consecutive or neighboring video frames
+        - keyword: frame relationship modeling
+          keyword_cn: 帧关系建模
+          query: capturing dependencies and correlations between video frames over time
+        - keyword: temporal distribution modeling
+          keyword_cn: 时序分布建模
+          query: learning temporal distributions across a sequence of video frames
+        - keyword: frame correlation
+          keyword_cn: 帧相关性
+          query: correlation structure between video frames for distribution modeling
+      intent_queries:
+        - query: How can the distributional relationship between video frames be modeled effectively?
+          query_cn: 如何有效建模视频帧之间的分布关系？
+          enabled: true
+          source: manual
+          note: ''
+        - query: What approaches capture inter frame distribution shifts in video data?
+          query_cn: 哪些方法能够捕捉视频数据中的帧间分布变化？
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-09-15T03:28:35.597Z'
 source_backends:
   arxiv:
     papers_table: arxiv_papers
