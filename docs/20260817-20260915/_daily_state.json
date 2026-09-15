@@ -1,26 +1,10 @@
 {
   "date": "20260817-20260915",
   "date_label": "2026-08-17 ~ 2026-09-15",
-  "generated_at": "2026-09-15 03:37:06 UTC",
+  "generated_at": "2026-09-15 04:03:40 UTC",
   "recommend_exists": true,
-  "run_count": 1,
+  "run_count": 2,
   "papers": [
-    {
-      "paper_id": "2608.19556v1",
-      "route": "20260817-20260915/2608.19556v1-stream4d-4d-consistency-for-streaming-autoregressive-diffusion-video-models",
-      "title": "Stream4D: 4D-Consistency for Streaming Autoregressive Diffusion Video Models",
-      "section": "deep",
-      "tags": [
-        {
-          "kind": "query",
-          "label": "phys-video"
-        }
-      ],
-      "score": 8.0,
-      "evidence": "用四维一致性奖励抑制自回归视频生成的几何漂移",
-      "first_seen_at": "2026-09-15 03:37:06 UTC",
-      "updated_at": "2026-09-15 03:37:06 UTC"
-    },
     {
       "paper_id": "2608.20770v1",
       "route": "20260817-20260915/2608.20770v1-motionphys-detecting-ai-generated-videos-via-physical-consistency-of-optical-flow-trajectories",
@@ -32,10 +16,10 @@
           "label": "phys-video"
         }
       ],
-      "score": 8.0,
-      "evidence": "基于光流轨迹物理一致性检测AI生成视频",
+      "score": 9.0,
+      "evidence": "通过光流轨迹物理一致性检测AI生成视频",
       "first_seen_at": "2026-09-15 03:37:06 UTC",
-      "updated_at": "2026-09-15 03:37:06 UTC"
+      "updated_at": "2026-09-15 04:03:40 UTC"
     },
     {
       "paper_id": "2609.04200v1",
@@ -48,10 +32,30 @@
           "label": "phys-video"
         }
       ],
-      "score": 8.0,
-      "evidence": "通过关系一致性评估视频模型牛顿物理的基准",
+      "score": 9.0,
+      "evidence": "通过成对物体间的关联一致性评估视频模型牛顿物理的基准",
       "first_seen_at": "2026-09-15 03:37:06 UTC",
-      "updated_at": "2026-09-15 03:37:06 UTC"
+      "updated_at": "2026-09-15 04:03:40 UTC"
+    },
+    {
+      "paper_id": "2608.19556v1",
+      "route": "20260817-20260915/2608.19556v1-stream4d-4d-consistency-for-streaming-autoregressive-diffusion-video-models",
+      "title": "Stream4D: 4D-Consistency for Streaming Autoregressive Diffusion Video Models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        },
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "四维一致性奖励约束自回归视频扩散保持几何与动态连贯",
+      "first_seen_at": "2026-09-15 03:37:06 UTC",
+      "updated_at": "2026-09-15 04:03:40 UTC"
     },
     {
       "paper_id": "2609.04283v1",
@@ -65,9 +69,73 @@
         }
       ],
       "score": 8.0,
-      "evidence": "面向视频生成的统一分布匹配对齐与蒸馏框架",
+      "evidence": "统一分布匹配框架，联合对齐与蒸馏视频生成模型",
       "first_seen_at": "2026-09-15 03:37:06 UTC",
-      "updated_at": "2026-09-15 03:37:06 UTC"
+      "updated_at": "2026-09-15 04:03:40 UTC"
+    },
+    {
+      "paper_id": "2609.09123v1",
+      "route": "20260817-20260915/2609.09123v1-mask-forcing-improving-autoregressive-video-diffusion-distillation-via-dual-noise-masking-rollout",
+      "title": "Mask Forcing: Improving Autoregressive Video Diffusion Distillation via Dual-Noise Masking Rollout",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向自回归视频扩散的分布匹配蒸馏并缓解模式坍缩",
+      "first_seen_at": "2026-09-15 03:37:06 UTC",
+      "updated_at": "2026-09-15 04:03:40 UTC"
+    },
+    {
+      "paper_id": "2609.11265v1",
+      "route": "20260817-20260915/2609.11265v1-uncertainty-dmd-restoring-diversity-in-few-step-autoregressive-video-distillation",
+      "title": "Uncertainty DMD: Restoring Diversity in Few-Step Autoregressive Video Distillation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "自回归视频生成的分布匹配蒸馏与时间变化坍缩",
+      "first_seen_at": "2026-09-15 03:37:06 UTC",
+      "updated_at": "2026-09-15 04:03:40 UTC"
+    },
+    {
+      "paper_id": "2608.19987v1",
+      "route": "20260817-20260915/2608.19987v1-step-score-based-temporal-energy-for-human-pose-video-anomaly-detection",
+      "title": "STEP: Score-Based Temporal Energy for Human Pose Video Anomaly Detection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "frame-dist"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "在时序上建模姿态分布并保持物理合理",
+      "first_seen_at": "2026-09-15 04:03:40 UTC",
+      "updated_at": "2026-09-15 04:03:40 UTC"
+    },
+    {
+      "paper_id": "2608.20473v1",
+      "route": "20260817-20260915/2608.20473v1-aggregating-visual-information-with-optimal-transport-for-videolm-token-compression",
+      "title": "Aggregating Visual Information with Optimal Transport for VideoLM Token Compression",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "frame-dist"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "将帧观测建模为经验测度并做最优传输耦合",
+      "first_seen_at": "2026-09-15 04:03:40 UTC",
+      "updated_at": "2026-09-15 04:03:40 UTC"
     },
     {
       "paper_id": "2608.22861v1",
@@ -81,9 +149,9 @@
         }
       ],
       "score": 6.0,
-      "evidence": "用运动引导状态空间扫描捕捉帧间长程依赖",
+      "evidence": "运动自适应序列化捕捉帧间长程依赖",
       "first_seen_at": "2026-09-15 03:37:06 UTC",
-      "updated_at": "2026-09-15 03:37:06 UTC"
+      "updated_at": "2026-09-15 04:03:40 UTC"
     },
     {
       "paper_id": "2608.26671v1",
@@ -97,9 +165,41 @@
         }
       ],
       "score": 6.0,
-      "evidence": "按外观新颖性组织记忆，维持长视频跨帧内容一致性",
+      "evidence": "以内容新颖度组织记忆，保持长视频帧间内容一致",
       "first_seen_at": "2026-09-15 03:37:06 UTC",
-      "updated_at": "2026-09-15 03:37:06 UTC"
+      "updated_at": "2026-09-15 04:03:40 UTC"
+    },
+    {
+      "paper_id": "2608.28694v1",
+      "route": "20260817-20260915/2608.28694v1-snf-bench-separating-static-drift-from-natural-flow-in-long-horizon-fixed-camera-video-generation",
+      "title": "SNF-Bench: Separating Static Drift from Natural Flow in Long-Horizon Fixed-Camera Video Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "通过分离静态漂移与自然流动评估长时视频生成",
+      "first_seen_at": "2026-09-15 04:03:40 UTC",
+      "updated_at": "2026-09-15 04:03:40 UTC"
+    },
+    {
+      "paper_id": "2609.05541v1",
+      "route": "20260817-20260915/2609.05541v1-video-compression-with-graph-inspired-neural-representation",
+      "title": "Video Compression with Graph-inspired Neural Representation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "frame-dist"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "在帧嵌入上构建时序邻域以利用帧间相关结构",
+      "first_seen_at": "2026-09-15 03:37:06 UTC",
+      "updated_at": "2026-09-15 04:03:40 UTC"
     },
     {
       "paper_id": "2609.01551v1",
@@ -118,22 +218,6 @@
       "updated_at": "2026-09-15 03:37:06 UTC"
     },
     {
-      "paper_id": "2609.05541v1",
-      "route": "20260817-20260915/2609.05541v1-video-compression-with-graph-inspired-neural-representation",
-      "title": "Video Compression with Graph-inspired Neural Representation",
-      "section": "quick",
-      "tags": [
-        {
-          "kind": "query",
-          "label": "frame-dist"
-        }
-      ],
-      "score": 6.0,
-      "evidence": "在帧嵌入上构建时间邻域并消息传递，利用帧间冗余",
-      "first_seen_at": "2026-09-15 03:37:06 UTC",
-      "updated_at": "2026-09-15 03:37:06 UTC"
-    },
-    {
       "paper_id": "2609.06373v1",
       "route": "20260817-20260915/2609.06373v1-multi-grid-post-training-for-long-form-multi-shot-video-generation",
       "title": "Multi-Grid Post-Training for Long-Form Multi-Shot Video Generation",
@@ -146,38 +230,6 @@
       ],
       "score": 6.0,
       "evidence": "面向长视频多镜头连贯生成的多网格后训练范式",
-      "first_seen_at": "2026-09-15 03:37:06 UTC",
-      "updated_at": "2026-09-15 03:37:06 UTC"
-    },
-    {
-      "paper_id": "2609.09123v1",
-      "route": "20260817-20260915/2609.09123v1-mask-forcing-improving-autoregressive-video-diffusion-distillation-via-dual-noise-masking-rollout",
-      "title": "Mask Forcing: Improving Autoregressive Video Diffusion Distillation via Dual-Noise Masking Rollout",
-      "section": "quick",
-      "tags": [
-        {
-          "kind": "query",
-          "label": "video-gen-rl"
-        }
-      ],
-      "score": 6.0,
-      "evidence": "视频扩散中的分布匹配蒸馏与模式坍塌",
-      "first_seen_at": "2026-09-15 03:37:06 UTC",
-      "updated_at": "2026-09-15 03:37:06 UTC"
-    },
-    {
-      "paper_id": "2609.11265v1",
-      "route": "20260817-20260915/2609.11265v1-uncertainty-dmd-restoring-diversity-in-few-step-autoregressive-video-distillation",
-      "title": "Uncertainty DMD: Restoring Diversity in Few-Step Autoregressive Video Distillation",
-      "section": "quick",
-      "tags": [
-        {
-          "kind": "query",
-          "label": "video-gen-rl"
-        }
-      ],
-      "score": 6.0,
-      "evidence": "分布匹配蒸馏塌缩经自回归缓存传播，抑制时序变化",
       "first_seen_at": "2026-09-15 03:37:06 UTC",
       "updated_at": "2026-09-15 03:37:06 UTC"
     }

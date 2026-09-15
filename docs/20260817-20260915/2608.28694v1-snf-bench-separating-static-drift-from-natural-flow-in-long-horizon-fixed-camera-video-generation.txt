@@ -1,0 +1,649 @@
+Title: SNF-Bench: Separating Static Drift from Natural Flow in Long-Horizon Fixed-Camera Video Generation
+
+URL Source: https://arxiv.org/pdf/2608.28694v1
+
+Published Time: Tue, 01 Sep 2026 00:04:29 GMT
+
+Number of Pages: 24
+
+Markdown Content:
+# SNF-Bench: Separating Static Drift from Natural Flow in Long-Horizon Fixed-Camera Video Generation 
+
+## Matiur Rahman Minar Sogang University Seoul, Korea 
+
+> minar@sogang.ac.kr
+
+## Seunghun Oh Sogang University Seoul, Korea 
+
+> gnsgus190@sogang.ac.kr
+
+## Ganghyeon Jeong Sogang University Seoul, Korea 
+
+> ganghyeon@sogang.ac.kr
+
+## Unsang Park Sogang University Seoul, Korea 
+
+> unsangpark@sogang.ac.kr
+
+## Abstract 
+
+Long-horizon video generation is evaluated with whole-frame metrics that reward motion and temporal consistency. For fixed-camera nature scenes this creates an ambiguity: motion of water, fire, smoke, or rain is desirable, whereas motion of the background is an error. A system can there-fore score well on motion while its scene drifts, or on consis-tency while its flow stagnates. We introduce SNF-Bench, an evaluation framework for long-horizon fixed-camera gener-ation that partitions each scene into static support and dy-namic flow and reports static fidelity, flow persistence with absolute magnitude, and drift leakage separately, never as one score. Drift leakage is interpretive context rather than a headline measurement. Each factor is validated mech-anistically rather than by correlation with preference: we inject global translation, rotation, and scale drift and pro-gressive late freezing at known severity into real genera-tions, and require each factor to respond in its stated di-rection and to remain selective against corruptions it does not target. Auditing publicly released long-horizon text-conditioned checkpoints under one recorded common infer-ence configuration, plus an image-conditioned track with released-pipeline references and a deployment-sensitivity panel, we find that whole-frame motion and static-region drift induce near-opposite orderings of the same outputs. At maximum controlled translation, fBD and NBF rise to 1.86 × and 1.32 × baseline, but whole-frame Dynamic De-gree reaches only 1.07 ×—rewarding the corruption. SNF-Bench measures where motion occurs and whether it per-sists; it does not measure physical realism. Project page: https://minar09.github.io/snfbench/ 
+
+## 1. Introduction 
+
+Long-horizon, autoregressive (AR), and streaming video diffusion models now extend generation from seconds to minute-scale horizons [20, 31, 33, 35, 37, 38]. Evaluation has not kept pace: small temporal errors invisible in short clips accumulate over long rollouts into background dis-placement, color drift, or motion decay, and whole-frame metrics summarize these qualitatively different failures into one score. The problem is sharpest in fixed-camera nature scenes. In a static-camera video of a river, the water should move while the bank, rocks, and surrounding landscape stay fixed. The same separation governs waterfalls, ocean waves, rain-fall, fire, smoke, and wind-driven vegetation: some regions form static support that must remain structurally fixed, while others carry dynamic flow that must persist. Whole-frame motion measures reward optical flow regardless of its origin, crediting background drift as readily as genuine fluid motion, while temporal-consistency measures can fa-vor videos whose stability comes from suppressing the flow they should sustain. Two opposite failures—static drift and flow decay—are thereby conflated, and increasingly so at long horizons, where accumulated background motion can dominate a sequence’s apparent dynamics. Figure 1 shows both failures in outputs of released checkpoints under the common setting. We introduce SNF-Bench (Static–Natural Flow), an evaluation framework built around this decomposition, evaluated at 60 and 120 s horizons with shorter ( 5 s) and longer ( 240 s) tiers retained as diagnostics. Measurement is organized into three factor groups, the third interpre-tive. Static fidelity captures geometric displacement and residual flow inside nominally stationary regions. Flow arXiv:2608.28694v1 [cs.CV] 27 Aug 2026 support held, motion persists CausVid                 
+
+> t= 0 s t= 30 s t= 60 s
+> VBench DD* 0.908
+> fBD 0.7
+> MCFF-L 8.1
+> support drifts Causal-Forcing
+> VBench DD* 0.919
+> fBD 29.3
+> MCFF-L 2.1
+> support held, motion stopped Infinite-Forcing
+> VBench DD* 0.116
+> fBD 3.5
+> MCFF-L 0.3
+> A whole-frame motion score rates the top two rows almost identically (DD 0.908 vs 0.919) —their background drift differs over 40 ×
+
+Figure 1. Why a fixed-camera benchmark needs a spatial decomposition. Three 60 s outputs from released checkpoints under the recorded common configuration. A whole-frame motion score rates the first two rows almost identically, yet only the first holds its scene in place; their static-region drift differs by over an order of magnitude. The third row shows the opposite failure, which that score does 
+
+detect. DD ∗ is the per-video quantity underlying VBench [12] Dynamic Degree, computed under its published rule but read before the binarization the suite applies when aggregating, so that near-identical rows remain distinguishable as numbers. 
+
+persistence reports the retention of dynamic-region mo-tion with its absolute compensated magnitude, so a ratio cannot look strong merely because motion is uniformly weak. Drift leakage relates static-region motion and global-motion compensation to dynamic-region flow; it contextu-alizes the two measurement axes rather than adding a third, and the central claim does not rest on it. A benchmark is only as trustworthy as its measurements, so we validate the protocol independently of any model comparison. Controlled perturbations inject global trans-lation, rotation, and scale drift, progressive motion attenu-ation, late freezing, photometric drift, and temporal repe-tition into real fixed-camera generations at known severity, and we require each factor to respond in the direction its definition states and to remain selective against corruptions it does not target. Because a parameter expressed in degrees is not commensurate with one expressed in pixels, geomet-ric severity is specified as the mean displacement a corrup-tion induces, which makes the families directly compara-ble. We additionally recompute every measurement under systematic erosion and dilation of the region partition. We then audit publicly released long-horizon generators as executed through the recorded evaluation pipeline. The audit exposes cases where conventional metrics and SNF-Bench interpret the same outputs differently: high whole-frame motion coexisting with substantial static-region dis-placement, and high stability coexisting with decaying flow. We do not argue that existing metrics are incorrect. They answer a whole-frame question accurately; that ques-tion does not encode the spatial distinction this setting re-quires. Nor does SNF-Bench measure physical realism— a sequence may be drift-free and persistent yet physically implausible. The contribution is narrower and complemen-tary: making the spatial origin and temporal persistence of motion explicit. Our contributions are: 1. SNF-Bench , an evaluation framework for long-horizon fixed-camera generation organized around a static-support/dynamic-flow partition. 2. A measurement protocol that reports static fidelity and flow persistence with absolute magnitude as the primary axes, with drift leakage provided separately as interpre-tive context; the factors are never collapsed into one score. 3. Mechanistic validation of every reported factor under corruptions of known type and severity, with selectivity measured against the families each factor should ignore and every measurement recomputed under erosion and dilation of the region partition. 4. A public-model audit showing that this decomposition materially changes the interpretation and ordering of long-horizon behavior relative to whole-frame metrics. 
+
+## 2. Related Work 
+
+Video-generation evaluation. General-purpose suites as-sess visual quality, temporal consistency, motion, and semantic alignment. VBench [12] decomposes quality into dimensions including background consistency, motion smoothness and dynamic degree, and VBench-2.0 [40] ex-tends it toward intrinsic faithfulness; EvalCrafter [21] learns a weighting of many metrics from user opinion; Video-Bench [7] scores generations with multimodal language models validated against human preference. Others special-ize: T2V-CompBench [27] targets compositional binding, VMBench [19] perceptually aligned motion quality, and WorldScore [4] controllability and dynamics for world gen-eration. These set the standards a benchmark paper must meet—explicit taxonomy, validated metrics, stated scale— but their measurements are whole-frame or sequence-level, and such an aggregate cannot reveal whether motion origi-nates where intended or in displacement of nominally static structure. VMBench is the closest comparator, but it asks whether motion is perceptually plausible where we ask where it occurs and whether it survives compensation for global displacement. Our validation is correspondingly mechanistic—perturb by a known amount, require the ex-pected response—complementing the human-alignment ev-idence those suites provide. 
+
+Long-horizon autoregressive generation. Autoregres-sive and streaming generators [2, 13, 18, 28, 41] ex-tend synthesis beyond short bidirectional clips by pro-ducing frames or temporal chunks causally, including CausVid [36], Self-Forcing [11], Infinite-Forcing [3], Rolling-Forcing [20], Reward-Forcing [22], LongLive [33], and Causal-Forcing [42] with its few-step successor Causal-Forcing++ [39]; bidirectional diffusion systems [1, 6, 14, 30, 34] provide short-horizon reference points. These systems differ substantially in temporal block size, train-ing objective, memory and cache policy, and horizon-extension mechanism [35], yet their evaluation typically relies on generic video metrics or method-specific qualita-tive analysis. That diversity motivates a recorded common-configuration audit, and the evaluation gap motivates a system-agnostic question: does static support remain fixed while dynamic flow persists? 
+
+Image dynamics and nature-flow animation. Work on animating still images has long modeled natural motion ex-plicitly [10, 15, 17, 23, 32]: controllable fluid animation separates static image structure from specified fluid mo-tion [24], and Generative Image Dynamics models long-term scene motion through learned trajectory representa-tions [16]. These works treat static support and dynamic content as distinct modeling targets; SNF-Bench elevates that distinction to an evaluation principle for long-horizon generators. 
+
+## 3. SNF-Bench Design 
+
+SNF-Bench evaluates long-horizon generation under a de-liberately constrained setting: a fixed camera observing a scene containing both stationary structure and persistent natural motion. This isolates two failure modes that are dif-ficult to separate in unconstrained video— static drift , where nominally stationary structure moves over time, and flow decay , where intended dynamics weaken or disappear. Ev-ery sequence is treated as a composition of two spatial roles, 
+
+Ωstatic for regions expected to remain geometrically station-ary and Ωflow for regions expected to exhibit sustained mo-tion. The partition defines an evaluation role, not a semantic ontology: a riverbank is static support while the river sur-face is flow; buildings are static support in a rainfall scene while the falling rain is flow. SNF-Bench does not require dynamics inside Ωflow to follow any physical model. It mea-sures whether motion stays localized to the appropriate re-gions and persists over time without mixing static support. Every system receives identical conditioning per item, and no prompt is rewritten for a particular method. Both condi-tioning modalities are evaluated under the same decomposi-tion, differing only in how static support is established: T2V builds it in the opening sequence, while I2V takes it from a shared source image, so divergence there is attributable to the system rather than to a differently imagined scene. We report here both T2V and I2V at 60s and 120s; the 5s and 240s diagnostic tiers are provided in the supplementary. 
+
+3.1. Scene Categories and Horizons 
+
+Prompts are stratified across representative fixed-camera natural processes—channel water, ocean waves, precipita-tion, fire and smoke, lava, and wind-borne motion—with the category set fixed before the final sweep. The realized composition is dominated by directional and broad-area wa-ter motion with additional atmospheric and combustion cat-egories, and conclusions should be read at that scope. The strata are not equally populated: channel water accounts for 61% of the principal prompt set. Reported aggregates are means over prompts, not category macro-averages: three of the five populated categories hold two prompts each, so equal category weighting would buy balance at a cost in variance the sample cannot support. We instead recompute every system both ways and state which conclusions sur-vive, with complete per-category counts in the supplemen-tary. Four temporal regimes are used: 5 s as an initialization check, 60 s as the primary reported horizon, 120 s as a sup-porting tier, and 240 s as a diagnostic extreme. Conclusions rest on the 60 s tier; the 120 s tier is reported alongside it as a supporting check, and the 5 and 240 s tiers are in the supplementary. A run that cannot reach a target horizon un-der its declared track and setting is reported as unsupported rather than silently omitted. 
+
+3.2. Region Partition 
+
+The partition is obtained automatically and identically for every sequence. Mean optical-flow magnitude over the leading 12% of sampled frame pairs is thresholded by Otsu’s method [25] into a dynamic region and its comple-ment; the static region is then eroded and a 4% frame border discarded, which together form an ignored transition band so that boundary pixels—where the partition is least certain and flow least reliable—contribute to neither region. Re-stricting the estimate to an early window reduces circularity from late accumulated drift: at 60 s the partition is fixed from the first 7.1 s and is therefore not defined by the late-window failure being measured. It still depends on early checkpoint behavior and on the same flow estimator used downstream. Two limitations bound the later conclusions. The partition is automatic, so a system drifting within the first 12% of its rollout can influence its own partition; we therefore treat partitions as measured quantities and recom-pute every result under systematic erosion and dilation of the boundary (Sec. 5). And a two-way partition cannot rep-resent layered content: rain and snow transit static support, so those pixels are assigned by flow magnitude alone and static-fidelity values in precipitation scenes carry an unmod-eled contribution. Derivation and sensitivity analyses are provided in the supplementary material; independent first-frame annotation remains an open extension. 
+
+3.3. Benchmark Manifest 
+
+SNF-Bench is defined by a versioned manifest fixed before the final sweep, recording per item: identifier and cate-gory, exact prompt, target horizons, resolution and frame-rate metadata, and provenance. After freezing, items are never removed because a system performs poorly; correc-tions require a new benchmark version. Measurement cov-erage, partial records, and fBD abstentions are reported in Supp. Tables S6–S7. Coverage is counted from valid per-video measurements rather than from the presence of a re-sults file, so a run that terminated early is reported as par-tial. 
+
+## 4. Drift–Motion Evaluation Protocol 
+
+SNF-Bench evaluates fixed-camera generation along three factor groups: Static Fidelity and Flow Persistence are the measurement axes, and Drift Leakage (DLR, DAR) con-textualizes them rather than adding a third measurement. No individual score is sufficient: low background motion can be achieved by freezing the entire video, and high fore-ground motion can be produced by drifting the entire scene. We therefore always report static-region stability jointly with both the relative persistence and absolute magnitude 
+
+of dynamic-region motion. Let It denote frame t, Ωstatic 
+
+and Ωflow the region masks of Sec. 3.2, and ut the optical flow from It to It+1 , estimated with RAFT [29]. Each se-quence defines an early window E and a late window L of equal duration, E beginning after a warm-up so that gener-ation transients do not define the motion reference; extents are fixed in the specification. 
+
+4.1. Static Fidelity 
+
+Feature-aligned Background Drift (fBD). ORB fea-tures [26] extracted inside Ωstatic from the first frame are matched against each late-window frame under robust geo-metric filtering; fBD (↓) is the median matched-point dis-placement, averaged over the late window and expressed as a percentage of the frame diagonal. It captures accumu-lated geometric displacement of persistent structure and is intentionally insensitive to fine-scale flicker that moves no structure (See formal definition in Supp. S 1). 
+
+Normalized Background Flow (NBF). Complementing accumulated drift, NBF (↓) is the mean optical-flow magni-tude inside the static mask, averaged over all frame pairs and normalized by frame width for resolution invariance and by the inter-frame interval ∆t for frame-rate invariance, giving units of 10 −3 frame widths per second (Supp. S1). Here ∆t is the interval of the sampled pairs actually used for flow estimation: methods are evaluated at their native frame rates, which differ across the roster, and the evalua-tion pipeline subsamples each clip to a common temporal rate before measurement. Expressing NBF per unit time rather than per frame makes the quantity independent of both the native rate and the sampling policy, so the measure remains comparable if either changes. NBF is a normal-ized magnitude, not a ratio: dividing by whole-frame flow would couple background leakage to foreground behavior and inflate the measure for methods whose dynamic motion decays. 
+
+4.2. Flow Persistence 
+
+Global-motion compensation. Coherent scene displace-ment is removed before dynamic-region motion is eval-uated. A single translation vector is insufficient: under rotation or zoom the static-region flow field is not con-stant, and its component-wise median is near zero for a centered rotation, so a translation-only estimate would leave exactly the corruptions Sec. 5 injects uncompensated. We therefore estimate a robust global similarity transform 
+
+Tt(x) = stRtx + bt from static-region correspondences under RANSAC, and subtract the displacement field it in-duces from the measured flow pointwise, giving a compen-sated field ˜ut (Supp. S1). A similarity rather than an un-restricted affine model is used because affine shear absorbs legitimate local deformation and over-corrects. Where cor-respondences are insufficient we fall back to median trans-lation and record the fallback per sequence. 
+
+Motion-Compensated Foreground Flow (MCFF). 
+
+MCFF (↑) is the mean compensated flow magnitude inside 
+
+Ωflow over a temporal window. We report it on both the early and the late window—MCFF-E and MCFF-L—so a method with uniformly negligible motion cannot appear strong through relative measures alone (Supp. S1). 
+
+Flow Persistence (FP). FP (↑) is the ratio of late to early MCFF, clipped at a fixed constant to prevent unstable ratios when early motion is small (Supp. S1). FP near one indi-cates retained motion; substantially smaller values indicate decay; values above one are not automatically better. FP is never reported without its MCFF magnitudes. 4.3. Drift Leakage and Attenuation 
+
+Whole-frame metrics cannot determine whether apparent dynamic-region motion arises from intended flow or from displacement of the whole scene; we report two diagnostics, since neither subsumes the other. Let Fstatic denote mean flow magnitude over Ωstatic , and Fraw , Fcomp the mean raw and compensated magnitude over Ωflow , all in the late win-dow, where drift has accumulated. 
+
+Drift Leakage Ratio (DLR). DLR (↓), the ratio of static-region to raw dynamic-region flow magnitude in the late window, locates the sequence’s motion energy (Supp. S1). It is not a fraction and is deliberately unbounded: DLR >
+
+1 indicates that static support moves more than the region intended to move, a regime that occurs in practice. 
+
+Drift Attenuation Ratio (DAR). DAR (↓), one minus the ratio of compensated to raw dynamic-region flow, mea-sures the signed relative attenuation of measured dynamic-region flow after global similarity compensation (Supp. S1). Headline tables report DAR clipped to [0 , 1] for com-pact comparison. Signed values are retained in the released records, and the incidence and magnitude of negative DAR are reported in Supp. Table S14. 
+
+Interpretation. Neither is a causal decomposition of mo-tion into drift and non-drift components. DLR and DAR are 
+
+secondary diagnostics that divide the work between them: DLR is a translational-leakage diagnostic whose rotational response is inverted, so rotational drift is carried by fBD and DAR instead, and that division is why DLR is never read alone. The underlying DAR is signed, and negative values are retained. High DLR with moderate DAR indi-cates static-region motion a rigid model does not account for; it does not identify what the residual is. 
+
+Semantic guardrail. The decomposition is agnostic to 
+
+what moves: a sequence rendering drifting fog where a river was requested can occupy a favorable operating point. The natural guardrail is a prompt-alignment score—CLIP-based image–text similarity [9], or a learned video-quality predic-tor [8] at higher cost. We do not report one, and the factors should be read accordingly: they establish where motion occurs and whether it persists, not that the depicted phe-nomenon is the one requested. Pairing SNF-Bench with a semantic score is how it should be used in practice. 
+
+4.4. Joint Interpretation 
+
+No factor is read alone: low drift with low compensated motion indicates an over-stabilized sequence, high com-pensated motion with high static-region flow indicates mo-tion contaminated by displacement, and high retention with negligible magnitude indicates persistent but trivial motion. SNF-Bench therefore reports no single scalar score, since collapsing the factors would recreate the ambiguity it exists to expose. 
+
+Implementation convention. Videos are normalized to a common evaluation resolution and subsampled to a com-mon flow-estimation rate; no frame interpolation is per-formed, since synthesizing frames would alter the flow field being measured. Every estimator, threshold, window ex-tent and constant is fixed globally before the sweep and applied unchanged to every system, and the per-sequence frame rate, resolution and compensation mode are released alongside the scores. 
+
+## 5. Controlled Validation 
+
+Before SNF-Bench is used to compare generators, we val-idate that its measurements respond to the failure modes they target. A benchmark is not justified merely because its metrics rank differently; each must change selectively ,
+
+monotonically , and in the expected direction under known corruptions. We therefore construct controlled variants of fixed-camera reference clips with known corruption type and severity, independently of the audit in Sec. 6: pertur-bation strengths, masks, windows, and hyperparameters are fixed before the final results are inspected. 
+
+5.1. Perturbations and Criteria 
+
+Given a reference sequence we generate variants that iso-late individual components of the decomposition. Ge-ometric drift applies a temporally increasing global transformation—translation, rotation, or scale—simulating camera-like background displacement that accumulates as long-horizon error does. Motion attenuation progressively blends dynamic-region content toward an early reference, and late freezing replaces all content after a chosen frac-tion of the sequence, both leaving static support untouched. 
+
+Photometric drift varies brightness and color temperature while preserving geometry and motion, bounding the resid-ual sensitivity of flow-based quantities. Temporal repe-tition replaces late dynamic content with a short repeated cycle. Partition perturbation erodes and dilates the re-gion boundary rather than the video. Geometric severity is specified as the mean pixel displacement a corruption in-duces, with each family’s parameter derived from it using the frame geometry. This is not presentational: a parame-ter in degrees is not commensurate with one in pixels, and at the evaluation resolution one degree of rotation induces only a few pixels of displacement, so families compared by their native parameters differ in injected severity by more than an order of magnitude. A factor is admitted only if its response direction matches its definition, that response is Factor target ρ ρrot off-target admitted fBD drift +1.00 +0.70 14% ✓                        
+
+> NBF drift +1.00 +0.60 6% ✓
+> MCFF-L freeze +1.00 n/a 14% ✓
+> FP freeze +0.80 n/a 21% ✓
+> DLR translational leakage +1.00 -0.80 5% ✓
+> DAR drift +0.90 +1.00 18% ✓
+> VBench DD drift +0.70 +0.70 2% –
+
+Table 1. Mechanistic validation and factor admission. ρ is signed target-family Spearman correlation; ρrot reports rotational response; off-target is the largest relative excursion under pho-tometric and mask perturbations. Admission requires ρ ≥ 0.7
+
+and off-target response below 25% . Rotation is reported but not gated: DLR is inverted there, while fBD and DAR carry that case. VBench DD is a contrast row, not a candidate factor. Twelve clips per severity. 
+
+monotonic in severity, unrelated corruptions produce sub-stantially smaller changes, and conclusions survive pertur-bation of the region partition. Factors failing these checks are reported as diagnostics rather than headline quantities. The severity specification and the admission outcome for every factor are in the supplementary. 
+
+5.2. Validation Results 
+
+Figure 2 and Table S1 report the outcome. Injected trans-lation produces the expected monotone increase in both static-fidelity factors, and progressive late freezing drives MCFF-L and FP down—to 0.02 and 0.07 of their unper-turbed values once the late window is frozen—while leav-ing the static factors comparatively unchanged, which is the selectivity the decomposition requires. At maximum translation, fBD and NBF reach 1.86 × and 1.32 × base-line, while VBench Dynamic Degree [12] reaches only 1.07 × and improves on a corruption fixed-camera evalua-tion should penalize. Two results qualify the framework rather than support it. Rotation is the harder geometric case for every factor, since correspondences degrade and the induced displacement is smallest at the frame center: both static-fidelity factors re-spond more weakly than under translation ( +0 .70 for fBD, 
+
++0 .60 for NBF, against +1 .00 for both), so neither is used alone. DLR is the sharper limitation—admitted on its tar-get family, where it responds perfectly, but with an inverted rotational response ( −0.80 ), so it is read only as a compar-ative diagnostic alongside DAR. Reported alongside these is the scope boundary of Sec. 5.1: looping content sustains both persistence and magnitude, so SNF-Bench cannot dis-tinguish genuine progression from repetition, and does not claim to. Table 2 summarizes the complementary parti-tion checks; the full per-checkpoint sensitivity analysis is reported in the supplementary.             
+
+> Check result Static-mask area 0.614–0.663 Area–fBD Spearman ρ=−0.75 , exact p= 0 .066 ,
+> n= 7
+> No precipitation: NBF order identical No precipitation: fBD extremes unchanged Boundary perturbation: max. response ≤14%
+
+Table 2. Partition robustness at 60 s. Static-region area is similar across checkpoints, and the headline NBF ordering is unchanged when precipitation is excluded. The negative area–fBD associa-tion has the direction expected under early-mask circularity and is therefore reported as an open validity concern rather than dis-missed. 
+
+## 6. Public-Model Audit 
+
+We apply SNF-Bench to publicly released long-horizon generators. The goal is not a universal leaderboard but a determination of how checkpoints occupy the static-fidelity/flow-persistence space under one recorded common T2V configuration. 
+
+Systems and setting. The audit covers 7 publicly re-leased autoregressive or streaming generators with acces-sible checkpoints, frozen as a set before the sweep. Ev-ery T2V checkpoint is loaded into the same recorded in-ference implementation rather than its released pipeline. Fixed before the sweep to give the distilled checkpoint fam-ily a shared step budget, the configuration uses a four-step denoising schedule (indices warped by the released scheduler), six frames per block, seed 0, and one roll-out/cache path. The T2V runs also share 832 × 480 out-put at 16 fps. Within a horizon, checkpoint weights and their recorded regular/EMA selection are the only system-specific inference inputs. Accordingly, these results char-acterize checkpoints under this common configuration, not each method’s published inference procedure; a checkpoint distilled for another step budget is not observed at its own operating point. The I2V track instead separates released-pipeline outputs from dagger-marked long-horizon-wrapper rows (Sec. 7.3). 
+
+Controls and statistics. Within each item every system receives identical conditioning, and the seed is fixed before the sweep. This makes each run reproducible but does not make different checkpoints’ stochastic trajectories equiva-lent; cross-system comparison rests on the paired-item de-sign. Videos are retained in their recorded form and the nor-malization of Sec. 4 applied unchanged. Scores are com-puted per item and averaged over items; the sensitivity of every conclusion to category macro-averaging is reported in the supplementary. Uncertainty is estimated by percentile bootstrap [5] over items, and we report 95% marginal in-tervals. These intervals summarize per-checkpoint uncer-0 25 50 75          
+
+> mean induced displacement (px)
+> 1.0 1.2 1.4 1.6 1.8
+> relative to unperturbed
+> fBD NBF
+> (a) injected drift
+> 025 50 75
+> mean induced displacement (px)
+> 1.0 1.2 1.4 1.6
+> fBD NBF
+> (b) injected rotation
+> 0.00 0.25 0.50 0.75
+> fraction of rollout frozen
+> 0.00 0.25 0.50 0.75 1.00
+> MCFF-L FP
+> (c) progressive late freeze
+> 025 50 75
+> mean induced displacement (px)
+> 1.0 1.1 1.2 1.3
+> VBench DD NBF
+> (d) whole-frame score vs static-region flow
+
+Figure 2. Mechanistic validation. Curves are relative to unperturbed fixed-camera clips. Translation raises fBD and NBF; progressive late freezing collapses MCFF-L and FP; under the same translation, VBench Dynamic Degree changes little and slightly upward. The perturbations are synthetic and implicate no published method. 
+
+tainty; all headline separation claims use paired bootstrap distributions of per-prompt differences, reported in Supp. Table S3. Measurement coverage and fBD abstentions are reported in Supp. Tables S6–S7; incomplete metric records are counted as partial rather than silently treated as success-ful. To test whether the decomposition changes interpreta-tion, the same outputs are additionally scored with estab-lished whole-frame metrics and the induced orderings com-pared. The focus is interpretation change, not a claim that existing metrics are wrong. 
+
+## 7. Results and Interpretation Changes 
+
+Unless stated otherwise, T2V comparisons refer to check-points under the recorded common configuration. I2V released-pipeline and wrapper results are identified sepa-rately and never ranked across settings. 
+
+7.1. Recorded Common-Configuration T2V Audit 
+
+Table 3 reports the primary 60 s T2V tier and a 120 s di-rectional check. Because the 120 s panel has 6 different prompts, it is not compared column-by-column with 60 s. The 5 and 240 s diagnostics and all four horizons are in the supplementary. Figure 3 shows every audited checkpoint on one prompt at t=0,30,60 s, ordered by fBD; the measured differences in static-region drift are visually apparent. 
+
+Motion persistence. We read  MCFF( L), FP  jointly: sustained flow needs non-trivial late motion and high reten-tion. MCFF-E beside MCFF-L exposes uniformly negligi-ble motion. 
+
+Operating regimes. Joint static-fidelity and persistence columns expose low-drift/low-motion, high-motion/high-drift, and low-drift/non-trivial-motion regimes without a scalar score. Infinite-Forcing [3] has the lowest NBF under the recorded common configuration—paired per-prompt in-tervals versus all 6 peers exclude zero (Supp. Table S3)— but also the least surviving late motion. Causal-Forcing [42] occupies the opposite, higher-background-flow corner.                                                                                                                                     
+
+> Method fBD ↓NBF ↓MCFF E →LFP ↑
+> 60s horizon ( n= 23 )
+> CausVid 8.08 ±3.15 9.27 ±4.14 2.87 →1.96 0.67 ±0.18 Self-Forcing 11.4 ±3.63 12.7 ±3.97 10.4 →2.54 0.44 ±0.22 Infinite-Forcing 7.75 ±3.84 3.65 ±0.88 1.17 →0.29 0.63 ±0.22 Rolling-Forcing 16.8 ±3.69 11.2 ±2.70 3.18 →1.57 0.75 ±0.29 Reward-Forcing 14.8 ±3.71 8.51 ±2.79 3.81 →0.80 0.49 ±0.18 LongLive 15.9 ±2.89 13.9 ±4.76 6.46 →2.41 0.75 ±0.28 Causal-Forcing 22.4 ±2.26 87.6 ±18.6 9.84 →7.21 0.83 ±0.31
+> 120s horizon ( n= 6 )
+> CausVid 6.15 3.42 0.36 →0.52 1.06 Self-Forcing 21.2 6.80 4.85 →0.82 0.85 Infinite-Forcing 16.1 2.60 0.50 →0.32 0.64 Rolling-Forcing 23.8 10.6 3.33 →0.77 0.38 Reward-Forcing 20.0 11.6 2.05 →0.69 0.39 LongLive 22.5 9.66 5.10 →1.19 0.81 Causal-Forcing 21.8 130 10.5 →10.7 0.90
+
+Table 3. Recorded common-configuration T2V audit. Afour-step denoising schedule with released-scheduler warping, six frames/block, and seed 0. Header n is the maximum valid item count within each horizon; factor-specific abstentions are in Ta-ble S6. Units: fBD is % frame diagonal; NBF is 10 −3 frame widths/s; MCFF is px/sampled interval; FP is unitless. FP is the mean of per-video clipped late/early ratios and therefore need not equal the ratio of the displayed aggregate MCFF-L and MCFF-E means. Means with percentile-bootstrap 95% CI half-width shown for compactness (10k resamples, seed 0); n < 10 shows means only. MCFF-E →L accompanies FP. Separation uses paired per-prompt intervals (Table S3). DLR/DAR are supplementary. 
+
+7.2. Whole-Frame Motion and Static-Region Flow Yield Different Interpretations 
+
+Across 7 checkpoint means, Dynamic Degree tracks static-region flow at ρ = +0 .93 (descriptive; per-item analysis in the supplementary): more apparent motion also tends to mean more background motion. Causal-Forcing ranks 1/7 on Dynamic Degree but 7/7 on NBF; Infinite-Forcing shows the reverse, ranking 7/7 on Dynamic Degree and 1/7 on NBF. Causal-Forcing’s DLR of 0.94 indicates static-region motion energy nearly equal to dynamic-region en-ergy. Its DAR of 0.40 means fitted similarity compensation reduces measured dynamic-region flow by that proportion; it is attenuation, not causal decomposition. The residual is t = 0 s       
+
+> CausVid Infinite-Forcing LongLive Self-Forcing Rolling-Forcing Reward-Forcing Causal-Forcing
+> t = 30 s t = 60 s
+
+Figure 3. T2V comparison under the recorded common configuration. Rows show t=0,30,60 s for one shared prompt; columns are ordered by increasing measured fBD. Green and orange borders identify the CausVid/Causal-Forcing pair highlighted in Figure 1; the fixed selection rule is documented in Supplementary Section S14. 
+
+Method fBD ↓ NBF ↓ MCFF E →L FP ↑
+
+60s horizon ( n = 30 )
+
+Causal-Forcing++ (2-step) † 9.18 5.97 0.85 → 0.60 0.86 Causal-Forcing++ (1-step) † 5.34 7.05 0.86 → 0.57 0.77 Causal-Forcing (frame-wise) † 21.1 36.4 2.80 → 2.69 0.89 Causal-Forcing++ (2-step, frame-wise) 9.94 6.91 1.30 → 0.78 1.02 Self-Forcing † 17.3 5.52 1.50 → 0.69 0.89 CausVid † 19.9 3.31 0.58 → 0.41 0.81 Causal-Forcing++ (1-step, frame-wise) 10.4 5.25 0.53 → 0.52 1.01 
+
+120s horizon ( n = 20 )
+
+Causal-Forcing++ (2-step) † 9.65 8.81 0.89 → 0.82 0.93 Causal-Forcing++ (1-step) † 7.26 9.39 0.84 → 0.66 0.86 Causal-Forcing (frame-wise) † 19.9 52.7 4.82 → 5.06 1.08 Causal-Forcing++ (2-step, frame-wise) 11.4 17.3 1.89 → 1.54 1.01 Self-Forcing † 23.0 10.3 2.41 → 0.76 0.45 CausVid † 19.7 6.04 1.15 → 0.83 0.67 Causal-Forcing++ (1-step, frame-wise) 13.6 7.39 1.01 → 0.35 0.64 
+
+Table 4. I2V released pipelines and deployment sensitivity at 60 and 120 s. Unmarked rows are released-pipeline outputs; †
+
+rows use the wrapper; settings are not compared. Header n is the maximum valid item count within each horizon; factor-specific ab-stentions are in Table S6. Units: fBD is % frame diagonal; NBF is 10 −3 frame widths/s; MCFF is px/sampled interval; FP is di-mensionless. FP is the mean of per-video clipped late/early ratios and therefore need not equal the ratio of the displayed aggregate MCFF-L and MCFF-E means. Means are shown; DLR and DAR are reported in Supplementary Table S9. MCFF-E →L accompa-nies FP, and released-pipeline and wrapper rows are not compared. 
+
+unidentified and may include non-rigid instability, intended motion, partition contamination, or flow error. 
+
+7.3. Image-Conditioned (I2V) Track: Released Pipelines and Deployment Sensitivity 
+
+At 60 and 120 s, Table 4 reports two released-pipeline rows and five dagger-marked wrapper rows per horizon; the two settings are kept separate and are never ranked together. The panels show deployment sensitivity without attributing its cause. Figure 4 compares a distinct 60 s sample: each shared source Causal-Forcing++ (1-step, frame-wise) Causal-Forcing++ (2-step, frame-wise)       
+
+> Causal-Forcing++ (1-step) †
+> Self-Forcing †
+> Causal-Forcing++ (2-step) †
+> Causal-Forcing (frame-wise) †CausVid †
+> t= 0 shared source; t= 60 outputs. Solid: released; †dashed: wrapper.
+
+Figure 4. I2V comparison (60s) on a shared source (0s). Un-marked outputs are produced by released pipelines; † marks out-puts generated with the common wrapper. 
+
+system shares one source image, so static support is given rather than imagined differently. Complete horizons and 5 sbidirectional references are in the supplementary. 
+
+## 8. Limitations and Conclusion 
+
+SNF-Bench is limited to long-horizon fixed-camera gener-ation where static support and dynamic flow separate. It measures neither physical nor semantic realism, cannot dis-tinguish progression from repetition, and depends on an au-tomatic partition bounded by our erosion–dilation study. Whole-frame motion and region-resolved static fidelity can materially change the interpretation of the same out-puts. Reporting static fidelity and flow persistence sepa-rately, with drift quantities only as context, complements broad benchmarks without a composite score. The released specification and common-configuration checkpoint audit provide a reproducible basis for evaluation; independent partitions and broader non-water coverage remain impor-tant next steps. References 
+
+[1] Andreas Blattmann, Tim Dockhorn, Sumith Kulal, Daniel Mendelevitch, Maciej Kilian, Dominik Lorenz, Yam Levi, Zion English, Vikram Voleti, Adam Letts, Varun Jampani, and Robin Rombach. Stable video diffusion: Scaling la-tent video diffusion models to large datasets. arXiv preprint arXiv:2311.15127 , 2023. 3 [2] Boyuan Chen, Diego Mart´ ı Mons´ o, Yilun Du, Max Sim-chowitz, Russ Tedrake, and Vincent Sitzmann. Diffusion forcing: Next-token prediction meets full-sequence diffu-sion. Advances in Neural Information Processing Systems ,37:24081–24125, 2024. 3 [3] Junyi Chen, Zhoujie Fu, and Xianglong He. Infinite-forcing: Towards infinite-long video generation, 2025. https://github.com/SOTAMak1r/Infinite-Forcing. 3, 7 [4] Haoyi Duan, Hong-Xing Yu, Sirui Chen, Li Fei-Fei, and Ji-ajun Wu. WorldScore: A unified evaluation benchmark for world generation. In ICCV , pages 27713–27724, 2025. 2 [5] Bradley Efron. Bootstrap methods: Another look at the jack-knife. Ann. Statist. , 7(1):1–26, 1979. 6, 13 [6] Yoav HaCohen, Nisan Chiprut, Benny Brazowski, Daniel Shalem, Dudu Moshe, Eitan Richardson, Eran Levin, Guy Shiran, Nir Zabari, Ori Gordon, Poriya Panet, Sapir Weiss-buch, Victor Kulikov, Yaki Bitterman, Zeev Melumian, and Ofir Bibi. LTX-Video: Realtime video latent diffusion. arXiv preprint arXiv:2501.00103 , 2024. 3 [7] Hui Han, Siyuan Li, Jiaqi Chen, Yiwen Yuan, Yuling Wu, Yufan Deng, Chak Tou Leong, Hanwen Du, Junchen Fu, Youhua Li, Jie Zhang, Chi Zhang, Li-jia Li, and Yongxin Ni. Video-Bench: Human-aligned video generation benchmark. In CVPR , pages 18858–18868, 2025. 2 [8] Xuan He, Dongfu Jiang, Ge Zhang, Max Ku, Achint Soni, Sherman Siu, Haonan Chen, Abhranil Chandra, Ziyan Jiang, Aaran Arulraj, Kai Wang, Quy Duc Do, Yuansheng Ni, Bo-han Lyu, Yaswanth Narsupalli, Rongqi Fan, Zhiheng Lyu, Bill Yuchen Lin, and Wenhu Chen. VideoScore: Building automatic metrics to simulate fine-grained human feedback for video generation. In Proc. Conf. Empirical Methods Nat-ural Language Process. (EMNLP) , pages 2105–2123, 2024. 5[9] Jack Hessel, Ari Holtzman, Maxwell Forbes, Ronan Le Bras, and Yejin Choi. CLIPScore: A reference-free evaluation metric for image captioning. In Proc. Conf. Empirical Methods Natural Language Process. (EMNLP) , pages 7514– 7528, 2021. 5 [10] Aleksander Holynski, Brian L Curless, Steven M Seitz, and Richard Szeliski. Animating pictures with eulerian mo-tion fields. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 5810– 5819, 2021. 3 [11] Xun Huang, Zhengqi Li, Guande He, Mingyuan Zhou, and Eli Shechtman. Self forcing: Bridging the train-test gap in autoregressive video diffusion. In NeurIPS , 2025. 3 [12] Ziqi Huang, Yinan He, Jiashuo Yu, Fan Zhang, Chenyang Si, Yuming Jiang, Yuanhan Zhang, Tianxing Wu, Qingyang Jin, Nattapol Chanpaisit, Yaohui Wang, Xinyuan Chen, Limin Wang, Dahua Lin, Yu Qiao, and Ziwei Liu. VBench: Com-prehensive benchmark suite for video generative models. In 
+
+CVPR , pages 21807–21818, 2024. 2, 6 [13] Jihwan Kim, Junoh Kang, Jinyoung Choi, and Bohyung Han. Fifo-diffusion: Generating infinite videos from text without training. Advances in Neural Information Processing Sys-tems , 37:89834–89868, 2024. 3 [14] Weijie Kong, Qi Tian, Zijian Zhang, Rox Min, Zuozhuo Dai, Jin Zhou, Jiangfeng Xiong, Xin Li, Bo Wu, Jian-wei Zhang, Kathrina Wu, Qin Lin, Junkun Yuan, Yanxin Long, Aladdin Wang, Andong Wang, Changlin Li, Duojun Huang, Fang Yang, Hao Tan, Hongmei Wang, Jacob Song, Jiawang Bai, Jianbing Wu, Jinbao Xue, Joey Wang, Kai Wang, Mengyang Liu, Pengyu Li, Shuai Li, Weiyan Wang, Wenqing Yu, Xinchi Deng, Yang Li, Yi Chen, Yutao Cui, Yuanbo Peng, Zhentao Yu, Zhiyu He, Zhiyong Xu, Zixiang Zhou, Zunnan Xu, Yangyu Tao, Qinglin Lu, Songtao Liu, Dax Zhou, Hongfa Wang, Yong Yang, Di Wang, Yuhong Liu, Jie Jiang, and Caesar Zhong. HunyuanVideo: A systematic framework for large video generative models. arXiv preprint arXiv:2412.03603 , 2024. 3 [15] Guojun Lei, Chi Wang, Rong Zhang, Yikai Wang, Hong Li, and Weiwei Xu. AnimateAnything: Consistent and con-trollable animation for video generation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 27946–27956, 2025. 3 [16] Zhengqi Li, Richard Tucker, Noah Snavely, and Aleksander Holynski. Generative image dynamics. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 24142–24153, 2024. 3 [17] Zizhang Li, Hong-Xing Yu, Wei Liu, Yin Yang, Charles Her-rmann, Gordon Wetzstein, and Jiajun Wu. WonderPlay: Dy-namic 3d scene generation from a single image and actions. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) , pages 9080–9090, 2025. 3 [18] Zongyu Lin, Wei Liu, Chen Chen, Jiasen Lu, Wenze Hu, Tsu-Jui Fu, Jesse Allardice, Zhengfeng Lai, Liangchen Song, Bowen Zhang, Cha Chen, Yiran Fei, Lezhi Li, Yinfei Yang, Yizhou Sun, and Kai-Wei Chang. STIV: Scalable text and image conditioned video generation. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) , pages 16249–16259, 2025. 3 [19] Xinran Ling, Chen Zhu, Meiqi Wu, Hangyu Li, Xiaokun Feng, Cundian Yang, Aiming Hao, Jiashu Zhu, Jiahong Wu, and Xiangxiang Chu. VMBench: A benchmark for perception-aligned video motion generation. In ICCV , 2025. 2[20] Kunhao Liu, Wenbo Hu, Jiale Xu, Ying Shan, and Shijian Lu. Rolling forcing: Autoregressive long video diffusion in real time. In ICLR , 2026. 1, 3 [21] Yaofang Liu, Xiaodong Cun, Xuebo Liu, Xintao Wang, Yong Zhang, Haoxin Chen, Yang Liu, Tieyong Zeng, Raymond Chan, and Ying Shan. Evalcrafter: Benchmarking and eval-uating large video generation models. In 2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 22139–22149, 2024. 2 [22] Yunhong Lu, Yanhong Zeng, Haobo Li, Hao Ouyang, Qi-uyu Wang, Ka Leong Cheng, Jiapeng Zhu, Hengyuan Cao, Zhipeng Zhang, Xing Zhu, et al. Reward forcing: Ef-ficient streaming video generation with rewarded distribu-tion matching distillation. arXiv preprint arXiv:2512.04678 ,2025. 3 [23] Xin Ma, Yaohui Wang, Gengyun Jia, Xinyuan Chen, Tien-Tsin Wong, Yuan-Fang Li, and Cunjian Chen. Consistent and controllable image animation with motion diffusion models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 7288–7298, 2025. 3 [24] Aniruddha Mahapatra and Kuldeep Kulkarni. Controllable animation of fluid elements in still images. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 3667–3676, 2022. 3 [25] Nobuyuki Otsu. A threshold selection method from gray-level histograms. IEEE Trans. Syst. Man Cybern. , 9(1):62– 66, 1979. 3, 11 [26] Ethan Rublee, Vincent Rabaud, Kurt Konolige, and Gary Bradski. ORB: An efficient alternative to SIFT or SURF. In ICCV , pages 2564–2571, 2011. 4, 13 [27] Kaiyue Sun, Kaiyi Huang, Xian Liu, Yue Wu, Zihan Xu, Zhenguo Li, and Xihui Liu. T2V-CompBench: A compre-hensive benchmark for compositional text-to-video genera-tion. In CVPR , pages 8406–8416, 2025. 2 [28] Mingzhen Sun, Weining Wang, Gen Li, Jiawei Liu, Jiahui Sun, Wanquan Feng, Shanshan Lao, Siyu Zhou, Qian He, and Jing Liu. AR-Diffusion: Asynchronous video gen-eration with auto-regressive diffusion. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 7364–7373, 2025. 3 [29] Zachary Teed and Jia Deng. RAFT: Recurrent all-pairs field transforms for optical flow. In ECCV , pages 402–419, 2020. 4, 11 [30] Team Wan, Ang Wang, Baole Ai, Bin Wen, Chaojie Mao, Chen-Wei Xie, Di Chen, Feiwu Yu, Haiming Zhao, Jianx-iao Yang, Jianyuan Zeng, Jiayu Wang, Jingfeng Zhang, Jin-gren Zhou, Jinkai Wang, Jixuan Chen, Kai Zhu, Kang Zhao, Keyu Yan, Lianghua Huang, Mengyang Feng, Ningyi Zhang, Pandeng Li, Pingyu Wu, Ruihang Chu, Ruili Feng, Shiwei Zhang, Siyang Sun, Tao Fang, Tianxing Wang, Tianyi Gui, Tingyu Weng, Tong Shen, Wei Lin, Wei Wang, Wei Wang, Wenmeng Zhou, Wente Wang, Wenting Shen, Wenyuan Yu, Xianzhong Shi, Xiaoming Huang, Xin Xu, Yan Kou, Yangyu Lv, Yifei Li, Yijing Liu, Yiming Wang, Yingya Zhang, Yi-tong Huang, Yong Li, You Wu, Yu Liu, Yulin Pan, Yun Zheng, Yuntao Hong, Yupeng Shi, Yutong Feng, Zeyinzi Jiang, Zhen Han, Zhi-Fan Wu, and Ziyu Liu. Wan: Open and advanced large-scale video generative models. arXiv preprint arXiv:2503.20314 , 2025. 3 [31] Hongjie Wang, Chih-Yao Ma, Yen-Cheng Liu, Ji Hou, Tao Xu, Jialiang Wang, Felix Juefei-Xu, Yaqiao Luo, Peizhao Zhang, Tingbo Hou, Peter Vajda, Niraj K. Jha, and Xiao-liang Dai. LinGen: Towards high-resolution minute-length text-to-video generation with linear computational complex-ity. In Proceedings of the IEEE/CVF Conference on Com-puter Vision and Pattern Recognition (CVPR) , pages 2578– 2588, 2025. 1 [32] Jinbo Xing, Menghan Xia, Yong Zhang, Haoxin Chen, Wangbo Yu, Hanyuan Liu, Gongye Liu, Xintao Wang, Ying Shan, and Tien-Tsin Wong. Dynamicrafter: Animating open-domain images with video diffusion priors. In Eu-ropean Conference on Computer Vision , pages 399–417. Springer, 2024. 3 [33] Shuai Yang, Wei Huang, Ruihang Chu, Yicheng Xiao, Yuyang Zhao, Xianbang Wang, Muyang Li, Enze Xie, Ying-cong Chen, Yao Lu, Song Han, and Yukang Chen. Longlive: Real-time interactive long video generation. In ICLR , 2026. 1, 3 [34] Zhuoyi Yang, Jiayan Teng, Wendi Zheng, Ming Ding, Shiyu Huang, Jiazheng Xu, Yuanming Yang, Wenyi Hong, Xiaohan Zhang, Guanyu Feng, Da Yin, Xiaotao Gu, Yuxuan Zhang, Weihan Wang, Yean Cheng, Ting Liu, Bin Xu, Yuxiao Dong, and Jie Tang. CogVideoX: Text-to-video diffusion models with an expert transformer. In The Thirteenth International Conference on Learning Representations , 2025. 3 [35] Hidir Yesiltepe, Tuna Han Salih Meral, Adil Kaan Akan, Kaan Oktay, and Pinar Yanardag. Infinity-RoPE: Action-controllable infinite video generation emerges from autore-gressive self-rollout. In CVPR , 2026. 1, 3 [36] Tianwei Yin, Qiang Zhang, Richard Zhang, William T Free-man, Fredo Durand, Eli Shechtman, and Xun Huang. From slow bidirectional to fast autoregressive video diffusion mod-els. In CVPR , 2025. 3 [37] Yifei Yu, Xiaoshan Wu, Xinting Hu, Tao Hu, Yangtian Sun, Xiaoyang Lyu, Bo Wang, Lin Ma, Yuewen Ma, Zhongrui Wang, and Xiaojuan Qi. VideoSSM: Autoregressive long video generation with hybrid state-space memory. arXiv preprint arXiv:2512.04519 , 2025. 1 [38] Shenghai Yuan, Yuanyang Yin, Zongjian Li, Xinwei Huang, Xiao Yang, and Li Yuan. Helios: Real real-time long video generation model. arXiv preprint arXiv:2603.04379 , 2026. 1[39] Min Zhao, Hongzhou Zhu, Kaiwen Zheng, Zihan Zhou, Bokai Yan, Xinyuan Li, Xiao Yang, Chongxuan Li, and Jun Zhu. Causal forcing++: Scalable few-step autoregressive dif-fusion distillation for real-time interactive video generation. 
+
+arXiv preprint arXiv:2605.15141 , 2026. 3 [40] Dian Zheng, Ziqi Huang, Hongbo Liu, Kai Zou, Yinan He, Fan Zhang, Yuanhan Zhang, Jingwen He, Wei-Shi Zheng, Yu Qiao, and Ziwei Liu. Vbench-2.0: Advancing video generation benchmark suite for intrinsic faithfulness. ArXiv ,abs/2503.21755, 2025. 2 [41] Deyu Zhou, Quan Sun, Yuang Peng, Kun Yan, Runpei Dong, Duomin Wang, Zheng Ge, Nan Duan, and Xiangyu Zhang. Taming teacher forcing for masked autoregressive video gen-eration. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 7374–7384, 2025. 3 [42] Hongzhou Zhu, Min Zhao, Guande He, Hang Su, Chongx-uan Li, and Jun Zhu. Causal forcing: Autoregressive diffu-sion distillation done right for high-quality real-time inter-active video generation. arXiv preprint arXiv:2602.02214 ,2026. 3, 7 SNF-Bench: Separating Static Drift from Natural Flow in Long-Horizon Fixed-Camera Video Generation 
+
+# Supplementary Material 
+
+This supplement records the material supporting the main paper without being required to follow its argument: the region-partition procedure and its sensitivity study, com-plete audit tables for both tracks at every horizon, mea-surement coverage, protocols for the two complementary perceptual checks, and additional qualitative material. The text-conditioned and image-conditioned tracks are reported here at equal depth. Section numbering is independent of the main paper. We release the benchmark code and data here: https://minar09.github.io/snfbench/ 
+
+## S1. Formal Factor Definitions 
+
+The definitions below are those referenced from the main paper’s protocol section. Notation follows it: It is frame 
+
+t of a T -frame sequence, Ωstatic and Ωflow are the region masks, ut is the optical flow from It to It+1 , and E and L
+
+are the early and late windows. 
+
+Feature-aligned Background Drift. For matched ORB pairs Mt between the first frame and frame t,
+
+Dfeat (t) = median 
+
+> (p,q )∈M t
+
+∥p − q∥2,
+
+fBD = 100 
+
+d · 1
+
+|L| 
+
+X
+
+> t∈L
+
+Dfeat (t) ( ↓), (S1) with d the frame diagonal, so fBD is a percentage of image size. 
+
+Normalized Background Flow. 
+
+NBF = 10 3
+
+W ∆t · 1
+
+T − 1 
+
+> T−1
+
+X
+
+> t=1
+
+1
+
+|Ωstatic |
+
+X
+
+> x∈Ωstatic
+
+∥ut(x)∥2 (↓),
+
+(S2) with W the frame width and ∆t the interval of the sampled 
+
+pairs actually used for flow estimation, so the quantity is independent of both the native frame rate and the sampling policy. 
+
+Global-motion compensation. With Tt(x) = stRtx+bt
+
+the robust similarity transform fitted to static-region corre-spondences and dt(x) = Tt(x) − x the displacement field it induces, 
+
+˜ut(x) = ut(x) − dt(x). (S3) 
+
+Motion-Compensated Foreground Flow and Flow Per-sistence. 
+
+MCFF( W) = 1
+
+|W| 
+
+X
+
+> t∈W
+
+1
+
+|Ωflow |
+
+X
+
+> x∈Ωflow
+
+∥˜ut(x)∥2 (↑),
+
+(S4) 
+
+FP = min 
+
+ MCFF( L)MCFF( E) + ϵ , c 
+
+
+
+(↑), (S5) clipped at a fixed c so that a vanishing early window cannot produce an unbounded ratio. 
+
+Drift leakage and attenuation. With Fstatic the mean flow magnitude over Ωstatic and Fraw , Fcomp the mean raw and compensated magnitudes over Ωflow , all in the late win-dow, 
+
+DLR = Fstatic 
+
+Fraw + ϵ (↓), DAR = 1 − Fcomp 
+
+Fraw + ϵ (↓).
+
+(S6) DLR is not a fraction and is deliberately unbounded: 
+
+DLR > 1 indicates static support moving more than the re-gion intended to move. DAR is stored signed and reported clipped to [0 , 1] .
+
+## S2. Region Partition 
+
+Derivation. For every generated sequence we average optical-flow magnitude [29] over the leading 12% of sam-pled frame pairs and threshold it by Otsu’s method [25] into a dynamic region and its complement. The static re-gion is then reduced by a fixed morphological erosion and a 
+
+4% frame border discarded; together these form the ignored transition band, so boundary pixels—where the partition is least certain and flow least reliable—contribute to neither region. The same procedure applies to both tracks. 
+
+Why the estimate is restricted to an early window. De-riving a partition from a sequence’s entire motion field would be circular, since accumulated background drift would itself be read as evidence that the affected region is dynamic. Restricting the estimate to the early window reduces circularity from late accumulated drift: at the 60 shorizon the partition is fixed from the first 7.1 s and is not defined by the late-window failure being measured. It nev-ertheless remains dependent on early checkpoint behavior and on the same flow estimator used downstream. Factor target ρ ρrot off-target admitted fBD drift +1.00 +0.70 14% ✓                                    
+
+> NBF drift +1.00 +0.60 6% ✓
+> MCFF-L freeze +1.00 n/a 14% ✓
+> FP freeze +0.80 n/a 21% ✓
+> DLR translational leakage +1.00 -0.80 5% ✓
+> DAR drift +0.90 +1.00 18% ✓
+> VBench DD drift +0.70 +0.70 2% –
+> Table S1. Mechanistic validation and factor admission. ρis signed target-family Spearman correlation; ρrot reports rotational response; off-target is the largest relative excursion under pho-tometric and mask perturbations. Admission requires ρ≥0.7
+> and off-target response below 25% . Rotation is reported but not gated: DLR is inverted there, while fBD and DAR carry that case. VBench DD is a contrast row, not a candidate factor. Twelve clips per severity.
+
+Limitations. The partition is obtained automatically rather than by annotation, so no inter-annotator agreement is reported, and for the image-conditioned track it is derived per generated sequence rather than once from the shared source image. The early window is a weaker guarantee than a first-frame annotation: a system that drifts within the first 
+
+12% of its rollout can influence its own partition. We there-fore treat partitions as measured quantities and report the consequence directly—every measurement is recomputed under systematic erosion and dilation of the boundary, with the response in Table S1. 
+
+## S3. Validation Protocol 
+
+Geometric severity is specified in a common physical unit— the mean pixel displacement a corruption induces over the frame by the end of the rollout—and each family’s parame-ter is derived from it using the frame geometry: a translation of d pixels, a rotation of d/ ¯r radians, or a zoom of 1 + d/ ¯r,where ¯r is the mean distance from the frame center. This is what makes the geometric families comparable. A parame-ter in degrees is not commensurate with one in pixels: at the evaluation resolution one degree of rotation induces roughly 
+
+2.7 px of mean displacement, so families compared by their native parameters differ in injected severity by more than an order of magnitude, and a factor can appear non-monotone simply because the corruption was too weak to clear the clip’s own baseline drift. 
+
+## S4. Partition and Composition Robustness 
+
+Two questions decide whether the region partition can be trusted as a measurement basis: whether a system can be advantaged by receiving an easier mask, and whether the ordering depends on the one scene category the partition cannot represent. The static region occupies a similar share of the frame for every audited system, between 0.61 and 0.66 on average, so no system is scored over a markedly larger or smaller support than another. Across systems, that area correlates negatively with feature-based drift. Over seven systems the correlation is not determined, but its sign is the one circular-ity would produce—a system that drifts within the estima-tion window enlarges its own dynamic region and shrinks the support its drift is measured over—and we report it as an open validity question rather than dismissing it on sig-nificance. The decisive test, recomputing every score under a region partition not derived from the same sequence, is stated as required future work in Sec. S2; we do not claim to have run it. Removing precipitation, where rain and snow cross static support and a two-way partition must assign those pixels to one region by flow magnitude alone, leaves the normalized-background-flow ordering unchanged and moves only mid-field positions under feature-based drift. 
+
+## S5. Paired Differences 
+
+Separation claims in the main text are made on the boot-strap distribution of per-prompt differences , not on whether two marginal intervals overlap. Every system sees the same prompts, so the paired difference is the statistic the design supports: overlapping marginal intervals can conceal a re-liable paired difference, and non-overlapping ones can sug-gest a difference that is not there. 
+
+## S6. Generation Configuration 
+
+Every text-conditioned checkpoint was loaded by the same inference program and configuration. Fixed before the sweep to give the distilled checkpoint family a shared four-step budget, it specifies a four-step denoising sched-ule with indices 1000 /750 /500 /250 warped by the re-leased scheduler at timestep shift 5.0, six frames per block, and seed 0. All T2V outputs are 832 × 480 at 16 
+
+fps. Within a horizon, only checkpoint weights and their recorded regular/EMA selection vary. The YAML retains a guidance scale: 5.0 field, but the selected few-step CausalInferencePipeline is conditional-only and never reads it; classifier-free guidance is therefore not an applied parameter in this sweep. We state plainly what this does and does not license. It is a recorded common-configuration comparison, repro-ducible because the inference path is uniform and recorded. It is not an audit of each method under its authors’ released defaults, and we no longer describe it as one. The cost is real: several of these checkpoints are distilled for a spe-cific step budget, and evaluating them at a common four-step schedule does not observe them at their own operating point. Results are therefore statements about these check-points under this configuration. Re-running the sweep at each method’s released defaults, and reporting how much (a) how the partition is derived     
+
+> generated sequence
+> EARLY window first 12% of pairs
+> mean flow magnitude Otsu threshold
+> Ωflow Ωstatic
+> erode static + drop 4% border =ignored transition band
+> the early window reduces late-window circularity, but the partition still depends on early checkpoint behavior and RAFT flow (automatic, not human-verified — see limitations)
+
+(b) limitation: layered content   
+
+> Ωstatic support Ωflow intended motion rain: assigned to one region by flow
+> rain crosses static support, so the same pixels are BOTH
+> a two-way partition cannot separate them; precipitation results carry this caveat
+
+Figure S1. Region-partition protocol. (a) The partition is derived automatically from early-window flow, with an ignored transition band at the boundary. (b) A two-way partition cannot represent layered content such as rain crossing static support, which is the scope limit stated in the main paper. System static-region area CausVid 0.663 ± 0.073 Reward-Forcing 0.661 ± 0.060 Self-Forcing 0.651 ± 0.087 Infinite-Forcing 0.650 ± 0.090 LongLive 0.644 ± 0.095 Rolling-Forcing 0.616 ± 0.107 Causal-Forcing 0.614 ± 0.086 
+
+Does mask area predict the drift score? 
+
+Spearman(area, fBD) over 7 systems -0.75, exact p = 0 .066 
+
+Ordering with precipitation excluded (3 of 23 prompts) 
+
+fBD ordering best and worst unchanged NBF ordering identical Table S2. Partition and composition robustness. The static region occupies a similar share of the frame for every audited system, so no system is scored over a much larger or smaller support than another. The area does correlate negatively with drift across systems; over seven systems that correlation is not determined, but its sign is the one circularity would produce—a system that drifts early enlarges its own dynamic region—and we flag it as an open validity question rather than dismissing it. Removing precipitation, the category a two-way partition cannot represent, leaves the normalized-background-flow ordering unchanged. 
+
+the ordering moves, is the natural next version of this audit. The image-conditioned roster contains two distinct set-tings. Unmarked rows are recorded outputs produced by model-specific released pipelines. Rows marked † use the common long-horizon rollout wrapper with six frames per block and a fixed seed; unlike T2V, denoising schedules are checkpoint-specific. These wrapper parameters do not ap-ply to unmarked rows. The marked rows are read as deploy-ment sensitivity and are never ranked against the recorded released-pipeline outputs. 
+
+## S7. Measurement Coverage 
+
+Coverage is counted from valid per-video measurements rather than from the presence of a results file, so a run that terminated early is reported as partial. Separately, fBD is feature-based [26] and declines to report where too few re-peatable keypoints survive; those abstentions are tabulated rather than folded silently into a smaller n.
+
+## S8. Complete Audit, Both Tracks 
+
+The main paper reports the 60s and 120s deployment pan-els; the 5s tier is an initialization check and the 240s tier is an exploratory stress horizon. Both T2V and I2V tracks appear here at every horizon, with uncertainty from a per-centile bootstrap over items [5]. For the image-conditioned (I2V) track, dagger-marked wrapper rows use a common long-horizon rollout wrapper rather than a released pipeline, so their scores are read as deployment sensitivity rather than as the published method’s performance. Comparison n mean diff. 95% CI Infinite-Forcing − Causal-Forcing 23 -83.98 [−102 .59 , −65 .52] 
+
+Infinite-Forcing − LongLive 23 -10.22 [−14 .72 , −6.18] 
+
+Infinite-Forcing − Self-Forcing 23 -9.07 [−13 .29 , −5.53] 
+
+Infinite-Forcing − Rolling-Forcing 23 -7.58 [−10 .38 , −5.12] 
+
+Infinite-Forcing − CausVid 23 -5.62 [−9.61 , −2.10] 
+
+Infinite-Forcing − Reward-Forcing 23 -4.86 [−7.48 , −2.69] 
+
+Table S3. Paired differences in NBF, 60s horizon. Every system is evaluated on the same prompts, so separation is judged on the bootstrap distribution of per-prompt differences (10k resamples, fixed seed) rather than on whether two marginal intervals happen to overlap—overlapping intervals can hide a reliable paired difference, and non-overlapping ones can suggest a difference that is not. 6 of 6 intervals exclude zero. System setting resolution fps horizons CausVid common 832 ×480 16 5s, 60s, 120s, 240s Self-Forcing common 832 ×480 16 5s, 60s, 120s, 240s Infinite-Forcing common 832 ×480 16 5s, 60s, 120s, 240s Rolling-Forcing common 832 ×480 16 5s, 60s, 120s, 240s Reward-Forcing common 832 ×480 16 5s, 60s, 120s, 240s LongLive common 832 ×480 16 5s, 60s, 120s, 240s Causal-Forcing common 832 ×480 16 5s, 60s, 120s, 240s Table S4. Recorded generation configuration (T2V). Every audited system was run from its released checkpoint. Output formats are normalized at measurement time: NBF is expressed per second and per frame width, fBD as a percentage of the frame diagonal, and every sequence is resampled to a common flow-estimation rate. All rows use the recorded common T2V configuration: a four-step denoising schedule with released-scheduler warping, six frames per block, and seed 0. These are checkpoint results under this common configuration, not reconstructions of the methods’ released inference procedures. 7.5 10.0 12.5 15.0 17.5 20.0 22.5 static-region drift fBD ↓ (% of frame diagonal) 02468surviving late flow  MCFF  Causal-Forcing Self-Forcing LongLive CausVid Rolling-Forcing Reward-Forcing Infinite-Forcing 
+
+> DAR 0.08 (low attenuation) DAR 0.40 (high attenuation)
+
+Figure S2. Operating regimes under the recorded common T2V configuration. Each checkpoint in the static-drift–surviving-flow plane. Color encodes low-to-high attenuation of measured dynamic-region flow after global-motion compensation, not a share attributable to drift: the quantity is signed, and values are shown clipped to [0 , 1] . The view exposes trade-offs; it is not a leaderboard. 
+
+## S9. Aggregation Sensitivity 
+
+The evaluation set is dominated by one flow medium, so the audit must be shown not to be a report on that medium alone. The main paper aggregates by averaging over prompts. The alternative, weighting each scene cate-gory equally, is not preferable here: at the principal horizon three of the five populated categories contain two prompts each, so a macro-average would give a two-prompt cell the same influence as a fourteen-prompt one and inflate vari-ance in exchange for nominal balance. We therefore report both and state what changes. The best- and worst-ranked systems are the same under either aggregation, so the contrast the paper draws does not depend on the choice. Intermediate ranks do move, which is why no ordinal claim is made about the middle of the field. 
+
+## S10. Whole-Frame and SNF-Bench Rank Cor-relation 
+
+Tables S11 and S12 report the method-level rank correla-tions and all interpretation changes satisfying the fixed in-clusion rule. System setting resolution fps horizons Causal-Forcing++ (2-step, frame-wise) released 832 ×480 16 5s, 60s, 120s, 240s Wan2.1-I2V-14B-480P released 832 ×464 16 5s Wan2.2-I2V-A14B released 832 ×464 16 5s LTX-Video 13B-0.9.8-distilled released 832 ×480 24 5s Causal-Forcing++ (1-step, frame-wise) released 832 ×480 16 60s, 120s Causal-Forcing++ (2-step) † wrapper 832 ×480 16 5s, 60s, 120s, 240s Causal-Forcing++ (1-step) † wrapper 832 ×480 16 5s, 60s, 120s, 240s Causal-Forcing (frame-wise) † wrapper 832 ×480 16 5s, 60s, 120s, 240s Self-Forcing † wrapper 832 ×480 16 5s, 60s, 120s, 240s CausVid † wrapper 832 ×480 16 5s, 60s, 120s, 240s Table S5. Recorded generation configuration (I2V). Every audited system was run from its released checkpoint. Output formats are normalized at measurement time: NBF is expressed per second and per frame width, fBD as a percentage of the frame diagonal, and every sequence is resampled to a common flow-estimation rate. Unmarked rows are recorded outputs from model-specific released pipelines and carry the setting label released . † rows use the common long-horizon rollout wrapper (six frames per block, fixed seed; checkpoint-specific denoising schedules); those parameters do not apply to unmarked rows, and the two settings are not ranked together. track horizon measured fBD abstained rate I2V 120s 140 0 0.0% I2V 240s 30 0 0.0% I2V 5s 90 0 0.0% I2V 60s 210 2 1.0% T2V 120s 42 0 0.0% T2V 240s 28 0 0.0% T2V 5s 48 0 0.0% T2V 60s 162 0 0.0% Table S6. Public-roster measurement coverage and fBD ab-stention. fBD is feature-based and declines to report when too few repeatable keypoints survive in the static region. Public-roster abstentions are confined to a desert dust-storm scene whose flat, dust-obscured ground offers little stable structure to track. The re-maining factors are reported for those clips as usual; only fBD is withheld. 
+
+## S11. Deployment Sensitivity 
+
+Table S13 reports changes from released-pipeline outputs to the common long-horizon wrapper for checkpoints eval-uated under both settings. 
+
+## S12. Signed Drift Attenuation 
+
+Table S14 reports the incidence and magnitude of negative signed DAR values. Drift attenuation is stored signed and reported clipped to 
+
+[0 , 1] . Negative values are informative rather than anoma-lous: where local flow opposes the estimated global field, compensation increases the measured magnitude. We re-port their incidence rather than suppressing it. 
+
+## S13. Evaluation-Set Composition 
+
+Table S15 summarizes category coverage by track and hori-zon. 
+
+## S14. Additional Qualitative Material 
+
+Figure selection rule. For each prompt represented by at least six systems, the support-preserving candidate min-imizes fBD − 2 MCFF -L, the drift candidate maximizes fBD, and the stagnation candidate minimizes MCFF-L. Among prompts with three distinct candidates, the se-lected prompt maximizes (fBD drift − fBD support )/(1 + 40 |DD ∗ 
+
+> drift
+
+− DD ∗
+
+> support
+
+|).Method status setting 5s 60s 120s 240s CausVid public common V6 T6 B V23 T23 B V6 T6 B V4 T4 B Self-Forcing public common V6 T6 B V23 T23 B V6 T6 B V4 T4 B Infinite-Forcing public common V6 T6 B V23 T23 B V6 T6 B V4 T4 B Rolling-Forcing public common V6 T6 B V24 T24 B V6 T6 B V4 T4 B Reward-Forcing public common V12 T12 B V23 T23 B V6 T6 B V4 T4 B LongLive public common V6 T6 B V23 T23 B V6 T6 B V4 T4 B Causal-Forcing public common V6 T6 B V23 T23 B V6 T6 B V4 T4 B Table S7. Asset and score coverage for the audited public systems. Vn is the number of available video assets, Tn the number of valid SNF task-metric records, and B denotes available VBench scores. Tn/N marks entries where only n of N videos hold usable measurements. V counts generated assets, whereas audit n counts unique frozen-manifest prompt items after duplicate prompt outputs are collapsed. Reward-Forcing has 12 assets over six 5 s prompts; Rolling-Forcing has 24 assets over 23 60 s prompts. Method fBD ↓ NBF ↓ MCFF-E MCFF-L ↑ FP ↑ DLR ↓ DAR ↓
+
+5s horizon ( n = 6 )
+
+CausVid 2.08 6.56 1.44 2.91 1.24 0.26 0.07 Self-Forcing 0.68 10.8 7.70 4.35 0.76 0.49 0.03 Infinite-Forcing 0.24 2.32 1.23 0.89 1.08 0.21 0.09 Rolling-Forcing 3.51 12.1 3.10 3.69 1.32 0.48 0.17 Reward-Forcing 1.10 5.21 0.63 0.58 1.37 0.44 0.28 LongLive 1.91 7.31 1.25 2.27 1.16 0.59 0.32 Causal-Forcing 9.55 31.0 5.32 3.01 1.13 0.62 0.37 
+
+60s horizon ( n = 23 )
+
+CausVid 8.08 9.27 2.87 1.96 0.67 0.45 0.14 Self-Forcing 11.4 12.7 10.4 2.54 0.44 0.50 0.14 Infinite-Forcing 7.75 3.65 1.17 0.29 0.63 0.55 0.14 Rolling-Forcing 16.8 11.2 3.18 1.57 0.75 0.54 0.18 Reward-Forcing 14.8 8.51 3.81 0.80 0.49 0.60 0.17 LongLive 15.9 13.9 6.46 2.41 0.75 0.59 0.17 Causal-Forcing 22.4 87.6 9.84 7.21 0.83 0.94 0.43 
+
+120s horizon ( n = 6 )
+
+CausVid 6.15 3.42 0.36 0.52 1.06 0.41 0.13 Self-Forcing 21.2 6.80 4.85 0.82 0.85 0.75 0.15 Infinite-Forcing 16.1 2.60 0.50 0.32 0.64 0.57 0.21 Rolling-Forcing 23.8 10.6 3.33 0.77 0.38 0.82 0.22 Reward-Forcing 20.0 11.6 2.05 0.69 0.39 0.70 0.12 LongLive 22.5 9.66 5.10 1.19 0.81 0.84 0.23 Causal-Forcing 21.8 130 10.5 10.7 0.90 0.81 0.50 
+
+240s horizon ( n = 4 )
+
+CausVid 7.23 13.4 0.42 0.87 0.99 0.85 0.08 Self-Forcing 20.0 17.4 3.09 0.50 0.15 2.26 0.20 Infinite-Forcing 20.0 4.15 0.33 0.23 1.02 1.08 0.15 Rolling-Forcing 23.7 15.4 2.15 0.97 0.46 0.78 0.18 Reward-Forcing 26.4 11.4 1.09 3.55 1.53 0.50 0.07 LongLive 23.1 11.8 1.52 1.32 1.20 1.38 0.31 Causal-Forcing 18.9 102 4.72 6.90 1.21 0.73 0.58 Table S8. Complete T2V audit, all four horizons. The main paper reports the 60 s and 120 s panels; the 5 s tier is an initialization check and 240 s a diagnostic extreme. Every row is computed under the same frozen specification, so panels are comparable within a horizon; prompt sets differ across horizons, so columns are not comparable between panels. Header n is the maximum valid item count within each horizon; factor-specific abstentions are in Table S6. Units: fBD is % frame diagonal; NBF is 10 −3 frame widths/s; MCFF is px/sampled interval; FP is unitless. FP is the mean of per-video clipped late/early ratios and therefore need not equal the ratio of the displayed aggregate MCFF-L and MCFF-E means. Method setting fBD ↓ NBF ↓ MCFF-E MCFF-L ↑ FP ↑ DLR ↓ DAR ↓
+
+5s horizon ( n = 10 )
+
+Causal-Forcing++ (2-step) wrapper 3.69 10.0 1.06 0.61 0.78 0.67 0.32 Causal-Forcing++ (1-step) wrapper 5.28 11.4 1.05 0.47 0.64 0.66 0.29 Causal-Forcing (frame-wise) wrapper 16.1 45.3 8.48 2.79 0.43 0.68 0.29 Causal-Forcing++ (2-step, frame-wise) released 1.22 10.6 2.23 0.78 0.47 0.68 0.20 Self-Forcing wrapper 9.66 5.74 0.69 0.26 0.70 0.74 0.21 CausVid wrapper 15.2 10.8 0.76 0.87 0.98 1.04 0.10 Wan2.1-I2V-14B-480P released 5.01 21.3 6.67 5.58 1.09 0.52 0.18 Wan2.2-I2V-A14B released 6.31 25.3 4.33 9.09 0.95 0.50 0.27 LTX-Video 13B-0.9.8-distilled released 6.65 17.8 3.59 3.48 0.92 0.39 0.24 
+
+60s horizon ( n = 30 )
+
+Causal-Forcing++ (2-step) wrapper 9.18 5.97 0.85 0.60 0.86 0.67 0.25 Causal-Forcing++ (1-step) wrapper 5.34 7.05 0.86 0.57 0.77 0.64 0.28 Causal-Forcing (frame-wise) wrapper 21.1 36.4 2.80 2.69 0.89 0.80 0.35 Causal-Forcing++ (2-step, frame-wise) released 9.94 6.91 1.30 0.78 1.02 0.75 0.17 Self-Forcing wrapper 17.3 5.52 1.50 0.69 0.89 0.67 0.18 CausVid wrapper 19.9 3.31 0.58 0.41 0.81 0.57 0.14 Causal-Forcing++ (1-step, frame-wise) released 10.4 5.25 0.53 0.52 1.01 0.83 0.22 
+
+120s horizon ( n = 20 )
+
+Causal-Forcing++ (2-step) wrapper 9.65 8.81 0.89 0.82 0.93 0.58 0.28 Causal-Forcing++ (1-step) wrapper 7.26 9.39 0.84 0.66 0.86 0.62 0.31 Causal-Forcing (frame-wise) wrapper 19.9 52.7 4.82 5.06 1.08 0.67 0.24 Causal-Forcing++ (2-step, frame-wise) released 11.4 17.3 1.89 1.54 1.01 0.75 0.09 Self-Forcing wrapper 23.0 10.3 2.41 0.76 0.45 0.66 0.26 CausVid wrapper 19.7 6.04 1.15 0.83 0.67 0.48 0.14 Causal-Forcing++ (1-step, frame-wise) released 13.6 7.39 1.01 0.35 0.64 0.77 0.33 
+
+240s horizon ( n = 5 )
+
+Causal-Forcing++ (2-step) wrapper 10.4 4.83 0.53 0.59 1.05 0.55 0.15 Causal-Forcing++ (1-step) wrapper 6.42 6.66 0.56 0.51 0.83 0.67 0.30 Causal-Forcing (frame-wise) wrapper 19.8 31.5 3.08 2.28 0.74 0.69 0.45 Causal-Forcing++ (2-step, frame-wise) released 6.32 3.95 1.23 0.68 0.67 0.83 0.02 Self-Forcing wrapper 22.3 5.74 1.48 1.59 0.81 0.71 0.08 CausVid wrapper 18.4 2.08 0.81 0.79 0.86 0.44 0.11 Table S9. Complete I2V audit, all four horizons. The main paper reports the 60s and 120s panels; the 5s tier is an initialization check and the 240s tier is an exploratory stress horizon. All rows are scored with the same frozen measurement specification; however, released-pipeline and wrapper rows represent different generation settings and are reported separately rather than ranked against one another. Prompt sets differ across horizons, so values are not compared across panels. Header n is the maximum valid item count within each horizon; factor-specific abstentions are in Table S6. Units: fBD is % frame diagonal; NBF is 10 −3 frame widths/s; MCFF is px/sampled interval; FP is unitless. FP is the mean of per-video clipped late/early ratios and therefore need not equal the ratio of the displayed aggregate MCFF-L and MCFF-E means. System prompt mean rank macro mean rank 
+
+NBF 
+
+Infinite-Forcing 3.65 1 4.12 1Reward-Forcing 8.51 2 10.11 4†
+
+CausVid 9.27 3 9.93 3Rolling-Forcing 11.23 4 11.32 5†
+
+Self-Forcing 12.72 5 8.98 2†
+
+LongLive 13.86 6 14.69 6Causal-Forcing 87.62 7 61.70 7
+
+fBD 
+
+Infinite-Forcing 7.75 1 6.10 1CausVid 8.08 2 9.51 3†
+
+Self-Forcing 11.37 3 9.27 2†
+
+Reward-Forcing 14.85 4 15.61 5†
+
+LongLive 15.94 5 14.93 4†
+
+Rolling-Forcing 16.77 6 18.85 6Causal-Forcing 22.44 7 23.49 7Table S10. Sensitivity of the audit to category aggregation. Prompt means, as reported in the main paper, against category macro-averages, for the two static-fidelity factors at the principal horizon. † marks a system whose rank changes. The best- and worst-ranked systems are identical under both, so the paper’s headline contrast does not depend on the choice; intermediate positions do change, which is why no ordinal claim is made about the middle of the field. generic metric fBD NBF MCFF DLR VB-DD +0.75 +0.93 +0.89 +0.36 VB-bg -0.64 -0.71 -0.75 -0.50 VB-smooth / VB-flick -0.96 -0.82 -0.61 -0.64 Table S11. Rank disagreement at 60 s. Spearman correlation over n = 7 method means—descriptive, not inferential. Positive correlation between apparent motion and background flow is the effect the benchmark isolates. Smoothness and flickering rank these systems identi-cally and share a row. Method Generic evidence SNF-Bench evidence Interpretation CausVid VB-DD rank 6/7 NBF rank 3/7, MCFF-L rank 4/7 stable sequence with decaying intended motion Causal-Forcing VB-DD rank 1/7 NBF rank 7/7, MCFF-L rank 1/7 high apparent motion accompanied by high static-region motion under the recorded common configuration Infinite-Forcing VB-DD rank 7/7 NBF rank 1/7, MCFF-L rank 7/7 stable sequence with decaying intended motion LongLive VB-DD rank 3/7 NBF rank 6/7, MCFF-L rank 3/7 high apparent motion accompanied by high static-region motion under the recorded common configuration Reward-Forcing VB-DD rank 5/7 NBF rank 2/7, MCFF-L rank 6/7 stable sequence with decaying intended motion Self-Forcing VB-DD rank 2/7 NBF rank 5/7, MCFF-L rank 2/7 high apparent motion accompanied by high static-region motion under the recorded common configuration Table S12. Interpretation changes between generic whole-frame metrics and SNF-Bench at 60 s. Neither evaluation is labeled correct; the table identifies information hidden by whole-frame aggregation. Cases are selected by a fixed rank-gap rule applied to all public methods. Rolling-Forcing does not satisfy the fixed three-rank-gap inclusion criterion and is therefore absent. Checkpoint horizon ∆fBD ∆NBF ∆MCFF-L ∆DLR Causal-Forcing++ (2-step) 5s +2.47 -0.61 -0.17 -0.01 Causal-Forcing++ (2-step) 60s -0.76 -0.95 -0.17 -0.08 Causal-Forcing++ (2-step) 120s -1.71 -8.46 -0.73 -0.17 Causal-Forcing++ (2-step) 240s +4.06 +0.88 -0.09 -0.28 Causal-Forcing++ (1-step) 60s -5.05 +1.80 +0.05 -0.20 Causal-Forcing++ (1-step) 120s -6.34 +2.00 +0.31 -0.14 Table S13. Deployment sensitivity. Change from each checkpoint’s own released setting to the common long-horizon wrapper, for the two checkpoints evaluated both ways. Absolute wrapper scores are never read as the published method’s performance. Method track dur n negative rate most negative CausVid i2v 120s 20 1 5.0% -0.055 CausVid i2v 5s 10 5 50.0% -1.076 CausVid i2v 60s 30 2 6.7% -0.084 Causal-Forcing++ (1-step) i2v 120s 20 1 5.0% -0.027 Causal-Forcing (frame-wise) i2v 120s 20 3 15.0% -0.171 Causal-Forcing++ (2-step) i2v 5s 10 1 10.0% -0.164 Causal-Forcing++ (1-step, frame-wise) i2v 60s 30 3 10.0% -1.420 Causal-Forcing++ (2-step, frame-wise) i2v 120s 20 5 25.0% -0.241 Causal-Forcing++ (2-step, frame-wise) i2v 240s 5 1 20.0% -0.651 Causal-Forcing++ (2-step, frame-wise) i2v 5s 10 1 10.0% -0.288 Causal-Forcing++ (2-step, frame-wise) i2v 60s 30 1 3.3% -0.001 LTX-Video 13B-0.9.8-distilled i2v 5s 10 2 20.0% -0.018 Self-Forcing i2v 120s 20 2 10.0% -0.046 Self-Forcing i2v 240s 5 1 20.0% -0.136 Self-Forcing i2v 60s 30 4 13.3% -0.578 Wan2.1-I2V-14B-480P i2v 5s 10 1 10.0% -0.255 Wan2.2-I2V-A14B i2v 5s 10 1 10.0% -0.335 CausVid t2v 240s 4 1 25.0% -0.384 CausVid t2v 5s 6 2 33.3% -0.093 Causal-Forcing t2v 5s 6 2 33.3% -0.273 Causal-Forcing t2v 60s 23 3 13.0% -0.640 Infinite-Forcing t2v 240s 4 1 25.0% -0.158 Infinite-Forcing t2v 60s 23 4 17.4% -0.359 LongLive t2v 120s 6 1 16.7% -1.076 LongLive t2v 5s 6 1 16.7% -0.139 LongLive t2v 60s 23 2 8.7% -0.051 Reward-Forcing t2v 120s 6 1 16.7% -0.116 Reward-Forcing t2v 5s 12 2 16.7% -0.145 Reward-Forcing t2v 60s 23 3 13.0% -0.317 Rolling-Forcing t2v 120s 6 3 50.0% -0.353 Rolling-Forcing t2v 5s 6 1 16.7% -0.068 Rolling-Forcing t2v 60s 24 2 8.3% -0.038 Self-Forcing t2v 120s 6 2 33.3% -0.130 Self-Forcing t2v 240s 4 1 25.0% -0.153 Self-Forcing t2v 5s 6 1 16.7% -0.046 Self-Forcing t2v 60s 23 4 17.4% -1.117 Table S14. Incidence of negative DAR, i.e. clips where global-motion compensation increased measured dynamic-region flow. 21 further entries had no negative values and are omitted. track/duration n river stream ocean waves precipitation fire smoke lava volcanic windborne cats i2v/5s 10 2 · 3 2 1 2 5i2v/60s 30 9 4 9 1 3 4 6i2v/120s 20 6 3 3 3 1 4 6i2v/240s 5 1 2 1 · 1 · 4t2v/5s 6 3 1 1 1 · · 4t2v/60s 23 14 2 3 2 · 2 5t2v/120s 6 4 · 1 · · 1 3t2v/240s 4 2 · 1 · · 1 3
+
+Table S15. Scene-category balance of the evaluation set, by track and horizon. A dot marks a category absent from that cell. t = 0 s     
+
+> Causal-Forcing++ (1-step, frame-wise)
+> Causal-Forcing++ (2-step, frame-wise)
+> Causal-Forcing++ (2-step) †Self-Forcing †
+> Causal-Forcing++ (1-step) †
+> Causal-Forcing (frame-wise) †CausVid †
+> t = 30 s t = 60 s
+> released pipelines wrapper outputs †
+
+Figure S3. Image-conditioned systems on one shared source image. Every system begins from the identical frame, so divergence over the rollout is attributable to the system rather than to a differently imagined scene—which is not true of the text-conditioned track, where each system authors its own layout. Released-pipeline and wrapper outputs are visibly separated and ordered by increasing fBD only within their respective groups; † marks a wrapper output, and no cross-setting ordering is intended. fBD NBF MCFF-L FP DLR 
+
+T2V @ 60 s 
+
+Causal-Forcing Infinite-Forcing 
+
+fBD NBF MCFF-L FP DLR 
+
+I2V @ 60 s 
+
+Self-Forcing †Figure S4. Factor profile per track. Each factor is rescaled across the audited systems and oriented so that outward is always better; plotting raw values would place “most drift” and “most surviving motion” both outward and the shape would carry no meaning. No system encloses the others on either track, which is the conclusion the operating-regime view reaches, shown as a profile. On the image-conditioned panel, dashed outlines marked † are rows run under the common long-horizon wrapper rather than a released pipeline: they are shown for shape, and are not peers of the solid released-pipeline outlines. The rescaling is relative to the audited roster, so a profile is descriptive of this set and would change if the set changed. t = 12 s 
+
+(a) layered content 
+
+> t = 5 s
+
+(b) stability without motion 
+
+> t = 8 s
+
+(c) non-rigid drift   
+
+> t = 48 s t = 55 s t = 52 s
+> rain and snow cross static support, so those pixels are assigned to one region by flow alone Self-Forcing: fBD 2.40 is among the best static fidelity in the audit, yet MCFF-L 0.05 -- the intended motion has stopped too Self-Forcing: DLR 1.80 but DAR 0.00 -- the support moves, yet a fitted similarity compensation attenuates little of the measured flow; the residual is not causally identified
+
+Figure S5. Stated scope boundaries. (a) A two-way partition cannot separate precipitation from the support it crosses. (b) A system can attain near-best static fidelity precisely because its intended motion has also stopped. (c) High leakage with low attenuation marks static-region motion for which the fitted global similarity model attenuates little measured flow; what the residual consists of is not identified by these measurements. t = 0 s       
+
+> Infinite-Forcing CausVid Reward-Forcing LongLive Self-Forcing Causal-Forcing Rolling-Forcing
+> t = 30 s t = 60 s
+
+Figure S6. T2V comparison under the recorded common configuration. Every audited text-conditioned checkpoint is evaluated on the same prompt. Rows show t=0,30,60 s; columns are ordered by increasing measured fBD. 1234567rank 
+
+VBench DD SNF-Bench NBF 
+
+5s (n=6) 
+
+CausVid CausVid 
+
+Causal-Forcing Causal-Forcing Infinite-Forcing Infinite-Forcing 
+
+LongLive LongLive Reward-Forcing Reward-Forcing Rolling-Forcing Rolling-Forcing Self-Forcing Self-Forcing 
+
+1234567rank 
+
+VBench DD SNF-Bench NBF 
+
+60s (n=23) 
+
+CausVid CausVid 
+
+Causal-Forcing Causal-Forcing Infinite-Forcing Infinite-Forcing 
+
+LongLive LongLive Reward-Forcing Reward-Forcing Rolling-Forcing Rolling-Forcing Self-Forcing Self-Forcing 
+
+1234567rank 
+
+VBench DD SNF-Bench NBF 
+
+120s (n=6) 
+
+CausVid CausVid 
+
+Causal-Forcing Causal-Forcing Infinite-Forcing Infinite-Forcing 
+
+LongLive LongLive Reward-Forcing Reward-Forcing Rolling-Forcing Rolling-Forcing Self-Forcing Self-Forcing 
+
+1234567rank 
+
+VBench DD SNF-Bench NBF 
+
+240s (n=4*) 
+
+CausVid CausVid 
+
+Causal-Forcing Causal-Forcing Infinite-Forcing Infinite-Forcing 
+
+LongLive LongLive Reward-Forcing Reward-Forcing Rolling-Forcing Rolling-Forcing Self-Forcing Self-Forcing Figure S7. Rank disagreement at every audited horizon. Rank under a whole-frame motion score against rank under normalized background flow. Both quantities are independent of the global-motion estimator; prompt counts are given per panel. An asterisk marks a horizon where Dynamic Degree is available only as a method-level VBench aggregate, suitable for descriptive ranks but not for item-level uncertainty. 0 5 10 15 20 25 30 prompts in the evaluation set 
+
+T2V 5s T2V 60s T2V 120s T2V 240s I2V 5s I2V 60s I2V 120s I2V 240s                             
+
+> 311114 2322411211232129491346333141211
+
+River / stream Ocean waves Precipitation Fire / smoke Lava / volcanic Wind-borne Figure S8. Composition of the evaluation set by scene category, in prompts per category at each track and horizon.
