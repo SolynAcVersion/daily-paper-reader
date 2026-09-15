@@ -1,19 +1,19 @@
 ---
 title: "Planning at Inference: MCTS Test-Time Scaling for Long Video Generation"
-title_zh: 推理时规划：基于MCTS的测试时扩展长视频生成
+title_zh: 推理期规划：面向长视频生成的MCTS测试时扩展
 authors: "Ritvik Bale, Ethan He, Ashwath Aithal, Linnan Wang"
 date: 2025-09-19
 pdf: "https://openreview.net/pdf?id=ilir6A52vh"
-tags: ["query:phys-video"]
-score: 4.0
-evidence: 使用MCTS规划提升长视频生成的物体永久性和跨帧一致性
-tldr: 长视频生成常面临语义漂移和物体永久性丢失等问题。本文提出将蒙特卡洛树搜索作为测试时扩展框架，通过前瞻回滚和奖励回传评估多条视频延续，并引入多树MCTS变体增强连续空间探索。该方法无需重新训练即可应用于现有骨干模型，在多个模型上一致改善物体永久性和生成一致性，为长视频生成提供新的推理时优化方向。
+tags: ["query:video-gen-rl"]
+score: 7.0
+evidence: MCTS测试时扩展提升长视频生成的一致性与物体恒存性
+tldr: 长视频生成中内容与画质一致性仍是难题，现有一次性与分块方法常出现语义漂移与累积伪影。本文将长视频生成建模为序列决策问题，采用蒙特卡洛树搜索进行测试时扩展，通过前瞻推演与奖励回传评估多种延续，并提出多树MCTS变体。实验在Cosmos-Predict2等模型上一致提升物体恒存性与长程一致性，且无需重训练即可模块化应用。
 source: ICLR-2026-Rejected-Public
 selection_source: conference_retrieval
-motivation: 长视频生成中片段式方法易导致语义漂移和物体永久性丢失，影响跨帧一致性。
-method: 将视频生成形式化为序列决策任务，使用MCTS和变体进行多步前瞻评估与路径选择。
-result: 在Cosmos-Predict2等模型上验证，使用MCTS规划能显著提升物体永久性并减少伪影。
-conclusion: 测试时规划是提升长视频一致性的有效免训练手段，具有良好通用性。
+motivation: 长视频生成存在语义漂移与累积伪影，难以保持内容与画质一致。
+method: 将生成建模为序列决策，用MCTS前瞻推演与多树变体进行测试时扩展。
+result: 在多个模型上一致提升物体恒存性与长程一致性。
+conclusion: 提供了无需重训练、可模块化应用的长视频生成增强框架。
 ---
 
 ## Abstract

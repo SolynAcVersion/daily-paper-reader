@@ -4,16 +4,16 @@ title_zh: 面向视频生成模型的物理引导运动损失
 authors: "Bowen Xue, Giuseppe Claudio Guarnera, Shuang Zhao, Zahra Montazeri"
 date: 2026-04-30
 pdf: "https://openreview.net/pdf/e8d93979c0e9f9ceb30a8fd994a4e162def94b33.pdf"
-tags: ["query:phys-video"]
+tags: ["query:video-gen-rl"]
 score: 9.0
-evidence: 物理引导的运动损失，提升视频生成的物理合理性
-tldr: "当前视频扩散模型生成的视频虽视觉逼真，但物理运动常有橡皮失真、物体运动不一致等伪影。该论文提出一种频域物理先验，将平移、旋转、缩放等常见运动模式分解为轻量谱损失，无需改变模型架构即可提升运动合理性。在Open-Sora、MVDIT和Hunyuan等模型上，运动精度和行为识别平均提升约11%，并在Wan 2.1-14B上持续获得视频质量和物理指标增益。用户研究显示74-83%的偏好，表明该方法能有效增强生成视频的物理一致性。"
+evidence: 频域物理先验提升视频扩散模型的运动合理性
+tldr: "现有视频扩散模型虽能生成视觉上吸引人的内容，却常出现橡皮布变形、物体运动不一致等物理不合理问题。本文提出一种频域物理先验，将平移、旋转、缩放等常见运动模式分解为轻量级谱损失，无需修改模型架构即可提升运动合理性。在Open-Sora、MVDIT、Hunyuan等模型上，运动准确率与动作识别平均提升约11%，用户研究显示74-83%的偏好率，为物理合理的视频生成提供了通用增强方案。"
 source: ICML-2026-Accepted
 selection_source: conference_retrieval
-motivation: 视频扩散模型生成的视频存在橡皮变形和物体运动不一致等物理伪影，缺乏运动先验。
-method: 引入频域物理先验，将平移、旋转、缩放等运动模式分解为轻量谱损失，不改动模型架构。
-result: "在多个视频生成模型上运动精度提升约11%，物理导向指标提升，用户偏好74-83%。"
-conclusion: 为视频生成模型提供了有效且即插即用的物理合理性提升方案，适用多种模型架构。
+motivation: 当前视频扩散模型虽视觉逼真，却常产生橡皮布变形与运动不一致等物理不合理现象。
+method: 提出频域物理先验，将平移、旋转、缩放等运动模式分解为轻量级谱损失，不修改模型架构。
+result: "在Open-Sora、MVDIT、Hunyuan上运动准确率与动作识别平均提升约11%，用户研究偏好率达74-83%。"
+conclusion: 该谱损失可作为通用插件提升视频生成的物理运动合理性。
 ---
 
 ## Abstract

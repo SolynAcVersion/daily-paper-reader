@@ -1,19 +1,19 @@
 ---
 title: "SimDiff: Simulator-constrained Diffusion Model for Physically Plausible Motion Generation"
-title_zh: SimDiff：物理合理运动生成的模拟器约束扩散模型
+title_zh: SimDiff：面向物理合理运动生成的模拟器约束扩散模型
 authors: "Akihisa Watanabe, Jiawei Ren, Li Siyao, YICHEN PENG, Erwin Wu, Edgar Simo-Serra"
 date: 2025-09-19
 pdf: "https://openreview.net/pdf?id=jFHaK889Jv"
-tags: ["query:phys-video"]
-score: 8.0
-evidence: 将模拟器约束与环境参数嵌入扩散过程以强制生成物理合理的运动
-tldr: 该论文针对物理合理人体运动生成中模拟器投影计算开销大、难以并行的问题，提出 SimDiff 模拟器约束扩散模型。其核心是将模拟器投影重新解释为一种分类器/无分类器指导形式，并将重力、风等环境参数直接注入去噪过程以端到端学习物理约束。这种方法避免串行物理模拟的瓶颈，同时保持生成的物理合理性，实验验证了其在人类动画和虚拟现实等场景中的有效性。
+tags: ["query:video-gen-rl"]
+score: 7.0
+evidence: 通过模拟器引导的扩散模型保证物理合理性
+tldr: 生成物理合理的人体运动对动画与虚拟现实很重要，但现有方法将模拟器投影层嵌入扩散过程，因模拟器串行而计算昂贵。本文发现模拟器投影可视为分类器式或无分类器引导，提出SimDiff将重力、风等环境参数直接融入去噪过程。该方法在保证物理合理性的同时可并行化，降低了计算成本，为物理约束下的生成建模提供了高效范式。
 source: ICLR-2026-Rejected-Public
 selection_source: conference_retrieval
-motivation: 现有方法通过模拟器投影强制物理合理性，但串行模拟阻碍并行化，训练推理开销大。
-method: 将模拟器投影视为扩散指导，把重力、风等环境参数集成进去噪网络，实现模拟器约束扩散。
-result: SimDiff 在保证物理合理性的同时显著降低计算成本，支持高效的运动生成。
-conclusion: 将物理模拟约束内化为扩散指导可实现高效且物理合理的运动生成，可迁移至视频领域。
+motivation: 现有扩散运动生成依赖串行模拟器投影，计算昂贵且难以并行。
+method: 将模拟器投影解释为扩散引导，提出SimDiff把重力、风等环境参数注入去噪过程。
+result: 在保持物理合理性的同时实现可并行化，显著降低计算开销。
+conclusion: 为物理约束下的生成建模提供了高效且可扩展的引导范式。
 ---
 
 ## Abstract

@@ -1,19 +1,19 @@
 ---
 title: "PhysMaster: Mastering Physical Representation for Video Generation via Reinforcement Learning"
-title_zh: PhysMaster：通过强化学习掌握物理表示用于视频生成
+title_zh: PhysMaster：通过强化学习掌握物理表征以生成视频
 authors: "Sihui Ji, Xi Chen, Xin Tao, Pengfei Wan, Hengshuang Zhao"
 date: 2025-09-09
 pdf: "https://openreview.net/pdf?id=CG2VPDZkwM"
-tags: ["query:phys-video"]
-score: 9.0
-evidence: 用强化学习学习物理表示并引导视频生成模型提升物理合理性
-tldr: 视频生成模型虽能生成视觉真实的视频，却常违反物理规律，难以作为世界模型。PhysMaster提出通过强化学习将物理知识学习为表示，用于引导模型提升物理感知。在图像到视频任务中，PhysEncoder从输入图像提取物体相对位置和潜在交互等物理先验，并以此为条件指导模型生成物理上合理的动态。该工作为借助强化学习增强视频生成物理一致性提供了直接方法。
+tags: ["query:video-gen-rl"]
+score: 10.0
+evidence: 强化学习提升视频物理合理性
+tldr: 视频生成模型虽能生成视觉逼真的视频，却常违背物理规律，难以充当世界模型。本文提出PhysMaster，将物理知识编码为表征以引导视频生成，基于图像到视频任务，设计PhysEncoder从输入图像中提取相对位置与潜在交互等物理先验。方法借助强化学习增强模型的物理感知能力，从而提升生成视频的物理合理性。该工作为构建遵循物理规律的世界模型提供了表征学习结合强化学习的新思路。
 source: ICLR-2026-Public
 selection_source: conference_retrieval
-motivation: 视频生成模型常违反物理规律，需要提升物理合理性以成为世界模型。
-method: 提出基于强化学习的物理表示学习框架，用PhysEncoder从输入图像编码物理先验并引导生成。
-result: 在图像到视频任务中生成更符合物理的动态，提升模型的物理感知能力。
-conclusion: 为用强化学习增强视频生成物理一致性提供了直接有效的方案。
+motivation: 视频生成模型虽视觉逼真却常违反物理规律，难以充当世界模型。
+method: 提出PhysMaster，基于图像到视频任务，用PhysEncoder从输入图像编码物理先验为表征，并借助强化学习引导生成。
+result: 增强模型物理感知，提升生成视频的物理合理性。
+conclusion: 为构建遵循物理规律的世界模型提供了表征加强化学习的新思路。
 ---
 
 ## Abstract

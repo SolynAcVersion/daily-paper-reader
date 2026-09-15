@@ -1,19 +1,19 @@
 ---
 title: Learning to Generate Object Interactions with Physics-Guided Video Diffusion
-title_zh: 物理引导的视频扩散：学习生成物体交互
+title_zh: 基于物理引导视频扩散的物体交互生成学习
 authors: "David Romero, Ariana Bermudez, Hao Li, Fabio Pizzati, Ivan Laptev"
 date: 2025-09-15
 pdf: "https://openreview.net/pdf?id=vrY91av397"
-tags: ["query:phys-video"]
+tags: ["query:video-gen-rl"]
 score: 9.0
-evidence: 物理引导的视频扩散方法，实现真实刚体控制与物理合理的物体交互
-tldr: 当前视频生成模型在生成物体交互时仍缺乏物理合理性，且缺少物理接地的控制机制。KineMask提出物理引导的视频生成方法：输入单张图像与指定物体速度，即可生成包含推断运动与未来物体交互的视频。方法实现真实刚体控制与物体间交互效果，为世界模拟器与具身决策提供可用的视频生成工具。实验显示其在物理合理性与可控性上优于现有方法。
+evidence: 物理引导视频扩散实现刚体控制与物体交互
+tldr: 当前视频生成模型虽进展显著，却难以生成物理合理的物体交互，且缺乏基于物理的控制机制。本文提出KineMask，一种物理引导的视频生成方法，给定单张图像与指定物体速度，即可推断运动并生成未来物体交互，实现真实的刚体控制与效果。该方法将物理约束融入扩散生成流程，提升了物体交互的合理性与可控性，为机器人及具身决策等世界模拟应用奠定基础。
 source: ICLR-2026-Public
 selection_source: conference_retrieval
-motivation: 现有视频生成模型难以生成物理合理的物体交互，且缺乏基于物理的控制机制。
-method: 提出KineMask，通过物理引导的视频扩散在单图和物体速度条件下生成刚体运动与物体交互。
-result: 实验表明该方法能生成物理合理且可控的视频，支撑世界模拟与具身决策。
-conclusion: 该工作为视频生成提供物理接地控制思路，增强了模型作为世界模拟器的可信度。
+motivation: 现有视频生成方法难以生成物理合理的物体交互，且缺少基于物理的控制机制。
+method: 提出KineMask物理引导视频生成方法，由单张图像与物体速度推断运动，生成真实的刚体交互与控制效果。
+result: 方法能生成物理合理的物体运动与未来交互，并支持细粒度的物理控制。
+conclusion: 该工作推动了视频生成作为世界模拟器在机器人与具身决策中的应用。
 ---
 
 ## Abstract

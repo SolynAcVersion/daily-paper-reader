@@ -4,16 +4,16 @@ title_zh: 实时运动可控的自回归视频扩散
 authors: "Kesen Zhao, Jiaxin Shi, Beier Zhu, Junbao Zhou, Xiaolong Shen, Yuan Zhou, Qianru Sun, Hanwang Zhang"
 date: 2026-01-26
 pdf: "https://openreview.net/pdf?id=4Q55RwYte9"
-tags: ["query:phys-video"]
-score: 7.0
-evidence: 用强化学习增强自回归视频扩散的运动控制，基于轨迹奖励；可用于物理合理性RL微调
-tldr: 实时运动可控视频生成仍受限于双向扩散模型延迟和自回归模型运动伪影。AR-Drag提出首个RL增强的少步自回归视频扩散模型，首先微调基础I2V模型支持基本运动控制，再利用基于轨迹的奖励模型通过强化学习进一步提升运动可控性。Self-Rollout设计保持了马尔可夫性质，实现高质量实时生成。该方法为通过RL改善视频运动物理合理性提供了可行范式。
+tags: ["query:video-gen-rl"]
+score: 8.0
+evidence: 带轨迹奖励的强化学习增强自回归视频扩散
+tldr: 实时运动可控视频生成受限于双向扩散的高延迟与自回归方法控制能力不足，现有模型仅支持简单信号且少步生成易出现质量退化与运动伪影。本文提出AR-Drag，首个经强化学习增强的少步自回归视频扩散模型，先微调基础图生视频模型支持运动控制，再通过基于轨迹的奖励模型进行强化学习优化。该方法在实时生成下实现多样运动控制并提升质量。
 source: ICLR-2026-Accepted
 selection_source: conference_retrieval
-motivation: 双向扩散模型延迟高，自回归视频扩散模型在少步生成中出现质量退化和运动伪影。
-method: 提出AR-Drag，先用微调支持运动控制，再通过基于轨迹奖励的强化学习改进，并用Self-Rollout保持马尔可夫性。
-result: 实现实时图像到视频生成，支持多样运动控制并提升生成质量。
-conclusion: RL增强的自回归扩散为实时运动可控视频生成提供了新方案，可扩展到物理合理性优化。
+motivation: 实时运动可控视频生成受限于扩散延迟，自回归方法控制信号弱且少步生成质量差。
+method: 提出AR-Drag，先微调基础图生视频模型，再用轨迹奖励模型做强化学习增强。
+result: 实现实时图生视频的多样运动控制，并改善少步生成质量与运动伪影。
+conclusion: 展示了强化学习在实时可控视频扩散中的有效性。
 ---
 
 ## Abstract

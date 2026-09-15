@@ -1,19 +1,19 @@
 ---
 title: Zero-shot Synthetic Video Realism Enhancement via Structure-aware Denoising
-title_zh: 基于结构感知去噪的合成视频零样本真实感增强
+title_zh: 基于结构感知去噪的零样本合成视频真实感增强
 authors: "Yifan Wang, Liya Ji, Zhanghan Ke, Harry Yang, Ser-Nam Lim, Qifeng Chen"
 date: 2025-09-16
 pdf: "https://openreview.net/pdf?id=4VzVWXUkhf"
-tags: ["query:phys-video"]
-score: 5.0
-evidence: 提升合成视频真实感并保持跨帧结构
-tldr: 论文针对合成视频真实感不足的问题，提出一种零样本结构感知去噪增强方法。该方法利用预训练扩散视频基础模型，并通过辅助模型估计合成视频的深度、语义和边缘图等结构信息来引导去噪，而非依赖模拟器参数。实验显示该方法在保持时空结构的同时显著提升合成视频的逼真度，无需额外微调，可广泛用于仿真视频的真实化处理。
+tags: ["query:video-gen-rl"]
+score: 6.0
+evidence: 用结构感知去噪增强合成视频的真实感
+tldr: 模拟器生成的合成视频虽然物理结构正确，但缺乏照片级真实感。本文提出一种零样本真实感增强框架，基于预训练视频扩散模型，在无需微调的情况下以辅助模型估计的深度图、语义图和边缘图作为结构感知条件进行去噪重渲染。方法在空间与时域上保留多层级结构，提升了合成视频的真实感，有助于物理模拟视频的视觉落地。
 source: ICLR-2026-Public
 selection_source: conference_retrieval
-motivation: 合成视频与真实视频视觉差异大，直接使用会影响下游任务性能，需要提升其真实感。
-method: 提出零样本框架，利用扩散视频基础模型，以合成视频的深度、语义和边缘图作为结构感知条件引导去噪增强。
-result: 无需微调即可保持合成视频的多级结构并进行真实感重渲染，提升了时空一致性。
-conclusion: 该方法可有效缩小合成与真实视频之间的视觉差距，适用于数据增强与仿真到真实的转换。
+motivation: 模拟器合成视频物理结构正确但缺乏照片级真实感。
+method: 在预训练视频扩散模型上以深度、语义、边缘等结构信息为条件进行零样本去噪重渲染。
+result: 在保持空间与时域多层级结构的同时显著提升合成视频真实感。
+conclusion: 为零样本提升物理模拟视频的视觉真实感提供了方案。
 ---
 
 ## Abstract

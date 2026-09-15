@@ -1,19 +1,19 @@
 ---
 title: "3DSPA: A 3D Semantic Point Autoencoder for Evaluating Video Realism"
-title_zh: 3DSPA：用于评估视频真实感的3D语义点自编码器
+title_zh: 3DSPA：用于评估视频真实性的3D语义点自编码器
 authors: "Bhavik Chandna, Kelsey R Allen"
 date: 2025-09-20
 pdf: "https://openreview.net/pdf?id=bb4nYKkmAn"
 tags: ["query:phys-video"]
-score: 6.0
-evidence: 无参考视频的真实感评估，结合3D结构与运动轨迹，可用于物理合理性度量
-tldr: 视频生成模型的真实感评估通常依赖人工标注或受限的定制数据集。3DSPA提出一种3D语义点自编码器，将3D点轨迹、深度线索和DINOv2语义特征统一成视频评估表示，无需参考视频即可评估生成视频。该方法能建模物体的运动方式与场景语义结构，从而实现可扩展的自动视频真实感评估，并为物理合理性度量提供了有力基础。
+score: 7.0
+evidence: 视频真实性评估框架
+tldr: AI视频生成发展迅速，但评估生成视频的真实性仍高度依赖人工标注或范围受限的专用数据集，缺乏可扩展的自动方法。本文提出3DSPA，一种3D语义点自编码器，将3D点轨迹、深度线索与DINOv2语义特征融合为统一表示，用于自动化评估视频真实性，且无需参考视频。该框架能同时刻画物体如何运动及其语义内容，为视频生成质量评估提供了可扩展、无需参考的自动基准。
 source: ICLR-2026-Public
 selection_source: conference_retrieval
-motivation: 生成视频真实感评估仍多为人工过程，现有自动化评估依赖参考视频或定制数据集，范围受限。
-method: 提出3D语义点自编码器，融合3D点轨迹、深度线索和DINOv2语义特征，构建无需参考视频的统一评估表示。
-result: 能够同时捕捉物体运动与语义一致的三维结构，实现自动化视频真实感评估。
-conclusion: 为视频真实感评估提供可扩展框架，可迁移到物理一致性评价。
+motivation: 评估生成视频真实性仍高度依赖人工标注或范围受限的专用数据集，缺乏可扩展的自动方法。
+method: 提出3DSPA，一种3D语义点自编码器，融合3D点轨迹、深度线索与DINOv2语义特征为统一表示，无需参考视频。
+result: 能同时刻画物体运动方式与语义内容，实现自动化视频真实性评估。
+conclusion: 为视频生成质量评估提供了可扩展、无需参考的自动基准框架。
 ---
 
 ## Abstract

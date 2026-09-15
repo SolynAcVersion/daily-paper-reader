@@ -4,16 +4,16 @@ title_zh: 运动梦想家：通过场景感知运动推理实现物理一致的�
 authors: "Tianshuo Xu, ZhiFei Chen, Leyi Wu, Hao LU, Yuying Chen, Bingbing Liu, Ying-Cong Chen"
 date: 2025-09-08
 pdf: "https://openreview.net/pdf?id=b6KiY3jlvS"
-tags: ["query:phys-video"]
+tags: ["query:video-gen-rl"]
 score: 9.0
-evidence: 显式针对物理一致的视频生成，将运动推理与视觉合成解耦
-tldr: 针对视频生成模型难以生成物理一致未来场景的问题，提出Motion Dreamer两阶段框架。该框架显式解耦运动推理与视觉合成，引入实例流这一稀疏到密集的运动表示，从初始帧和稀疏运动线索生成复杂场景。实验表明该方法在物理一致性上明显优于端到端基线，为自动驾驶和机器人应用提供支持。
+evidence: 物理一致的视频生成
+tldr: 当前视频生成模型常无法生成逻辑与物理一致的未来场景，这是自动驾驶与机器人应用的关键短板，根源在于端到端训练中感知保真与长程时序建模存在根本冲突。本文提出Motion Dreamer两阶段框架，将运动推理与视觉合成显式解耦，并引入实例流这一新颖的稀疏到稠密运动表示。该框架能从初始帧与稀疏运动线索生成复杂场景，提升长时程物理一致性。通过解耦运动推理与视觉合成，为物理一致的长时程视频生成提供了新框架。
 source: ICLR-2026-Public
 selection_source: conference_retrieval
-motivation: 当前视频生成模型常因感知保真度与长时结构建模冲突，难以生成逻辑与物理一致的未来场景。
-method: 提出Motion Dreamer两阶段框架，显式解耦运动推理与视觉合成，并引入实例流这一稀疏到密集的运动表示。
-result: 方法能够从初始帧和稀疏运动线索生成复杂场景，在物理一致性方面显著优于端到端基线。
-conclusion: 将运动推理与视觉合成分离是提升视频生成物理一致性的有效途径。
+motivation: 当前视频生成模型难以生成逻辑与物理一致的未来场景，端到端训练中感知保真与长程时序建模存在根本冲突。
+method: 提出Motion Dreamer两阶段框架，将运动推理与视觉合成显式解耦，并引入实例流这一稀疏到稠密运动表示。
+result: 能从初始帧与稀疏运动线索生成复杂场景，提升长时程物理一致性，适用于自动驾驶与机器人。
+conclusion: 通过解耦运动推理与视觉合成，为物理一致的长时程视频生成提供了新框架。
 ---
 
 ## Abstract

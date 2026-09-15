@@ -5,15 +5,15 @@ authors: "Antonios Tragoudaras, Chenyu Zhang, Daniil Cherniavskii, Antonios Vozi
 date: 2026-04-30
 pdf: "https://openreview.net/pdf/976c490ac6544b3d27985792d12e47d8266dda69.pdf"
 tags: ["query:phys-video"]
-score: 10.0
-evidence: 提出基于真实物理系统的Morpheus基准，用于衡量视频生成模型对牛顿动力学的理解
-tldr: 该论文指出现有视频生成模型评估依赖主观判断或轨迹匹配，难以衡量物理推理能力。为此引入Morpheus，一个基于真实物理实验的物理感知评估框架，包含大量真实物理视频，用于测试模型对牛顿动力学的理解。通过该基准可更准确地评估生成视频是否符合物理定律，为视频生成模型的世界建模能力提供客观度量。
+score: 9.0
+evidence: 对视频生成模型的牛顿力学物理合理性评估框架
+tldr: 视频生成模型被寄予世界模型的厚望，但其是否遵循物理定律仍缺乏可靠度量。本文提出Morpheus，一个面向牛顿动力学的物理信息评估框架，用真实物理系统替代主观判断与轨迹匹配来量化模型理解物理规律的能力。该框架能更客观地评测生成视频的物理合理性，为物理一致性视频生成提供基准支撑。
 source: ICML-2026-Accepted
 selection_source: conference_retrieval
-motivation: 现有评估方法主观或基于轨迹匹配，无法客观衡量视频生成模型是否遵循物理定律。
-method: 构建Morpheus基准，使用真实物理系统视频和牛顿动力学测试集评估模型。
-result: Morpheus能够揭示现有视频生成模型在物理推理上的不足，提供更严格的物理正确性度量。
-conclusion: 物理信息驱动的真实实验基准可替代主观评估，有效衡量视频生成模型的物理合理性。
+motivation: 现有评估依赖主观判断或轨迹匹配，难以衡量生成视频对物理定律的遵循程度。
+method: 提出Morpheus物理信息评估框架，用真实物理系统量化视频生成模型的牛顿动力学理解能力。
+result: 该框架能区分物理上合理的多种生成结果，提供比轨迹匹配更细致的物理推理评测。
+conclusion: 为判断视频生成模型是否具备物理世界建模能力提供了可量化的基准方法。
 ---
 
 ## Abstract

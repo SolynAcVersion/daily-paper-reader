@@ -4,16 +4,16 @@ title_zh: 运动从何而来？视频生成模型的可扩展运动归因
 authors: "Xindi Wu, Despoina Paschalidou, Jun Gao, Antonio Torralba, Laura Leal-Taixé, Olga Russakovsky, Sanja Fidler, Jonathan Lorraine"
 date: 2025-09-14
 pdf: "https://openreview.net/pdf?id=0dnSbhNoTB"
-tags: ["query:psd"]
-score: 9.0
-evidence: 数据归因识别提升时间一致性与物理合理性的微调片段，指导物理感知的数据筛选
-tldr: 视频生成模型中数据对运动质量的影响尚不明确。MOTIVE提出一种可扩展的梯度基数据归因框架，通过光流加权损失掩码将时间动态与静态外观分离，计算视频片段对训练的影响分数。该方法能够识别改善或损害时间动态的微调片段，指导数据筛选，从而提升生成视频的时间一致性和物理合理性。该框架适用于现代大规模视频数据集与模型，为物理感知的数据选择提供了实用工具。
+tags: ["query:video-gen-rl"]
+score: 8.0
+evidence: 运动归因指导数据筛选以提升物理合理性
+tldr: 尽管视频生成模型进展迅速，数据如何塑造运动质量仍缺乏理解。本文提出MOTIVE，一种以运动为中心、基于梯度的训练影响归因框架，通过光流加权损失掩码将时序动态与静态外观分离，得到可扩展的影响分数。在文生视频模型上，MOTIVE识别显著影响运动的微调片段并指导数据筛选，从而提升时序一致性与物理合理性。该工作为以数据为中心提升视频运动质量提供了可扩展工具。
 source: ICLR-2026-Rejected-Public
 selection_source: conference_retrieval
-motivation: 视频生成模型的数据对运动质量的影响尚未被充分理解，需要可扩展的方法分析微调数据对时间动态的作用。
-method: 提出MOTIVE运动归因框架，用光流加权损失掩码分离运动与外观，基于梯度计算数据影响分数。
-result: 在文本生成视频模型上，MOTIVE识别出影响运动的片段，指导数据筛选后提升时间一致性和物理合理性。
-conclusion: 该工作提供了可扩展的数据归因工具，有助于理解并优化视频生成中的运动与物理合理性。
+motivation: 视频生成模型中数据如何塑造运动质量仍不清楚。
+method: 提出以运动为中心、基于梯度的MOTIVE框架，用光流加权损失掩码分离时序动态与外观。
+result: 识别影响运动的微调片段并指导数据筛选，提升时序一致性与物理合理性。
+conclusion: 为以数据为中心改进视频运动质量提供了可扩展的归因工具。
 ---
 
 ## Abstract

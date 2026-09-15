@@ -1,19 +1,19 @@
 ---
 title: Physics-Guided Motion Loss for Video Generation Model
-title_zh: 物理引导运动损失的视频生成模型
+title_zh: 面向视频生成模型的物理引导运动损失
 authors: "Bowen Xue, Giuseppe Claudio Guarnera, Shuang Zhao, Zahra Montazeri"
 date: 2025-09-11
 pdf: "https://openreview.net/pdf?id=jhan3NJ5x1"
-tags: ["query:phys-video"]
+tags: ["query:video-gen-rl"]
 score: 9.0
-evidence: 物理引导运动损失提升视频生成模型的物理合理性
-tldr: "针对视频扩散模型生成内容常违反基本物理定律、出现橡皮式变形和物体运动不一致的问题，该工作提出一种频域物理先验，将常见刚体运动分解为轻量谱损失，仅需2.7%的频域系数即可保留97%以上的谱能量。将方法应用于Open-Sora、MVDIT和Hunyuan等模型后，运动准确率和动作识别平均相对提升约11%，用户研究显示74%-83%偏好物理增强后的视频。该方法无需修改架构，即可提升视频生成的运动物理合理性。"
+evidence: 物理先验提升运动合理性
+tldr: "现有视频扩散模型虽能生成视觉上引人入胜的内容，却常违反基本物理规律，产生橡皮膜变形与物体运动不一致等细微伪影。本文提出频域物理先验，将平移、旋转、缩放等常见刚体运动分解为轻量频谱损失，仅需2.7%的频域系数即可保留97%以上频谱能量，且无需修改模型架构。在Open-Sora、MVDIT与Hunyuan上应用后，运动准确度与动作识别平均提升约11%，视觉质量保持，用户研究显示74%至83%的偏好。该方法为视频生成模型提供了即插即用的物理约束方案。"
 source: ICLR-2026-Public
 selection_source: conference_retrieval
-motivation: 视频扩散模型常违反物理定律，产生橡皮变形和运动不一致等伪影。
-method: 引入频域物理先验，将平移、旋转、缩放等刚体运动分解为轻量谱损失，不改动架构。
-result: "在Open-Sora、MVDIT、Hunyuan上平均提升运动准确率与动作识别约11%，用户偏好74-83%。"
-conclusion: 频域物理损失可有效提升视频生成的运动物理合理性。
+motivation: 视频扩散模型虽视觉引人，却常违反基本物理规律，产生橡皮膜变形与运动不一致等伪影。
+method: 提出频域物理先验，将平移、旋转、缩放等刚体运动分解为轻量频谱损失，无需修改模型架构。
+result: "在Open-Sora、MVDIT与Hunyuan上，运动准确度与动作识别平均提升约11%，视觉质量保持，用户偏好74%至83%。"
+conclusion: 以轻量频域损失实现物理增强，为通用视频生成模型提供即插即用的物理约束方案。
 ---
 
 ## Abstract

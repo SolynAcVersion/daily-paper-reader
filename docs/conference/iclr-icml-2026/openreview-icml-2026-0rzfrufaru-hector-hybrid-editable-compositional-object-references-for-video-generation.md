@@ -1,19 +1,19 @@
 ---
 title: "HECTOR: Hybrid Editable Compositional Object References for Video Generation"
-title_zh: HECTOR：用于视频生成的混合可编辑组合对象参照
+title_zh: HECTOR：面向视频生成的混合可编辑组合物体引用
 authors: "Guofeng Zhang, Angtian Wang, Jacob Zhiyuan Fang, Liming Jiang, Haotian Yang, Alan Yuille, Chongyang Ma"
 date: 2026-04-30
 pdf: "https://openreview.net/pdf/66df44bb768f2a363e9e52325e8afe2797de9a9e.pdf"
-tags: ["query:phys-video"]
+tags: ["query:video-gen-rl"]
 score: 6.0
-evidence: 可对每个物体指定轨迹、位置、尺度和速度，支持组合式视频生成中的物理路径控制
-tldr: 真实视频通常包含多个物理对象的复杂交互，但现有生成模型整体合成场景，难以组合操控。HECTOR提出混合参照条件生成流程，能够同时使用静态图和动态视频进行引导，并允许用户显式指定每个参照要素的轨迹、位置、尺度和速度。这让模型可以精细控制物体动态，为编排符合物理直观的运动提供了可行机制。
+evidence: 组合式物体引用实现可控多物体视频生成
+tldr: 现实视频常包含多个物理物体间的复杂交互，但现有视频生成模型整体合成场景，缺乏显式组合操控能力。本文提出HECTOR，一种支持细粒度组合控制的生成流程。它支持混合参考条件，可同时由静态图像或动态视频引导生成，并允许用户精确指定每个参考元素的位置、尺度与速度轨迹。该设计增强了多物体场景的可控性与一致性，为组合式视频生成提供了新工具。
 source: ICML-2026-Accepted
 selection_source: conference_retrieval
-motivation: 现有视频生成模型缺乏对多物体动态组合的显式控制，难以精确编排对象运动。
-method: 提出支持图像和视频混合参照条件的生成流程，可逐对象指定轨迹、尺度、位置和速度。
-result: 实现了对视频中对象运动的细粒度组合控制，可生成指定的复合动态。
-conclusion: 为视频生成提供了可编辑的对象级动态控制，有助于实现物理上合理的运动编排。
+motivation: 现有视频生成模型整体合成场景，缺乏对多个物理物体的显式组合操控能力。
+method: 提出HECTOR生成流程，支持由静态图像或动态视频混合引导，并允许用户指定每个元素的轨迹、尺度与速度。
+result: 该方法实现了多物体场景的细粒度组合控制与一致生成。
+conclusion: 组合式参考条件为可控视频生成提供了更灵活的手段。
 ---
 
 ## Abstract

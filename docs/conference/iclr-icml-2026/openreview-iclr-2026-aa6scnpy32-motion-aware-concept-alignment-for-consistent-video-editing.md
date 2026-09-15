@@ -1,19 +1,19 @@
 ---
 title: Motion-Aware Concept Alignment for Consistent Video Editing
-title_zh: 运动感知的概念对齐用于一致性视频编辑
+title_zh: 运动感知的概念对齐实现一致性视频编辑
 authors: "Tong Zhang, Juan C Leon Alcazar, Victor Escorcia, Bernard Ghanem"
 date: 2025-09-18
 pdf: "https://openreview.net/pdf?id=aa6sCNPy32"
-tags: ["query:phys-video"]
-score: 4.0
-evidence: 视频编辑中的时间一致性，非物理特定
-tldr: 论文关注视频编辑中目标对象的时间一致性问题，提出MoCA-Video框架。它在冻结视频扩散模型潜空间中运行，利用类别无关分割与斜向去噪调度器定位并追踪目标，引入动量修正以逼近新的混合分布，并用伽马残差模块抑制伪影。实验显示该框架在语义对齐和视觉稳定性上优于现有方法，且无需训练，为视频编辑提供了高效方案。
+tags: ["query:video-gen-rl"]
+score: 6.0
+evidence: 视频编辑中保持跨帧时序稳定
+tldr: 视频语义混合编辑需要在语义变化下保持跨帧时序稳定。本文提出免训练框架MoCA-Video，在冻结视频扩散模型潜空间中结合类无关分割与对角去噪调度跟踪目标，并用动量校正近似训练分布外的新混合分布。在SSIM、LPIPS及自提指标上持续优于免训练与需训练基线，为保持时序一致性的视频编辑提供了免训练方案。
 source: ICLR-2026-Rejected-Public
 selection_source: conference_retrieval
-motivation: 视频编辑中需要保持目标对象跨帧的运动与语义一致性，避免伪影。
-method: 提出训练无关框架，结合类别无关分割和斜向去噪调度器进行目标定位与追踪，并用动量修正与残差模块保证时间稳定。
-result: 在语义混合视频编辑上优于现有训练无关和无训练方法，且提出了新的语义对齐评估指标。
-conclusion: 为无需训练的语义级视频编辑提供了一种高稳定性方案。
+motivation: 视频语义混合编辑在语义变化时易出现跨帧时序不稳定与视觉伪影。
+method: 在冻结视频扩散模型潜空间中用分割跟踪目标并引入动量校正与残差模块。
+result: 在SSIM、LPIPS与自提语义对齐指标上优于免训练与需训练方法。
+conclusion: 为保持时序一致性的视频编辑提供了免训练方案。
 ---
 
 ## Abstract

@@ -1,19 +1,19 @@
 ---
 title: Enhancing Physical Plausibility in Video Generation by Reasoning the Implausibility
-title_zh: 通过推理不合理性增强视频生成的物理合理性
+title_zh: 通过推理不合理性提升视频生成的物理合理性
 authors: "Yutong Hao, Chen Chen, Ajmal Saeed Mian, Chang Xu, Daochang Liu"
 date: 2025-09-14
 pdf: "https://openreview.net/pdf?id=SYBfaOcbmw"
-tags: ["query:phys-video"]
-score: 9.0
-evidence: 通过反事实提示和同步解耦引导，在推理时提升视频生成的物理合理性
-tldr: 该论文指出现有视频扩散模型隐含学习物理推理成本高且仍会产生违反物理定律的运动。为此提出一个免训练框架，利用轻量物理感知推理构造反事实提示，并通过同步解耦引导（SDG）在推理阶段引导生成远离物理不合理行为，从而在不重新训练的情况下增强视频的物理合理性。实验表明该方法能有效减少违反物理规律的运动，提升生成视频的物理可信度。
+tags: ["query:video-gen-rl"]
+score: 10.0
+evidence: 免训练提升视频生成物理合理性
+tldr: 扩散模型虽能生成逼真视频，但依赖从大规模文本视频数据中隐式学习物理规律，成本高且仍常产生违反物理定律的运动。本文提出免训练框架，在推理阶段显式推理不合理性，利用轻量物理感知推理流程构造反事实提示，并提出同步解耦引导（SDG）策略，引导生成远离物理违规行为。实验表明该方法能有效提升生成视频的物理合理性，为无需额外训练即可增强物理一致性提供了新思路。
 source: ICLR-2026-Rejected-Public
 selection_source: conference_retrieval
-motivation: 现有视频生成模型隐式学习物理推理，成本高且仍易生成违反物理规律的运动。
-method: 提出免训练框架，构造反事实提示并用同步解耦引导（SDG）在推理时引导生成。
-result: 在多个基准上验证该方法能有效提升生成视频的物理合理性与运动可信度。
-conclusion: 免训练推理式引导可显著改善视频生成中的物理一致性，无需重新训练。
+motivation: 现有扩散视频生成依赖大规模数据隐式学习物理规律，成本高且仍易产生违反物理定律的运动。
+method: 提出免训练框架，用轻量物理感知推理构造反事实提示，并以同步解耦引导（SDG）策略引导生成远离不合理性。
+result: 实验表明该方法在推理阶段即可有效提升生成视频的物理合理性。
+conclusion: 为无需额外训练即可增强视频物理一致性提供了新范式。
 ---
 
 ## Abstract

@@ -5,15 +5,15 @@ authors: "Chenyu Zhang, Daniil Cherniavskii, Antonios Tragoudaras, Antonios Vozi
 date: 2025-09-18
 pdf: "https://openreview.net/pdf?id=1E6pburMKc"
 tags: ["query:phys-video"]
-score: 10.0
-evidence: 提出Morpheus基准，包含130个真实世界物理实验视频，用于评估视频生成模型的物理推理能力
-tldr: 该论文与Morpheus基准相同，针对视频生成模型物理推理评估能力不足的问题，构建了一个包含130个真实世界物理现象视频的基准。该基准用于检测生成视频是否遵循物理规律，避免主观判断或轨迹匹配的局限。通过对视频生成模型的系统评测，能够更客观地衡量其对物理世界的理解程度。
+score: 9.0
+evidence: 用130段真实物理视频评测视频生成模型的物理推理
+tldr: 当前评测视频生成模型物理推理能力的方法依赖主观判断或轨迹匹配，难以衡量多种合理生成。本文提出Morpheus基准，包含130段捕捉真实物理现象的视频，用于评估生成视频是否符合物理规律。该基准为将视频生成模型作为世界模型提供了更客观的物理推理评测手段，涵盖物理一致性与物理可解释性评估。
 source: ICLR-2026-Rejected-Public
 selection_source: conference_retrieval
-motivation: 现有评估依赖主观判断或轨迹匹配，无法准确刻画视频生成模型的物理推理能力。
-method: 构建130个真实物理实验视频的Morpheus基准，用于评估视频生成模型的物理合理性。
-result: 该基准能够揭示模型在物理推理上的差异，为视频生成模型的世界建模提供可靠评测。
-conclusion: 真实世界物理视频基准可有效衡量视频生成模型的物理推理能力，推动物理合理生成研究。
+motivation: 现有视频生成物理评测依赖主观判断或轨迹匹配，难以衡量多种合理生成。
+method: 提出Morpheus基准，采集130段真实物理现象视频并设计物理推理评测流程。
+result: 提供了更客观的物理推理评测，用于检验生成视频是否遵循物理规律。
+conclusion: 为把视频生成模型当作世界模型提供了评测基础。
 ---
 
 ## Abstract
