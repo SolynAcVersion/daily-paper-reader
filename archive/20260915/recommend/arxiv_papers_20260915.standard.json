@@ -1,0 +1,596 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-15T22:03:27.344416+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 4,
+    "deep_divecandidates": 2,
+    "deep_cap": 9,
+    "deep_selected": 2,
+    "quick_candidates": 9,
+    "quick_skim_target": 14,
+    "quick_selected": 9
+  },
+  "deep_dive": [
+    {
+      "id": "2609.15392v1",
+      "source": "arxiv",
+      "title": "ESG: Generating Physically Consistent Dynamic 3D Scenes from Text Descriptions",
+      "abstract": "Recent progress in image and 3D scene generation has enabled increasingly realistic static environments, yet most methods remain confined to such static configurations. Generating dynamic scenes from natural language is fundamentally challenging: it requires joint reasoning over scene structure, temporal evolution, and physical feasibility, while ensuring reliable execution in modern physics engines. We present a unified framework for generating physically consistent dynamic 3D scenes from text, with outputs directly executable in Unreal Engine. Central to our approach is the \\emph{Evolutive Scene Graph} (ESG), which specifies entities with physical attributes, spatial relations, and event-driven timelines in a machine-checkable form. Given a prompt, a large language model constructs and validates a complete ESG; spatial layouts are grounded via energy-minimized gradient optimization; timeline-constrained physical parameters are then optimized through differentiable simulation to satisfy user-specified events; and the resulting scene is compiled into an engine-executable class. Experiments on 10 scenes across three complexity levels show that our method achieves $16.4/18$ mean event completion, outperforming Scene Language, the strongest engine-executable baseline (SimWorld), and our ablation without physical optimization by a clear margin in event completion and parameter accuracy.",
+      "authors": [
+        "Xintong Fang",
+        "Zhiyuan Fang",
+        "Rengan Xie",
+        "Xuhong Zhang",
+        "Guoyuan An",
+        "Zeran Liu",
+        "Jingyan Zhang",
+        "Jiarui Guo",
+        "Yuchi Huo"
+      ],
+      "primary_category": "cs.GR",
+      "categories": [
+        "cs.GR",
+        "cs.CV"
+      ],
+      "published": "2026-09-14T11:19:25+00:00",
+      "link": "https://arxiv.org/pdf/2609.15392v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "generating physically consistent dynamic scenes from text",
+      "llm_evidence_cn": "从文本生成物理一致的动态场景",
+      "llm_evidence": "从文本生成物理一致的动态场景",
+      "canonical_evidence": "从文本生成物理一致的动态场景",
+      "llm_tldr_en": "Image and 3D scene generation remains mostly static; generating dynamic scenes from language requires joint reasoning over structure, temporal evolution and physical feasibility. The paper introduces an Evolutive Scene Graph encoding physical attributes, relations and event timelines, producing outputs executable in Unreal Engine.",
+      "llm_tldr_cn": "现有图像与3D场景生成多局限于静态环境，而从自然语言生成动态场景需联合推理场景结构、时序演化与物理可行性。本文提出统一框架，以演化场景图ESG用机器可校验的形式描述实体的物理属性、空间关系与事件驱动时间线，并确保输出可直接在虚幻引擎中执行。实验表明该方法能够生成物理一致的动态3D场景。该工作为文本驱动的物理合理动态内容生成提供了新的表示与范式。",
+      "llm_tldr": "现有图像与3D场景生成多局限于静态环境，而从自然语言生成动态场景需联合推理场景结构、时序演化与物理可行性。本文提出统一框架，以演化场景图ESG用机器可校验的形式描述实体的物理属性、空间关系与事件驱动时间线，并确保输出可直接在虚幻引擎中执行。实验表明该方法能够生成物理一致的动态3D场景。该工作为文本驱动的物理合理动态内容生成提供了新的表示与范式。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.15980v1",
+      "source": "arxiv",
+      "title": "A Chosen Future Can Still Be Rewritten: Causal Writability in Video Models",
+      "abstract": "When a video model generates physically incorrect motion, did it fail to learn the correct motion, or did it learn it but fail to use it? We show the latter: the correct motion remains available inside the model and can still be made to control the generated video. We train on videos where red masses oscillate slowly and blue masses oscillate quickly, then test a red mass with fast observed motion. Even when the model generates slow motion in this conflicting case, a low-dimensional edit predicted from simple physical variables restores the correct fast motion. We call this ability causal writability. At fixed strength, we find a sharp depth boundary: the same edit changes the video before the boundary but not after it. This closure marks commitment for that write. The motion signal nevertheless remains, and a stronger downstream write can restore physical motion, while excessive gain overshoots. Early causal writability predicts which errors training later corrects: those errors are writable at more network depths than errors that persist. We reproduce both causal writability and its sharp closure in a pretrained 1.3B video model, supporting generality across model scale and training regime.",
+      "authors": [
+        "Xingyun Wang",
+        "Haomin Zheng",
+        "Man Yuan",
+        "Leqian Yang",
+        "Ziming Liu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CV"
+      ],
+      "published": "2026-09-14T17:58:11+00:00",
+      "link": "https://arxiv.org/pdf/2609.15980v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "physical incorrect motion in video models; low-dimensional physical edit restores correct motion",
+      "llm_evidence_cn": "视频模型物理错误运动；低维物理编辑恢复正确运动",
+      "llm_evidence": "视频模型物理错误运动；低维物理编辑恢复正确运动",
+      "canonical_evidence": "视频模型物理错误运动；低维物理编辑恢复正确运动",
+      "llm_tldr_en": "Investigates whether video models fail to learn or fail to use correct physical motion, showing a low-dimensional physical edit can restore correct motion, revealing causal writability.",
+      "llm_tldr_cn": "论文探究视频模型生成物理错误运动时究竟是没学会还是未调用正确运动先验，提出因果可写性概念。作者在红蓝质量块以不同速度振荡的视频上训练，再测试红块快速运动场景；即便模型生成慢速运动，也可用由简单物理变量预测的低维编辑恢复正确快速运动。研究还发现固定强度下存在明显的深度边界，边界前后同一编辑效果不同，标志模型承诺点。该结果揭示物理正确运动仍潜藏于模型内部，为提升视频生成物理一致性提供新思路。",
+      "llm_tldr": "论文探究视频模型生成物理错误运动时究竟是没学会还是未调用正确运动先验，提出因果可写性概念。作者在红蓝质量块以不同速度振荡的视频上训练，再测试红块快速运动场景；即便模型生成慢速运动，也可用由简单物理变量预测的低维编辑恢复正确快速运动。研究还发现固定强度下存在明显的深度边界，边界前后同一编辑效果不同，标志模型承诺点。该结果揭示物理正确运动仍潜藏于模型内部，为提升视频生成物理一致性提供新思路。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "how to ensure physical consistency in generated videos",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.15562v1",
+      "source": "arxiv",
+      "title": "PIVOT: Physics-Grounded Verification for AI-Generated Audio-Video Detection",
+      "abstract": "As generative models continue to advance, AI-generated content (AIGC) is becoming increasingly realistic, weakening the artifact cues commonly exploited by existing detectors. Nevertheless, faithfully reproducing the physical behavior of real-world events remains challenging for current generators. We therefore explore detecting AIGC by assessing whether the depicted event satisfies measurable constraints derived from physical laws. We introduce PIVOT, a physics-grounded AIGC detector, instantiated here for audio-video clips, that estimates physical quantities from video and audio, selects physical laws relevant to each clip, and verifies their measurable constraints. Beyond a real/fake decision, PIVOT returns supporting evidence that records the verification outcome, relevant time window, and supporting quantities for each applicable law. Although instantiated and evaluated here on audio-video data, the framework can, in principle, extend to other AIGC modalities whenever the physical quantities required for verification can be estimated reliably. We also introduce PhysForensics-Bench, comprising paired real and generated audio-video clips from nine event-centric scene families and two recent audio-video generators. On PhysForensics-Bench, PIVOT achieves 70.30% accuracy and 64.29% F1 score on Real+Seedance, and 72.16% accuracy and 65.82% F1 on Real+VEO. In comparison, direct inspection with Gemini 3.1 Pro obtains 53.96% accuracy and 60.09% F1 on Real+Seedance, and 57.22% accuracy and 63.44% F1 on Real+Veo. These results demonstrate the practical promise of physical-consistency verification as a structured and inspectable source of evidence that complements artifact-based AIGC detection.",
+      "authors": [
+        "Bo Zheng",
+        "Kangran Zhao",
+        "Xiaoyu Zhang",
+        "Weinan Guan",
+        "Zhiheng Li",
+        "Yize Chen",
+        "Haizhou Li",
+        "Qingshan Liu",
+        "Siwei Lyu",
+        "Baoyuan Wu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.MM"
+      ],
+      "published": "2026-09-14T13:41:54+00:00",
+      "link": "https://arxiv.org/pdf/2609.15562v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "verifies physical law constraints in generated audio-video clips",
+      "llm_evidence_cn": "验证生成音视频片段中的物理定律约束",
+      "llm_evidence": "验证生成音视频片段中的物理定律约束",
+      "canonical_evidence": "验证生成音视频片段中的物理定律约束",
+      "llm_tldr_en": "PIVOT detects AI-generated audio-video by estimating physical quantities, selecting relevant physical laws, and verifying measurable constraints, exposing physical implausibility of generators.",
+      "llm_tldr_cn": "生成模型日益逼真，削弱了现有检测器依赖的伪造痕迹，但忠实再现真实事件的物理行为仍很困难。论文据此提出PIVOT，一个基于物理的AIGC检测器：从视频与音频估计物理量，为每个片段选择相关物理定律，并验证其可测量约束是否成立。除真伪判定外，PIVOT还返回记录所依据物理证据的支持信息。该工作为衡量生成视频的物理正确性提供了评测思路，与物理一致性评估需求高度契合。",
+      "llm_tldr": "生成模型日益逼真，削弱了现有检测器依赖的伪造痕迹，但忠实再现真实事件的物理行为仍很困难。论文据此提出PIVOT，一个基于物理的AIGC检测器：从视频与音频估计物理量，为每个片段选择相关物理定律，并验证其可测量约束是否成立。除真伪判定外，PIVOT还返回记录所依据物理证据的支持信息。该工作为衡量生成视频的物理正确性提供了评测思路，与物理一致性评估需求高度契合。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "benchmark for evaluating physical correctness in video generation models",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.09123v1",
+      "source": "arxiv",
+      "title": "Mask Forcing: Improving Autoregressive Video Diffusion Distillation via Dual-Noise Masking Rollout",
+      "abstract": "Autoregressive (AR) video diffusion models have shown great potential in real-time video generation. Recent methods distill pretrained bidirectional video diffusion models into causal AR students through Distribution Matching Distillation (DMD), but the generated videos often suffer from over-saturation and over-smoothing issues, resulting in limited visual quality and realism. The key contributing factor is the mode-seeking behavior of the reverse KL objective in DMD, which can cause the student distribution to collapse onto only a few modes of the teacher distribution. To address this, we propose Mask Forcing, a Dual-Noise Masking Rollout strategy that perturbs the AR student self-rollout to mitigate mode collapse induced by reverse-KL mode seeking. The core idea is to inject cleaner signals into noisy rollout inputs via random masks along spatial and temporal axes during the self-rollout process of AR diffusion distillation. Such perturbations encourage the student rollouts to explore more regions of the teacher distribution, allowing DMD to provide learning signals beyond the modes already covered by the student. Moreover, the cleaner tokens act as denoising guidance for other noisier tokens, improving the intermediate rollout predictions and reducing error accumulation. Extensive experiments demonstrate that our method improves multiple AR video diffusion distillation methods with higher visual quality efficiently, without incorporating real video data or additional post-training stages.",
+      "authors": [
+        "Zhuoran Zhao",
+        "Shengju Qian",
+        "Tongtong Liang",
+        "Xianghao Kong",
+        "Songchun Zhang",
+        "Junchao Huang",
+        "Guian Fang",
+        "Xin Wang",
+        "Pan Hui",
+        "Anyi Rao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-08T17:50:05+00:00",
+      "link": "https://arxiv.org/pdf/2609.09123v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "improves realism and visual quality of autoregressive video generation",
+      "llm_evidence_cn": "提升自回归视频生成的视觉质量与真实感",
+      "llm_evidence": "提升自回归视频生成的视觉质量与真实感",
+      "canonical_evidence": "提升自回归视频生成的视觉质量与真实感",
+      "llm_tldr_en": "Autoregressive video diffusion models distilled via distribution matching suffer over-saturation and over-smoothing from mode collapse. Mask Forcing, a dual-noise masking rollout that perturbs the AR student self-rollout, mitigates mode collapse and improves visual quality and realism.",
+      "llm_tldr_cn": "自回归视频扩散模型在实时视频生成中潜力巨大，但通过分布匹配蒸馏从双向模型蒸馏得到的因果学生模型常出现过饱和与过平滑，导致视觉质量与真实感下降，根源在于反向KL目标的模式寻求行为造成学生分布坍缩。本文提出Mask Forcing，一种双噪声掩码展开策略，通过对自回归学生的自展开进行扰动来缓解模式坍缩。实验表明该方法改善了生成视频的视觉质量与真实感，为视频生成模型的分布匹配与真实感提升提供了有效途径。",
+      "llm_tldr": "自回归视频扩散模型在实时视频生成中潜力巨大，但通过分布匹配蒸馏从双向模型蒸馏得到的因果学生模型常出现过饱和与过平滑，导致视觉质量与真实感下降，根源在于反向KL目标的模式寻求行为造成学生分布坍缩。本文提出Mask Forcing，一种双噪声掩码展开策略，通过对自回归学生的自展开进行扰动来缓解模式坍缩。实验表明该方法改善了生成视频的视觉质量与真实感，为视频生成模型的分布匹配与真实感提升提供了有效途径。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "improving physical plausibility and realism in video generation",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.11507v1",
+      "source": "arxiv",
+      "title": "Harnessing Intrinsic Subject-Aware Attention for Controllable Multi-Subject Video Generation",
+      "abstract": "Multi-subject video generation faces two key challenges: uncontrollable fidelity strength and potential semantic drift. We address these by analyzing the internal mechanisms of Diffusion Transformers (DiTs). We found that certain attention blocks naturally form an Intrinsic Spatial Grounding Map (ISGM) that precisely locates reference subjects. Building on this insight, we propose Dual-phase Intrinsic Attention Leveraging (DIAL), a framework that uses these internal signals for both training and inference. In low-noise stages, we use ISGM to guide the attention mechanism, allowing precise control over fidelity strength during inference without retraining. In high-noise stages, we use these same maps to automatically build preference pairs at no additional cost for Reinforcement Learning (RL). This RL procedure effectively anchors the model's attention to reference subjects and mitigates semantic drift. Extensive experiments show that DIAL significantly outperforms baseline models on the OpenS2V-Eval benchmark, consistently improving identity consistency and enabling controllable fidelity strength.",
+      "authors": [
+        "Niange Yu",
+        "Ye Tian",
+        "Biaolong Chen",
+        "Miao Lu",
+        "Aixi Zhang",
+        "Hao Jiang",
+        "Yunhai Tong",
+        "Pipei Huang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-10T13:15:03+00:00",
+      "link": "https://arxiv.org/pdf/2609.11507v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "controllable multi-subject video generation via attention",
+      "llm_evidence_cn": "基于注意力的可控多主体视频生成",
+      "llm_evidence": "基于注意力的可控多主体视频生成",
+      "canonical_evidence": "基于注意力的可控多主体视频生成",
+      "llm_tldr_en": "DIAL analyzes Diffusion Transformer internals to find an Intrinsic Spatial Grounding Map, using it in a dual-phase scheme to control fidelity strength and reduce semantic drift in multi-subject video generation.",
+      "llm_tldr_cn": "多主体视频生成面临保真强度不可控与语义漂移两大难题。作者分析扩散Transformer内部机制，发现部分注意力块会自然形成精确定位参考主体的内在空间接地图（ISGM），据此提出DIAL双阶段内在注意力利用框架：低噪声阶段用ISGM引导注意力以无重训练地控制保真强度，高噪声阶段用同一图自动构建偏好。该工作揭示了DiT内部可解释信号并提升了生成可控性。",
+      "llm_tldr": "多主体视频生成面临保真强度不可控与语义漂移两大难题。作者分析扩散Transformer内部机制，发现部分注意力块会自然形成精确定位参考主体的内在空间接地图（ISGM），据此提出DIAL双阶段内在注意力利用框架：低噪声阶段用ISGM引导注意力以无重训练地控制保真强度，高噪声阶段用同一图自动构建偏好。该工作揭示了DiT内部可解释信号并提升了生成可控性。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "video generation models and generative video synthesis",
+      "matched_requirement_id": "req-20",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.11548v1",
+      "source": "arxiv",
+      "title": "World in World: Explore the World with World Models",
+      "abstract": "Autoregressive video world models enable interactive, long-horizon exploration, but flexible control remains challenging. Exploring a source video from new viewpoints requires the generated rollout to remain synchronised with the recorded event, place observed content in the requested view, plausibly complete newly exposed regions, and recover previously generated appearance on revisits. Existing methods typically address these requirements through task-specific modules or additional training. We present World in World, a training-free inference-time interface that converts heterogeneous control evidence into camera- and time-labelled clean visual states, which are read through the native self attention of a frozen causal video model. The evidence comprises source-video observations, target-view scene projections, geometry renderings that guide completion of newly exposed subject regions, and retrieved generated states beyond the rolling cache. Each evidence source carries token-level support and its own availability schedule. A correspondence router combines persistent point identities with geometry to establish token correspondences, guiding supported queries towards matching source-video tokens. Evidence-wise attention CFG (EWA) then independently regulates each auxiliary channel's additional contribution using attention responses from the same denoising forward pass. The shared interface supports camera-controlled rerendering, long-horizon revisiting, and human-motion transfer with the same frozen backbone. We evaluate World in World on camera-controlled video rerendering under diverse viewpoint changes, assessing perceptual quality, temporal consistency, and camera-following accuracy.",
+      "authors": [
+        "Chenxi Song",
+        "Yanming Yang",
+        "Chi Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-10T13:42:26+00:00",
+      "link": "https://arxiv.org/pdf/2609.11548v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "autoregressive video world model with temporal synchronization",
+      "llm_evidence_cn": "保持时间同步的自回归视频世界模型",
+      "llm_evidence": "保持时间同步的自回归视频世界模型",
+      "canonical_evidence": "保持时间同步的自回归视频世界模型",
+      "llm_tldr_en": "World in World is a training-free inference-time interface that turns heterogeneous control evidence into camera- and time-labelled visual states read through the self-attention of a frozen causal video model for controllable exploration.",
+      "llm_tldr_cn": "自回归视频世界模型支持交互式长时程探索，但灵活控制仍具挑战：从新视角探索源视频需生成结果与已记录事件同步、正确放置内容、合理补全新暴露区域并恢复先前外观。World in World提出免训练推理时接口，将异构控制证据转换为带相机与时间标签的干净视觉状态，并通过冻结因果视频模型的原生自注意力读取，实现可控世界探索。该方法避免额外训练与专用模块。",
+      "llm_tldr": "自回归视频世界模型支持交互式长时程探索，但灵活控制仍具挑战：从新视角探索源视频需生成结果与已记录事件同步、正确放置内容、合理补全新暴露区域并恢复先前外观。World in World提出免训练推理时接口，将异构控制证据转换为带相机与时间标签的干净视觉状态，并通过冻结因果视频模型的原生自注意力读取，实现可控世界探索。该方法避免额外训练与专用模块。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "maintaining inter-frame coherence in video generation",
+      "matched_requirement_id": "req-22",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.14073v1",
+      "source": "arxiv",
+      "title": "LPA-CWM: A Learned Physical Adjudicator for Motion Reasoning with Counterfactual World Models",
+      "abstract": "Counterfactual world models (CWM) extract motion from pretrained video predictors by comparing factual and intervened predictions. However, responses generated under different target-frame masks vary in reliability, while uniform aggregation weights them equally. We formulate response aggregation as candidate reliability learning and propose LPA-CWM with a lightweight Learned Physical Adjudicator (LPA). Trained on dense MOVi-F trajectories, the 3.0M-parameter LPA compares visual context and response structure across an unordered candidate set to predict relative weights, while the CWM predictor and intervention generator remain frozen. The weighted responses undergo windowed localization and one paired re-evaluation to recover motion. We also introduce Completeness-aware Motion Correspondence (CMC), a ground-truth-anchored evaluation protocol that jointly measures localization, trajectory completeness, visibility, and continuity, counting missing predictions as failures on visible dynamic points. On the evaluated DAVIS and Kinetics subsets, LPA-CWM improves $\\mathrm{DCA}_{\\mathrm{avg}}$ over Uniform CWM by 60.0\\% and 29.0\\%, respectively, and also improves tracking accuracy under TAP-Vid First. A quick overview is available at https://LPA-CWM.github.io.",
+      "authors": [
+        "Kunwei Wu",
+        "Xiang Liu",
+        "Guocai Yao",
+        "Junming Chen",
+        "Zhikang Chen",
+        "Min Zhang",
+        "Pengwei Wang",
+        "Sen Cui"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.RO"
+      ],
+      "published": "2026-09-12T17:46:32+00:00",
+      "link": "https://arxiv.org/pdf/2609.14073v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Physical adjudicator for motion reasoning using pretrained video predictors",
+      "llm_evidence_cn": "用预训练视频预测器进行物理运动推理",
+      "llm_evidence": "用预训练视频预测器进行物理运动推理",
+      "canonical_evidence": "用预训练视频预测器进行物理运动推理",
+      "llm_tldr_en": "Counterfactual world models extract motion from frozen video predictors but weight responses uniformly. LPA-CWM learns a lightweight physical adjudicator to reweight candidate responses, improving motion reasoning reliability.",
+      "llm_tldr_cn": "反事实世界模型通过比较真实与干预后的预测，从预训练视频预测器中抽取运动信息，但不同目标帧掩码下生成的响应可靠性差异很大，均匀聚合会削弱效果。本文把响应聚合建模为候选可靠性学习，提出LPA-CWM，用一个仅300万参数的轻量学习型物理裁决器比较视觉上下文与响应结构，为无序候选集预测相对权重，同时保持预测器与干预生成器冻结。加权响应再经过窗口化定位与一次成对重评估来恢复运动，实验表明该方法提升了运动推理的可靠性。其价值在于用轻量学习组件改进物理运动推理的聚合策略。",
+      "llm_tldr": "反事实世界模型通过比较真实与干预后的预测，从预训练视频预测器中抽取运动信息，但不同目标帧掩码下生成的响应可靠性差异很大，均匀聚合会削弱效果。本文把响应聚合建模为候选可靠性学习，提出LPA-CWM，用一个仅300万参数的轻量学习型物理裁决器比较视觉上下文与响应结构，为无序候选集预测相对权重，同时保持预测器与干预生成器冻结。加权响应再经过窗口化定位与一次成对重评估来恢复运动，实验表明该方法提升了运动推理的可靠性。其价值在于用轻量学习组件改进物理运动推理的聚合策略。",
+      "llm_tags": [
+        "query:psd"
+      ],
+      "matched_query_tag": "query:psd",
+      "matched_query_text": "motion of a single object with complex trajectory",
+      "matched_requirement_id": "req-15",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.14462v1",
+      "source": "arxiv",
+      "title": "AlayaVista: Streaming World Modeling from Panoramic States to Perspective Video",
+      "abstract": "Interactive video world models must maintain broad scene context under camera motion while producing high-fidelity observations with low latency. Existing approaches face a representation trade-off: perspective models operate on local views and must preserve off-screen content over long rollouts, whereas broader spatial coverage is typically obtained by synthesizing full-sphere videos or constructing explicit 3D representations. Motivated by the complementary roles of global context and selective local acuity in visual perception, we present AlayaVista, a camera-controllable streaming video world model that decouples panoramic world evolution from perspective observation synthesis. Given a single perspective image, AlayaVista constructs a 360-degree scene prior using a pretrained panorama expansion model and then evolves the scene as a camera-conditioned panoramic latent state. A latent viewport renderer maps this state to the requested perspective video latents, while a perspective refiner restores details, suppresses artifacts, and performs super-resolution. To support efficient streaming, we adapt the panoramic generator to chunk-autoregressive generation and distill both panoramic generation and perspective refinement into few-step processes. To provide the supervision required by this design, we construct MUGEN, a large-scale real-world panoramic video dataset containing 1,318 hours of videos at resolutions of at least 4K, together with rich semantic and geometric annotations.",
+      "authors": [
+        "Jiaming Tan",
+        "Mingliang Zhai",
+        "Zhen Li",
+        "Yuwei Wu",
+        "Chuanhao Li",
+        "Kaipeng Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-13T12:13:51+00:00",
+      "link": "https://arxiv.org/pdf/2609.14462v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "streaming video world model synthesizing perspective video",
+      "llm_evidence_cn": "合成透视视频的流式世界模型",
+      "llm_evidence": "合成透视视频的流式世界模型",
+      "canonical_evidence": "合成透视视频的流式世界模型",
+      "llm_tldr_en": "AlayaVista is a camera-controllable streaming video world model that decouples panoramic world evolution from perspective observation synthesis to keep scene context coherent under camera motion.",
+      "llm_tldr_cn": "现有交互式视频世界模型在相机运动下难以兼顾广阔场景上下文与低延迟高保真观测，透视模型需长期保留离屏内容，而全景合成或显式三维表示代价高昂。AlayaVista提出可相机控制的流式世界模型，将全景世界演化与透视观测合成解耦：由单张透视图像构建全景状态，再据此合成透视视频。该设计在长时rollout中保持场景一致性，为可交互视频生成提供新范式。",
+      "llm_tldr": "现有交互式视频世界模型在相机运动下难以兼顾广阔场景上下文与低延迟高保真观测，透视模型需长期保留离屏内容，而全景合成或显式三维表示代价高昂。AlayaVista提出可相机控制的流式世界模型，将全景世界演化与透视观测合成解耦：由单张透视图像构建全景状态，再据此合成透视视频。该设计在长时rollout中保持场景一致性，为可交互视频生成提供新范式。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "video generation models and generative video synthesis",
+      "matched_requirement_id": "req-20",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.14973v1",
+      "source": "arxiv",
+      "title": "PhysBrain 1.5: From Vision-Language Models to Physical Foundation Models",
+      "abstract": "We present PhysBrain 1.5, a unified model for understanding physical environments, generating actions, and predicting future states. Motivated by the physical loop of observation, interaction, and environmental change, we bring these capabilities into a common learning framework. Starting from a general vision--language model, we encode language responses, end-effector motion, and dense visual targets as discrete sequences and jointly optimize them with autoregressive next-token prediction. Pre-training draws its embodied supervision entirely from human interaction videos, using task-centered episodes to pair semantic and spatial context with recovered motion and subsequent observations. We then adapt the model through supervised fine-tuning on a mixture of human demonstrations, robot trajectories, and simulated experience. Across 28 embodied understanding benchmarks, our 8B model achieves an average score of 72.5, setting a new open-source state of the art and performing on par with leading proprietary models such as GPT-6-Astra and Gemini 3.6 Flash. It achieves the best open-source results on 14 benchmarks while retaining general multimodal capabilities. Beyond these understanding evaluations, qualitative examples show the model's ability to produce end-effector trajectories and predict future scenes through spatially aligned RGB, depth, and robot-mask outputs.",
+      "authors": [
+        "DeepCybo Team",
+        "Yu Bin",
+        "Haipeng Cao",
+        "Zheng Chang",
+        "Kai Chen",
+        "Youning Chen",
+        "Kailin Deng",
+        "Yichao Du",
+        "Xiaotong Fu",
+        "Haoyang Ge",
+        "Yunlong Guo",
+        "Chenliu Hao",
+        "Jiyan He",
+        "Xuguo He",
+        "Yakun Hou",
+        "Kai Hu",
+        "Cong Huang",
+        "Tuopusen Huang",
+        "Yu Huang",
+        "Hong Li",
+        "Peize Li",
+        "Shijie Lian",
+        "Xiaopeng Lin",
+        "Yun Lin",
+        "Haibao Liu",
+        "Haochen Liu",
+        "Qiuzhi Liu",
+        "Shengcai Liu",
+        "Zhiqiang Liu",
+        "Tao Luo",
+        "Peng Ren",
+        "Shuo Ren",
+        "Chaoyi Ruan",
+        "Zhaolong Shen",
+        "Yukun Shi",
+        "Qiyuan Su",
+        "Yuxuan Tian",
+        "Yining Wang",
+        "Changti Wu",
+        "Hao Wu",
+        "Xueyin Xu",
+        "Ruoqi Yang",
+        "Zhaoyang Yang",
+        "Hang Yuan",
+        "Zhaoyang Zeng",
+        "Hanwen Zhang",
+        "Ruimeng Zhang",
+        "Yao Zhang",
+        "Yibo Zhang",
+        "Yuxiang Zhang",
+        "Zhirui Zhang",
+        "Ziyi Zhang",
+        "Zubin Zheng",
+        "Zishen Zhuang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-09-14T03:25:46+00:00",
+      "link": "https://arxiv.org/pdf/2609.14973v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "physical foundation model predicting future states from human interaction videos with supervised fine-tuning",
+      "llm_evidence_cn": "基于人类交互视频预测未来状态的物理基础模型与监督微调",
+      "llm_evidence": "基于人类交互视频预测未来状态的物理基础模型与监督微调",
+      "canonical_evidence": "基于人类交互视频预测未来状态的物理基础模型与监督微调",
+      "llm_tldr_en": "PhysBrain 1.5 unifies physical environment understanding, action generation and future state prediction by encoding language, end-effector motion and dense visual targets as discrete sequences, pretrained on human interaction videos.",
+      "llm_tldr_cn": "针对物理智能中环境理解、动作生成与未来状态预测相互割裂的问题，本文提出PhysBrain 1.5统一模型。该方法从视觉语言模型出发，将语言回复、末端执行器运动与稠密视觉目标编码为离散序列，以自回归下一词元预测联合优化，预训练监督完全来自人类交互视频，并在混合数据上进行监督微调。实验显示模型能统一完成物理环境理解、动作生成与未来状态预测。该工作为物理基础模型提供了统一学习框架与具身数据路线。",
+      "llm_tldr": "针对物理智能中环境理解、动作生成与未来状态预测相互割裂的问题，本文提出PhysBrain 1.5统一模型。该方法从视觉语言模型出发，将语言回复、末端执行器运动与稠密视觉目标编码为离散序列，以自回归下一词元预测联合优化，预训练监督完全来自人类交互视频，并在混合数据上进行监督微调。实验显示模型能统一完成物理环境理解、动作生成与未来状态预测。该工作为物理基础模型提供了统一学习框架与具身数据路线。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "predicting future frames in video sequences",
+      "matched_requirement_id": "req-23",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.15570v1",
+      "source": "arxiv",
+      "title": "DIDO: Distilling Interaction-Centric Dynamics into One-Step Denoising for World Action Models",
+      "abstract": "World Action Models (WAMs) use video generation models to predict future visual dynamics for robotic manipulation, but iterative denoising introduces additional latency for closed-loop control. We empirically find that visual content converges at different rates during denoising. Static background structure forms early, whereas the gripper and manipulated object remain blurry after the first step, with their interaction dynamics emerging only through subsequent denoising. Consequently, naively truncating a multi-step video model to one step preserves scene structure but loses the interaction-centric dynamics most critical for manipulation. To address this issue, we propose DIDO, which distills the converged dynamics of a multi-step video model into a single denoising step. DIDO combines distribution matching distillation with interaction-centric representation guidance. Beyond compressing multi-step generation into one forward pass, DIDO explicitly models the gripper, manipulated object, and their interaction using supervised bounding-box visual reasoning tokens. Additionally, DIDO aligns the target object's representations across multiple model layers with features from a pretrained DINOv3 encoder. This interaction-centric guidance helps the distilled model preserve both the relevant entities and their future dynamics in a single step, while substantially reducing inference latency. DIDO achieves an average success rate of 99.0\\% on LIBERO, 76.6\\% on LIBERO-Plus, and 92.0\\% on RoboTwin, while also demonstrating effective transfer to long-horizon and generalization tasks in real-world robotic manipulation.",
+      "authors": [
+        "Jing Lyu",
+        "Shuanghao Bai",
+        "Runze Xiao",
+        "Zhenyu Liao",
+        "Wenxing Tan",
+        "Zihan Tang",
+        "Ruochuan Shi",
+        "Cheng Peng",
+        "Yuheng Ji",
+        "Yihao Wang",
+        "Badong Chen",
+        "Pengwei Wang",
+        "Zhongyuan Wang",
+        "Xiaoguang Zhao"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-14T13:46:57+00:00",
+      "link": "https://arxiv.org/pdf/2609.15570v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "video generation models predict future visual dynamics; interaction dynamics emerge during denoising",
+      "llm_evidence_cn": "视频生成模型预测未来视觉动态；交互动态在去噪中涌现",
+      "llm_evidence": "视频生成模型预测未来视觉动态；交互动态在去噪中涌现",
+      "canonical_evidence": "视频生成模型预测未来视觉动态；交互动态在去噪中涌现",
+      "llm_tldr_en": "World Action Models use video generation to predict future dynamics but iterative denoising adds latency; DIDO distills interaction-centric dynamics into one-step denoising to keep manipulation-relevant motion.",
+      "llm_tldr_cn": "世界动作模型用视频生成模型预测未来视觉动态以支持机器人操作，但迭代去噪带来闭环控制延迟。作者发现去噪过程中视觉内容收敛速率不同：背景结构早期形成，而夹爪与被操作物体的交互动态仅在后续去噪中才显现，因此粗暴截断为一步会丢失最关键的交互动态。为此提出DIDO，将多步模型收敛后的交互中心动态蒸馏进一步去噪。结果在保留场景结构的同时恢复关键交互动态，提升操作控制效率。",
+      "llm_tldr": "世界动作模型用视频生成模型预测未来视觉动态以支持机器人操作，但迭代去噪带来闭环控制延迟。作者发现去噪过程中视觉内容收敛速率不同：背景结构早期形成，而夹爪与被操作物体的交互动态仅在后续去噪中才显现，因此粗暴截断为一步会丢失最关键的交互动态。为此提出DIDO，将多步模型收敛后的交互中心动态蒸馏进一步去噪。结果在保留场景结构的同时恢复关键交互动态，提升操作控制效率。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "predicting future frames in video sequences",
+      "matched_requirement_id": "req-23",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.15863v1",
+      "source": "arxiv",
+      "title": "LynnReal-Omni: Native multi-modal Video Generation for Agentic Visual Workflows",
+      "abstract": "Video diffusion models are stochastic and hard to control: precise content often requires repeated sampling without guaranteed success, and long-horizon scenes drift in appearance, interactions, and temporal coherence. Agentic visual creation provides explicit references, editable 3D scenes, or executable game states for stable control, but does not by itself guarantee high object or character fidelity. Combining the two can enable stable, high-quality generation. To realize this combination, we present LynnReal-Omni, a native multimodal video generation framework built on a 32B shared multimodal diffusion transformer that unifies text-to-video, image-conditioned generation, reference-guided generation, structural control, editing, degraded video restoration, and long-video generation. It accepts heterogeneous visual inputs, including appearance references, editable 3D renders, and game recordings, allowing agents to compose visual conditions within a unified model. We also train a dedicated 27B Flash shared multimodal diffusion transformer for real-time rendering. We build a systematic data pipeline for video cleaning, subject association, multimodal annotation, and aligned control construction, yielding a curated corpus of multi-shot audiovisual segments, and introduce MSAVP, a 100-prompt, 20-metric evaluation design that separates instruction following, generating plausibility, visual quality, temporal behavior, and audio coordination. LynnReal-Omni-Flash further reduces inference cost through model and decoding acceleration, including a lightweight VAE decoder; on one H100, warm generation and decoding of a 22-frame 540p video take 843 ms with LynnReal-Omni and 377 ms with Flash. These results provide a foundation for real-time streaming video generation, making LynnReal-Omni a unified, controllable, and efficient basis for agentic visual creation.",
+      "authors": [
+        "Xiaofeng Mao",
+        "Peijia Lin",
+        "Shaohao Rui",
+        "Yibo Zhang",
+        "Haibin Wan",
+        "Weijie Ma"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-14T16:55:25+00:00",
+      "link": "https://arxiv.org/pdf/2609.15863v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "long-horizon video generation drift in temporal coherence, unified multimodal diffusion transformer",
+      "llm_evidence_cn": "长时序视频生成的时间连贯性漂移与多模态扩散生成",
+      "llm_evidence": "长时序视频生成的时间连贯性漂移与多模态扩散生成",
+      "canonical_evidence": "长时序视频生成的时间连贯性漂移与多模态扩散生成",
+      "llm_tldr_en": "Video diffusion models are stochastic and drift over long horizons; LynnReal-Omni unifies text-to-video, image-conditioned, reference-guided and structural control generation in a 32B shared multimodal diffusion transformer.",
+      "llm_tldr_cn": "针对视频扩散模型随机性强、长时序场景易在外观与交互上漂移的问题，本文提出LynnReal-Omni原生多模态视频生成框架。该方法基于320亿参数共享多模态扩散Transformer，统一文生视频、图像条件生成、参考引导生成与结构控制等任务。实验表明该框架能实现稳定且高保真的视频生成，缓解长时序时间连贯性退化。工作为智能体式可控视频创作提供了统一的多模态生成方案。",
+      "llm_tldr": "针对视频扩散模型随机性强、长时序场景易在外观与交互上漂移的问题，本文提出LynnReal-Omni原生多模态视频生成框架。该方法基于320亿参数共享多模态扩散Transformer，统一文生视频、图像条件生成、参考引导生成与结构控制等任务。实验表明该框架能实现稳定且高保真的视频生成，缓解长时序时间连贯性退化。工作为智能体式可控视频创作提供了统一的多模态生成方案。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "maintaining inter-frame coherence in video generation",
+      "matched_requirement_id": "req-22",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

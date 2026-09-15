@@ -1,0 +1,2410 @@
+PREPRINT
+1
+PIVOT: Physics-Grounded Verification for
+AI-Generated Audio-Video Detection
+Bo Zheng, Kangran Zhao, Xiaoyu Zhang, Weinan Guan, Zhiheng Li, Yize Chen, Haizhou Li,
+Qingshan Liu, Siwei Lyu, and Baoyuan Wu
+Abstract—As generative models continue to advance,
+AI-generated content (AIGC) is becoming increasingly
+realistic, weakening the artifact cues commonly exploited
+by existing detectors. Nevertheless, faithfully reproduc-
+ing the physical behavior of real-world events remains
+challenging for current generators. We therefore explore
+detecting AIGC by assessing whether the depicted event
+satisfies measurable constraints derived from physical laws.
+We introduce PIVOT, a physics-grounded AIGC detec-
+tor, instantiated here for audio-video clips, that estimates
+physical quantities from video and audio, selects physical
+laws relevant to each clip, and verifies their measurable
+constraints. Beyond a real/fake decision, PIVOT returns
+supporting evidence that records the verification outcome,
+relevant time window, and supporting quantities for each
+applicable law. Although instantiated and evaluated here on
+audio-video data, the framework can, in principle, extend
+to other AIGC modalities whenever the physical quantities
+required for verification can be estimated reliably. We
+also introduce PhysForensics-Bench, comprising paired real
+and generated audio-video clips from nine event-centric
+scene families and two recent audio-video generators. On
+PhysForensics-Bench, PIVOT achieves 70.30% accuracy
+and 64.29% F1 score on Real+Seedance, and 72.16% accu-
+racy and 65.82% F1 on Real+VEO. In comparison, direct
+inspection with Gemini 3.1 Pro obtains 53.96% accuracy
+and 60.09% F1 on Real+Seedance, and 57.22% accuracy
+and 63.44% F1 on Real+Veo. These results demonstrate
+the practical promise of physical-consistency verification
+as a structured and inspectable source of evidence that
+complements artifact-based AIGC detection.
+Index
+Terms—AI-generated
+audio-video
+detection,
+physics-grounded
+verification,
+physical
+constraints,
+physical quantity estimation.
+I. INTRODUCTION
+A
+UDIO-VIDEO generation is rapidly advancing to-
+ward clips with realistic appearance and coher-
+ent motion [1]–[3], while recent systems also generate
+Bo Zheng, Kangran Zhao, Xiaoyu Zhang, Weinan Guan, Zhiheng
+Li, Yize Chen, Haizhou Li, and Baoyuan Wu are with the School of
+Artificial Intelligence, Chinese University of Hong Kong, Shenzhen,
+Shenzhen 518172, China. Qingshan Liu is with Nanjing University of
+Posts and Telecommunications, Nanjing 210023, China. Siwei Lyu is
+with University at Buffalo, State University of New York, New York
+14260, USA.
+Corresponding author: Baoyuan Wu (wubaoyuan@cuhk.edu.cn).
+Fig. 1. From artifact cues to physics-grounded verification. Direct
+foundation-model inspection is persuaded by surface realism, whereas
+PIVOT identifies physically implausible increases in rebound height
+and audio inter-onset interval and supports its AI-generated decision
+with evidence of physical inconsistency.
+synchronized sound [4]–[6]. As such media become
+easier to deploy in communication settings, fabricated
+events can more readily circulate as apparent record-
+ings, making reliable authenticity assessment increas-
+ingly important [7], [8]. Existing detection research al-
+ready provides valuable signals from visual appearance,
+frame consistency, and temporal dynamics [9]–[11], as
+well as audio-visual correspondence and local cross-
+modal inconsistencies [12]–[15]. However, some model-
+exposed artifact cues may become weaker or less stable
+as the generators evolve, as cross-generator evidence
+arXiv:2609.15562v1  [cs.CV]  14 Sep 2026
+
+
+PREPRINT
+2
+from image forensics suggests [16], [17]. This motivates
+the search for more durable evidence grounded in the
+properties of the depicted event itself.
+Physical laws offer a promising basis for such ev-
+idence because perceptual realism does not guaranty
+physical fidelity. Recent studies show that visually con-
+vincing generated videos can still violate physical com-
+monsense in object interactions, material behavior, and
+action-centric events [18]–[20]. The similar challenge
+also exists in joint audio-video generation: a clip may
+look and sound plausible at first glance while remain-
+ing inconsistent in visual dynamics, acoustic behavior,
+or the physical relationship between an event and its
+sound [21], [22]. These findings suggest that physical
+laws can guide the interpretation of observations as
+evidence about the depicted event, complementing ar-
+tifact cues whose reliability may change as generation
+techniques evolve.
+Motivated by this gap, we formulate audio-video
+AIGC detection as physics-grounded verification: testing
+whether the depicted event is consistent with measurable
+constraints derived from physical laws. Audio-visual
+studies show that visible events can be associated with
+acoustic events and sound-producing objects from paired
+observations [23]–[25]. Besides, physical reasoning re-
+search has likewise studied object dynamics and latent
+physical properties from visual observations, as well as
+physical reasoning in simulated environments [26]–[29].
+Together, these lines of research suggest that audio-
+video observations can expose physical quantities and
+cross-modal relations useful for law-based consistency
+assessment. Given the depicted event and the available
+quantity estimates, a physical law that is relevant to the
+event and verifiable from the available quantities can be
+operationalized as one or more measurable constraints.
+The estimated quantities provide evidence supporting or
+contradicting these constraints. In principle, this formu-
+lation can extend to additional families of physical laws
+as reliable estimators for their required quantities be-
+come available. In the current instantiation, we focus on
+event-centric clips whose observable physical evidence is
+primarily derived from object motion, contact dynamics,
+scene geometry, and associated acoustic events.
+Figure 1 illustrates this verification perspective. In the
+example, direct inspection with Gemini 3.1 Pro [30] clas-
+sifies the clip as real based on the apparently synchro-
+nized audio and visual events, plausible ball trajectory
+and shadow, and realistic imperfections in the backdrop.
+Yet the measured event contains two physically implausi-
+ble trends. First, the fourth through sixth rebound heights
+increase from 0.64 m to 0.75 m during passive bouncing
+( 1⃝), violating the expected decay of mechanical energy.
+Second, the third through fifth audio inter-onset intervals
+increase from 533 ms to 631 ms ( 2⃝), whereas successive
+impact intervals should shorten as a passive bouncing
+system loses energy. Rather than relying on an overall
+impression of realism, the proposed method PIVOT links
+these measurements to energy-decay and bounce-interval
+constraints and returns the corresponding laws, time
+windows, verification statuses, and supporting quantities
+as evidence for its decision.
+We operationalize this formulation in PIVOT. Given
+a clip, PIVOT estimates structured physical quantities
+from the video and audio streams, selects laws that are
+relevant to the depicted event and measurable from the
+available quantity fields, and instantiates them as opera-
+tional constraints. It then evaluates each applicable con-
+straint as supported, violated, or uncertain and produces
+a real/fake decision together with supporting evidence
+organized by law and time window; non-applicable law-
+window pairs are omitted. This caption–estimate–select–
+verify design separates the observations, the physically
+expected behavior, and the verification outcome while
+allowing stronger physical estimators to be incorporated
+through the same quantity interface.
+To
+evaluate
+this
+direction,
+we
+introduce
+PhysForensics-Bench,
+a
+physics-centric
+benchmark
+of paired real and generated audio-video clips spanning
+nine
+event-centric
+scene
+families
+and
+two
+recent
+generators, Veo 3.1 Fast [6] and Seedance 2.0 [5].
+On the test split of PhysForensics-Bench, PIVOT
+achieves 70.30% accuracy and 64.29% F1 score on
+Real+Seedance, and 72.16% accuracy and 65.82% F1
+score on Real+Veo. In comparison, direct inspection
+with Gemini 3.1 Pro obtains 53.96% accuracy and
+60.09% F1 score on Real+Seedance, and 57.22%
+accuracy and 63.44% F1 score on Real+Veo.
+Our contributions are threefold:
+• We formulate audio-video AIGC detection as
+physics-grounded verification and instantiate this
+view in PIVOT, which selects event-relevant and
+measurable physical laws, verifies their constraints
+over estimated quantities, and returns supporting
+evidence organized by law and time window.
+• We build PhysForensics-Bench, a physics-centric
+benchmark of paired real and generated audio-video
+clips spanning nine event-centric scene families and
+two recent generators.
+• We demonstrate the practical potential of physical-
+consistency verification on PhysForensics-Bench
+through comparisons with existing detectors and
+direct foundation-model inspection, together with
+ablations of the video and audio physical estimators.
+
+
+PREPRINT
+3
+Fig. 2. PIVOT inference pipeline. Step 1: Captioning generates clip captions without making a detection decision. Step 2: Physical Quantity
+Estimation extracts time-indexed video and audio quantities. Step 3: Physical Law Selection selects laws that are relevant to the depicted event
+and verifiable from the available quantities, then instantiates their physical constraints. Step 4: Physical Consistency Verification evaluates
+those constraints against the quantities and returns a real/fake decision with supporting evidence.
+II. RELATED WORK
+a) AI-generated video detection: Video forensics
+has been widely studied in face manipulation and
+deepfake settings. MesoNet uses compact convolu-
+tional networks to detect facial video forgeries [31].
+FaceForensics++ establishes a large-scale benchmark
+and
+dataset
+for
+manipulated-face
+detection
+[32];
+Celeb-DF contributes high-quality celebrity DeepFake
+videos [33]; and DFDC provides a large face-swap video
+dataset [34]. Beyond these evaluation resources, F3-
+Net mines frequency-aware forgery clues [35], while
+LipForensics detects semantic irregularities in mouth
+motion using representations learned through visual-
+speech recognition [36]. X2-DFD combines an MLLM
+with specialized forgery-feature detectors to produce
+both deepfake decisions and human-readable explana-
+tions [37].
+Recent work also studies general AI-generated content
+detection beyond face manipulation. SIDA distinguishes
+authentic, fully synthetic, and tampered social-media
+content, while localizing tampered regions and providing
+textual explanations [38]. So-Fake provides a large-
+scale, generator-diverse benchmark with dedicated out-
+of-domain evaluation using generators excluded from
+training [39]. DeCoF learns temporal artifacts through
+frame consistency [9]. DeMamba introduces the million-
+scale GenVideo benchmark and a plug-and-play mod-
+ule for spatial-temporal inconsistency analysis
+[40].
+GenVidBench further provides 6.78 million videos with
+cross-source and cross-generator evaluation settings [41].
+Among existing detectors, D3 [10] and NSG-VD [11]
+are particularly relevant to our physics-grounded per-
+spective. D3 derives second-order temporal features mo-
+tivated by Newtonian mechanics and uses their standard
+deviation as its detection score [10]. NSG-VD derives a
+Normalized Spatiotemporal Gradient from probability-
+flow conservation and uses deep-kernel MMD to com-
+pare the NSG features of a test video with those
+of reference real videos as its detection metric [11].
+These methods demonstrate the value of physics-inspired
+temporal priors for AI-generated video detection. Their
+published inference pipelines apply a predefined physics-
+inspired formulation across inputs, rather than explic-
+itly determining which physical laws are relevant to
+each depicted event and verifiable from its available
+quantities. This distinction motivates the event-aware,
+measurability-constrained physical-consistency verifica-
+tion setting studied in our method.
+b) AI-generated
+audio-video
+detection:
+Audio-
+visual fake media detection has also been studied in
+multimodal deepfake settings. FakeAVCeleb provides
+a multimodal dataset containing synthesized faces and
+voices [42], while LAV-DF introduces localized audio,
+visual, and audio-visual manipulations for detection and
+temporal localization
+[43]. AVFF learns audio-visual
+correspondence through self-supervised representation
+
+
+PREPRINT
+4
+learning followed by supervised deepfake classifica-
+tion [12]. FGI targets fine-grained spatial and tem-
+poral audio-visual inconsistencies [44]. Astrid et al.
+further use temporal distance maps and locally in-
+consistent pseudo-fakes to capture local temporal mis-
+matches [13]. SAVe combines facial manipulation cues
+with lip-speech misalignment while learning from au-
+thentic videos [14], whereas AVPF generates audio-
+visual pseudo-fakes from authentic samples to improve
+generalization [15]. DeepfakeBench-MM provides a uni-
+fied evaluation framework spanning five multimodal
+datasets and eleven detectors, together with the Mega-
+MMDF dataset of human-centric audio-visual forg-
+eries [45].
+General audio-video AIGC detection remains less
+explored than face-centric audio-visual deepfake detec-
+tion. MVAD broadens multimodal AIGC detection data
+beyond facial deepfakes [46]. AV-Phys Bench evaluates
+physical commonsense in joint audio-video generation
+and introduces AV-Phys Agent, which combines mul-
+timodal reasoning with deterministic acoustic measure-
+ment tools for rubric-based generation evaluation [21].
+PhyAVBench evaluates the audio-physics sensitivity of
+text-to-audio-video generators through controlled paired
+prompts [22]. These studies expand general audio-video
+data and physics-aware generation evaluation, while
+most of the audio-visual detectors considered above are
+designed for facial manipulation, lip-speech alignment,
+or local cross-modal inconsistency. Authenticity detec-
+tion of general physical events using per-law measurable
+evidence remains less studied.
+c) Physical reasoning for perception: Physical rea-
+soning has long supported scene understanding. Approx-
+imate physical simulation can explain human judgments
+about scene dynamics
+[26], and Newtonian scene un-
+derstanding predicts forces and long-term object motion
+from static images
+[27]. Physics 101 learns object
+properties from unlabeled videos by encoding physical
+laws [28], while PHYRE provides a benchmark of
+classical-mechanics puzzles for physical reasoning [29].
+Audio-visual learning provides complementary foun-
+dations. Visually Indicated Sounds predicts impact
+sounds from silent videos to capture material proper-
+ties and physical interactions [47]. Look, Listen and
+Learn introduces audio-visual correspondence as a self-
+supervised learning task [23]; Objects that Sound uses
+this correspondence for cross-modal retrieval and sound-
+source localization
+[24]; and multisensory scene anal-
+ysis learns from the temporal alignment of video and
+audio [25].
+Recent benchmarks directly evaluate physical com-
+monsense in generated videos. VideoPhy evaluates phys-
+ical plausibility in text-to-video outputs
+[18]; Phy-
+GenBench organizes evaluation around explicit physi-
+cal laws [19]; and VideoPhy-2 extends this direction
+to action-centric physical commonsense [20]. Broader
+video-generation evaluation is complementary: VBench
+decomposes generation quality into fine-grained dimen-
+sions [48], EvalCrafter covers visual, content, motion,
+and text-video alignment quality [49], and FETV adds
+multi-aspect and temporal-aware evaluation of open-
+domain text-to-video generation [50].
+Collectively, these studies provide complementary
+foundations in generated-video detection, audio-visual
+forensic analysis, physical perception, and physics-aware
+generation evaluation. PIVOT brings these directions
+together for authenticity detection: it selects physical
+laws according to the depicted event and the quantities
+available for measurement, instantiates their operational
+constraints, and returns physical-consistency verification
+records organized by law, time window, and estimated
+quantity.
+III. METHODOLOGY
+PIVOT detects generated audio-video by testing
+whether the observed event is physically consistent. The
+inference pipeline in Figure 2 comprises four stages:
+captioning generates clip captions; physical quantity esti-
+mation recovers time-indexed video and audio quantities;
+physical law selection selects event-relevant and measur-
+able laws and instantiates their constraints; and physi-
+cal consistency verification evaluates those constraints
+and produces a structured report. This decomposition
+is the core framework contribution: physics-grounded
+AIGC detection should make the observed event and
+its physical quantities explicit, state which physical laws
+apply, and check the observed quantities against their
+constraints while retaining a structured decision trace.
+The resulting inference workflow is caption–estimate–
+select–verify.
+A. Captioning
+The captioning stage generates concise captions for
+the input clip, collectively denoted by Bi:
+Bi = Bθ(xi).
+(1)
+It identifies the objects, surfaces, interactions, and tem-
+poral phases needed to determine which physical laws
+are relevant, without predicting whether the clip is real
+or generated. In the reported implementation, Gemini
+3.1 Pro and GPT-5.5 independently describe the clip,
+and both descriptions are retained in Bi for downstream
+physical law selection.
+
+
+PREPRINT
+5
+Fig. 3. Illustrative implementations of the tool-agnostic physical quantity interface. Top: Basic visual attributes and kinematics are two example
+video branches; the latter illustrates one path for estimating position, velocity, and acceleration. External estimators may replace or extend either
+branch to expose other physical quantities. Bottom: The audio estimator localizes complementary sound events and spectral transients, fuses
+their temporal intervals, and produces event-level quantities such as onset, peak dB, F0, RMS, and HNR. The downstream framework consumes
+these structured quantities and does not depend on a particular estimator architecture.
+B. Physical Quantity Estimation
+PIVOT treats video and audio physical estimators as
+external, replaceable modules. Rather than prescribing a
+particular estimator architecture, the framework requires
+only that each module expose named, time-aligned phys-
+ical quantities that can be inspected by later stages. For
+a clip xi, we write this shared interface as
+Mi = (Ai, Vi).
+(2)
+Here Ai contains event-level audio records, and Vi
+contains frame-level video records. Quantity fields retain
+their timestamps and, where applicable, units and coor-
+dinate conventions. Downstream components consume
+only these structured records, not estimator-specific hid-
+den features. This interface allows improved or domain-
+specific estimation tools to be substituted without chang-
+ing physical law selection or verification.
+1) Video Physical Estimator: The video estimator
+interface can connect external models or procedures
+that provide the physical quantities required by the
+framework. The two branches at the top of Figure 3 are
+illustrative implementation examples rather than a fixed
+or exhaustive decomposition. The basic visual attributes
+branch applies object segmentation to the video frames,
+producing object labels and mask extents from which
+quantities such as visible object area can be derived.
+The kinematics branch applies 3D object tracking to
+recover each object’s trajectory in a common coordinate
+system, from which position, velocity, and acceleration
+can be estimated. Other external estimators can replace
+or extend these paths to provide object-pair relations or
+additional physical quantities.
+Together, these records form the frame-level set Vi.
+The interface does not require a particular segmentation,
+geometry, or tracking model; it requires only consistent
+object identities, timestamps, field definitions, and coor-
+dinate conventions. Our current instantiation focuses on
+basic visual quantities and kinematic quantities, while
+the same interface can incorporate additional properties
+such as mass, volume, density, elasticity, or material
+when suitable estimators become available. Appendix D
+documents the concrete tools, calibration, and recon-
+struction procedure used in our experiments.
+2) Audio Physical Estimator: The audio estimator
+interface, shown at the bottom of Figure 3, represents
+the waveform as temporally localized event records.
+An event–transient extractor combines complementary
+cues: low-band event detection identifies semantically
+recognizable sound regions, while high-band transient
+detection recovers brief spectral changes that may not
+receive a reliable semantic label. Their temporal intervals
+are fused before physical quantities are extracted, so both
+cues are described on a shared time axis aligned with the
+video.
+For each detected interval, the resulting audio record
+can include the onset, envelope boundaries, duration,
+peak dB, RMS level, fundamental frequency (F0),
+harmonic-to-noise ratio (HNR), and spectral descriptors.
+These records form the event-level set Ai. As with the
+
+
+PREPRINT
+6
+video interface, PIVOT depends on the fields and their
+temporal meaning rather than on a particular detector
+or acoustic backbone. Appendix F specifies the concrete
+audio tools, frequency bands, fusion rule, and thresholds
+used in our experiments.
+Because full frame-level quantity sequences are un-
+necessarily long for prompt-based reasoning, PIVOT
+applies a lightweight, caption-conditioned compression
+step before law selection and verification:
+˜
+Mi = Compress(Mi; Bi).
+(3)
+The compressed representation preserves temporally in-
+formative quantity records and includes the metadata
+needed to interpret the retained rows. The concrete
+sampling strategies and serialization procedure are im-
+plementation details described in Appendix G.
+C. Physical Law Selection
+The space of physical laws governing real-world
+events is broad, making exhaustive verification neither
+tractable nor useful. A meaningful test must satisfy
+two conditions: the law must be relevant to the event
+depicted in the clip, and its requirements must be covered
+by the physical quantities available to the framework.
+The Physical Law Selector therefore identifies applica-
+ble physical laws and specifies constraints that can be
+checked using the available quantities. This event-aware,
+measurability-constrained law selection uses the clip
+captions, available quantity fields, and a structured law
+schema. The available quantity specification is obtained
+from the field names in the compact quantity tables. The
+Physical Law Selector receives the clip captions Bi and
+these available fields, but it does not directly classify
+the clip. Instead, it selects a compact set of laws that are
+relevant to the depicted event and verifiable from the
+available quantities, then instantiates their constraints.
+Each selected law follows a constrained output schema
+containing its name, relative priority, physical basis,
+required audio and video fields, decision_basis,
+applicability conditions, and failure conditions. The cap-
+tions supply clip context, while the field specification
+restricts selection to laws that can be checked using the
+exposed quantities. Physical law selection is therefore
+Li = Pθ
+
+Bi, Fields( ˜
+Mi)
+
+.
+(4)
+The decision_basis states the equality, inequality,
+ordering, trend, or temporal relation to be checked.
+Either modality’s required-field list may be empty when
+that modality is not needed.
+As one example, in a bouncing or collision scene, the
+selector may produce an impact synchronization check.
+Its constraint requires an acoustic onset to be temporally
+consistent with a nearby visible contact, release, re-
+bound, relation-distance extremum, velocity reversal, or
+acceleration peak. It specifies the audio onset fields and
+video quantities that can support or refute the relation.
+Applicability and failure conditions require the verifier
+to account for low frame rate, occlusion, missed audio
+events, and merged acoustic envelopes. During verifica-
+tion, the model compares measured onset_ms values
+with the available event quantities, then returns support,
+violation, or uncertainty together with the quantities used
+in that judgment. This example is illustrative rather than
+a fixed template; additional checks associated with the
+selected laws are summarized in Appendix Section J.
+The Physical Law Selector turns the clip captions and
+quantity specification into an explicit physics test. A
+generic audio-visual classifier can silently rely on any
+correlation in its representation; PIVOT instead requires
+the model to state the applicable physical laws and
+their constraints before the verifier checks the compact
+quantities against those constraints.
+D. Physical Consistency Verification
+The Physical Consistency Verifier receives the se-
+lected laws, their physical constraints over the required
+quantities, the clip captions, and compressed audio and
+video quantities. For each law, it evaluates the constraint
+against the relevant quantities and records whether the
+constraint is supported, violated, or uncertain. The quan-
+tity observations supporting each judgment form the
+evidence reported with the decision. The compressed
+representation retains the timestamps, units, coordinate
+conventions, and sampling metadata needed to interpret
+each row. Here, verification denotes formula-guided con-
+sistency assessment conditioned on estimated physical
+quantities, rather than exact physical simulation or full
+system identification.
+Each of three independent verification runs returns a
+binary label and a structured report:
+
+ˆy(r)
+i
+, R(r)
+i
+
+= Vθ
+
+Li, Bi, ˜
+Mi
+
+,
+r ∈{1, 2, 3}.
+(5)
+For each applicable law and time window, R(r)
+i
+records
+support, violate, or uncertain, together with confidence,
+the relevant quantity observations and values when avail-
+able, and a textual explanation. Inapplicable laws are
+omitted. The final sample-level label is the majority vote
+over the three binary labels, while the final structured
+output retains the reports from all three runs:
+ˆyi = Mode
+
+ˆy(1)
+i
+, ˆy(2)
+i
+, ˆy(3)
+i
+
+,
+Ri = {R(r)
+i }3
+r=1.
+(6)
+
+
+PREPRINT
+7
+Algorithm 1 PIVOT inference for audio-video clip xi
+Require: Clip xi
+Ensure: Label ˆyi and verification reports {R(r)
+i
+}3
+r=1
+1: Bi ←Bθ(xi)
+2: Mi ←PHYSICALQUANTITIES(xi)
+3:
+˜
+Mi ←COMPRESS(Mi, Bi)
+4: Li ←Pθ(Bi, FIELDS( ˜
+Mi))
+5: for r = 1, 2, 3 do
+6:
+(ˆy(r)
+i
+, R(r)
+i
+) ←Vθ(Li, Bi, ˜
+Mi)
+7: end for
+8: ˆyi ←MODE(ˆy(1)
+i
+, ˆy(2)
+i
+, ˆy(3)
+i
+)
+9: return
+
+ˆyi, {R(r)
+i
+}3
+r=1
+
+Confidence values are retained in the structured reports
+but are neither averaged nor used to weight the votes.
+Each run-level label is not obtained by thresholding
+a hand-written law score; it is produced by the veri-
+fier’s structured report, which ties a generated decision
+to concrete violations such as a discontinuous visual
+trajectory, an implausible acoustic transient sequence,
+an acoustic onset without corresponding contact, or a
+rebound rhythm whose video events and audio timing
+disagree. Thus, PIVOT produces a detection result and
+its supporting evidence in the same structured output.
+The selector-produced law weights communicate rel-
+ative law priority to the verifier; they are not coefficients
+of a deterministic classifier. Weighted support and viola-
+tion rates are retained only as report diagnostics and do
+not determine the run-level or final label. Each structured
+LLM verification call still produces the law-window
+states and one run-level binary label. The deterministic
+post-processing is the local majority vote over three such
+labels. Algorithm 1 summarizes the complete inference
+path.
+IV. PHYSFORENSICS-BENCH
+PhysForensics-Bench is designed to evaluate AIGC
+detectors on event-centric audio-video clips for which
+physical-law consistency provides a relevant forensic
+signal. For example, trajectory-continuity constraints
+concern how positions and velocities evolve; energy-
+decay checks assess rebound trends under dissipative
+conditions; and impact-synchronization checks require
+visible contact and acoustic onset to align temporally.
+This benchmark foregrounds event-centric physical be-
+havior rather than face identity or artifacts tied to a single
+generator.
+A. Data Sources and Generation
+The benchmark contains real captured clips and gen-
+erated audio-video clips from Veo 3.1 Fast
+[6] and
+Seedance 2.0
+[5]. For each real clip, we use the first
+frame as the visual reference image and provide a text
+prompt that describes the target physical event. The
+generation models then synthesize the full audio-video
+continuation. This design makes each generated clip a
+counterpart of a real clip: it shares the same initial
+visual context and high-level event description, while the
+model must synthesize the subsequent visual dynamics
+and sounds.
+The construction is pair-oriented but not perfectly
+balanced. Some generation requests were blocked by
+platform safety or community-policy filters, for example
+when the reference frame contained a visible face or
+when the prompt was rejected by the platform. As a
+result, a small number of real clips do not have all
+corresponding generated variants.
+B. Physical Scene Taxonomy
+PhysForensics-Bench covers nine scenes: ball bounc-
+ing, balloon deflation, ball collisions, basketball drib-
+bling, catapult launches, coin drops, slingshot releases,
+object descent on a slope, and cart descent on a ramp.
+The scenes are deliberately short and event-centric. They
+create contacts, releases, rebounds, direction reversals,
+surface deformation, rolling/sliding acceleration, and re-
+peated periodic impacts. These events stress different as-
+pects of physical laws: timing, object relations, kinematic
+change, material-dependent sound, and energy trends.
+Table I summarizes the scene definitions, within-scene
+variation, and representative physical constraints, while
+Figure 4 provides a visual overview of the nine scene
+families. Most scenes are recorded around controlled
+short physical events. Catapult Launch is the main ex-
+ception: its real clips are web-collected from YouTube,
+TikTok, and Reddit to cover diverse catapult designs,
+launch mechanisms, and viewpoints.
+The scene set is designed to separate different kinds
+of physical quantities. Ball-bounce and basketball scenes
+emphasize repeated impact timing and decay; bal-
+loon deflation emphasizes visible deformation and air-
+release sound; ball-collision and coin-drop scenes require
+sharper contact localization; and slope and ramp scenes
+require continuous motion reasoning rather than isolated
+impact detection. This organization makes the bench-
+mark more than a collection of object categories: it asks
+whether detectors can handle several recurring physical
+constraints under different objects, surfaces, viewpoints,
+and motion patterns.
+C. Benchmark Split
+We split the benchmark at the seed-clip level. Each
+real seed clip and all of its available Seedance and Veo
+
+
+PREPRINT
+8
+Fig. 4. PhysForensics-Bench overview. Left: a schematic taxonomy of the nine physical scene families, where wedge area does not indicate
+sample count. Right: one representative real frame from each scene.
+counterparts are treated as one group and assigned to the
+same train, validation, or test split. This prevents clips
+that share the same initial frame and event description
+from appearing across different splits. The resulting
+split contains 878 training samples, 293 validation sam-
+ples, and 293 test samples, with scene- and source-
+level distributions reported in Table II. The training
+split is used for supervised baseline training, while the
+validation split supports external methods that require
+checkpoint selection or operating-point tuning. PIVOT
+uses neither split for detector adaptation. We preserve
+each clip’s native container, codec, frame rate, resolution,
+duration, and audio encoding rather than globally re-
+encoding the benchmark. These attributes are not sup-
+plied to PIVOT as detection features: the visual path
+operates on decoded frames, infers the source frame
+rate, and expresses motion on a millisecond time axis;
+the audio path operates on decoded mono waveforms,
+normalizes amplitude, applies model-specific resampling
+for SED, and analyzes high-frequency transients at the
+native sample rate. File names, source labels, container
+metadata, codec identifiers, and bitrates are not included
+in the physical quantities or prompts. The generated clips
+contain no visible platform watermarks. This processing
+reduces direct dependence on acquisition and encoding
+settings, although we do not assume complete invariance
+to changes in compression quality or spatial resolution.
+V. EXPERIMENTS
+A. Experimental Setup
+We evaluate on our train/validation/test split described
+in Section IV. We report accuracy and F1 score, treating
+AI-generated audio-video as the positive class. When a
+table reports generator-specific columns, Real+Seedance
+and Real+Veo denote binary subtasks formed by pairing
+all real clips with one generated source.
+The main comparison includes methods without
+PhysForensics-Bench-specific detector training, i.e., no
+data from PhysForensics-Bench is adopted to train or
+fine-tune the detector parameters. Released checkpoints
+may nevertheless have been trained on their original
+source domains. PIVOT uses no PhysForensics-Bench
+labels for adaptation.
+Unless otherwise stated, PIVOT uses the complete
+video and audio physical estimator architecture shown in
+Figure 3. Clip captions are produced independently by
+Gemini 3.1 Pro [30] and GPT-5.5 [51], and both captions
+are provided to the Physical Law Selector to reduce
+reliance on a single model. GPT-5.5 is used for physics-
+aware sampling strategy selection, physical-law selec-
+tion, and physical-consistency verification. Each sample
+is verified independently three times to reduce stochastic
+verifier failures, and its final Real/Fake prediction is
+determined by majority voting over the three run-level
+labels; confidence values do not weight the vote. For
+visual trajectory reconstruction, we set the velocity and
+acceleration EMA coefficients to αv = 0.3980 and
+αa = 0.3305, respectively. Both were selected on the
+Unity simulation data without using any PhysForensics-
+Bench labels.
+All GPU-based runs, including baseline feature extrac-
+tion, finetuning, and physical-estimator preprocessing,
+are run on eight NVIDIA RTX 3090 GPUs.
+
+
+PREPRINT
+9
+TABLE I
+PHYSICAL SCENES, REPRESENTATIVE PHYSICAL CONSTRAINTS, AND ILLUSTRATIVE RELATIONS AMONG PHYSICAL QUANTITIES IN
+PHYSFORENSICS-BENCH. THE FORMULAS SUMMARIZE EXPECTED RELATIONSHIPS AMONG THOSE QUANTITIES RATHER THAN A FIXED
+HAND-CODED LAW BANK; THE PHYSICAL LAW SELECTOR INSTANTIATES MEASURABLE CONSTRAINTS FOR THE DEPICTED EVENT AT
+RUNTIME.
+Scene
+Description
+Representative physical
+constraints
+Illustrative relations
+Ball Bounce
+Ping-pong, tennis, golf, and bouncy balls
+bounce on a tabletop, entering from the
+left, top, or right.
+(1) Impact–sound synchronization;
+(2) rebound kinematics;
+(3) mechanical and acoustic energy
+decay.
+(1) minm |ta
+m −tv
+n| ≤τsync;
+(2) vz(t−
+n )vz(t+
+n ) < 0;
+(3) Hn+1 ≤Hn, Ln+1 ≤Ln.
+Balloon Deflation
+A balloon deflates on a tabletop, either
+upright or lying horizontally.
+(1) Deformation–airflow coupling;
+(2) deflation-onset synchronization;
+(3) airflow and rubber-timbre
+consistency.
+(1) −˙A(t)↑⇒Eair(t)↑;
+(2) minm |ta
+m −tv
+defl| ≤τsync;
+(3) EHF/Etot ∈Rair/rubber.
+Ball Collision
+An incoming ball is launched from the
+left or right and collides with another
+ball.
+(1) Collision–sound
+synchronization;
+(2) momentum-transfer consistency;
+(3) single-collision–single-transient
+correspondence.
+(1) minm |ta
+m −tv
+col| ≤τsync;
+(2) m1∆v1 ≈−m2∆v2;
+(3) Na([tv
+col −τ, tv
+col + τ]) = 1.
+Basketball
+Dribbling
+A person dribbles a basketball while
+stationary, approaching or leaving the
+camera, or moving left or right.
+(1) Impact–sound synchronization;
+(2) dribble periodicity;
+(3) rebound-energy–loudness
+consistency.
+(1) minm |ta
+m −tv
+n| ≤τsync;
+(2) Var(∆tn) ≤ϵp;
+(3) corr(Hn, Ln) > 0.
+Catapult Launch
+Web-collected videos show diverse
+catapult designs and viewpoints
+launching a projectile.
+(1) Release synchronization;
+(2) projectile-trajectory continuity;
+(3) free-flight source and silence
+consistency.
+(1) minm |ta
+m −tv
+rel| ≤τsync;
+(2) ¨p(t) ≈g;
+(3) Nunexplained(Wflight) = 0.
+Coin Drop
+Coins are dropped onto a tabletop or a
+foam board.
+(1) Impact–sound synchronization;
+(2) bounce damping and acoustic
+decay;
+(3) surface-dependent timbre
+consistency.
+(1) minm |ta
+m −tv
+n| ≤τsync;
+(2) Hn+1 < Hn, Ln+1 < Ln;
+(3) ftable
+c
+> ffoam
+c
+.
+Slingshot Release
+A slingshot is pulled and released to
+shoot a ball.
+(1) Release-onset synchronization;
+(2) elastic-energy and recoil
+consistency;
+(3) post-release vibration and flight
+continuity.
+(1) minm |ta
+m −tv
+rel| ≤τsync;
+(2) 1
+2 kx2 ≈1
+2 mv2
+0 + Eloss;
+(3) ¨p(t) ≈g,
+˙Avib(t) < 0.
+Object Descent on
+a Slope
+A ball or wooden block descends a low
+or high slope.
+(1) Gravity-driven acceleration;
+(2) rolling/sliding friction
+consistency;
+(3) persistent surface-contact
+continuity.
+(1) 0 < a∥≤g sin θ;
+(2) |v −rω| ≤ϵr for rolling;
+(3) do,s(t) ≤ϵc.
+Cart Descent on a
+Ramp
+A cart descends a ramp, with or without
+a terminal wooden block that creates an
+end collision.
+(1) Gravity-driven descent;
+(2) rolling-speed–sound coupling;
+(3) terminal-impact
+synchronization.
+(1) 0 < a∥≤g sin θ;
+(2) λroll(t) ∝v(t)/r;
+(3) minm |ta
+m −tv
+term| ≤τsync.
+Here tv and ta denote visual-event and audio-onset times; Hn, Ln, and ∆tn denote rebound height, impact loudness, and inter-impact
+interval; Na(W) counts audio onsets in window W; and R, ϵ, and τ denote applicability-dependent plausible ranges or tolerances.
+B. Main Results
+Table III reports methods without PhysForensics-
+Bench adaptation on the test split. D3 [10] is a training-
+free score method, so we use a validation-real target-FPR
+threshold to report Accuracy and F1. The direct LLM
+rows test prompt-only inspection: GPT-5.5 uses sampled
+video frames, while Gemini 3.1 Pro uses video input
+with audio. PIVOT uses no PhysForensics-Bench labels
+or benchmark-specific adaptation.
+We report Real+Seedance and Real+Veo subtasks
+rather than a single overall score so the table ex-
+poses generator-specific behavior and prediction bias. A
+method that over-predicts generated videos can have high
+generated recall but will lose Accuracy and F1 once real
+samples are included in the paired subtask. We include
+FGI [44] to cover the audio-video detector modality; it
+is a human-centric audio-video deepfake detector rather
+than a general AIGC physical reasoning method, so its
+result should be read as an out-of-domain reference.
+PIVOT
+achieves
+strong
+performance
+on
+
+
+PREPRINT
+10
+TABLE II
+PHYSFORENSICS-BENCH DATA DISTRIBUTION BY SCENE, SPLIT,
+AND SOURCE. VEO DENOTES VEO 3.1 FAST, AND SEED. DENOTES
+SEEDANCE 2.
+Scene
+Total Train Val. Test Real VEO Seed.
+Ball Bounce
+366
+219
+72
+75
+122
+122
+122
+Balloon Deflation
+153
+92
+31
+30
+51
+51
+51
+Ball Collision
+108
+66
+21
+21
+36
+36
+36
+Basketball Dribbling
+242
+145
+49
+48
+104
+52
+86
+Catapult Launch
+42
+24
+9
+9
+14
+14
+14
+Coin Drop
+74
+45
+15
+14
+26
+22
+26
+Slingshot Release
+135
+81
+27
+27
+45
+45
+45
+Object Descent on a Slope
+167
+101
+33
+33
+56
+55
+56
+Cart Descent on a Ramp
+177
+105
+36
+36
+59
+59
+59
+Total
+1,464
+878 293
+293
+513
+456
+495
+TABLE III
+MAIN TEST-SET RESULTS FOR METHODS WITHOUT
+PHYSFORENSICS-BENCH ADAPTATION. SEEDANCE AND VEO
+DENOTE THE REAL+SEEDANCE AND REAL+VEO BINARY
+SUBTASKS, RESPECTIVELY. ACCURACY AND F1 ARE REPORTED AS
+PERCENTAGES.
+Method
+Modality
+Seedance
+VEO
+Acc(%)
+F1(%)
+Acc(%)
+F1(%)
+NSG-VD [11]
+Video
+48.02
+21.05
+52.06
+27.91
+D3 [10]
+Video
+65.35
+52.05
+65.46
+49.62
+FGI [44]
+Audio-video
+49.50
+22.73
+45.88
+7.08
+GPT-5.5 [51]
+Video
+51.49
+2.00
+55.67
+10.42
+Gemini 3.1 Pro [30]
+Audio-video
+53.96
+60.09
+57.22
+63.44
+PIVOT
+Audio-video
+70.30
+64.29
+72.16
+65.82
+PhysForensics-Bench without using benchmark labels
+for detector training or operating-point calibration.
+Specifically, PIVOT performs best in all four generator-
+specific
+metrics,
+achieving
+70.30%
+Accuracy
+and
+64.29% F1 on Seedance and 72.16% Accuracy and
+65.82% F1 on Veo. Gemini 3.1 Pro has relatively
+high F1 but lower Accuracy, indicating a stronger bias
+toward predicting generated videos. Released video
+detectors and the out-of-domain FGI detector transfer
+poorly, showing that source-specific visual signals or
+face-centric audio-video cues do not directly solve our
+physical-event setting.
+C. Per-Scene Analysis
+Table IV breaks down PIVOT performance by phys-
+ical scene. Because PIVOT uses no PhysForensics-
+Bench labels for adaptation, this diagnostic view pools
+all completed training, validation, and test samples to
+provide more reliable scene-level estimates. Its values are
+therefore not directly comparable to the test-only results
+in Table III.
+Performance is broadly associated with observability
+of the underlying physical process. Object descent on
+TABLE IV
+PER-SCENE DIAGNOSTIC RESULTS FOR PIVOT POOLED OVER ALL
+COMPLETED TRAIN, VALIDATION, AND TEST SAMPLES. ACCURACY
+AND F1 ARE REPORTED AS PERCENTAGES.
+Scene
+Seedance
+VEO
+Acc(%)
+F1(%)
+Acc(%)
+F1(%)
+Ball Bounce
+68.03
+69.29
+63.52
+63.37
+Balloon Deflation
+48.04
+51.38
+45.10
+47.17
+Ball Collision
+69.44
+62.07
+68.06
+59.65
+Basketball Dribbling
+67.37
+62.20
+77.56
+71.54
+Catapult Launch
+64.29
+61.54
+71.43
+71.43
+Coin Drop
+46.15
+17.65
+70.83
+65.00
+Slingshot Release
+57.78
+34.48
+77.78
+73.68
+Object Descent on a Slope
+78.57
+72.73
+80.18
+75.00
+Cart Descent on a Ramp
+70.34
+57.83
+70.34
+57.83
+a slope is the strongest and most consistent scene,
+achieving 78.57%/72.73% Accuracy/F1 on Seedance and
+80.18%/75.00% on Veo. Its sustained trajectory exposes
+position, velocity, acceleration, and object-surface rela-
+tions over many frames. Ball bounce is also compar-
+atively stable because repeated contacts permit several
+checks of rebound dynamics and impact-onset align-
+ment. In contrast, balloon deflation remains below 50%
+Accuracy for both generators: gradual deformation and
+sustained airflow provide no sharply localized event, and
+the relevant shape changes are sensitive to mask and
+geometry estimation.
+Coin drop reveals a different, generator-specific failure
+mode. The two paired subtasks both correctly classify
+21 of 26 real clips, so their gap comes entirely from
+generated clips: PIVOT detects only 3 of 26 Seedance
+clips as fake, compared with 13 of 22 Veo clips. The Veo
+reports frequently identify a major audio onset before
+or after the visible surface contact, a missing onset at
+the first impact, or a late strong transient after the coin
+has nearly stopped. Seedance clips more often exhibit
+aligned first impacts and plausible acoustic decay; later
+sounds can be attributed to rolling or friction, while weak
+unmatched events are usually marked uncertain rather
+than violated. This yields 17.65% F1 on Seedance but
+65.00% on Veo.
+Slingshot release shows the same diagnosis: the real-
+clip count is again fixed at 42 of 45, whereas generated-
+clip detections increase from 10 of 45 for Seedance to 28
+of 45 for Veo. Thus, the generator gaps do not indicate a
+general bias on real videos; they measure how often each
+generator exposes violations that are observable through
+the selected quantities and laws. Overall, verification is
+strongest for sustained trajectories and repeated events,
+but weaker for subtle deformation, small objects, and
+brief contacts. These results motivate more accurate
+physical-quantity estimation for weakly observed events
+
+
+PREPRINT
+11
+and should not be interpreted as a generator-wide quality
+ranking.
+VI. FUTURE DIRECTIONS
+Our results indicate that physics-grounded verifica-
+tion is a promising direction for AIGC detection. The
+structured quantity representation in PIVOT, the selec-
+tion of physical laws based jointly on event relevance
+and measurability, and the explicit verification records
+returned by the framework together provide a foundation
+for several future directions.
+Broader physical coverage. The current implementation
+estimates object extent, three-dimensional kinematics,
+and event-level acoustic quantities, enabling the verifi-
+cation of constraints concerning event-onset anchoring,
+kinematic and energy continuity, material-acoustic con-
+sistency, source plausibility, and scene geometry. Future
+work can extend this foundation with direct estimators
+for physical quantities and properties that are not yet
+explicitly recovered, such as mass, volume, density, ma-
+terial properties, elasticity parameters, frictional param-
+eters, and contact force. Additional quantity fields could
+support constraints involving illumination, reflection, re-
+fraction, acoustic propagation, resonance, and observable
+electromechanical processes. As these quantities become
+reliably measurable, the same selection-and-verification
+framework can expand from its current mechanics- and
+acoustics-oriented coverage to broader families of phys-
+ical laws.
+Uncertainty-aware and executable verification. A sec-
+ond direction is to make verification explicitly aware of
+measurement uncertainty. Future estimators can report
+calibrated confidence intervals, observation quality, and
+alternative measurement hypotheses together with their
+estimated quantities. The verifier can then propagate
+this information when assigning supported, violated, or
+uncertain states. Disagreement among estimators can
+expose measurement ambiguity, whereas consistent vi-
+olations across independently estimated quantities or
+related constraints can strengthen the evidence of phys-
+ical inconsistency. For constraints that admit precise
+numerical forms, semantic reasoning can also be sep-
+arated from numerical execution: reasoning models can
+determine which laws are relevant to the depicted event
+and verifiable from the available quantities, while unit-
+aware executable operators evaluate equations, inequal-
+ities, trends, and temporal relations reproducibly. This
+combination would retain the flexibility of event-aware,
+measurability-constrained law selection while making
+applicable numerical checks more reproducible and in-
+spectable.
+Broader evaluation and longitudinal testing. Future
+versions of PhysForensics-Bench can expand the physi-
+cal domains, object categories, capture conditions, acous-
+tic environments, and generator families represented in
+the benchmark. Matched cross-generator, cross-scene,
+and cross-law-family protocols can directly evaluate
+whether the verification framework remains effective
+on previously unseen generators and events. Longitudi-
+nal evaluation across successive generations of models
+can further examine whether the selected law families,
+measurable quantities, and observed violation patterns
+remain informative as generation technologies evolve.
+Such evaluations would directly test the robustness
+to evolving generators that motivates physics-grounded
+AIGC detection.
+VII. CONCLUSION
+We presented PIVOT, a physics-grounded verification
+framework for AIGC detection that tests whether the
+depicted event is consistent with measurable constraints
+derived from physical laws. PIVOT estimates structured
+physical quantities from the video and audio streams,
+selects laws that are relevant to the event and verifiable
+from the available quantities, and assesses each applica-
+ble constraint as supported, violated, or uncertain. Be-
+yond a real/fake decision, it returns supporting evidence
+specifying the tested law, relevant time window, verifi-
+cation outcome, and quantities used in the assessment.
+We also introduced PhysForensics-Bench, comprising
+paired real and generated audio-video clips across nine
+event-centric scene families, with generated samples
+produced by Seedance 2.0 and Veo 3.1 Fast. On this
+benchmark, PIVOT achieves the highest accuracy and F1
+score among the evaluated methods in the primary com-
+parison, outperforming direct foundation-model inspec-
+tion and the compared baselines. These results provide
+empirical support for physical-consistency verification as
+a practical strategy for AIGC detection.
+More broadly, this work establishes event-aware,
+measurability-constrained physical-consistency verifica-
+tion as a complementary direction for AIGC detection.
+It connects physical perception with multimedia foren-
+sics and provides a framework in which advances in
+physical-quantity estimation and physical-law coverage
+can be incorporated as structured, inspectable evidence.
+This perspective opens a promising research direction
+for building AIGC detectors around explicit evidence
+from the physical behavior of depicted events, which
+may remain informative as generated media become
+increasingly realistic.
+
+
+PREPRINT
+12
+APPENDIX
+A. LLM Agent Workflow
+PIVOT uses prompted models inside the agent flow
+described in Section III. Captioning first generates clip
+captions from ordered frames or video input. Physical
+Quantity Estimation converts the raw streams into video
+and audio quantities. The Physical Law Selector then
+uses the clip captions and available quantity fields to
+select only laws whose constraints can be evaluated
+from those quantities. The Physical Consistency Verifier
+receives the selected laws and compressed quantities,
+checks the corresponding constraints, and reports sup-
+port, violations, uncertainty, and a final real/fake verdict.
+B. Notation and Implementation Mapping
+We summarize the symbols used in Section III before
+presenting the prompt examples. Prompted model map-
+pings use calligraphic letters with θ, which denotes the
+model and prompting configuration of the corresponding
+stage rather than a shared trainable parameter tensor.
+Vector quantities use boldface, scalar quantities use
+ordinary italic letters, and deterministic procedures use
+upright function names.
+The concrete backends used in our experiments are
+listed in Table V, while Table VI defines the remaining
+symbols.
+C. Prompt and Response Examples
+This section reports representative prompt structures
+used by the main LLM agents and one verifier response
+example. Runtime prompts are filled with video frames,
+clip captions, sanitized audio/video physical quantities,
+and selected laws. For readability, the templates are
+translated and lightly abridged while preserving their
+task instructions, constraints, and output schemas.
+Captioning prompt.
+The captioning prompt asks each model to produce a
+factual description of the clip.
+Review the provided clip and produce a factual clip caption.
+Output JSON only:
+{
+"caption": string
+}
+Constraints:
+- The caption should be a concise factual paragraph, with no
+Markdown.
+- Describe the environment, objects, actions, interactions, and
+camera/view changes.
+- Follow the video timeline from beginning to end and include
+key transitions.
+- Keep it factual and do not introduce unsupported details.
+- Use the requested output language.
+TABLE V
+PROMPTED MODEL MAPPINGS AND THEIR CONCRETE
+IMPLEMENTATIONS.
+Symbol
+Mapping
+Implementation and role
+Bθ
+Captioning
+mapping
+Gemini 3.1 Pro and GPT-5.5 independently
+describe the clip; Bi retains both captions
+for downstream physical-law selection.
+Pθ
+Physical Law
+Selector
+GPT-5.5 selects an event-relevant and
+measurable law set Li and encodes each
+physical constraint in its
+decision_basis.
+Vθ
+Physical
+Consistency
+Verification and
+report generation
+GPT-5.5 evaluates the selected laws and
+constraints and produces the run-level
+label, verification records, and summary in
+one API call. Each clip is evaluated in
+three independent calls before local
+majority voting.
+TABLE VI
+NOTATION USED THROUGHOUT THE METHOD. SECTION ROWS
+GROUP SYMBOLS BY THEIR ROLE IN THE PIPELINE.
+Symbol
+Definition and role
+Core inference notation
+i, r
+Clip index and verification-run index,
+respectively.
+xi
+Input audio-video clip.
+Bi
+Captions retained for clip i.
+Mi = (Ai, Vi)
+Full event-level audio and frame-level
+video quantities.
+˜
+Mi
+Compact physical quantities supplied to
+law selection and verification.
+Li
+Physical laws and constraints selected
+for clip i.
+ˆy(r)
+i
+, R(r)
+i
+Binary label and structured report from
+verification run r.
+ˆyi, Ri
+Majority-voted label and the retained
+reports from all three runs.
+Video-estimator implementation notation
+o, (u, v), t
+Object index, image-plane pixel
+coordinates, and frame time.
+Ωo,t
+Object-mask pixels at time t.
+Dt, Kt, ˆTt
+Metric depth map, 3 × 3
+camera-intrinsic matrix, and 4 × 4
+world-to-camera transform.
+pc
+t, pw
+t
+Reconstructed 3D point in the camera
+frame and the fixed world frame.
+¯uo,t, ¯
+Do,t, co,t
+Mask centroid, median metric depth,
+and reconstructed object center.
+vraw
+o,t , araw
+o,t
+Raw velocity and acceleration from
+backward finite differences.
+vo,t, ao,t
+EMA-smoothed object velocity and
+acceleration.
+∆t, αv, αa
+Frame-time step and
+velocity/acceleration EMA coefficients.
+Physical-quantity input examples.
+The verifier receives compressed physical quantities
+rather than raw waveforms, raw frames, or detector
+logits. The following abridged snippets come from the
+same generated ball-bounce example used below. They
+
+
+PREPRINT
+13
+illustrate the detailed records exposed to physical con-
+sistency verification; the Physical Law Selector receives
+only a compact summary of their available fields.
+Audio event JSON keeps the aligned time origin,
+onset, acoustic envelope, detector sources, and native-
+rate spectral descriptors.
+{
+"audio_meta": {
+"sample_rate": 48000,
+"duration_ms": 4020,
+"time_origin": "aligned_with_video_frame_0"
+},
+"events": [
+{
+"event_id": 0,
+"onset_ms": 20,
+"active_start_ms": 0,
+"active_end_ms": 363,
+"duration_ms": 363,
+"peak_db": -23.566,
+"features": {
+"rms_mean": 0.014,
+"hnr_mean": -31.361,
+"centroid_mean": 3963.245,
+"decay_rate_ms": 93,
+"spectral_band": "0-8000Hz",
+"high_band_delta_db": 60.378,
+"spectral_novelty_score": 60.378,
+"sample_rate_used": 48000
+},
+"labels": {
+"sed_primary_label": "Knock",
+"event_type": "impact",
+"detector_sources": ["pretrained_sed", "
+spectral_proposal"]
+}
+},
+...
+]
+}
+Compressed video-quantity CSV provides object iden-
+tities, sampled trajectories, and relation distances. The
+example shows a ball and table; small min_dist val-
+ues around audio onsets support impact-synchronization
+checks, while object velocity and acceleration support
+trajectory-continuity checks. This is an excerpt from the
+sparse visual quantity table used by the verifier.
+[Object Names]
+obj_id,obj_name
+1,<ball-1>
+2,<table-2>
+[Object Trajectories]
+t_ms,obj_id,x,y,z,vx,vy,vz,ax,ay,az,distance_to_camera,
+mask_area_px
+...
+458,1,-0.829,0.152,1.301,0.470,1.850,-0.448,3.374,2.698,-5.235,
+1.551,13630
+458,2,-0.038,0.365,1.128,-0.001,-0.004,-0.007,-0.006,0.076,
+0.137,1.188,420179
+500,1,-0.796,0.229,1.256,0.597,1.845,-0.695,2.881,0.043,-5.465,
+1.508,12233
+500,2,-0.038,0.365,1.126,0.001,-0.007,-0.022,0.035,-0.059,
+-0.309,1.187,418449
+542,1,-0.761,0.302,1.226,0.759,1.720,-0.712,3.337,-2.767,-3.471
+,1.465,14292
+...
+[Relative Distances]
+t_ms,obj1_id,obj2_id,centroid_distance,min_dist
+...
+458,1,2,0.837,0.093
+500,1,2,0.781,0.011
+542,1,2,0.723,0.004
+625,1,2,0.756,0.028
+667,1,2,0.776,0.083
+...
+Physical-law-selection prompt.
+The Physical Law Selector receives the clip captions
+and a compact field summary of the available physical
+quantities. It selects laws before seeing the full numerical
+tables, so every decision_basis constraint must be
+evaluable from the available fields.
+You are a physics-grounded audio-video law selector.
+Task:
+Do not perform verification in this stage. Using only the clip
+captions and the available audio/video quantity-field
+summary, select which physical laws should be checked
+later and assign each law a relative weight. Consider
+both clip semantics and observable physical quantities.
+Exclude any law whose required quantities are unavailable
+.
+Selection requirements:
+- Select approximately three applicable physical-law checks as
+a prompting target; the returned law set may have a
+different size.
+- For each law, specify physical basis, audio fields, video
+fields, applicability, failure conditions, decision basis
+, and weight.
+- Law weights must sum to approximately 1.
+- Return JSON only.
+Output schema:
+{
+"meta": {
+"scene_understanding": "string",
+"selection_principles": ["string"]
+},
+"law_plan": [
+{
+"law_name": "string",
+"display_name": "string",
+"weight": 0.5,
+"physical_basis": "string",
+"audio_fields": ["string"],
+"video_fields": ["string"],
+"decision_basis": "string",
+"applicability": "string",
+"failure_conditions": "string"
+}
+],
+"selection_summary": "string"
+}
+Runtime input:
+<clip captions and audio/video quantity-field summary>
+The field decision_basis states the operational con-
+straint; Figure 2 shows representative symbolic forms.
+Physical-consistency-verification prompt.
+The Physical Consistency Verifier receives the selected
+laws, their decision_basis constraints, and com-
+pressed quantity tables. It is instructed to evaluate only
+those constraints rather than select new laws.
+You are a physics-grounded audio-video law verifier.
+The preceding selection stage has already selected laws and
+weights from the clip captions and the observable fields.
+You may only use the given law names, physical bases,
+required audio/video fields, decision bases,
+applicability, failure conditions, and weights. Do not
+add new laws.
+If a law is irrelevant to a time window, omit it for that
+window. If it is relevant but evidence is insufficient,
+output uncertain. Mild deviations should be uncertain or
+low-severity; only strong evidence should produce a
+violation.
+For every decision, cite the relevant quantity fields,
+timestamps, and measured values when available.
+
+
+PREPRINT
+14
+Return JSON only:
+{
+"meta": {
+"window_ms": number,
+"audio_duration_ms": number,
+"video_duration_ms": number
+},
+"window_analysis": [
+{
+"window_ms": [number, number],
+"laws": {
+"<law_name>": {
+"decision": "support|violate|uncertain",
+"confidence": number,
+"evidence": "string"
+}
+}
+}
+],
+"violations": [
+{"time_ms": number, "law": "string", "evidence": "string",
+"severity": "low|medium|high"}
+],
+"final_result": {
+"verdict": "physical_plausible|partially_plausible|
+physically_implausible",
+"real_or_fake": "Real|Fake",
+"summary": "string"
+}
+}
+Runtime input:
+<selected laws, clip captions, field descriptions, audio CSV,
+video CSV>
+Verifier output example.
+The following is an abridged example of a final
+verification response for a generated ball-bounce clip.
+The response is translated from the original model output
+and shows how PIVOT exposes the physical reason
+behind the decision, rather than returning only a binary
+label.
+{
+"violations": [
+{
+"time_ms": 20,
+"law": "impact_synchronization",
+"evidence": "A strong isolated audio onset appears at the
+beginning of the clip, but the visible ball has not yet
+contacted the table or any other surface. No plausible
+visible source explains the transient.",
+"severity": "high"
+},
+{
+"time_ms": 1330,
+"law": "bounce_energy_dissipation_consistency",
+"evidence": "The second visible impact has lower visual
+energy than the previous bounce, but the corresponding
+audio transient becomes stronger. This is inconsistent
+with a simple dissipative bouncing sequence.",
+"severity": "medium"
+}
+],
+"final_result": {
+"verdict": "physically_implausible",
+"real_or_fake": "Fake",
+"summary": "Most bounce onsets align with visible table
+contacts and rebound candidates, and the trajectory is
+broadly gravity-consistent. However, an early unsourced
+transient and an energy-ordering inconsistency indicate
+imperfect audio-video physical plausibility."
+}
+}
+D. Video Physical Quantity Estimator
+The video physical estimator combines a frozen
+object-understanding path with a simulation-calibrated
+geometry path. GroundingDINO detects scene objects
+from text labels [52], and SAM 2 propagates the
+resulting masks bidirectionally through the clip [53].
+Frozen ViPE estimates camera intrinsics, camera mo-
+tion, and dense near-metric depth. A lightweight ridge-
+regression adapter calibrates predicted intrinsics against
+known camera parameters, while a residual convolutional
+adapter predicts a log-depth correction from frozen depth
+and camera-aware pixel coordinates. The mask models
+are pretrained, and the intrinsics/depth adapters are fit-
+ted or trained only on the Unity simulation calibration
+set described below; none is trained on PhysForensics-
+Bench real/fake labels.
+a) Geometric reconstruction and kinematics.: For
+reproducibility, we next specify how the concrete video
+backend converts its mask and geometry outputs into the
+kinematic quantities consumed by PIVOT. Let Ωo,t be
+the mask pixels of object o at frame time t, Dt(u, v)
+the depth map, Kt ∈R3×3 the camera-intrinsic matrix,
+and ˆTt ∈SE(3) ⊂R4×4 the world-to-camera trans-
+form. Depth values and reconstructed 3D coordinates
+are expressed in meters. The camera frame follows the
+OpenCV convention, with right, down, and forward as
+positive x, y, and z, respectively. ViPE establishes a fixed
+world frame from its reference camera. Each masked
+pixel is back-projected into the camera frame and then
+mapped into this world frame:
+pc
+t(u, v) = Dt(u, v)K−1
+t
+[u, v, 1]⊤∈R3,
+pw
+t (u, v) =
+
+ˆT −1
+t
+pc
+t(u, v)
+1
+
+1:3
+,
+(u, v) ∈Ωo,t.
+(7)
+The appended 1 allows rotation and translation in one
+matrix multiplication, while (·)1:3 retains the resulting
+3D world coordinate. The object center is estimated from
+the 2D mask centroid and median object depth:
+¯uo,t =
+1
+|Ωo,t|
+X
+(u,v)∈Ωo,t
+[u, v, 1]⊤,
+¯Do,t = median{Dt(u, v) : (u, v) ∈Ωo,t},
+co,t =
+
+ˆT −1
+t
+ ¯Do,tK−1
+t
+¯uo,t
+1
+
+1:3
+.
+(8)
+Raw velocities and accelerations are computed by back-
+ward finite differences and smoothed with separate ex-
+ponential moving averages to suppress derivative noise
+from frame-level depth and mask jitter while retaining
+
+
+PREPRINT
+15
+the motion trend:
+vraw
+o,t = co,t −co,t−∆t
+∆t
+,
+araw
+o,t =
+vraw
+o,t −vraw
+o,t−∆t
+∆t
+,
+vo,t = αvvraw
+o,t + (1 −αv)vo,t−∆t,
+ao,t = αaaraw
+o,t + (1 −αa)ao,t−∆t.
+(9)
+Here, αv and αa control velocity and acceleration
+smoothing; their values are reported in Section V.
+The video ablation removes these enhancement com-
+ponents: it restores ViPE’s default Track-Anything-style
+mask path [54], where GroundingDINO-seeded SAM
+masks are propagated by AOT/DeAOT
+[55]–[57],
+and bypasses the intrinsics and depth adapters. The
+downstream physical quantity estimation, sampling, law-
+selection, and verification stages remain unchanged.
+E. Unity Simulation Calibration Data
+The simulation calibration set is used only to improve
+the quality of video-side quantity estimates. It is not part
+of PhysForensics-Bench and it does not contain real/fake
+labels. The source is a Unity ball-dropping simulation
+archive with known camera parameters, camera poses,
+object identities, object masks, and depth. We convert
+each simulated episode into a ViPE-style monocular
+run by exporting RGB frames, depth, object masks,
+camera pose, camera intrinsics, and object metadata.
+Each episode is rendered from four fixed cameras, so
+the final calibration set contains 260 physical episodes
+and 1,040 monocular object runs.
+Splits are assigned by Unity simulation episode rather
+than by camera view. This prevents the same physical
+trajectory from appearing in both training and valida-
+tion/test through different cameras. The split contains
+208/26/26 episodes for train/validation/test, correspond-
+ing to 832/104/104 monocular runs. The object labels are
+common ball-like objects: basketball, baseball, golf ball,
+ping-pong ball, soccer ball, tennis ball, and volleyball.
+Each run contributes 90 frames with ground-truth depth,
+masks, intrinsics, camera pose, and object identity.
+This supervision supports three video-estimator cal-
+ibration choices. First, the GroundingDINO+SAM 2
+bidirectional mask path is selected because it produces
+much cleaner object masks on held-out simulation runs
+than the default ViPE mask path. Second, the intrin-
+sics adapter learns a small ridge-regression correction
+from predicted camera parameters to known camera
+parameters. Third, the residual depth adapter learns to
+correct frozen depth predictions using predicted depth
+and camera-aware pixel coordinates. These calibrations
+are applied before video physical quantity estimation on
+PhysForensics-Bench clips, but no PhysForensics-Bench
+labels are used in fitting or selecting them.
+In the held-out Unity simulation audit, bidirectional
+GroundingDINO+SAM 2 masks achieved about 0.94
+foreground IoU, while the default masks were about
+0.54–0.55. The residual depth adapter reduced full-
+frame absolute relative error from 0.393 to 0.057 and
+object-region absolute relative error from 0.450 to 0.188.
+These results characterize physical-quantity estimation
+rather than PhysForensics-Bench detection results; they
+justify the calibrated components used by the final video
+physical estimator.
+F. Audio Physical Quantity Estimator
+The audio JSON uses the same time origin as the
+video: all timestamps are aligned to video frame 0.
+The semantic path uses the PretrainedSED inference
+framework with a BEATs backbone [58], [59], following
+AudioSet and AudioSet Strong sound-event supervi-
+sion [60], [61]. The input waveform is resampled to 16
+kHz and processed in 10 s chunks, producing frame-level
+sound-event probabilities. We decode these probabilities
+into coarse semantic event regions with a probability
+threshold of 0.2, a median filter window of 9 frames,
+and a 50 ms minimum event duration. The audio agent
+then refines these coarse regions with waveform onsets
+and envelope boundaries.
+The native-rate spectral path is designed for phys-
+ical sounds that are brief, weakly semantic, or high-
+frequency. It computes STFT band novelty on the orig-
+inal waveform with a 25 ms window and a 10 ms hop.
+The active configuration uses bands 0–8 kHz, 8–16 kHz,
+and 16–24 kHz, skipping bands above Nyquist when the
+source sample rate is lower. For each band, power is
+converted to dB and compared with a causal 120 ms
+median baseline:
+∆b(t) = Pb(t)−median(Pb(t′) : t −120 ms ≤t′ < t) .
+(10)
+A spectral proposal must pass a robust threshold of
+median novelty plus 6 MAD, at least 6 dB energy rise,
+and a peak floor of −75 dB. Proposal regions are padded
+by 20 ms, filtered to be at least 30 ms long, and merged
+within an 80 ms window. The proposal label is the
+neutral spectral_transient; it does not inject a
+semantic sound class.
+The main audio branch merges semantic and spec-
+tral proposals before feature extraction. Two regions
+are fused when they overlap or when their bound-
+ary gap is within 80 ms. The fused window is
+
+
+PREPRINT
+16
+the
+temporal
+union
+of
+the
+regions;
+if
+a
+seman-
+tic
+label
+is
+present,
+it
+remains
+the
+primary
+se-
+mantic
+label,
+while
+detector_sources
+records
+whether the event was proposed by pretrained_sed,
+spectral_proposal, or both. The event record
+keeps detector-source metadata, peak and RMS energy,
+HNR, spectral centroid, flux, zero-crossing rate, decay
+estimate, dominant spectral band, high-band energy rise,
+spectral novelty score, and the sample rate used by the
+spectral path. Spectral-only events are kept as physical
+transient candidates with no fabricated semantic label.
+Events proposed only by the semantic detector still
+receive native-rate spectral descriptors on their final
+event window, so weak or absent high-band content is
+represented by measured values rather than by deleting
+the field. The audio ablation removes the native-rate
+spectral-transient proposal branch and its spectral-only
+event fields while retaining the semantic event detector.
+G. Physics-Aware Quantity Compression
+The full video quantity stream contains frame-level
+trajectories and relations, so directly placing every
+record in the verification prompt is unnecessarily ex-
+pensive. Using the clip captions Bi, the sampler se-
+lector chooses from a fixed catalog of policies. The
+selected policy is then applied deterministically to Mi
+to produce the compact representation ˜
+Mi. The selector
+receives neither the real/fake label nor source-bearing
+sample identifiers. The catalog contains six choices:
+relation extrema, which retain object-pair distance ex-
+trema; kinematic extrema, which retain speed, accel-
+eration, direction-change, and trajectory-turning events;
+kinematic–relation sparse, which combines the first two;
+area-change extrema, which retain visible-area and de-
+formation changes; temporal uniform, which provides
+uniform coverage when no reliable event cue exists; and
+hybrid-event sparse, which combines relation, kinematic,
+and area-change candidates.
+The selected deterministic sampler extracts visual core
+frames and retains the two neighboring frames on each
+side. The selected visual quantities are then converted
+from JSON into a compact CSV table. Audio quantities
+require less aggressive temporal sampling because the
+audio estimator first detects event intervals and then
+computes event-level quantities; these records are like-
+wise converted from JSON into CSV. The two compact
+tables, together with sampling metadata, form ˜
+Mi. This
+metadata tells the verifier that sparse visual rows are
+deliberately event-centered rather than missing dense ob-
+servations. On a stratified 135-clip sample, compression
+reduces the verification input from approximately 154.3k
+TABLE VII
+PHYSICAL-ESTIMATOR ABLATIONS ON THE TEST SPLIT.
+ACCURACY AND F1 ARE REPORTED AS PERCENTAGES.
+Variant
+Seedance
+VEO
+Acc(%)
+F1(%)
+Acc(%)
+F1(%)
+Full estimator
+70.30
+64.29
+72.16
+65.82
+w/o video enhancement
+60.40
+54.55
+62.89
+57.14
+w/o high-band branch
+64.85
+60.34
+65.46
+59.88
+to 8.9k tokens per clip, or about 94%. Appendix K
+provides the detailed calculation.
+H. Physical Quantity Estimator Ablations
+Table VII measures the contribution of estimator
+enhancements by removing them from the complete
+architecture. Without video enhancement, Accuracy/F1
+decrease from 70.30%/64.29% to 60.40%/54.55% on
+Seedance and from 72.16%/65.82% to 62.89%/57.14%
+on VEO. This ablation restores the default mask path
+and removes the Unity-calibrated intrinsics and depth
+adapters, showing that calibrated object geometry is
+important for reliable physical dynamics. Removing
+high-band transient detection yields 64.85%/60.34% on
+Seedance and 65.46%/59.88% on VEO. High-band tran-
+sients therefore complement semantic sound events with
+additional physical timing and spectral information for
+physical-consistency verification.
+I. Qualitative Verification of Physical Constraints
+Each selected law includes a decision_basis that
+states its physical constraint over the required quantities.
+The formulas in Figure 2 and Table I are symbolic
+forms of such constraints: they identify the quantities
+to compare and the physical relation expected between
+them.
+In the current implementation, most constraints are
+evaluated qualitatively or ordinally rather than as exact
+calibrated equalities. For example, the verifier checks
+whether successive rebound heights decrease during pas-
+sive bouncing; it does not estimate gravitational accel-
+eration and require it to equal 9.81 m/s2. Monocular
+geometry, mask propagation, and acoustic-event local-
+ization are not yet accurate enough for universal ab-
+solute thresholds. Accordingly, the decision_basis
+guides checks of temporal alignment, ordering, mono-
+tonic trends, and qualitative consistency, and the verifier
+returns support, violation, or uncertainty from the avail-
+able quantities.
+
+
+PREPRINT
+17
+J. Representative Physical Constraints
+The Physical Law Selector operates under the con-
+straints defined in Section III: each selected law must be
+relevant to the clip caption, supported by the available
+physical quantities, and specified through a structured
+schema containing its physical basis, operational check,
+applicability, and failure conditions. Across completed
+runs, the selected laws are operationalized through the
+recurring checks summarized below. The listed names
+identify these checks in the law_name fields of the
+output schema.
+• Onset-to-event
+anchoring.
+Examples
+include
+impact_synchronization for ball-table im-
+pacts,
+release_onset_synchronization
+for slingshot release, and deflation_onset_
+visual_sync for balloon collapse. These checks
+use
+events[].onset_ms
+as
+the
+temporal
+anchor and search nearby frames for contact,
+release, rebound, relation-distance minima, velocity
+changes, or area-change events.
+• Kinematic
+and
+energy
+continuity. Examples
+include
+bounce_energy_dissipation_
+consistency,
+passive_cart_energy_
+continuity,
+and
+post_release_
+trajectory_continuity. These checks ask
+whether visual dynamics follow plausible gravity,
+inertia, dissipation, or projectile continuity, and
+whether the acoustic strength is compatible with
+the visible mechanical energy.
+• Material
+and
+acoustic
+envelope
+consistency.
+Examples
+include
+material_timbre_
+consistency
+for
+ping-pong-ball
+impacts,
+airflow_rubber_timbre_consistency
+for balloon deflation, and rolling_friction_
+envelope_coverage for slope-descent scenes.
+These checks compare duration, decay, spectral
+novelty,
+and
+band
+energy
+with
+the
+material
+interaction implied by the video.
+• Source-gating and negative plausibility. Exam-
+ples
+include
+per_event_unattributed_
+transient_coverage,
+pre_contact_
+independent_onset_plausibility,
+and
+late_or_offscreen_unsourced_onset.
+These checks flag strong or repeated audio onsets
+when the visual stream has no plausible source,
+contact, release, or remaining visible activity.
+• Scene-geometry and topology checks. Examples
+include
+static_reference_stability
+for
+fixed
+ramps
+or
+supports,
+topology_
+orientation_continuity
+for
+balloon
+shape evolution, and post_release_free_
+flight_continuity for catapult projectiles.
+These checks identify geometry-level violations
+that local audio-visual synchronization alone may
+miss.
+K. Compute Cost
+Across 1,464 evaluated samples, complete PIVOT
+inference uses 10,248 successful API calls. Each sam-
+ple uses two captioning calls, one sampler-selector
+call, one physical-law-selection call, and three physical-
+consistency-verification calls. Normalized per sample,
+provider usage logs report 144.8k input tokens, 16.5k
+output tokens, and 161.8k total tokens, with 18.1% of
+the input served from cache; token counts are rounded
+to 0.1k. Failed retries and extra successful reruns are ex-
+cluded. We report token consumption rather than dollar
+cost because provider prices can change.
+We estimate the input-token reduction from physical-
+quantity compression on a stratified set of 135 clips,
+containing five clips for each scene–source combination.
+For every clip, we replace only the compressed audio
+and video CSV blocks with their original JSON quantity
+records. Provider usage logs show that the compressed
+prompts average 8.9k input tokens, while the raw quan-
+tity prompts average 154.3k input tokens, corresponding
+to about a 94% reduction. As a tokenizer-independent
+size check, the audio and video quantity blocks decrease
+from 294.7k to 8.4k characters on average, a 97.1%
+reduction. The visual sampler retains 31.2 of 90.3 frames
+on average (34.5%).
+
+
+PREPRINT
+18
+REFERENCES
+[1] U. Singer, A. Polyak, T. Hayes, X. Yin, J. An, S. Zhang, Q. Hu,
+H. Yang, O. Ashual, O. Gafni et al., “Make-a-video: Text-
+to-video generation without text-video data,” in International
+Conference on Learning Representations, 2023.
+[2] O. Bar-Tal, H. Chefer, O. Tov, C. Herrmann, R. Paiss, S. Zada,
+A. Ephrat, J. Hur, G. Liu, A. Raj et al., “Lumiere: A space-
+time diffusion model for video generation,” in SIGGRAPH Asia
+Conference Papers, 2024.
+[3] OpenAI,
+“Sora
+System
+Card,”
+2024.
+[Online].
+Available:
+https://openai.com/index/sora-system-card/
+[4] A. Polyak, A. Zohar, A. Brown, A. Tjandra, A. Sinha, A. Lee,
+A. Vyas, B. Shi, C.-Y. Ma, C.-Y. Chuang et al., “Movie
+gen: A cast of media foundation models,” arXiv preprint
+arXiv:2410.13720, 2024.
+[5] T. Seedance, D. Chen, L. Chen, X. Chen, Y. Chen, Z. Chen,
+Z. Chen, F. Cheng, T. Cheng, Y. Cheng et al., “Seedance
+2.0: Advancing video generation for world complexity,” arXiv
+preprint arXiv:2604.14148, 2026.
+[6] Google
+DeepMind,
+“Veo
+3.1,”
+2025.
+[Online].
+Available:
+https://deepmind.google/models/veo/
+[7] L. Verdoliva, “Media forensics and deepfakes: an overview,”
+IEEE Journal of Selected Topics in Signal Processing, vol. 14,
+no. 5, pp. 910–932, 2020.
+[8] Y. Mirsky and W. Lee, “The creation and detection of deepfakes:
+A survey,” ACM Computing Surveys, vol. 54, no. 1, pp. 1–41,
+2021.
+[9] L. Ma, Z. Yan, Q. Guo, Y. Liao, H. Yu, and P. Zhou, “Detecting
+ai-generated video via frame consistency,” in IEEE International
+Conference on Multimedia and Expo, 2025.
+[10] C. Zheng, R. Suo, C. Lin, Z. Zhao, L. Yang, S. Liu, M. Yang,
+C. Wang, and C. Shen, “D3: Training-free ai-generated video de-
+tection using second-order features,” in IEEE/CVF International
+Conference on Computer Vision, 2025.
+[11] S. Zhang, Z. Lian, J. Yang, D. Li, G. Pang, F. Liu, B. Han,
+S. Li, and M. Tan, “Physics-driven spatiotemporal modeling for
+ai-generated video detection,” in Advances in Neural Information
+Processing Systems, 2025.
+[12] T. Oorloff, S. Koppisetti, N. Bonettini, D. Solanki, B. Colman,
+Y. Yacoob, A. Shahriyari, and G. Bharaj, “Avff: Audio-visual
+feature fusion for video deepfake detection,” in IEEE/CVF Con-
+ference on Computer Vision and Pattern Recognition, 2024.
+[13] M. Astrid, E. Ghorbel, and D. Aouada, “Audio-visual deepfake
+detection with local temporal inconsistencies,” in IEEE Interna-
+tional Conference on Acoustics, Speech and Signal Processing,
+2025.
+[14] S. A. Shahzad, A. Hashmi, J. Yamagishi, Y. Yasuda, Y. Tsao,
+C.-W. Lin, Y.-T. Peng, and H.-M. Wang, “Save: Self-supervised
+audio-visual deepfake detection exploiting visual artifacts and
+audio-visual misalignment,” arXiv preprint arXiv:2603.25140,
+2026.
+[15] Z. Wei and Y. Li, “Generalizing video deepfake detection
+by self-generated audio-visual pseudo-fakes,” arXiv preprint
+arXiv:2604.09110, 2026.
+[16] S.-Y. Wang, O. Wang, R. Zhang, A. Owens, and A. A. Efros,
+“Cnn-generated images are surprisingly easy to spot... for now,”
+in IEEE/CVF Conference on Computer Vision and Pattern Recog-
+nition, 2020.
+[17] U. Ojha, Y. Li, and Y. J. Lee, “Towards universal fake image
+detectors that generalize across generative models,” in IEEE/CVF
+Conference on Computer Vision and Pattern Recognition, 2023.
+[18] H. Bansal, Z. Lin, T. Xie, Z. Zong, M. Yarom, Y. Bitton, C. Jiang,
+Y. Sun, K.-W. Chang, and A. Grover, “Videophy: Evaluating
+physical commonsense for video generation,” in International
+Conference on Learning Representations, 2025.
+[19] F. Meng, J. Liao, X. Tan, Q. Lu, W. Shao, K. Zhang, Y. Cheng,
+D. Li, and P. Luo, “Towards world simulator: Crafting physical
+commonsense-based benchmark for video generation,” in Inter-
+national Conference on Machine Learning, 2025.
+[20] H. Bansal, C. Peng, Y. Bitton, R. Goldenberg, A. Grover, and K.-
+W. Chang, “Videophy-2: A challenging action-centric physical
+commonsense evaluation in video generation,” in International
+Conference on Learning Representations, 2026.
+[21] Z. Cui, X. Liu, H. Fang, M. Xu, J. Liu, Z. Xu, W. Pian, S. Deng,
+F. Du, C. Ge et al., “Do joint audio-video generation models
+understand physics?” arXiv preprint arXiv:2605.07061, 2026.
+[22] T. Xie, W. Lei, K. Jiang, G. Huang, P. Zhang, C. Zhang, F. Ma,
+H. He, H. Zhang, J. He et al., “PhyAVBench: A challenging audio
+physics-sensitivity benchmark for physically grounded text-to-
+audio-video generation,” arXiv preprint arXiv:2512.23994, 2025.
+[23] R. Arandjelovic and A. Zisserman, “Look, listen and learn,” in
+IEEE International Conference on Computer Vision, 2017.
+[24] ——, “Objects that sound,” in European Conference on Com-
+puter Vision, 2018.
+[25] A. Owens and A. A. Efros, “Audio-visual scene analysis with
+self-supervised multisensory features,” in European Conference
+on Computer Vision, 2018.
+[26] P. W. Battaglia, J. B. Hamrick, and J. B. Tenenbaum, “Simulation
+as an engine of physical scene understanding,” Proceedings of
+the National Academy of Sciences, vol. 110, no. 45, pp. 18 327–
+18 332, 2013.
+[27] R. Mottaghi, H. Bagherinezhad, M. Rastegari, and A. Farhadi,
+“Newtonian scene understanding: Unfolding the dynamics of
+objects in static images,” in IEEE Conference on Computer Vision
+and Pattern Recognition, 2016.
+[28] J. Wu, J. J. Lim, H. Zhang, J. B. Tenenbaum, and W. T. Freeman,
+“Physics 101: Learning physical object properties from unlabeled
+videos.” in British Machine Vision Conference, 2016.
+[29] A. Bakhtin, L. van der Maaten, J. Johnson, L. Gustafson, and
+R. Girshick, “Phyre: A new benchmark for physical reasoning,”
+in Advances in Neural Information Processing Systems, 2019.
+[30] Google
+DeepMind,
+“Gemini
+3.1
+Pro
+model
+card,”
+2026.
+[Online].
+Available:
+https://deepmind.google/models/
+model-cards/gemini-3-1-pro/
+[31] D. Afchar, V. Nozick, J. Yamagishi, and I. Echizen, “Mesonet:
+a compact facial video forgery detection network,” in IEEE
+International Workshop on Information Forensics and Security,
+2018.
+[32] A. Rossler, D. Cozzolino, L. Verdoliva, C. Riess, J. Thies, and
+M. Nießner, “Faceforensics++: Learning to detect manipulated
+facial images,” in IEEE/CVF International Conference on Com-
+puter Vision, 2019.
+[33] Y. Li, X. Yang, P. Sun, H. Qi, and S. Lyu, “Celeb-df: A large-
+scale challenging dataset for deepfake forensics,” in IEEE/CVF
+Conference on Computer Vision and Pattern Recognition, 2020.
+[34] B. Dolhansky, J. Bitton, B. Pflaum, J. Lu, R. Howes, M. Wang,
+and C. C. Ferrer, “The deepfake detection challenge (dfdc)
+dataset,” arXiv preprint arXiv:2006.07397, 2020.
+[35] Y. Qian, G. Yin, L. Sheng, Z. Chen, and J. Shao, “Thinking
+in frequency: Face forgery detection by mining frequency-aware
+clues,” in European Conference on Computer Vision, 2020.
+[36] A. Haliassos, K. Vougioukas, S. Petridis, and M. Pantic, “Lips
+don’t lie: A generalisable and robust approach to face forgery
+detection,” in IEEE/CVF Conference on Computer Vision and
+Pattern Recognition, 2021.
+[37] Y. Chen, Z. Yan, G. Cheng, K. Zhao, S. Lyu, and B. Wu, “X2-
+DFD: A framework for explainable and extendable deepfake de-
+tection,” in Advances in Neural Information Processing Systems,
+2025.
+[38] Z. Huang, J. Hu, X. Li, Y. He, X. Zhao, B. Peng, B. Wu,
+X. Huang, and G. Cheng, “SIDA: Social media image deepfake
+detection, localization and explanation with large multimodal
+model,” in IEEE/CVF Conference on Computer Vision and Pat-
+tern Recognition, 2025.
+
+
+PREPRINT
+19
+[39] Z. Huang, X. Li, X. Yang, B. Peng, X. Huang, B. Wu, D. Tao, M.-
+H. Yang, and G. Cheng, “So-Fake: Benchmarking social-media
+image forgery detection,” arXiv preprint arXiv:2505.18660, 2025.
+[40] H. Chen, Y. Hong, Z. Huang, Z. Xu, Z. Gu, Y. Li, J. Lan,
+H. Zhu, J. Zhang, W. Wang et al., “Demamba: Ai-generated video
+detection on million-scale genvideo benchmark,” Science China
+Information Sciences, vol. 69, no. 6, p. 162103, 2026.
+[41] Z. Ni, Q. Yan, M. Huang, T. Yuan, Y. Tang, H. Hu, X. Chen, and
+Y. Wang, “Genvidbench: A 6-million benchmark for ai-generated
+video detection,” in AAAI Conference on Artificial Intelligence,
+2026.
+[42] H. Khalid, S. Tariq, M. Kim, and S. S. Woo, “Fakeavceleb:
+A novel audio-video multimodal deepfake dataset,” in Neural
+Information Processing Systems Datasets and Benchmarks Track,
+2021.
+[43] Z. Cai, S. Ghosh, A. Dhall, T. Gedeon, K. Stefanov, and
+M. Hayat, “Glitch in the matrix: A large scale benchmark for
+content driven audio–visual forgery detection and localization,”
+Computer Vision and Image Understanding, vol. 236, p. 103818,
+2023.
+[44] M. Astrid, E. Ghorbel, and D. Aouada, “Detecting audio-visual
+deepfakes with fine-grained inconsistencies,” in British Machine
+Vision Conference, 2024.
+[45] K. Zhao, Y. Chen, X. Zhang, Y. Chen, W. Guan, B. Chen, C. Sun,
+S. K. Datta, Q. Liu, S. Lyu, and B. Wu, “DeepfakeBench-MM:
+A comprehensive benchmark for multimodal deepfake detection,”
+arXiv preprint arXiv:2510.22622, 2025.
+[46] M. Hu, Y. Diao, C. Miao, J. Li, Z. Li, and J. T. Zhou, “Mvad:
+A comprehensive multimodal video-audio dataset for aigc detec-
+tion,” arXiv preprint arXiv:2512.00336, 2025.
+[47] A. Owens, P. Isola, J. McDermott, A. Torralba, E. H. Adelson,
+and W. T. Freeman, “Visually indicated sounds,” in IEEE Con-
+ference on Computer Vision and Pattern Recognition, 2016.
+[48] Z. Huang, Y. He, J. Yu, F. Zhang, C. Si, Y. Jiang, Y. Zhang, T. Wu,
+Q. Jin, N. Chanpaisit et al., “Vbench: Comprehensive benchmark
+suite for video generative models,” in IEEE/CVF Conference on
+Computer Vision and Pattern Recognition, 2024.
+[49] Y. Liu, X. Cun, X. Liu, X. Wang, Y. Zhang, H. Chen, Y. Liu,
+T. Zeng, R. Chan, and Y. Shan, “Evalcrafter: Benchmarking
+and evaluating large video generation models,” in IEEE/CVF
+Conference on Computer Vision and Pattern Recognition, 2024.
+[50] Y. Liu, L. Li, S. Ren, R. Gao, S. Li, S. Chen, X. Sun, and L. Hou,
+“Fetv: A benchmark for fine-grained evaluation of open-domain
+text-to-video generation,” in Advances in Neural Information
+Processing Systems, 2023.
+[51] OpenAI,
+“OpenAI
+API
+model
+documentation:
+GPT-5.5,”
+2026.
+[Online].
+Available:
+https://developers.openai.com/api/
+docs/models/gpt-5.5
+[52] S. Liu, Z. Zeng, T. Ren, F. Li, H. Zhang, J. Yang, Q. Jiang,
+C. Li, J. Yang, H. Su et al., “Grounding dino: Marrying dino with
+grounded pre-training for open-set object detection,” in European
+Conference on Computer Vision, 2024.
+[53] N. Ravi, V. Gabeur, Y.-T. Hu, R. Hu, C. Ryali, T. Ma, H. Khedr,
+R. R¨adle, C. Rolland, L. Gustafson et al., “Sam 2: Segment
+anything in images and videos,” in International Conference on
+Learning Representations, 2025.
+[54] J. Yang, M. Gao, Z. Li, S. Gao, F. Wang, and F. Zheng, “Track
+anything: Segment anything meets videos. arxiv 2023,” arXiv
+preprint arXiv:2304.11968, 2023.
+[55] A.
+Kirillov,
+E.
+Mintun,
+N.
+Ravi,
+H.
+Mao,
+C.
+Rolland,
+L. Gustafson, T. Xiao, S. Whitehead, A. C. Berg, W.-Y. Lo et al.,
+“Segment anything,” in IEEE/CVF International Conference on
+Computer Vision, 2023.
+[56] Z. Yang, Y. Wei, and Y. Yang, “Associating objects with trans-
+formers for video object segmentation,” in Advances in Neural
+Information Processing Systems, 2021.
+[57] Z. Yang and Y. Yang, “Decoupling features in hierarchical prop-
+agation for video object segmentation,” in Advances in Neural
+Information Processing Systems, 2022.
+[58] F. Schmid, T. Morocutti, F. Foscarin, J. Schl¨uter, P. Primus,
+and G. Widmer, “Effective pre-training of audio transformers
+for sound event detection,” in IEEE International Conference on
+Acoustics, Speech and Signal Processing, 2025.
+[59] S. Chen, Y. Wu, C. Wang, S. Liu, D. Tompkins, Z. Chen, W. Che,
+X. Yu, and F. Wei, “Beats: Audio pre-training with acoustic
+tokenizers,” in International Conference on Machine Learning,
+2023.
+[60] J.
+F.
+Gemmeke,
+D.
+P.
+Ellis,
+D.
+Freedman,
+A.
+Jansen,
+W. Lawrence, R. C. Moore, M. Plakal, and M. Ritter, “Audio
+set: An ontology and human-labeled dataset for audio events,” in
+IEEE International Conference on Acoustics, Speech and Signal
+Processing, 2017.
+[61] S. Hershey, D. P. Ellis, E. Fonseca, A. Jansen, C. Liu, R. C.
+Moore, and M. Plakal, “The benefit of temporally-strong labels
+in audio event classification,” in IEEE International Conference
+on Acoustics, Speech and Signal Processing, 2021.

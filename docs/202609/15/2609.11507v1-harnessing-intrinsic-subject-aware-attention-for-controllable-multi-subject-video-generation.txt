@@ -1,0 +1,1316 @@
+Harnessing Intrinsic Subject-Aware Attention for
+Controllable Multi-Subject Video Generation
+Niange Yu1⋆, Ye Tian2, Biaolong Chen1, Miao Lu1, Aixi Zhang1, Hao Jiang1,
+Yunhai Tong2, and Pipei Huang1
+1 Alibaba Group
+2 Peking University
+Abstract. Multi-subject video generation faces two key challenges: un-
+controllable fidelity strength and potential semantic drift. We address
+these by analyzing the internal mechanisms of Diffusion Transformers
+(DiTs). We found that certain attention blocks naturally form an In-
+trinsic Spatial Grounding Map (ISGM) that precisely locates reference
+subjects. Building on this insight, we propose Dual-phase Intrinsic Atten-
+tion Leveraging (DIAL), a framework that uses these internal signals for
+both training and inference. In low-noise stages, we use ISGM to guide
+the attention mechanism, allowing precise control over fidelity strength
+during inference without retraining. In high-noise stages, we use these
+same maps to automatically build preference pairs at no additional cost
+for Reinforcement Learning (RL). This RL procedure effectively anchors
+the model’s attention to reference subjects and mitigates semantic drift.
+Extensive experiments show that DIAL significantly outperforms base-
+line models on the OpenS2V-Eval benchmark, consistently improving
+identity consistency and enabling controllable fidelity strength.
+1
+Introduction
+Recent advances in diffusion models [16, 27] enables significant breakthroughs
+in video generation [21, 28, 32, 35], delivering realistic and temporally coherent
+results across text-to-video (T2V) [14, 32] and image-to-video (I2V) [3] tasks.
+Despite these successes, general-purpose models still struggle to provide fine-
+grained, user-centric controllability, especially when users require multiple
+personalized subjects to remain visually consistent in a dynamic sequence.
+This trend has pushed the field toward a more demanding frontier: Subject-
+to-Video (S2V) generation [23, 24, 38]. Unlike T2V, S2V requires the model to
+strictly adhere to the visual identities provided by one or multiple reference
+images while accurately executing complex motion instructions. This capability
+is critical for high-value applications such as personalized storytelling, virtual
+try-on, and cinematic production.
+While existing approaches have tackled consistency via high-quality dataset
+curation [24], Vision-Language Model (VLM) feature extraction [23], and novel
+⋆Corresponding author: niangeyu@gmail.com
+arXiv:2609.11507v1  [cs.CV]  10 Sep 2026
+
+
+2
+N. Yu et al.
+Fig. 1: Limitations for current subject-to-video generation methods: (Top) Inflexible
+fidelity strength: existing models either produce unnatural “copy-paste” effects due to
+training data bias (A) or exhibit uncontrollable sensitivity to inputs (B). (Bottom)
+Semantic drift: models frequently suffer from (i) subject disappearance over time, (ii)
+attribute errors (e.g., clothing color drift), and (iii) multi-reference entanglement where
+identities from different subjects are mixed.
+model architectures [38], two critical limitations remain largely unexplored. First,
+the fidelity strength in most models is inflexible and uncontrollable. Typi-
+cally, consistency strength is dictated solely by the training data. For example,
+crop-based paired data often induces a rigid copy-paste effect, while cross-domain
+data yields weaker fidelity. As a result, users cannot dynamically adjust the con-
+sistency strength to suit different scenarios at inference time. Second, existing
+models often suffer from semantic drift, where the generated content devi-
+ates from the reference-conditioned semantics. This drift typically appears as (i)
+subject disappearance, (ii) attribute mismatch, and (iii) multi-reference entan-
+glement, where identities or attributes across multiple references are mixed or
+swapped, as is shown in Fig. 1.
+To address these limitations, we hypothesize that both uncontrollable fidelity
+and semantic drift are rooted in misaligned attention to reference subjects
+during denoising. We therefore investigate the internal mechanics of Diffusion
+Transformers (DiTs) with a layer-wise analysis of cross-attention. We obtain
+subject masks from a semantic segmentation pipeline and use them as ground
+truth, and measure the spatial correlation between these masks and the attention
+weights at each layer and timestep.
+This analysis reveals a surprising pattern(Fig. 2): Certain attention block(s)
+consistently assigns the strongest and most spatially concentrated at-
+tention to the reference subjects, yielding markedly higher grounding accuracy
+than other layers. We term these peaking internal signals the Intrinsic Spatial
+Grounding Map (ISGM). The ISGM precisely localizes reference subjects in the
+video latent space, providing an intrinsic guidance signal that can be leveraged to
+modulate and strengthen subject consistency throughout the denoising process.
+Inspired by this finding, we propose Dual-phase Intrinsic Attention Lever-
+aging (DIAL), which exploits ISGM for both training-free inference control and
+training-time alignment.
+
+
+Intrinsic Subject-Aware Attention for Multi-Subject Video Generation
+3
+Fig. 2: Visualization of the attention peaking phenomenon and Intrinsic Spatial
+Grounding Maps (ISGM) in Kaleido [38] Baseline. Layer-wise analysis reveals that
+while most attention blocks produce diffuse noise, a certain block consistently exhibits
+the most spatially concentrated grounding to the reference subject.
+In the late denoising stages, ISGM is sharp and spatially reliable. We ex-
+tract ISGM from the identified blocks, binarize it into subject-specific spatial
+guides, and use them to inject a controllable attention bias into all atten-
+tion blocks during denoising. This mechanism is training-free and also supports
+independent, adjustable guidance for each reference subject in multi-subject sce-
+narios, leading to large gains in identity consistency.
+In the early denoising stages, attention is noisier and ISGM is not suit-
+able for direct supervision. To better exploit its signal, we introduce a zero-
+cost preference construction pipeline for Reinforcement Learning (RL) fine-
+tuning. Specifically, we score generated denoising trajectories by measuring how
+well their ISGM aligns with the ground-truth masks. These scores allow us to au-
+tomatically build preference pairs without manual annotation, and we use them
+to fine-tune the model to anchor attention to reference subjects. This procedure
+stabilizes reference grounding and mitigates potential semantic drift.
+Applied to strong subject-to-video baselines [24,38], DIAL delivers consistent
+improvements in both quantitative and qualitative evaluations, and achieves
+state-of-the-art performance on the OpenS2V-Eval [36] benchmark. Further
+analyses and ablations show that DIAL enables free and fine-grained fidelity
+control at inference time without sacrificing overall visual quality. Moreover, it
+substantially reduces semantic drift and leads to more reliable subject grounding.
+Our contributions are as follows:
+1. We uncover a subset of high-quality attention blocks in DiT architectures
+whose attention patterns form an Intrinsic Spatial Grounding Map
+(ISGM) that precisely localizes reference subjects.
+2. We propose a training-free, inference-time guided attention mechanism
+that enables precise, region-adaptive, and user-controllable fidelity
+enhancement for multi-subject generation.
+3. We introduce a zero-cost preference pair construction strategy and leverage
+reinforcement learning to effectively anchor reference grounding and mitigate
+semantic drift.
+4. By combining these components, our unified framework DIAL achieves state-
+of-the-art performance on the OpenS2V-Eval benchmark [36].
+
+
+4
+N. Yu et al.
+2
+Related Work
+2.1
+Subject-to-Video Generation
+Subject-to-video (S2V) generation has evolved from computationally expensive
+per-subject optimization or fine-tuning [8, 33] to efficient end-to-end adapters
+that enable zero-shot identity preservation [20,23,24]. Representative frameworks
+such as Phantom [24] and VACE [20] utilize joint injection and unified context
+adapters to facilitate multimodal alignment. More recent models like Hunyuan-
+Custom [18], MAGREF [11], and PolyVivid [19] have further refined identity
+injection through region-aware masking and 3D-RoPE. Notably, Kaleido [38] im-
+proves reference grounding via Reference Rotary Positional Encoding (R-RoPE)
+and curated data construction. However, these models still frequently suffer from
+semantic drift—such as subject disappearance or attribute entanglement—and
+lack a mechanism for user-controllable fidelity strength, as the consistency level
+is typically fixed by the training data bias [24].
+2.2
+Attention Analysis in Diffusion Models
+Attention maps are widely utilized as diagnostic and control interfaces in diffu-
+sion models. In U-Net architectures, cross-attention maps facilitate grounding-
+aware editing [15] and subject emphasis [7], while self-attention serves as a struc-
+tural cue for training-free guidance in methods like SAG [17] and PAG [1]. Re-
+cently, these techniques have been extended to Diffusion Transformers (DiTs).
+DiTCtrl [5] explores attention control in MM-DiT for coherent video generation,
+and DiT4Edit [13] adapts these controls for image editing. Despite this progress,
+existing literature rarely characterizes which specific internal DiT blocks provide
+the most reliable Intrinsic Spatial Grounding Map (ISGM) for multi-subject syn-
+thesis. DIAL fills this gap by identifying privileged attention layers that naturally
+act as grounding modules.
+2.3
+Reinforcement Learning for Diffusion Models
+Reinforcement learning (RL) has become a practical tool for aligning diffusion
+models with downstream objectives. Early methods like DDPO [2] optimized
+models via policy gradients, while modern approaches favor preference-based
+alignment. Diffusion-DPO [31] adapted Direct Preference Optimization to the
+diffusion paradigm, and video-specific variants like VideoDPO [25] and Dance-
+GRPO [34] have scaled these techniques to temporal generation. However, these
+methods typically depend on expensive human feedback or external reward mod-
+els. In contrast, DIAL introduces a zero-cost preference construction pipeline
+that scores denoising trajectories based on the spatial alignment between the
+ISGM and ground-truth subject masks, enabling automated anchoring of sub-
+ject semantics.
+
+
+Intrinsic Subject-Aware Attention for Multi-Subject Video Generation
+5
+Fig. 3: Phase I: Attention Guidance via ISGM. This training-free mechanism
+extracts the Intrinsic Spatial Grounding Map (ISGM) from step i −1 to guide the
+self-attention (ATTN) in step i. Each subject has an independent, spatially-aligned
+ISGM used to construct an attention bias matrix. The guidance strength (γk) can
+be adjusted independently for each subject, enabling precise identity fidelity control
+without requiring model updates.
+3
+Method
+3.1
+Preliminaries
+Video Diffusion Models We adopt a text-conditioned Diffusion Transformer
+(DiT) architecture [27] for latent video generation. Let x0 = {x(f)
+0 }F
+f=1 denote
+a video clip with F frames. A spatio-temporal VAE encoder E(·) maps the
+video into a compact latent representation z0 = E(x0) ∈RT ×C×H×W [32].
+Following the rectified flow matching framework [26,32], generation is modeled
+as an interpolation between the data latent z0 and Gaussian noise z1 ∼N(0, I).
+For t ∼U(0, 1), the noisy latent is formed as:
+  \ ma t hbf { z}_t = (1-t)\mathbf {z}_0 + t\mathbf {z}_1, 
+(1)
+with the target velocity defined as vt = dzt
+dt = z1 −z0. A DiT-based network
+predicts the velocity vθ(zt, t, c) conditioned on text tokens c, and is optimized
+using the flow-matching objective:
+  \ m athcal {
+L
+}_{ \ mathrm { fm}}
+ 
+=
+ \mathbb {E}_{t, \mathbf {z}_0, \mathbf {z}_1} \left [ \left \| \mathbf {v}_t - \mathbf {v}_\theta (\mathbf {z}_t, t, \mathbf {c}) \right \|_2^2 \right ]. 
+(2)
+During inference, the video is generated by numerically solving the ODE dzt/dt =
+vθ(zt, t, c) from t = 1 to t = 0, followed by VAE decoding ˆx0 = D(z0) [32].
+Subject-to-Video Generation Subject-to-video (S2V) generation aims to
+synthesize a video ˆx0 that aligns with a text prompt y while maintaining the
+visual identity of a set of reference subjects R = {Ik}K
+k=1 [24,38].
+
+
+6
+N. Yu et al.
+Phase II: High-noise RL Anchoring via Preference Optimization
+DiT Model
+Φ!
+𝑧"
+# (Seed 𝑆#)
+𝑧"
+# (Seed 𝑆#)
+DiT Model
+Φ!
+Multi-Step
+𝑧" →𝑧"$%
+Winner
+Loser
+DPO Loss
+𝐿&'(
+Reference 
+Model
+Φ)*+
+Alignment Scoring
+Fig. 4: Phase II: Dual-Seed Preference Optimization. We construct preference
+pairs by evaluating the spatial alignment between the subject mask Mk and ISGMs
+generated from distinct random seeds. Then we use DPO to optimize the model policy,
+enabling proactive anchoring of subject semantics and mitigation of drift during the
+high-noise denoising phase.
+Following current state-of-the-art backbones [32, 38], reference information
+is injected through intrinsic latent-token interaction. Each reference image Ik is
+mapped to a spatial latent z(k)
+img = E(Ik). At each denoising step t, the video
+latent zt and all reference latents are concatenated:
+ \ t ilde {\
+m
+athb
+f {z } } _ t = \
+math rm
+ 
+{Concat}_c \left ( \mathbf {z}^{(1)}_{\mathrm {img}}, \dots , \mathbf {z}^{(K)}_{\mathrm {img}},\mathbf {z}_t \right ). 
+(3)
+The resulting tensor is patchified and linearly projected to form the initial token
+sequence H(0) = PatchEmbed(˜zt). In this unified sequence, video and reference
+tokens coexist, enabling the DiT’s self-attention layers to perform joint spatio-
+temporal modeling and cross-modal identity transfer [38]. Textual conditions are
+typically incorporated via cross-attention. In our framework, we primarily focus
+on manipulating these spatio-temporal self-attention blocks to achieve control-
+lable fidelity and mitigate semantic drift.
+3.2
+Identification of Intrinsic Spatial Grounding Maps (ISGM)
+We begin with a practical observation on current open-source S2V systems [24,
+38] as shown in Fig. 1: despite strong overall quality, they frequently exhibit
+semantic drift in real usage. In these failure cases, the reference subjects are
+missing, attributes deviate, or multiple references become entangled. These er-
+rors suggest a mismatch between what the references specify and how the model
+actually uses them during denoising. Intuitively, this points to a failure in the
+interaction between the noisy video latent and reference-image latents, which in
+DiT backbones is primarily mediated by self-attention over the joint token se-
+quence. To resolve this, we conducted a layer-wise investigation of the attention
+blocks to locate the source of this misalignment.
+
+
+Intrinsic Subject-Aware Attention for Multi-Subject Video Generation
+7
+Token Layout. At denoising step i, the DiT processes a token sequence Hi =
+[Href
+i,1; . . . ; Href
+i,K; Hvid
+i
+]. Here, Href
+i,k represents tokens from the k-th reference latent
+and Hvid
+i
+denotes tokens from the noisy video latent. Given Nk as the token
+length of Href
+i,k and Nb as the length of Hvid
+i
+, the total sequence length is N =
+PK
+k=1 Nk + Nb.
+Extracting per-subject Attention Maps. For each self-attention module, let queries
+and keys be Q ∈Rh×N×d and K ∈Rh×N×d. We measure the attention from
+video tokens to each reference subject by computing:
+  \
+m
+a
+t
+hbf
+ {A} = 
+\
+frac
+ {1 }{h} \s
+u
+m
+ 
+_ {m=1}^{h} \mathrm {softmax} \left ( \frac {\mathbf {Q}^{(m)}_{\text {vid}}(\mathbf {K}^{(m)})^\top }{\sqrt {d}} \right ) \in \mathbb {R}^{N_b \times N} 
+(4)
+where Q(m)
+vid corresponds to queries from the video tokens. The per-subject at-
+tention score is then defined as:
+  \
+m
+athb
+f {s } _k =
+ \ s
+u
+m 
+_{j
+ \i
+n
+ \m
+at
+h
+cal {I}_k} \mathbf {A}_{:,j} \in \mathbb {R}^{N_b}, \quad \mathcal {I}_k = \left [ \sum _{\ell < k} N_\ell , \sum _{\ell \le k} N_\ell \right ) 
+(5)
+We aggregate these into a joint score matrix S = [s1, . . . , sK] ∈RNb×K.
+0
+10
+20
+30
+40
+Transformer Block Index
+1.0
+1.5
+2.0
+2.5
+3.0
+Attention Score
+Layer 16 Peak
+Layer 10 Peak
+Kaleido
+Phantom-14B
+Fig. 5:
+Attention
+peaking
+across
+blocks.
+The Peaking Phenomenon. We evaluate S
+for each attention block and identify the
+block that yields the highest grounding ac-
+curacy. Our analysis is shown in Fig. 5. This
+reveals a consistent peaking phenomenon
+across diverse prompts. Among the numer-
+ous attention blocks, a specific block yields
+the highest interaction score. The attention
+map in the specific block is highly concen-
+trated and aligns precisely with the subject
+regions. We define this refined signal as the
+Intrinsic Spatial Grounding Map (ISGM).
+The discovery of these intrinsic maps sug-
+gests that the DiT backbone contains a spe-
+cialized grounding layer for subject-to-video
+information transfer. This layer serves as the
+foundation for our Dual-phase Intrinsic At-
+tention Leveraging(DIAL).
+3.3
+DIAL Phase I: Low-noise
+Inference Guidance
+Building on the discovery of ISGMs, we first utilize this intrinsic attention signal
+to implement training-free fidelity control. Our observations indicate that during
+
+
+8
+N. Yu et al.
+the later stages of the denoising process, typically the final 80% of timesteps, the
+attention maps for individual subjects become highly structured and spatially
+consistent. These maps serve as reliable spatial anchors to guide the synthesis
+of fine-grained details in subsequent steps.
+Let Si−1 be the extracted ISGM from step i−1. We normalize it to obtain
+a soft spatial guide ˜Si−1(:, k) = Si−1(:, k)/ max(Si−1(:, k)). Optionally, a binary
+guide can be obtained by thresholding. At step i, we modulate all self-attention
+modules in the DiT backbone by injecting a controllable bias matrix Mi into
+the attention logits. This bias specifically targets the interaction between video
+queries and reference subject keys:
+  \la be l
+ 
+{eq:mas k } \mathb f {
+M } _i(q, j ) =
+ \
+begin {cases} \log (\gamma _k) \cdot \tilde {\mathbf {S}}_{i-1}(q, k), & q \in \mathcal {I}_{\text {vid}}, j \in \mathcal {I}_k, \\ 0, & \text {otherwise} \end {cases} 
+(6)
+where γk > 0 is a user-specified fidelity scale for subject k, Ivid = [PK
+k=1 Nk, N)
+denotes the index range of video tokens, and Ik denotes the key range of the
+k-th reference as above.
+For an attention module at step i, the biased attention is computed as
+  \mathrm {A ttn } _i(\mat
+hbf {
+Q
+}
+_
+i ,\
+m
+athbf {K}_i,\mathbf {V}_i)= \mathrm {softmax}\!\left (\frac {\mathbf {Q}_i\mathbf {K}_i^\top }{\sqrt {d}}+\mathbf {M}_i\right )\mathbf {V}_i. \label {eq:phase1_attn} 
+(7)
+Intuitively, Mi selectively increases the attention paid by guided video regions
+to the corresponding reference subject, enabling independent and continuous fi-
+delity control in multi-subject generation. This mechanism, as is shown in Fig. 3,
+is training-free and requires no model updates; it only reuses ISGM from the
+previous denoising step and adds a lightweight log-scale bias. This process is
+illustrated in Algorithm 1 and Fig. 3.
+3.4
+DIAL Phase II: High-noise Anchoring via Preference
+Optimization
+While the inference-time guidance in Phase I effectively enhances subject fidelity,
+its performance relies heavily on the clarity of the extracted ISGM. Our investi-
+gations reveal that this is insufficient during the high-noise regime, typically the
+initial 20% of denoising steps. In this stage, the intrinsic attention signals are
+highly stochastic and diffused, failing to provide the precise spatial boundaries
+required for deterministic bias injection. Relying solely on inference guidance
+during high-noise stages often leads to unstable spatial layouts and irreversible
+semantic drift.
+Since early denoising largely determines global layout and attribute ground-
+ing, we introduce a learning-based anchoring mechanism for this regime. Al-
+though pixel-wise supervision is unreliable at high noise, we can still rank de-
+noising trajectories by how well their intrinsic maps align with reference subjects.
+We therefore cast high-noise alignment as a preference optimization problem
+in latent space and optimize the model toward trajectories with better ground-
+ing.
+
+
+Intrinsic Subject-Aware Attention for Multi-Subject Video Generation
+9
+Algorithm 1 DIAL Phase I: Low-noise Inference Guidance
+Require: Pre-trained DiT model Φ, Reference subjects R = {R1, . . . , RK}, Text
+prompt T, Fidelity scales Γ = {γ1, . . . , γK}, Denoising steps N.
+Ensure: Generated video latent z0.
+1: Initialize zN ∼N(0, I);
+2: S(N+1) ←None;
+3: for i = N to 1 do
+4:
+// Step 1: Fidelity Bias Construction
+5:
+if S(i+1) is not None and i ≤0.8N then
+6:
+Normalize S(i+1) to obtain spatial guide ˜S(i+1);
+7:
+Construct Bias Matrix Mi using ˜S(i+1) and Γ; {Eq. (6)}
+8:
+Inject Mi into DiT attention modules;
+9:
+else
+10:
+Set Mi = 0 (Disable guidance);
+11:
+end if
+12:
+// Step 2: Denoising and Map Extraction
+13:
+[vθ(zi), A(i)] ←Φ(zi, T, R, Mi);
+14:
+zi−1 ←Denoise(zi, vθ(zi));
+15:
+// Step 3: ISGM Update for Next Step
+16:
+S(i) ←Extract(A(i), R);
+17: end for
+18: return z0;
+Zero-cost Preference Construction. Inspired by this, we leverage the intrin-
+sic grounding capability of ISGM to automatically construct preference pairs
+without human annotation. For a training sample (V, T, R), we first obtain the
+ground-truth segmentation masks {Mk}K
+k=1 for each reference subject from the
+video V . We then generate two independent attention trajectories using different
+random seeds S1 and S2. We define a Preference Score P based on the spatial
+overlap between the extracted ISGM and the ground-truth mask:
+  
+P
+ 
+= \
+sum _ {k=1}^
+K \frac {\sum (\mathbf {M}_k \odot \text {ISGM}_k)}{\sum \text {ISGM}_k} \label {eq:pref_score} 
+(8)
+where ⊙denotes the element-wise product. P quantifies the model’s self-consistency
+in grounding reference subjects within the latent space. For each sample, the tra-
+jectory with the higher P is designated as the winner vw, while the other is the
+loser vl.
+Multi-step DPO Training. To ensure stable semantic anchoring, we employ
+a multi-step Direct Preference Optimization (DPO) strategy. Unlike standard
+DPO that often relies on single-step noise prediction, our approach utilizes Tdpo
+steps to obtain a more accurate evaluation of the attention layout. For each it-
+eration i ∈{1, . . . , Tdpo}, we compute the noise prediction vθ and the reference
+model prediction vref (obtained by disabling adapters). The normalized DPO
+
+
+10
+N. Yu et al.
+Algorithm 2 DIAL Phase II: High-noise Anchoring via Preference Optimization
+Require: Pipeline Φ, training sample (V, T, R), Subject masks {Mk}, DPO iterations
+Tdpo, beta β.
+Ensure: Updated LoRA weights for DiT.
+1: Sample t ∈[tmin, tmax] within high-noise boundary (e.g., t ∈[0, 0.2N]);
+2: Initialize two noisy latents z1
+t, z2
+t with seeds S1, S2;
+3: for i = 1 to Tdpo do
+4:
+v1
+θ, A1 ←Φ(z1
+t, T, R); v2
+θ, A2 ←Φ(z2
+t, T, R);
+5:
+Compute preference scores P1, P2 using {Mk} via Eq. 8;
+6:
+Identify winner vw and loser vl based on max(P1, P2);
+7:
+vw
+ref, vl
+ref ←Φref(zw,l
+t
+, T, R) (with adapters disabled);
+8:
+Compute LDP O using normalized logits via Eq. 9;
+9:
+Backpropagate and update θ;
+10:
+Update z1,2
+t
+for the next denoising step;
+11: end for
+loss is defined as:
+  \ m a th
+c
+al {
+L
+}_{
+DPO } =
+ -\m a thb
+b {E} \l
+eft [ 
+\
+log \sigma \left ( \frac {(\mathcal {L}_{ref}^w - \mathcal {L}_{ref}^l) - (\mathcal {L}_{train}^w - \mathcal {L}_{train}^l)}{\tau } \right ) \right ] \label {eq:dpo_loss} 
+(9)
+where L = ∥vθ −vtarget∥2 is the mean squared error of the noise prediction, and
+τ is a dynamic scale factor derived from the running mean of the loss differences
+to maintain numerical stability. This procedure effectively anchors the model’s
+spatial attention to the reference subjects, decoupling identity maintenance from
+specific prompt structures. This method is further detailed in Algorithm 2 and
+shown in Fig. 4.
+4
+Experiments
+4.1
+Experimental Settings
+Benchmark and Metrics. We evaluate on OpenS2V-Eval [36] and follow its
+official protocol. The benchmark includes 180 prompts from seven categories,
+covering single-subject cases (face, body, entity) as well as multi-subject and
+human–entity interactions. We report the automated metrics provided by the
+protocol, where higher is better. These include Aesthetics [29] for visual ap-
+peal, MotionSmoothness and MotionAmplitude [4] for temporal dynam-
+ics, and FaceSim [37] for identity preservation. We also report OpenS2V-Eval’s
+benchmark-specific scores, including NexusScore for subject consistency, Nat-
+uralScore for overall naturalness, and GmeScore for text–video relevance [36].
+Implementation Details. We apply DIAL to two representative open-source
+S2V baselines, Phantom-14B [24] and Kaleido-14B [38]. Both models are fine-
+tuned from the DiT-based foundation model Wan2.1-T2V-14B [32]. For Phase II
+
+
+Intrinsic Subject-Aware Attention for Multi-Subject Video Generation
+11
+preference learning, we construct a training set of approximately 14K samples
+from Phantom-Data. For Phase I inference-time guidance, we use a single fidelity
+scale γ shared by all subjects and report results with γ ∈{0, 2, 4, 8, 16}. Here
+γ = 0 corresponds to the baseline that disables Phase I guidance and uses
+only the Phase II preference-optimized model. More details can be found in
+Appendix C.
+Baselines. We compare DIAL with recent open-sourced S2V approaches, in-
+cluding baseline Phantom-14B [24], Kaleido [38], along with VACE [20], SkyReels-
+A2 [12], MAGREF [11], BindWeave [23] and most recent SkyReels-v3 [22].
+4.2
+Main Results
+Quantitative Results As summarized in Table 1, DIAL achieves state-of-the-
+art performance on OpenS2V-Eval benchmark. A salient feature of our frame-
+work is its controllable fidelity, where the scale factor γ enables monotonic
+improvement in identity preservation. Specifically, when integrated with the
+Kaleido backbone, increasing γ from 2 to 8 yields a substantial rise in FaceSim
+from 43.80% to 57.46%, representing a 31.2% relative gain without significant
+degradation in video naturalness. This scaling behavior underscores the efficacy
+of our Phase I step-wise guidance mechanism in anchoring subject-specific de-
+tails within the denoising trajectory. Crucially, the impact of our Phase II
+RL anchoring in mitigating semantic drift is empirically validated by the
+performance of DIAL at γ = 0, where Phase I guidance is disabled. In this
+configuration, we observe a consistent improvement in NexusScore—a metric
+within the OpenS2V-Eval protocol designed to evaluate subject consistency and
+identity persistence. Compared to original backbones, DIAL (γ = 0) improves
+NexusScore from 38.62% to 41.22% for Kaleido and from 41.10% to 42.76% for
+Phantom-14B. These gains directly link preference optimization to the reduction
+of semantic drift, confirming that Phase II effectively anchors the model’s spatial
+attention to reference subjects during high-noise stages.
+Qualitative Results As shown in Fig. 6, DIAL exhibits stronger subject faith-
+fulness and reduced semantic drift compared to SkyReels-v3 and BindWeave.
+It preserves fine-grained identity cues (e.g., hairstyle) and object attributes
+(e.g., hair dryer design) that baselines often corrupt. In multi-subject scenar-
+ios, DIAL prevents identity entanglement and geometric mismatches (e.g., fruit
+basket shape) seen in competitors. Compared to the backbone, DIAL enhances
+facial consistency and shape stability without sacrificing visual aesthetics or nat-
+uralness.
+4.3
+Ablation Study
+Effect of ISGM in Fidelity Strength Control Fidelity strength control can
+be implemented without the use of ISGM by substituting the spatially-aware
+
+
+12
+N. Yu et al.
+Table 1: Main Results on OpenS2V-Eval. We evaluate DIAL across various DiT-
+based models. Our method, under each base model, aims to show the performance
+gain across different fidelity control strengths (γ). Metrics: Aes. (Aesthetics), Smth.
+(MotionSmoothness), Amp. (MotionAmplitude), Face (FaceSim), Gme. (GmeScore),
+Nex. (NexusScore), and Nat. (NaturalScore). All values are percentages (%). Bold
+marks the best and underline the second best value within each block.
+Method
+Total
+Quality
+Dynamics
+Consistency
+Realism
+Score↑
+Aes.↑
+Smth.↑Amp.↑Face↑Gme.↑Nex.↑
+Nat.↑
+General Baselines
+MAGREF-480P [11]
+52.51
+45.02
+93.17
+21.81
+30.83
+70.47
+43.04
+66.90
+VACE-P1.3B [20]
+48.98
+47.34
+96.80
+12.03
+16.59
+71.38
+40.19
+64.31
+VACE-1.3B [20]
+49.89
+48.24
+97.20
+18.83
+20.57
+71.26
+37.91
+65.46
+VACE-14B [20]
+57.55
+47.21
+94.97
+15.02
+55.09
+67.27
+44.08
+67.04
+SkyReels-A2 [12]
+52.25
+39.41
+87.93
+25.60
+45.95
+64.54
+43.75
+60.32
+Phantom-1.3B [24]
+54.89
+46.67
+93.30
+14.29
+48.56
+69.43
+42.48
+62.50
+BindWeave [23]
+57.61
+45.55
+95.90
+13.91
+53.71
+67.79
+46.84
+66.85
+VINO [36]
+57.85
+45.92
+94.73
+12.30
+52.00
+69.69
+42.67
+71.99
+SkyReels-v3 [22]
+59.26
+46.92
+99.78
+15.17
+45.90
+67.98
+39.70
+84.12
+Results on Kaleido backbone
+Kaleido [38]
+56.00
+51.75
+97.98
+8.50
+31.81
+70.37
+38.62
+79.77
++ DIAL (γ = 0)
+56.32
+50.40
+97.07
+10.05
+31.79
+70.54
+41.22
+79.86
++ DIAL (γ = 2)
+58.38
+50.42
+97.09
+9.84
+43.80
+70.23
+42.18
+77.78
++ DIAL (γ = 4)
+59.88
+50.45
+97.02
+9.94
+52.37
+69.92
+42.40
+76.85
++ DIAL (γ = 8)
+60.78
+50.23
+96.99
+9.96
+57.46
+69.65
+42.40
+76.62
++ DIAL (γ = 16)
+61.14
+50.11
+96.70
+9.71
+60.64
+69.50
+43.02
+75.23
+Results on Phantom-14B backbone
+Phantom-14B [24]
+60.43
+50.46
+98.24
+9.40
+56.50
+69.46
+41.10
+76.76
++ DIAL (γ = 0)
+60.41
+50.29
+98.39
+8.41
+57.04
+69.14
+42.76
+75.14
++ DIAL (γ = 2)
+60.69
+50.28
+98.31
+8.30
+57.82
+69.14
+42.81
+75.65
++ DIAL (γ = 4)
+60.62
+50.29
+98.45
+8.14
+58.00
+69.13
+42.80
+75.19
++ DIAL (γ = 8)
+60.70
+50.32
+98.47
+8.33
+58.61
+69.07
+42.83
+75.00
++ DIAL (γ = 16)
+60.78
+50.27
+98.41
+8.40
+58.92
+69.05
+43.10
+74.91
+Si−1 in Eq. 6 with a uniform all-ones matrix, a baseline variant we denote as
+Uni [30]. As demonstrated in Table 2, the Uni method suffers from a significant
+decline in NaturalScore even at a minimal enhancement scale of (γ = 2). In
+contrast, ISGM (γ = 16) achieves identity consistency (FaceSim) comparable
+to that of Uni (γ = 2) while maintaining a much higher and more competitive
+NaturalScore of 75.23%. These results indicate that applying a uniform strength
+enhancement across the entire latent space tends to degrade overall video real-
+ism, whereas ISGM provides localized, region-adaptive guidance that preserves
+visual quality. Additional qualitative comparisons supporting these findings are
+provided in Appendix A.
+
+
+Intrinsic Subject-Aware Attention for Multi-Subject Video Generation
+13
+Fig. 6: Qualitative comparisons with recent open-sourced models and our baselines.
+Table 2: Ablation on Uni and ISGM in Fidelity Strength Control on the Kaleido
+backbone. Bold marks the best and underline the second best value per column.
+Si−1
+Total
+Quality
+Dynamics
+Consistency
+Realism
+Score↑
+Aes.↑
+Smth.↑
+Amp.↑
+Face↑
+Gme.↑
+Nex.↑
+Nat.↑
+γ = 0
+56.32
+50.40
+97.07
+10.05
+31.79
+70.54
+41.22
+79.86
+ISGM (γ = 2)
+58.38
+50.42
+97.09
+9.84
+43.80
+70.23
+42.18
+77.78
+ISGM (γ = 4)
+59.88
+50.45
+97.02
+9.94
+52.37
+69.92
+42.40
+76.85
+ISGM (γ = 8)
+60.78
+50.23
+96.99
+9.96
+57.46
+69.65
+42.40
+76.62
+ISGM (γ = 16)
+61.14
+50.11
+96.70
+9.71
+60.64
+69.50
+43.02
+75.23
+Uni (γ = 2)
+59.63
+50.23
+97.39
+9.75
+59.21
+69.47
+43.26
+69.03
+0
+10
+20
+30
+40
+50
+Denoising Steps
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+1.0
+1.1
+Attention Score
+Before RL (Unstable)
+After RL (Anchored & Smooth)
+Fig. 7: Evolution of attention scores
+(with normalization) across denoising
+steps.
+Effect of Multi-step DPO Iterations
+We first study how the multi-step pref-
+erence horizon, denoted by Tdpo, affects
+Phase II alignment. Table 3 shows that
+Tdpo=2 yields the best overall trade-off,
+improving identity-related metrics while
+maintaining stable realism. With Tdpo=1,
+the preference signal is computed from a
+single step and becomes less reliable, lead-
+ing to weaker identity preservation. In-
+
+
+14
+N. Yu et al.
+Table 3: Ablation on the number of DPO iterations (Tdpo) on the Kaleido backbone
+with γ=0. Tdpo=0 corresponds to the baseline. Bold marks the best value per column.
+Tdpo
+Total
+Quality
+Dynamics
+Consistency
+Realism
+Score↑
+Aes.↑
+Smth.↑
+Amp.↑
+Face↑
+Gme.↑
+Nex.↑
+Nat.↑
+0
+56.00
+51.75
+97.98
+8.50
+31.81
+70.37
+38.62
+79.77
+1
+56.00
+51.11
+98.09
+9.80
+31.74
+70.19
+39.20
+79.60
+2
+56.32
+50.40
+97.07
+10.05
+31.79
+70.54
+41.22
+79.86
+3
+55.64
+50.65
+98.07
+13.61
+31.68
+70.40
+38.71
+78.55
+creasing to Tdpo=3 brings marginal gains
+on some consistency metrics but slightly
+degrades overall realism, suggesting over-
+emphasis on early-step preferences. We
+therefore use Tdpo=2 as the default setting
+in all experiments.
+Attention Dynamics Enhancement in Phase II We examine how Phase II
+changes reference grounding over denoising timesteps. Fig. 7 reports the average
+grounding score across timesteps. Before preference optimization, the score is
+low in the initial high-noise steps, matching our observation that early atten-
+tion is diffuse. After Phase II, the early-stage score increases markedly, and the
+curve becomes smoother, indicating that anchoring encourages correct reference
+attention earlier and reduces error propagation to later refinement. We include
+more in-depth analysis in Appendix B.
+5
+Conclusion
+We introduced DIAL, a unified dual-phase framework for controllable subject-to-
+video (S2V) generation. Central to our work is the identification of Intrinsic Spa-
+tial Grounding Map (ISGM) within specific DiT blocks, which provide reliable
+and intrinsic subject localization signals. DIAL leverages these maps through
+a two-phase strategy: Phase I implements training-free, inference-time guid-
+ance for fine-grained and independent fidelity control; and Phase II utilizes a
+zero-cost preference optimization to anchor subject semantics during high-noise
+stages. Extensive experiments on the OpenS2V-Eval benchmark demonstrate
+that DIAL achieves state-of-the-art performance, significantly improving identity
+consistency and mitigating semantic drift without compromising visual quality.
+References
+1. Ahn, D., Cho, H., Min, J., Jang, W., Kim, J., Kim, S., Park, H.H., Jin, K.H.,
+Kim, S.: Self-rectifying diffusion sampling with perturbed-attention guidance. In:
+European Conference on Computer Vision. pp. 1–17. Springer (2024)
+
+
+Intrinsic Subject-Aware Attention for Multi-Subject Video Generation
+15
+2. Black, K., Janner, M., Du, Y., Kostrikov, I., Levine, S.: Training diffusion models
+with reinforcement learning. arXiv preprint arXiv:2305.13301 (2023)
+3. Blattmann, A., Dockhorn, T., Kulal, S., Mendelevitch, D., Kilian, M., Lorenz, D.,
+Levi, Y., English, Z., Voleti, V., Letts, A., et al.: Stable video diffusion: Scaling
+latent video diffusion models to large datasets. arXiv preprint arXiv:2311.15127
+(2023)
+4. Bradski, G., Kaehler, A., et al.: OpenCV. Dr. Dobb’s journal of software tools 3(2)
+(2000)
+5. Cai, M., Cun, X., Li, X., Liu, W., Zhang, Z., Zhang, Y., Shan, Y., Yue, X.: DiTCtrl:
+Exploring attention control in multi-modal diffusion transformer for tuning-free
+multi-prompt longer video generation. In: Proceedings of the Computer Vision
+and Pattern Recognition Conference. pp. 7763–7772 (2025)
+6. Carion, N., Gustafson, L., Hu, Y.T., Debnath, S., Hu, R., Suris, D., Ryali, C., Al-
+wala, K.V., Khedr, H., Huang, A., et al.: SAM 3: Segment anything with concepts.
+arXiv preprint arXiv:2511.16719 (2025)
+7. Chefer, H., Alaluf, Y., Vinker, Y., Wolf, L., Cohen-Or, D.: Attend-and-excite:
+Attention-based semantic guidance for text-to-image diffusion models. ACM trans-
+actions on Graphics (TOG) 42(4), 1–10 (2023)
+8. Chen, H., Wang, X., Zhang, Y., Zhou, Y., Zhang, Z., Tang, S., Zhu, W.: DisenStu-
+dio: Customized multi-subject text-to-video generation with disentangled spatial
+control. In: Proceedings of the 32nd ACM International Conference on Multimedia.
+pp. 3637–3646 (2024)
+9. Chen, Z., Li, B., Ma, T., Liu, L., Liu, M., Zhang, Y., Li, G., Li, X., Zhou, S., He,
+Q., et al.: Phantom-Data: Towards a general subject-consistent video generation
+dataset. arXiv preprint arXiv:2506.18851 (2025)
+10. Cheng, T., Song, L., Ge, Y., Liu, W., Wang, X., Shan, Y.: YOLO-World: Real-time
+open-vocabulary object detection. In: Proceedings of the IEEE/CVF conference on
+computer vision and pattern recognition. pp. 16901–16911 (2024)
+11. Deng, Y., Guo, X., Yin, Y., Fang, J.Z., Yang, Y., Wang, Y., Yuan, S., Wang, A.,
+Liu, B., Huang, H., et al.: MAGREF: Masked guidance for any-reference video
+generation. arXiv preprint arXiv:2505.23742 (2025)
+12. Fei, Z., Li, D., Qiu, D., Wang, J., Dou, Y., Wang, R., Xu, J., Fan, M., Chen, G., Li,
+Y., et al.: SkyReels-A2: Compose anything in video diffusion transformers. arXiv
+preprint arXiv:2504.02436 (2025)
+13. Feng, K., Ma, Y., Wang, B., Qi, C., Chen, H., Chen, Q., Wang, Z.: DiT4Edit:
+Diffusion transformer for image editing. In: Proceedings of the AAAI Conference
+on Artificial Intelligence. vol. 39, pp. 2969–2977 (2025)
+14. HaCohen, Y., Chiprut, N., Brazowski, B., Shalem, D., Moshe, D., Richardson, E.,
+Levin, E., Shiran, G., Zabari, N., Gordon, O., et al.: LTX-Video: Realtime video
+latent diffusion. arXiv preprint arXiv:2501.00103 (2024)
+15. Hertz, A., Mokady, R., Tenenbaum, J., Aberman, K., Pritch, Y., Cohen-Or,
+D.: Prompt-to-prompt image editing with cross attention control. arXiv preprint
+arXiv:2208.01626 (2022)
+16. Ho, J., Jain, A., Abbeel, P.: Denoising diffusion probabilistic models. Advances in
+neural information processing systems 33, 6840–6851 (2020)
+17. Hong, S., Lee, G., Jang, W., Kim, S.: Improving sample quality of diffusion mod-
+els using self-attention guidance. In: Proceedings of the IEEE/CVF International
+Conference on Computer Vision. pp. 7462–7471 (2023)
+18. Hu, T., Yu, Z., Zhou, Z., Liang, S., Zhou, Y., Lin, Q., Lu, Q.: HunyuanCustom:
+A multimodal-driven architecture for customized video generation. arXiv preprint
+arXiv:2505.04512 (2025)
+
+
+16
+N. Yu et al.
+19. Hu, T., Yu, Z., Zhou, Z., Zhang, J., Zhou, Y., Lu, Q., Yi, R.: PolyVivid: Vivid
+multi-subject video generation with cross-modal interaction and enhancement. In:
+NeurIPS (2025)
+20. Jiang, Z., Han, Z., Mao, C., Zhang, J., Pan, Y., Liu, Y.: VACE: All-in-one video
+creation and editing. In: ICCV (2025)
+21. Kong, W., Tian, Q., Zhang, Z., Min, R., Dai, Z., Zhou, J., Xiong, J., Li, X., Wu, B.,
+Zhang, J., et al.: HunyuanVideo: A systematic framework for large video generative
+models. arXiv preprint arXiv:2412.03603 (2024)
+22. Li, D., Fei, Z., Li, T., Dou, Y., Chen, Z., Yang, J., Fan, M., Xu, J., Wang, J., Gu,
+B., et al.: SkyReels-V3 technique report. arXiv preprint arXiv:2601.17323 (2026)
+23. Li, Z., Qian, D., Su, K., Diao, Q., Xia, X., Liu, C., Yang, W., Zhang, T., Yuan,
+Z.: BindWeave: Subject-consistent video generation via cross-modal integration.
+arXiv preprint arXiv:2510.00438 (2025)
+24. Liu, L., Ma, T., Li, B., Chen, Z., Liu, J., He, Q., Wu, X.: Phantom:
+Subject-consistent video generation via cross-modal alignment. arXiv preprint
+arXiv:2502.11079 (2025)
+25. Liu, R., Wu, H., Zheng, Z., Wei, C., He, Y., Pi, R., Chen, Q.: VideoDPO: Omni-
+preference alignment for video diffusion generation. In: Proceedings of the Com-
+puter Vision and Pattern Recognition Conference. pp. 8009–8019 (2025)
+26. Liu, X., Gong, C., Liu, Q.: Flow straight and fast: Learning to generate and transfer
+data with rectified flow. arXiv preprint arXiv:2209.03003 (2022)
+27. Peebles, W., Xie, S.: Scalable diffusion models with transformers. In: Proceedings of
+the IEEE/CVF international conference on computer vision. pp. 4195–4205 (2023)
+28. Polyak, A., Zohar, A., Brown, A., Tjandra, A., Sinha, A., Lee, A., Vyas, A., Shi,
+B., Ma, C.Y., Chuang, C.Y., et al.: Movie Gen: A cast of media foundation models.
+arXiv preprint arXiv:2410.13720 (2024)
+29. Schuhmann,
+C.:
+improved-aesthetic-predictor.
+https://github.com/
+christophschuhmann/improved-aesthetic-predictor (2024)
+30. Tan, Z., Liu, S., Yang, X., Xue, Q., Wang, X.: OminiControl: Minimal and universal
+control for diffusion transformer. In: Proceedings of the IEEE/CVF International
+Conference on Computer Vision. pp. 14940–14950 (2025)
+31. Wallace, B., Dang, M., Rafailov, R., Zhou, L., Lou, A., Purushwalkam, S., Ermon,
+S., Xiong, C., Joty, S., Naik, N.: Diffusion model alignment using direct preference
+optimization. In: Proceedings of the IEEE/CVF Conference on Computer Vision
+and Pattern Recognition. pp. 8228–8238 (2024)
+32. Wan, T., Wang, A., Ai, B., Wen, B., Mao, C., Xie, C.W., Chen, D., Yu, F., Zhao,
+H., Yang, J., et al.: Wan: Open and advanced large-scale video generative models.
+arXiv preprint arXiv:2503.20314 (2025)
+33. Wang, Z., Li, A., Zhu, L., Guo, Y., Dou, Q., Li, Z.: CustomVideo: Customizing
+text-to-video generation with multiple subjects. arXiv preprint arXiv:2401.09962
+(2024)
+34. Xue, Z., Wu, J., Gao, Y., Kong, F., Zhu, L., Chen, M., Liu, Z., Liu, W., Guo, Q.,
+Huang, W., et al.: DanceGRPO: Unleashing GRPO on visual generation. arXiv
+preprint arXiv:2505.07818 (2025)
+35. Yang, Z., Teng, J., Zheng, W., Ding, M., Huang, S., Xu, J., Yang, Y., Hong, W.,
+Zhang, X., Feng, G., et al.: CogVideoX: Text-to-video diffusion models with an
+expert transformer. arXiv preprint arXiv:2408.06072 (2024)
+36. Yuan, S., He, X., Deng, Y., Ye, Y., Huang, J., Lin, B., Luo, J., Yuan, L.: OpenS2V-
+Nexus: A detailed benchmark and million-scale dataset for subject-to-video gener-
+ation. arXiv preprint arXiv:2505.20292 (2025)
+
+
+Intrinsic Subject-Aware Attention for Multi-Subject Video Generation
+17
+37. Yuan, S., Huang, J., He, X., Ge, Y., Shi, Y., Chen, L., Luo, J., Yuan, L.: Identity-
+preserving text-to-video generation by frequency decomposition. arXiv preprint
+arXiv:2411.17440 (2024)
+38. Zhang, Z., Teng, J., Yang, Z., Cao, T., Wang, C., Gu, X., Tang, J., Guo, D., Wang,
+M.: Kaleido: Open-sourced multi-subject reference video generation model. arXiv
+preprint arXiv:2510.18573 (2025)
+
+
+18
+N. Yu et al.
+Fig. 8: Localized (ISGM-guided) vs. global guidance in Phase I. We compare
+our ISGM-based spatially localized guidance with a global baseline that applies a uni-
+form guidance signal to all spatial locations. Without ISGM, increasing γ noticeably
+degrades overall video quality; the magnified insets show severe background blurring
+and texture loss already at γ = 2 and γ = 4. In contrast, ISGM-guided attention bias
+allows strong fidelity enhancement (e.g., γ = 16) while preserving sharp backgrounds,
+indicating that our guidance is confined to subject-specific regions.
+A
+Additional Qualitative Results for Low-noise Inference
+Guidance
+Phase I performs training-free attention guidance in the low-noise denoising
+regime by injecting an ISGM-conditioned bias into attention logits (cf. Eq. 6–
+7 in the main paper). Here we provide additional qualitative results to support
+three claims: (i) ISGM is crucial for localized fidelity enhancement, (ii) the ISGM
+signal becomes reliable only after sufficient denoising, and (iii) the fidelity scale
+γ offers smooth and robust controllability.
+ISGM enables localized enhancement. We first compare ISGM-guided attention
+bias with a global baseline that applies uniform guidance to all spatial locations.
+As shown in Fig. 8, uniform guidance tends to introduce global artifacts, whereas
+ISGM guidance preserves the background while strengthening subject fidelity.
+ISGM is reliable mainly in the low-noise regime. Fig. 9 visualizes how ISGM
+evolves across denoising steps. The early high-noise stage yields scattered maps,
+motivating our choice to disable Phase I guidance there; as denoising proceeds,
+the maps become sharply localized, enabling effective spatially conditioned con-
+trol.
+
+
+Intrinsic Subject-Aware Attention for Multi-Subject Video Generation
+19
+Table 4: Phase II improves subject presence (video-level detection). We
+evaluate subject presence using an image-prompt open-vocabulary detector [10], where
+each reference image is used as the query. The benchmark contains 180 cases with
+varying numbers of reference subjects, resulting in 320 (case, subject) instances in total.
+An instance is counted as a Match if the queried subject is detected in at least one
+frame of the generated video; otherwise it is counted as a miss. “Total” is the number
+of evaluated (case, subject) instances, and “Ratio” is computed as Matches/Total. All
+results are reported with Phase I guidance disabled (γ = 0) to isolate the effect of
+Phase II.
+Method
+Matches↑
+Total
+Ratio↑
+Kaleido [38]
+155
+320
+0.48
++ DIAL (γ = 0)
+163
+320
+0.51
+Continuous controllability via γ. Fig. 10 illustrates that increasing γ yields con-
+sistent improvements in identity similarity on Kaleido [38], and remains effective
+under prompt–reference ambiguity and cross-domain references.
+B
+Analysis of Semantic Drift Mitigation
+Phase II targets the high-noise regime where deterministic ISGM-based bias
+injection is less reliable. We therefore anchor reference grounding via preference
+optimization over denoising trajectories (cf. Algorithm 2 in the main paper).
+Quantifying subject disappearance. We quantify subject presence using an image-
+prompt open-vocabulary detector [10], with each reference image as the query.
+We use the detector implementation released with OpenS2V-Eval 3. As shown
+in Table 4, Phase II increases the match ratio, indicating that fewer reference
+subjects are completely missing from the generated videos (with Phase I disabled,
+γ = 0).
+Qualitative evidence. Fig. 11 shows representative examples where Phase II bet-
+ter preserves the identities and key attributes of the reference subjects than the
+Kaleido backbone, consistent with the reduced subject disappearance reported
+in Table 4.
+C
+Additional Implementation Details
+C.1
+Identification of Intrinsic Spatial Grounding Maps (ISGM)
+Attention score. In Fig. 5, we quantify the grounding strength of an attention
+block by the ratio between attention mass inside the predicted subject region
+3 YOLO-World
+checkpoint:
+yolo_world_v2_l_image_prompt_adapter-719a7afb.
+pth.
+
+
+20
+N. Yu et al.
+and that outside. For each reference k ∈{1, . . . , K}, we compute
+  r
+_
+k \
+;=
+\
+; \f
+r ac { 
+\
+fra
+c 
+{
+1}{|
+\ mathcal {I}^{k}_{+}|}\sum _{q\in \mathcal {I}^{k}_{+}} s_k(q) }{ \frac {1}{|\mathcal {I}^{k}_{-}|}\sum _{q\in \mathcal {I}^{k}_{-}} s_k(q) }, \label {eq:rk_ratio} 
+(10)
+where q indexes video queries (patch tokens), sk(q) is the per-reference attention
+score at query q (cf. Eq. (5) in the main paper), and Ik
++ / Ik
+−denote the fore-
+ground/background query sets, respectively. We then aggregate across references
+as
+  
+R
+ 
+\
+;
+=\;
+ \frac {1}{K}\sum _{k=1}^{K} r_k . \label {eq:R_avg} 
+(11)
+Foreground/background region construction. We use the image-prompt detec-
+tion model provided by OpenS2V-Eval [36] to obtain a bounding box for each
+reference subject in each generated frame. We map the predicted box to the
+latent token grid to form Ik
++, and define Ik
+−as its complement over video query
+tokens. The score reported in Fig. 5 is the average of R over all 180 prompts in
+OpenS2V-Eval.
+C.2
+DIAL Phase I: Low-noise Inference Guidance
+ISGM computation. In practice, ISGM is extracted from a pre-identified privi-
+leged attention block (see Fig. 5). We compute ISGM from this block indepen-
+dently at each denoising step. Since only a single block is used, the additional
+overhead is minimal.
+Inference settings. Some baselines adopt prompt rephrasing during OpenS2V
+evaluation. For Kaleido [38], we use the original prompts; for Phantom [24], we
+follow the official recommendation to rephrase prompts before evaluation. Unless
+specified otherwise, all evaluations use T = 50 denoising steps and the default
+resolution of each backbone.
+C.3
+DIAL Phase II: High-noise Anchoring via Preference
+Optimization
+Training set. We sample 14K multi-reference training examples from Phantom-
+Data [9]. We use SAM3 [6] to obtain pseudo segmentation masks {Mk}K
+k=1 for
+each subject as supervision for preference construction. Although Phantom-Data
+has limited background-style references, we observe that Phase II training still
+improves consistency for background references (see Fig. 11), suggesting that
+our anchoring objective improves reference utilization and generalization.
+Training hyperparameters. We train with 48 NVIDIA H100 GPUs using LoRA
+with rank 16. We use a learning rate of 1 × 10−4 and train for 800 steps (ap-
+proximately two epochs).
+
+
+Intrinsic Subject-Aware Attention for Multi-Subject Video Generation
+21
+Fig. 9: Evolution of ISGM across denoising steps. In the early high-noise regime
+(roughly the first 20% steps; e.g., steps 0–8), ISGM is diffuse and provides unreliable
+spatial localization; thus we disable Phase I guidance in this regime. As denoising
+proceeds, ISGM becomes progressively sharper and expands to cover the full subject
+extent. Near the final low-noise steps (e.g., > 40), the activation often concentrates on
+discriminative regions (e.g., faces), which are critical for identity preservation.
+
+
+22
+N. Yu et al.
+Fig. 10: Effect of fidelity scale γ on identity preservation. Increasing γ from
+0 to 16 yields a monotonic improvement in identity similarity. This controllability re-
+mains effective under challenging conditions, including prompt–reference ambigu-
+ity (Row 3: prompt “a baby” with an adult reference) and cross-domain generation
+(Row 5: reference image in an oil-painting style). The backbone is Kaleido [38].
+
+
+Intrinsic Subject-Aware Attention for Multi-Subject Video Generation
+23
+Fig. 11: Effect of Phase II high-noise anchoring via preference optimization.
+Baseline: Kaleido backbone [38]. Ours: Phase II model with Phase I guidance disabled
+(γ = 0).
