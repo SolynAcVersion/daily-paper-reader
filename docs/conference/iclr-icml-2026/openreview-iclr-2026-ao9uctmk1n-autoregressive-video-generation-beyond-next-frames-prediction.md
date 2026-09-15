@@ -4,16 +4,16 @@ title_zh: 超越下一帧预测的自回归视频生成
 authors: "Sucheng Ren, Jiasen Lu, Chen Chen, Zhenbang Wang, Liangchen Song, Xiangxin Zhu, Alan Yuille, Yinfei Yang"
 date: 2025-09-11
 pdf: "https://openreview.net/pdf?id=ao9uctmk1N"
-tags: ["query:video-gen-rl"]
-score: 8.0
-evidence: 以时空立方体为预测单元的自回归视频生成
-tldr: 现有自回归视频生成默认以整帧为预测单元，逐帧扩展语言中的下一词预测。本文质疑帧是否为合适的自回归单元，提出VideoAR统一框架，支持整帧、关键细节帧、多尺度细化与时空立方体等多种预测单元。研究发现以时空立方体为单元可同时沿空间与时间维度自回归，取得更优效果，重新定义了视频自回归生成的预测单元选择。
+tags: ["query:frame-dist"]
+score: 6.0
+evidence: 沿视频时间维度的自回归建模
+tldr: 针对自回归视频生成通常逐帧进行、默认帧是自然原子单元的问题，本文提出统一框架VideoAR，支持整帧、关键细节帧、多尺度细化以及时空立方体等多种预测单元。研究发现以时空立方体为预测单元可让模型同时在空间与时间维度上自回归建模，从而突破帧作为原子单元的假设。该工作重新思考了视频序列的建模粒度，对理解帧间时间依赖关系具有参考价值。
 source: ICLR-2026-Public
 selection_source: conference_retrieval
-motivation: 自回归视频生成默认以整帧为预测单元，但帧未必是合适的原子单位。
-method: 提出VideoAR统一框架，支持整帧、关键细节帧、多尺度细化与时空立方体等预测单元。
-result: 实验发现以时空立方体为预测单元可同时沿空间与时间维度建模并取得更优效果。
-conclusion: 重新定义了视频自回归生成的预测单元选择。
+motivation: 自回归视频生成默认帧为原子单元，其合理性缺乏检验。
+method: 提出VideoAR框架，支持整帧、细节帧、多尺度及时空立方体等预测单元。
+result: 以时空立方体为单元可同时沿空间和时间维度自回归建模。
+conclusion: 重新思考视频建模粒度，对帧间时间依赖建模有参考价值。
 ---
 
 ## Abstract

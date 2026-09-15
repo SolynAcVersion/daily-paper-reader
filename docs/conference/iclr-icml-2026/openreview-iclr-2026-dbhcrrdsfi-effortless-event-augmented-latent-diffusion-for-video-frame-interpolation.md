@@ -1,19 +1,19 @@
 ---
 title: Effortless Event-Augmented Latent Diffusion for Video Frame Interpolation
-title_zh: 轻松事件增强的潜扩散视频插帧
+title_zh: 轻松实现事件增强的潜在扩散视频帧插值
 authors: "Guixu Lin, Yuyang Yu, Xiang Ji, Linyao Chen, Zhengwei Yin, Mengshun Hu, Mingdeng Cao, Shengfeng He, Yinqiang Zheng"
 date: 2025-09-16
 pdf: "https://openreview.net/pdf?id=DBHCRrdsfi"
-tags: ["query:video-gen-rl"]
+tags: ["query:frame-dist"]
 score: 6.0
-evidence: 潜扩散视频插帧，弥合帧间时间间隔
-tldr: 潜扩散模型推动了视频插帧，但在大时间间隔与复杂运动下仍易产生伪影。本文认为事件相机信号能捕捉高时间分辨率的连续运动，适合弥合时间间隔。作者提出基于适配器的框架，将事件相机的高时间分辨率线索无缝融入预训练图像到视频模型，且无需修改其底层结构。方法在提升插值精度的同时保持模型兼容性，为帧间连贯的视频插值提供了高效方案。
+evidence: 生成中间帧以弥合时间间隔
+tldr: 针对视频帧插值在大时间间隔和复杂运动下易产生伪影的问题，本文提出利用事件相机信号来弥合时间间隔并提升插值精度。方法设计了一种适配器框架，将事件相机的高时间分辨率线索无缝集成到预训练的图像到视频模型中，无需从头训练或修改其底层结构。该工作聚焦相邻帧之间的运动与时间关系建模，为帧间分布与运动连续性提供了有效手段。
 source: ICLR-2026-Rejected-Public
 selection_source: conference_retrieval
-motivation: 潜扩散视频插帧在大时间间隔与复杂运动下仍易产生伪影，帧间连贯性不足。
-method: 提出基于适配器的框架，将事件相机的高时间分辨率线索融入预训练图像到视频模型，不改变其结构。
-result: 该方法在不修改模型底层结构的前提下提升了插值精度并减少伪影。
-conclusion: 事件信号与适配器结合为高质量视频插帧提供了高效途径。
+motivation: 视频帧插值在大时间间隔和复杂运动下易产生伪影。
+method: 用适配器将事件相机高时间分辨率线索注入预训练图像到视频模型。
+result: 无需修改底层结构即可提升插值精度并弥合时间间隔。
+conclusion: 为相邻帧间运动与时间关系建模提供了有效手段。
 ---
 
 ## Abstract

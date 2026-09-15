@@ -1,19 +1,19 @@
 ---
 title: Improving Autoregressive Video Modeling with History Understanding
-title_zh: 以历史理解改进自回归视频建模
+title_zh: 通过历史理解改进自回归视频建模
 authors: "Wenyang Luo, Haina Qin, Bing Li, Jiwen Lu, Xin Tao, Pengfei Wan, Kun Gai"
 date: 2026-01-26
 pdf: "https://openreview.net/pdf?id=kd2V5Bkw1D"
 tags: ["query:video-gen-rl"]
-score: 8.0
-evidence: 自回归视频生成基于历史帧预测未来帧
-tldr: 视频自回归生成按顺序基于历史帧预测未来帧，但历史帧内部表示的作用尚未被充分研究。本文系统分析发现历史表示质量与生成性能正相关，且增强历史表示可带来仅优化未来帧表示无法获得的增益。据此提出MiMo方法，通过改进历史帧表示提升自回归视频建模效果，强调了条件信号质量的重要性。
+score: 7.0
+evidence: 以历史帧为条件顺序预测未来帧
+tldr: 自回归视频生成以历史帧为条件顺序预测未来帧，但历史帧条件表示的作用长期被忽视。本文系统分析后发现历史表示质量与生成性能正相关，且改进历史表示带来的增益无法仅靠优化未来帧表示获得。基于此作者提出MiMo，通过掩码历史增强历史帧内部表示。结果验证了强化历史表示能有效提升视频自回归生成质量，为条件建模提供新视角。
 source: ICLR-2026-Accepted
 selection_source: conference_retrieval
-motivation: 自回归视频生成中历史帧内部表示的作用未被充分探索。
-method: 分析历史表示质量与生成性能关系，提出MiMo增强历史帧表示。
-result: 增强历史表示可带来优化未来帧表示无法获得的增益。
-conclusion: 强调条件信号质量对自回归视频生成的重要性。
+motivation: 自回归视频生成中历史帧条件表示的作用未被充分探索。
+method: 提出MiMo，通过掩码历史增强历史帧的内部表示。
+result: 历史表示质量与生成性能正相关，改进其表示带来显著增益。
+conclusion: 强化历史帧表示可有效提升视频自回归生成。
 ---
 
 ## Abstract

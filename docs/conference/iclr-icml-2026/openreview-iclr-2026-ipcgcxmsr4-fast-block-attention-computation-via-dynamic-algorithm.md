@@ -4,16 +4,16 @@ title_zh: 基于动态算法的快速块注意力计算
 authors: "Yang Cao, Xuyang Guo, Zhao Song"
 date: 2025-09-19
 pdf: "https://openreview.net/pdf?id=iPCgCxmSR4"
-tags: ["query:video-gen-rl"]
+tags: ["query:frame-dist"]
 score: 4.0
-evidence: 视频建模中时序帧依赖的注意力计算
-tldr: 视频建模因token数量庞大，注意力机制成为主要计算瓶颈，朴素方法展平f帧n个token会产生O(n^2f^2)复杂度。本文提出一种动态算法计算块注意力，突破了以往方法仅在某一个维度较小时才能达到次二次复杂度、且依赖固定块划分的限制。该方法可加速视频Transformer中跨空间块与时序帧的依赖建模，为长视频建模提供更高效的计算基础。
+evidence: 通过注意力建模跨时间帧的依赖关系
+tldr: 视频Transformer因帧序列极长使注意力机制成为主要计算瓶颈，现有径向或轴向方法仅在空间或时间维度较小时达到子二次复杂度。本文提出动态算法，在一般情况下以子二次时间计算块注意力，同时兼顾空间与时间维度。实验表明该方法在长视频序列上显著降低计算开销。其意义在于为大规模视频建模提供可扩展的注意力计算基础。
 source: ICLR-2026-Public
 selection_source: conference_retrieval
-motivation: 视频建模token量庞大，注意力机制成为主要计算瓶颈，现有次二次方法适用范围受限。
-method: 提出一种动态算法高效计算块注意力，突破单一维度较小的限制。
-result: 方法降低了跨空间块与时序帧注意力的计算成本。
-conclusion: 为长视频建模提供了更高效的注意力计算基础。
+motivation: 视频建模中Transformer注意力计算量巨大，成为主要计算瓶颈。
+method: 提出动态算法，在子二次时间内计算块注意力，处理时空维度。
+result: 在空间或时间维度较大时仍保持高效，降低注意力复杂度。
+conclusion: 为长序列视频建模提供高效注意力计算方案。
 ---
 
 ## Abstract

@@ -1,19 +1,19 @@
 ---
 title: Condensing Videos by Learning Where Motion Matters
-title_zh: 通过学习运动关键位置进行视频压缩
+title_zh: 通过学习运动关键位置实现视频压缩
 authors: "Jaehyun Choi, Jiwan Hur, Gyojin Han, Jaemyung Yu, Junmo Kim"
 date: 2025-09-16
 pdf: "https://openreview.net/pdf?id=9JAYXdBsIU"
-tags: ["query:video-gen-rl"]
-score: 4.0
-evidence: 时序连贯的视频帧合成
-tldr: 视频数据集压缩需在缓解巨大计算开销的同时，保留空间内容与时序动态之间复杂的相互依赖，而先前工作常将二者不当解耦。本文提出动态帧合成DFS，从少量关键帧出发，通过梯度错位定位高运动复杂度、简单插值失效的时刻，自适应地合成新帧。该方法仅在复杂度高的位置分配新帧，从而构建高效且时序连贯的合成数据集。这为视频数据的时空耦合建模与高效压缩提供了新思路。
+tags: ["query:frame-dist"]
+score: 5.0
+evidence: 时间动态与帧间运动复杂度
+tldr: 针对视频数据集蒸馏中空间内容与时间动态相互依赖难以保持的问题，作者提出动态帧合成方法，从少量关键帧出发，利用梯度错位识别插值失效的高运动复杂度时刻，只在需要处合成新帧。实验表明该方法生成高效且时间连贯的合成数据集，在压缩视频数据的同时更好地保留时间动态，为视频蒸馏提供了保留时空耦合的新思路。
 source: ICLR-2026-Public
 selection_source: conference_retrieval
-motivation: 视频数据集压缩需缓解巨大计算开销，同时保留空间内容与时序动态的相互依赖，现有方法常将其不当解耦。
-method: 提出动态帧合成DFS，从少量关键帧出发，通过梯度错位定位高运动复杂度时刻，自适应合成新帧。
-result: 仅在复杂度高处分配新帧，构建高效且时序连贯的合成数据集。
-conclusion: 在保留时空耦合的前提下实现了高效视频数据集压缩。
+motivation: 视频数据蒸馏面临保持空间内容与时间动态耦合的挑战，以往方法人为解耦二者，忽视了其相互依赖。
+method: 提出动态帧合成（DFS），从少量关键帧出发，通过梯度错位识别简单插值失效的高运动复杂度时刻，自适应合成新帧。
+result: 该方法仅在运动复杂处分配新帧，生成高效且时间连贯的合成数据集，实验显示其性能优于现有视频蒸馏方法。
+conclusion: 通过保留空间与时间动态的耦合，实现了高效且时间连贯的视频数据集蒸馏。
 ---
 
 ## Abstract

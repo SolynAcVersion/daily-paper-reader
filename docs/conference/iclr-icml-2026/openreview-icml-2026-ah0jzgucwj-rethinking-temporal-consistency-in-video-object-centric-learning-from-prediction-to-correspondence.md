@@ -1,19 +1,19 @@
 ---
 title: "Rethinking Temporal Consistency in Video Object-Centric Learning: From Prediction to Correspondence"
-title_zh: 重新思考视频物体中心学习中的时间一致性：从预测到对应
+title_zh: 重思视频对象中心学习中的时序一致性：从预测到对应
 authors: "Zhiyuan Li, Rongzhen Zhao, Wenyan Yang, Wenshuai Zhao, Pekka Marttinen, Joni Pajarinen"
 date: 2026-04-30
 pdf: "https://openreview.net/pdf/dcd77eaaefe18894b3c15cb1bd0feb33d94061de.pdf"
-tags: ["query:video-gen-rl"]
-score: 4.0
-evidence: 以对应匹配替代学习预测来维持帧间时间一致性
-tldr: 视频物体中心学习通常依赖学习到的动力学模块预测未来物体表示来维持时间一致性。本文指出这类预测器只是离散对应问题的高成本近似，而现代自监督视觉骨干已能编码可靠的实例判别特征。作者提出Grounded Correspondence框架，用确定性二分匹配替代学习到的转移函数，槽位由冻结骨干特征中的显著区域初始化，从而在帧间维持物体身份。该工作重新审视了时间一致性的实现方式，为视频表示学习提供了更简洁的路径。
+tags: ["query:frame-dist"]
+score: 5.0
+evidence: 维持帧到帧的身份与时序一致性
+tldr: 针对视频对象中心学习中依赖学习到的动力学模块预测未来对象表示来维持时序一致性的做法，本文指出这些预测器只是离散对应问题的昂贵近似。方法提出Grounded Correspondence框架，用确定性二分匹配替代学习到的转移函数，从冻结骨干特征的显著区域初始化槽，从而维持帧到帧的身份一致。该工作质疑了预测式建模帧间关系的必要性，为帧间对应与时序一致性提供了新视角。
 source: ICML-2026-Accepted
 selection_source: conference_retrieval
-motivation: 视频物体中心学习依赖学习到的动力学预测器来维持时间一致性，但这类预测器代价高且近似。
-method: 提出Grounded Correspondence框架，用确定性二分匹配替代学习到的转移函数，槽位由冻结骨干特征初始化。
-result: 该方法以更简洁的对应机制在帧间维持物体身份，避免了昂贵的动力学预测。
-conclusion: 从预测转向对应为视频时间一致性建模提供了新视角。
+motivation: 学习到的动力学预测器只是离散对应问题的昂贵近似。
+method: 提出Grounded Correspondence，用确定性二分匹配替代学习转移函数。
+result: 从冻结骨干特征初始化槽并维持帧到帧身份一致。
+conclusion: 质疑预测式建模帧间关系的必要性，提供对应视角。
 ---
 
 ## Abstract

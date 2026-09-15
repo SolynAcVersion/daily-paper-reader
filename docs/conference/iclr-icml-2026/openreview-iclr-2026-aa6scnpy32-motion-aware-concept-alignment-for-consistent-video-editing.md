@@ -1,19 +1,19 @@
 ---
 title: Motion-Aware Concept Alignment for Consistent Video Editing
-title_zh: 运动感知的概念对齐实现一致性视频编辑
+title_zh: 运动感知概念对齐的一致性视频编辑
 authors: "Tong Zhang, Juan C Leon Alcazar, Victor Escorcia, Bernard Ghanem"
 date: 2025-09-18
 pdf: "https://openreview.net/pdf?id=aa6sCNPy32"
 tags: ["query:video-gen-rl"]
-score: 6.0
-evidence: 视频编辑中保持跨帧时序稳定
-tldr: 视频语义混合编辑需要在语义变化下保持跨帧时序稳定。本文提出免训练框架MoCA-Video，在冻结视频扩散模型潜空间中结合类无关分割与对角去噪调度跟踪目标，并用动量校正近似训练分布外的新混合分布。在SSIM、LPIPS及自提指标上持续优于免训练与需训练基线，为保持时序一致性的视频编辑提供了免训练方案。
+score: 5.0
+evidence: 跨帧逼近新型混合分布以保持时序稳定
+tldr: 针对视频语义混合编辑中跨帧时序不稳定与语义漂移问题，本文提出免训练框架MoCA-Video，在冻结视频扩散模型的隐空间内，利用类别无关分割与对角去噪调度器定位并跟踪目标对象，并引入动量校正来逼近训练分布之外的新型混合分布。实验用SSIM、LPIPS及新指标评估，表明其在一致性与语义对齐上优于现有免训练方法，为视频编辑中的分布外时序稳定提供了新思路。
 source: ICLR-2026-Rejected-Public
 selection_source: conference_retrieval
-motivation: 视频语义混合编辑在语义变化时易出现跨帧时序不稳定与视觉伪影。
-method: 在冻结视频扩散模型潜空间中用分割跟踪目标并引入动量校正与残差模块。
-result: 在SSIM、LPIPS与自提语义对齐指标上优于免训练与需训练方法。
-conclusion: 为保持时序一致性的视频编辑提供了免训练方案。
+motivation: 视频语义编辑常面临跨帧时序不稳定与语义漂移问题。
+method: 在冻结视频扩散模型隐空间中用分割跟踪目标，并引入动量校正逼近新型混合分布。
+result: 在SSIM、LPIPS及新语义对齐指标上优于现有免训练方法。
+conclusion: 为视频编辑中的分布外时序稳定与语义一致性提供了免训练方案。
 ---
 
 ## Abstract

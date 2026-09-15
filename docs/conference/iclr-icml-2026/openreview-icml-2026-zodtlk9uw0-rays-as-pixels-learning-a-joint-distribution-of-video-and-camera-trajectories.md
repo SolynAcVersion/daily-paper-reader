@@ -1,19 +1,19 @@
 ---
 title: "Rays as Pixels: Learning A Joint Distribution of Video and Camera Trajectories"
-title_zh: 以像素为光线：学习视频与相机轨迹的联合分布
+title_zh: 光线即像素：学习视频与相机轨迹的联合分布
 authors: "Wonbong Jang, Shikun Liu, Soubhik Sanyal, Juan Camilo Perez, Kam Woh Ng, Sanskar Agrawal, Juan-Manuel Perez-Rua, Yiannis Douratsos, Tao Xiang"
 date: 2026-04-30
 pdf: "https://openreview.net/pdf/c0a4677a69a2b0522f6d321e1f3ee53bad83072c.pdf"
 tags: ["query:video-gen-rl"]
 score: 6.0
-evidence: 视频扩散模型联合建模视频帧与相机轨迹分布
-tldr: 相机参数恢复与新视角渲染长期被分开处理，在图像覆盖稀疏或相机位姿模糊时容易失败。本文提出Rays as Pixels，一种专用视频扩散模型，联合学习视频与相机轨迹的分布。作者将相机表示为密集光线像素，并通过解耦自交叉注意力与视频帧同步去噪。该联合建模提升了在稀疏条件下的鲁棒性，为统一生成式框架下的视频与几何感知提供了新思路。
+evidence: 视频帧的联合分布建模
+tldr: 针对相机参数估计与新视角渲染长期被分开处理、在图像覆盖稀疏或位姿模糊时易失败的问题，作者提出光线即像素模型，将相机表示为稠密光线像素并与视频帧通过解耦自交叉注意力一起去噪，从而学习视频与相机轨迹的联合分布。实验表明该联合建模在稀疏覆盖与位姿模糊场景下改善效果，为视频与相机轨迹的统一生成建模提供了新框架。
 source: ICML-2026-Accepted
 selection_source: conference_retrieval
-motivation: 相机参数恢复与新视角渲染被分开处理，在图像稀疏或位姿模糊时容易失败。
-method: 提出Rays as Pixels视频扩散模型，用密集光线像素表示相机，并通过解耦自交叉注意力与视频帧联合去噪。
-result: 联合分布建模在稀疏图像覆盖与模糊相机位姿下表现更稳健。
-conclusion: 该框架统一了视频生成与相机几何感知。
+motivation: 相机参数估计与新视角渲染此前被孤立处理，在图像覆盖稀疏或相机位姿模糊时容易失败。
+method: 提出专门的视频扩散模型，将相机表示为稠密光线像素（raxels），与视频帧一起通过解耦自交叉注意力同步去噪，学习联合分布。
+result: 该联合建模在稀疏覆盖和位姿模糊场景下改善了相机感知与视角合成效果。
+conclusion: 通过联合建模视频与相机轨迹分布，统一了相机估计与新视角渲染两个问题。
 ---
 
 ## Abstract

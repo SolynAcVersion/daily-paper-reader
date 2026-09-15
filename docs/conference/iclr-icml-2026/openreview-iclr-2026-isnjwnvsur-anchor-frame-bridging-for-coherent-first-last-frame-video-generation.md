@@ -1,19 +1,19 @@
 ---
 title: Anchor Frame Bridging for Coherent First-Last Frame Video Generation
-title_zh: 锚帧桥接：面向连贯首尾帧视频生成的方法
+title_zh: 面向连贯首尾帧视频生成的锚帧桥接
 authors: "Xuehan Hou, Meng Fan, Pengchong Qiao, Zesen Cheng, Yian Zhao, Lei Zhu, Kaiwen Cheng, Chang Liu, Jie Chen"
 date: 2026-01-26
 pdf: "https://openreview.net/pdf?id=isNjWnVsUR"
-tags: ["query:video-gen-rl"]
-score: 7.0
-evidence: 缓解语义漂移以维持帧间时序一致性
-tldr: 首尾帧视频生成需在指定首末帧间生成连贯运动，但中间帧易出现语义退化，导致场景扭曲与主体变形，破坏时序一致性。本文提出锚帧桥接（AFB），一种即插即用且免训练的方法，在语义不连续最大的关键时刻自适应插值锚帧，将边界帧语义连续性显式桥接到中间帧。该方法有效缓解中间帧语义漂移，提升帧间一致性与泛化性。
+tags: ["query:frame-dist"]
+score: 6.0
+evidence: 将语义连续性桥接到中间帧以保持时序一致
+tldr: 针对首尾帧视频生成中中间帧语义退化、场景扭曲和主体变形破坏时序一致性的问题，本文提出即插即用的锚帧桥接方法AFB。该方法在语义不连续性最大的时间关键位置自适应地插入锚帧，显式地将边界帧的语义连续性桥接到中间帧，无需训练即可通用。研究有效缓解了中间帧的语义漂移，为帧间语义与分布连续性的建模提供了思路。
 source: ICLR-2026-Accepted
 selection_source: conference_retrieval
-motivation: 首尾帧视频生成中间帧易语义退化，造成场景扭曲与主体变形，破坏时序一致性。
-method: 提出免训练即插即用的锚帧桥接，在语义不连续最大处自适应插值锚帧。
-result: 显式桥接边界帧语义连续性，有效缓解中间帧语义漂移并提升一致性。
-conclusion: 为提升首尾帧视频生成的帧间连贯性提供了通用免训练方案。
+motivation: 首尾帧视频生成的中间帧易出现语义退化，破坏时序一致性。
+method: 提出即插即用AFB，在语义不连续关键位置自适应插入锚帧。
+result: 有效缓解中间帧语义漂移，提升帧间语义连续性。
+conclusion: 为帧间语义与分布连续性的建模提供了免训练思路。
 ---
 
 ## Abstract

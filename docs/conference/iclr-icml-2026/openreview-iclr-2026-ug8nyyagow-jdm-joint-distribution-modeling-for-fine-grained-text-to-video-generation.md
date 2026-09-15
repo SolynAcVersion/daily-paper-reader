@@ -4,16 +4,16 @@ title_zh: JDM：面向细粒度文本到视频生成的联合分布建模
 authors: "Penghui Ruan, Bojia Zi, Xianbiao Qi, Youze Huang, Rong Xiao, Pichao WANG, Jiannong Cao, Yuhui Shi"
 date: 2025-09-15
 pdf: "https://openreview.net/pdf?id=Ug8NyyagOw"
-tags: ["query:video-gen-rl"]
+tags: ["query:frame-dist"]
 score: 7.0
-evidence: 面向文本到视频生成的联合分布建模
-tldr: 文本到视频扩散模型视觉质量提升，但在细粒度文本对齐上仍存在属性错配、物体交互错误与组合失败等问题。本文指出其根源在于过度关注视频重建而非显式学习文本与视频的结构对应关系，提出联合分布建模（JDM），对视频内容与物体掩膜的联合分布进行建模以增强对齐。实验表明该方法改善了细粒度对齐与物体交互的合理性。
+evidence: 建模视频内容与物体掩码的联合分布
+tldr: 文本到视频生成在视觉质量上进步显著，但细粒度文本-视频对齐仍存在属性错配、物体交互错误与组合失败等问题。本文指出其根源在于模型偏重视频重建而非显式学习结构化的文本-视频对应关系，提出联合分布建模框架JDM，通过建模视频内容与物体掩码的联合分布来增强对齐。该框架为细粒度文本到视频生成提供了新的分布建模视角。
 source: ICLR-2026-Rejected-Public
 selection_source: conference_retrieval
-motivation: 文本到视频模型在细粒度对齐上存在属性错配与组合失败问题。
-method: 提出联合分布建模JDM，显式建模视频内容与物体掩膜的联合分布以增强对齐。
-result: 方法改善了文本到视频的细粒度对齐与物体交互正确性。
-conclusion: 表明对视频与掩膜联合分布建模有助于结构化文本视频对应。
+motivation: 扩散文本到视频模型存在属性错配与组合失败等细粒度对齐问题。
+method: 提出联合分布建模框架，显式建模视频内容与物体掩码的联合分布。
+result: 增强了文本与视频之间的结构化细粒度对应关系。
+conclusion: 以联合分布建模为文本到视频的细粒度对齐提供了新路径。
 ---
 
 ## Abstract

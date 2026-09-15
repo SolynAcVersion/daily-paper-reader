@@ -1,19 +1,19 @@
 ---
 title: "Enhance-A-Video: Better Generated Video for Free"
-title_zh: Enhance-A-Video：免费提升生成视频质量
+title_zh: Enhance-A-Video：免费获得更好的生成视频
 authors: "Yang Luo, Xuanlei Zhao, Mengzhao Chen, Kaipeng Zhang, Wenqi Shao, Kai Wang, Zhangyang Wang, Yang You"
 date: 2025-09-17
 pdf: "https://openreview.net/pdf?id=Z35TJPOalp"
-tags: ["query:video-gen-rl"]
+tags: ["query:frame-dist"]
 score: 8.0
-evidence: 免训练增强跨帧相关性以提升生成视频连贯性
-tldr: DiT类视频生成模型效果显著，但如何增强已有模型的研究仍较缺乏。本文提出免训练的Enhance-A-Video，利用非对角时间注意力分布增强跨帧相关性，无需重训练或微调即可应用于多数DiT视频生成框架。实验表明该方法在时间一致性和视觉质量上均有稳定提升，为生成视频的增强提供了简单有效的通用手段。
+evidence: 基于非对角时序注意力分布增强跨帧相关性
+tldr: 该文针对DiT视频生成模型增强研究不足的问题，提出无需训练的方法Enhance-A-Video。其核心思想是利用时序注意力分布中的非对角分量来增强跨帧相关性，从而提升生成视频的时序一致性与视觉质量。该方法可直接应用于多数DiT视频生成框架，无需重训练或微调。实验在多种模型上验证了时序一致性与画质的显著提升，为建模帧间相关性以改善视频生成提供了通用思路，与帧间分布关系建模高度契合。
 source: ICLR-2026-Public
 selection_source: conference_retrieval
-motivation: DiT视频生成模型缺乏对已有模型进行增强的研究。
-method: 基于非对角时间注意力分布增强跨帧相关性，实现免训练的视频增强。
-result: 在多种DiT模型上同时提升时间一致性与视觉质量。
-conclusion: 提供了简单通用、无需重训练的视频生成增强方法。
+motivation: DiT视频生成效果显著，但针对已有模型的增强研究仍相对空白。
+method: 提出免训练方法，基于非对角时序注意力分布增强跨帧相关性，可直接用于多数DiT框架。
+result: 在多种DiT视频生成模型上同时提升时序一致性与视觉质量。
+conclusion: 为通过建模帧间相关性来增强视频生成质量提供了通用免训练方案。
 ---
 
 ## Abstract

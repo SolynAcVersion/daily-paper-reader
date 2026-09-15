@@ -1,19 +1,19 @@
 ---
 title: "VidSplice: Towards Coherent Video Inpainting via Explicit Spaced Frame Guidance"
-title_zh: VidSplice：通过显式间隔帧引导实现连贯视频修复
+title_zh: VidSplice：基于显式间隔帧引导的连贯视频修复
 authors: "Ming Xie, Junqiu Yu, Qiaole Dong, Xiangyang Xue, Yanwei Fu"
 date: 2025-09-19
 pdf: "https://openreview.net/pdf?id=pjXSfyhifn"
-tags: ["query:video-gen-rl"]
-score: 5.0
-evidence: 利用间隔帧引导实现连贯视频修复与时间一致性
-tldr: 现有视频修复方法借助图像到视频先验建模帧间一致性，但在严重内容退化下难以兼顾时空稳定性，对视频后段控制不足。本文提出VidSplice，将修复解耦为多帧一致的图像修复与掩膜区域运动传播，并引入间隔帧先验提供时空线索。该框架提升了修复视频的时空连贯性，其帧间一致性建模思路对视频生成有借鉴意义。
+tags: ["query:frame-dist"]
+score: 6.0
+evidence: 跨掩码视频帧的时间一致性
+tldr: 针对现有视频修复方法在严重内容退化下难以保持时空稳定、对视频后段控制不足的问题，作者将视频修复解耦为多帧一致图像修复与掩码区域运动传播，提出VidSplice框架，引入间隔帧先验并设计CoSpliced模块传播首帧信息。实验表明该方法在严重退化场景下提升了时空稳定性与后段控制能力，为跨帧连贯的视频修复提供了新思路。
 source: ICLR-2026-Public
 selection_source: conference_retrieval
-motivation: 现有视频修复在严重退化下忽视时空稳定性，后段视频控制不足。
-method: 将修复解耦为一致图像修复与运动传播，并引入间隔帧先验提供时空线索。
-result: 方法在复杂退化场景下提升了修复视频的时空连贯性与稳定性。
-conclusion: 为视频修复的帧间一致性建模提供了新框架。
+motivation: 现有视频修复方法在严重内容退化下难以保持时空稳定，对视频后段控制不足。
+method: 将视频修复解耦为多帧一致图像修复与掩码区域运动传播，引入间隔帧先验与CoSpliced模块传播首帧信息。
+result: 该方法在严重退化场景下提升了时空稳定性与对视频后段的控制。
+conclusion: 通过间隔帧引导与运动传播，改善了视频修复的时间连贯性。
 ---
 
 ## Abstract
