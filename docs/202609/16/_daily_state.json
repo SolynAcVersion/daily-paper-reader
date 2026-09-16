@@ -1,0 +1,41 @@
+{
+  "date": "20260916",
+  "date_label": "",
+  "generated_at": "2026-09-16 22:33:11 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.11265v1",
+      "route": "202609/16/2609.11265v1-uncertainty-dmd-restoring-diversity-in-few-step-autoregressive-video-distillation",
+      "title": "Uncertainty DMD: Restoring Diversity in Few-Step Autoregressive Video Distillation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "自回归视频生成中的时间分布建模",
+      "first_seen_at": "2026-09-16 22:33:11 UTC",
+      "updated_at": "2026-09-16 22:33:11 UTC"
+    },
+    {
+      "paper_id": "2609.13830v1",
+      "route": "202609/16/2609.13830v1-diva-enabling-interactive-digital-life-simulation-via-video-models",
+      "title": "DiVA: Enabling Interactive Digital Life Simulation via Video Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "长时视频生成的连续性与过渡建模",
+      "first_seen_at": "2026-09-16 22:33:11 UTC",
+      "updated_at": "2026-09-16 22:33:11 UTC"
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-16T22:32:16.120004+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 4,
+    "deep_divecandidates": 0,
+    "deep_cap": 9,
+    "deep_selected": 0,
+    "quick_candidates": 2,
+    "quick_skim_target": 14,
+    "quick_selected": 2
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2609.11265v1",
+      "source": "arxiv",
+      "title": "Uncertainty DMD: Restoring Diversity in Few-Step Autoregressive Video Distillation",
+      "abstract": "Few-step distillation improves the efficiency of autoregressive (AR) video generation, but often causes diversity collapse: under the same prompt, different noise samples tend to produce highly similar videos with weakened motion dynamics. We analyze this degradation in Distribution Matching Distillation (DMD)-distilled AR video generators and find that, in the autoregressive setting, it takes the form of a structured uncertainty collapse: the mode-seeking bias of DMD maps different noise samples to nearly identical first chunks, and the deterministic AR cache then propagates this collapsed state to all subsequent chunks, turning a local loss of stochasticity at the rollout root into a global suppression of temporal variation. Based on this analysis, we propose Uncertainty DMD, a simple uncertainty-injection framework that restores stochasticity at two key stages of AR generation: a timestep perturbation for the first chunk to increase first-chunk diversity, and a stochastic cache-writing mechanism for later chunks to preserve uncertainty in autoregressive conditioning. The method requires no architectural changes and introduces only lightweight perturbation operations. The same perturbation mechanisms are used during both training and inference. Experiments show that Uncertainty DMD consistently improves diversity and motion dynamics while maintaining comparable per-sample visual quality.",
+      "authors": [
+        "Zixuan Duan",
+        "Xunzhi Xiang",
+        "Yabo Chen",
+        "Xin Zhang",
+        "Changhan Liu",
+        "Haibin Huang",
+        "Chi Zhang",
+        "Qi Fan",
+        "Xuelong Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-10T08:59:47+00:00",
+      "link": "https://arxiv.org/pdf/2609.11265v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "temporal distribution modeling in autoregressive video generation",
+      "llm_evidence_cn": "自回归视频生成中的时间分布建模",
+      "llm_evidence": "自回归视频生成中的时间分布建模",
+      "canonical_evidence": "自回归视频生成中的时间分布建模",
+      "llm_tldr_en": "Uncertainty DMD diagnoses diversity collapse in DMD-distilled autoregressive video generators as structured uncertainty collapse and proposes restoring temporal variation across rollout chunks.",
+      "llm_tldr_cn": "少步蒸馏提升了自回归视频生成的效率，却常导致多样性崩塌，同一提示下不同噪声产生高度相似且运动减弱的视频。本文分析分布匹配蒸馏中的该退化现象，发现其表现为结构化不确定性崩塌：模式寻求偏差把不同噪声映射到几乎相同的第一段，确定性自回归缓存又把崩塌状态传播到后续所有段。基于此提出Uncertainty DMD，恢复根部的随机性并抑制时间变化被全局压制，从而改善自回归视频生成的多样性与运动动态。",
+      "llm_tldr": "少步蒸馏提升了自回归视频生成的效率，却常导致多样性崩塌，同一提示下不同噪声产生高度相似且运动减弱的视频。本文分析分布匹配蒸馏中的该退化现象，发现其表现为结构化不确定性崩塌：模式寻求偏差把不同噪声映射到几乎相同的第一段，确定性自回归缓存又把崩塌状态传播到后续所有段。基于此提出Uncertainty DMD，恢复根部的随机性并抑制时间变化被全局压制，从而改善自回归视频生成的多样性与运动动态。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "temporal distribution modeling and frame to frame dependency learning for video synthesis",
+      "matched_requirement_id": "req-29",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.13830v1",
+      "source": "arxiv",
+      "title": "DiVA: Enabling Interactive Digital Life Simulation via Video Models",
+      "abstract": "We present DiVA, a deeply interactive digital life simulator pioneering a new paradigm for long-term, open-ended interactive experiences within digital character worlds. DiVA's architecture pairs a Multimodal Large Language Model (MLLM) as a router with a meticulously designed stacked video pipeline for seamless, multi-turn interactions with action and audio response. To maintain continuity and avoid degradation, we model generation as a three-part coupled system: waiting video, action video, and the transitions between them. These transitions are critically handled by our Anchored Video Continuation (AVC) module, which returns the character to stable states to prevent degradation. By encoding information from the preceding action video segment, AVC ensures smooth transitions, significantly reducing camera jitter and inconsistencies common in current video transition methods. This design also enables complex pose changes (e.g., sitting to standing) typically difficult for audio-driven models. These system designs together ensure high-fidelity identity, coherence, and dynamics for extended experiences. To validate our pipeline design, we comprehensively compare our system against alternatives by replacing our core generation module with mainstream long-video, continuation, and interpolation methods. We further analyze the necessity of the three-stage design, anchor-state selection, transition naturalness, spatial grounding, and the quality-latency trade-off, and we expand the comparison to additional long-form audio-driven avatar models. Results confirm DiVA is markedly superior in maintaining long-term visual quality and realism, validating its effectiveness as a sustainable, interactive simulation.",
+      "authors": [
+        "Cheng Chen",
+        "Hao Ouyang",
+        "Qiuyu Wang",
+        "Ka Leong Cheng",
+        "Wen Wang",
+        "Yihao Meng",
+        "Hanlin Wang",
+        "Yixuan Li",
+        "Jiacheng Wei",
+        "Zhenshan Tan",
+        "Yanhong Zeng",
+        "Yujun Shen",
+        "Guosheng Lin",
+        "Fayao Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-12T09:33:15+00:00",
+      "link": "https://arxiv.org/pdf/2609.13830v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "long-horizon video generation with continuity and transition modeling",
+      "llm_evidence_cn": "长时视频生成的连续性与过渡建模",
+      "llm_evidence": "长时视频生成的连续性与过渡建模",
+      "canonical_evidence": "长时视频生成的连续性与过渡建模",
+      "llm_tldr_en": "DiVA builds an interactive digital-life simulator pairing an MLLM router with a stacked video pipeline, using an Anchored Video Continuation module to keep characters in stable states and prevent temporal degradation across multi-turn generation.",
+      "llm_tldr_cn": "针对长时交互式数字角色世界中视频生成易退化、连贯性差的问题，本文提出DiVA模拟器。方法上以大模型作为路由，配合堆叠式视频生成管线，并用锚定视频续接模块将角色拉回稳定状态。系统支持多轮动作与音频响应，保持长程连续性与稳定。该工作为交互式视频世界建模提供了架构与连续性保持思路。",
+      "llm_tldr": "针对长时交互式数字角色世界中视频生成易退化、连贯性差的问题，本文提出DiVA模拟器。方法上以大模型作为路由，配合堆叠式视频生成管线，并用锚定视频续接模块将角色拉回稳定状态。系统支持多轮动作与音频响应，保持长程连续性与稳定。该工作为交互式视频世界建模提供了架构与连续性保持思路。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "maintaining inter-frame coherence in video generation",
+      "matched_requirement_id": "req-22",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

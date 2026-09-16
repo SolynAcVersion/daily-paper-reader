@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-09-15T22:03:27.346036+00:00",
-  "updated_date": "20260915",
+  "generated_at": "2026-09-16T22:32:16.120842+00:00",
+  "updated_date": "20260916",
   "carryover_days": 9,
   "tag_states": {
     "phys-video": {
-      "updated_date": "20260915",
+      "updated_date": "20260916",
       "carryover_days": 9,
       "items": []
     },
     "psd": {
-      "updated_date": "20260915",
+      "updated_date": "20260916",
       "carryover_days": 9,
       "items": []
     },
@@ -19,12 +19,12 @@
       "items": []
     },
     "frame-dist": {
-      "updated_date": "20260915",
+      "updated_date": "20260916",
       "carryover_days": 9,
       "items": []
     },
     "video-gen-rl": {
-      "updated_date": "20260915",
+      "updated_date": "20260916",
       "carryover_days": 9,
       "items": []
     }

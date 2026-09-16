@@ -1,0 +1,39 @@
+{
+  "label": "2026-09-16",
+  "date": "2026-09-16",
+  "generated_at": "2026-09-16T22:33:12",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202609/16/2609.11265v1-uncertainty-dmd-restoring-diversity-in-few-step-autoregressive-video-distillation",
+      "section": "quick",
+      "title_en": "Uncertainty DMD: Restoring Diversity in Few-Step Autoregressive Video Distillation",
+      "authors": "Zixuan Duan, Xunzhi Xiang, Yabo Chen, Xin Zhang, Changhan Liu, Haibin Huang, Chi Zhang, Qi Fan, Xuelong Li",
+      "date": "2026-09-10",
+      "pdf": "https://arxiv.org/pdf/2609.11265v1",
+      "score": "6.0",
+      "evidence": "自回归视频生成中的时间分布建模",
+      "tldr": "少步蒸馏提升自回归视频生成效率，却因DMD的mode-seeking偏差导致多样性崩溃：同一提示下不同噪声生成高度相似视频、运动动态减弱。作者指出该问题源于结构化不确定性坍缩，首块多样性丢失后被确定性AR缓存传播至后续块。为此提出Uncertainty DMD，在首块做时间步扰动、后续块做随机缓存写入，训练与推理均注入扰动且无需改架构。实验表明其在保持单样本画质的同时持续提升多样性与运动动态。",
+      "tags": "query:video-gen-rl",
+      "abstract_en": "Few-step distillation improves the efficiency of autoregressive (AR) video generation, but often causes diversity collapse: under the same prompt, different noise samples tend to produce highly similar videos with weakened motion dynamics. We analyze this degradation in Distribution Matching Distillation (DMD)-distilled AR video generators and find that, in the autoregressive setting, it takes the form of a structured uncertainty collapse: the mode-seeking bias of DMD maps different noise samples to nearly identical first chunks, and the deterministic AR cache then propagates this collapsed state to all subsequent chunks, turning a local loss of stochasticity at the rollout root into a global suppression of temporal variation. Based on this analysis, we propose Uncertainty DMD, a simple uncertainty-injection framework that restores stochasticity at two key stages of AR generation: a timestep perturbation for the first chunk to increase first-chunk diversity, and a stochastic cache-writing mechanism for later chunks to preserve uncertainty in autoregressive conditioning. The method requires no architectural changes and introduces only lightweight perturbation operations. The same perturbation mechanisms are used during both training and inference. Experiments show that Uncertainty DMD consistently improves diversity and motion dynamics while maintaining comparable per-sample visual quality.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/16/2609.13830v1-diva-enabling-interactive-digital-life-simulation-via-video-models",
+      "section": "quick",
+      "title_en": "DiVA: Enabling Interactive Digital Life Simulation via Video Models",
+      "authors": "Cheng Chen, Hao Ouyang, Qiuyu Wang, Ka Leong Cheng, Wen Wang, Yihao Meng, Hanlin Wang, Yixuan Li, Jiacheng Wei, Zhenshan Tan, Yanhong Zeng, Yujun Shen, Guosheng Lin, Fayao Liu",
+      "date": "2026-09-12",
+      "pdf": "https://arxiv.org/pdf/2609.13830v1",
+      "score": "6.0",
+      "evidence": "长时视频生成的连续性与过渡建模",
+      "tldr": "DiVA 面向长期开放式数字角色世界交互，用 MLLM 路由加堆叠视频管线支持多轮动作与音频响应。为抑制退化，它将生成拆为等待视频、动作视频及二者过渡，并由锚定视频续接 AVC 模块维持稳定状态。实验对比长视频、续接与插帧等方法，并分析三阶段设计、锚点选择与质量延迟权衡。结果表明 DiVA 在长期视觉质量、真实感与复杂姿态变化上显著更优。",
+      "tags": "query:video-gen-rl",
+      "abstract_en": "We present DiVA, a deeply interactive digital life simulator pioneering a new paradigm for long-term, open-ended interactive experiences within digital character worlds. DiVA's architecture pairs a Multimodal Large Language Model (MLLM) as a router with a meticulously designed stacked video pipeline for seamless, multi-turn interactions with action and audio response. To maintain continuity and avoid degradation, we model generation as a three-part coupled system: waiting video, action video, and the transitions between them. These transitions are critically handled by our Anchored Video Continuation (AVC) module, which returns the character to stable states to prevent degradation. By encoding information from the preceding action video segment, AVC ensures smooth transitions, significantly reducing camera jitter and inconsistencies common in current video transition methods. This design also enables complex pose changes (e.g., sitting to standing) typically difficult for audio-driven models. These system designs together ensure high-fidelity identity, coherence, and dynamics for extended experiences. To validate our pipeline design, we comprehensively compare our system against alternatives by replacing our core generation module with mainstream long-video, continuation, and interpolation methods. We further analyze the necessity of the three-stage design, anchor-state selection, transition naturalness, spatial grounding, and the quality-latency trade-off, and we expand the comparison to additional long-form audio-driven avatar models. Results confirm DiVA is markedly superior in maintaining long-term visual quality and realism, validating its effectiveness as a sustainable, interactive simulation.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

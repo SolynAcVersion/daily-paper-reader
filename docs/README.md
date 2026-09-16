@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-15</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-16</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 11 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 2 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>9</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>2</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-15 22:13:49 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-16 22:33:11 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,8 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日扫11篇、精读2篇，8分双星聚焦文本生成动态3D场景与视频模型因果可改写性。</p>
-<p>最值得看的是两篇8.0精读：ESG从文本生成物理一致的动态3D场景，另一篇追问视频模型</p>
+<p>今日速读2篇视频生成方向论文，均为6.0分，无精读。可关注少步自回归视频蒸馏中的多样性恢复（Uncertainty DMD）与用视频模型驱动交互式数字生命模拟（DiVA）两个方向。普通读者可先浏览这两篇摘要，判断是否与自身兴趣或工作相关再决定深入。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -72,12 +71,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">2 篇</strong>
+    <strong class="dpr-home-dashboard-count">0 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="ESG: Generating Physically Consistent Dynamic 3D Scenes from Text Descriptions">ESG: Generating Physically Consistent Dynamic 3D Scenes from Text Descriptions</span></li><li><span class="dpr-home-dashboard-paper-title" title="A Chosen Future Can Still Be Rewritten: Causal Writability in Video Models">A Chosen Future Can Still Be Rewritten: Causal Writability in Video Models</span></li></ul>
+<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>2</strong></span></div>
+
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -85,12 +84,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">9 篇</strong>
+    <strong class="dpr-home-dashboard-count">2 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="PIVOT: Physics-Grounded Verification for AI-Generated Audio-Video Detection">PIVOT: Physics-Grounded Verification for AI-Generated Audio-Video Detection</span></li><li><span class="dpr-home-dashboard-paper-title" title="Mask Forcing: Improving Autoregressive Video Diffusion Distillation via Dual-Noise Masking Rollout">Mask Forcing: Improving Autoregressive Video Diffusion Distillation via Dual-Noise Masking Rollout</span></li><li><span class="dpr-home-dashboard-paper-title" title="Harnessing Intrinsic Subject-Aware Attention for Controllable Multi-Subject Video Generation">Harnessing Intrinsic Subject-Aware Attention for Controllable Multi-Subject Video Generation</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Uncertainty DMD: Restoring Diversity in Few-Step Autoregressive Video Distillation">Uncertainty DMD: Restoring Diversity in Few-Step Autoregressive Video Distillation</span></li><li><span class="dpr-home-dashboard-paper-title" title="DiVA: Enabling Interactive Digital Life Simulation via Video Models">DiVA: Enabling Interactive Digital Life Simulation via Video Models</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">video-gen-rl <strong>7</strong></span><span class="dpr-home-dashboard-tag">phys-video <strong>1</strong></span><span class="dpr-home-dashboard-tag">psd <strong>1</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">video-gen-rl <strong>2</strong></span></div>
 </section>
 </div>
 
