@@ -1,0 +1,105 @@
+{
+  "date": "20260917",
+  "date_label": "",
+  "generated_at": "2026-09-17 22:46:16 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.17521v1",
+      "route": "202609/17/2609.17521v1-physstream-streaming-physics-grounded-video-generation-with-structured-scene-memory-and-fine-grained-motion-control",
+      "title": "PhysStream: Streaming Physics-Grounded Video Generation with Structured Scene Memory and Fine-Grained Motion Control",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "物理驱动的视频生成与细粒度运动控制",
+      "first_seen_at": "2026-09-17 22:46:16 UTC",
+      "updated_at": "2026-09-17 22:46:16 UTC"
+    },
+    {
+      "paper_id": "2609.18430v1",
+      "route": "202609/17/2609.18430v1-strucphysvideo-learning-physical-dynamics-from-structured-captions-and-robot-actions",
+      "title": "StrucPhysVideo: Learning Physical Dynamics from Structured Captions and Robot Actions",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "以物理数据策展学习物理动力学的视频世界模型",
+      "first_seen_at": "2026-09-17 22:46:16 UTC",
+      "updated_at": "2026-09-17 22:46:16 UTC"
+    },
+    {
+      "paper_id": "2609.17414v1",
+      "route": "202609/17/2609.17414v1-slotdit-object-centric-representations-for-diffusion-transformers",
+      "title": "SlotDiT: Object-Centric Representations for Diffusion Transformers",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向视频生成的文本引导扩散Transformer，采用对象中心隐变量建模动态",
+      "first_seen_at": "2026-09-17 22:46:16 UTC",
+      "updated_at": "2026-09-17 22:46:16 UTC"
+    },
+    {
+      "paper_id": "2609.17524v1",
+      "route": "202609/17/2609.17524v1-modality-autoregressive-world-action-models",
+      "title": "Modality-Autoregressive World-Action Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "自回归预测多种未来视觉模态后再预测动作",
+      "first_seen_at": "2026-09-17 22:46:16 UTC",
+      "updated_at": "2026-09-17 22:46:16 UTC"
+    },
+    {
+      "paper_id": "2609.18077v1",
+      "route": "202609/17/2609.18077v1-vidax-a-unified-jax-framework-for-video-generative-models-on-accelerator-meshes",
+      "title": "vidax: A Unified JAX Framework for Video Generative Models on Accelerator Meshes",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向视频生成模型的统一JAX推理框架",
+      "first_seen_at": "2026-09-17 22:46:16 UTC",
+      "updated_at": "2026-09-17 22:46:16 UTC"
+    },
+    {
+      "paper_id": "2609.19137v1",
+      "route": "202609/17/2609.19137v1-dreaming-the-sound-of-contact-leveraging-video-and-audio-generation-for-zero-shot-force-aware-manipulation-and-data-generation",
+      "title": "Dreaming the Sound of Contact: Leveraging Video and Audio Generation for Zero-Shot Force-Aware Manipulation and Data Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "结合接触音频的视频生成以实现力感知物理交互",
+      "first_seen_at": "2026-09-17 22:46:16 UTC",
+      "updated_at": "2026-09-17 22:46:16 UTC"
+    }
+  ]
+}

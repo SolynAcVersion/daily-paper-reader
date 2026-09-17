@@ -1,0 +1,290 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-17T22:41:38.920033+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 4,
+    "deep_divecandidates": 2,
+    "deep_cap": 9,
+    "deep_selected": 2,
+    "quick_candidates": 4,
+    "quick_skim_target": 14,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2609.17521v1",
+      "source": "arxiv",
+      "title": "PhysStream: Streaming Physics-Grounded Video Generation with Structured Scene Memory and Fine-Grained Motion Control",
+      "abstract": "Interactive control for video generation is moving from coarse prompts toward fine-grained, physically meaningful manipulation of dynamic scenes. Yet existing controllable methods either require the full control schedule before generation starts, or use pixel-space signals that dictate object positions rather than physical dynamics. To address these limitations, we propose PhysStream, an autoregressive model for physics-grounded image-to-video synthesis that incorporates structured scene memory---positional maps and object tracking maps derived online from previously generated frames---and supports fine-grained motion control via sparse velocity-increment signals that encode physical quantities, letting the model learn the underlying dynamics. We train our model in two stages: a bidirectional model is first finetuned with motion-control conditioning, then a causal autoregressive model is trained with additional structured scene memory, further improving physical consistency. PhysStream enables interactive, mid-generation control over multi-object tabletop rigid-body scenes---a capability not supported by prior methods---reducing motion distribution distance (FVMD) by 33% and trajectory error by 12% over the strongest baselines on synthetic benchmarks, and is preferred by human evaluators in over 85% of in-the-wild comparisons. Please check our website for more details: https://czzzzh.github.io/PhysStream",
+      "authors": [
+        "Chuhao Chen",
+        "Peter Wonka",
+        "Chaoyang Wang",
+        "Chen Wang",
+        "Qiao Feng",
+        "Sergey Tulyakov",
+        "Lingjie Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.GR"
+      ],
+      "published": "2026-09-15T17:55:13+00:00",
+      "link": "https://arxiv.org/pdf/2609.17521v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "physics-grounded video generation with fine-grained motion control",
+      "llm_evidence_cn": "物理驱动的视频生成与细粒度运动控制",
+      "llm_evidence": "物理驱动的视频生成与细粒度运动控制",
+      "canonical_evidence": "物理驱动的视频生成与细粒度运动控制",
+      "llm_tldr_en": "PhysStream is an autoregressive image-to-video model that builds structured scene memory from generated frames and uses sparse velocity-increment signals encoding physical quantities for fine-grained, physics-grounded control of dynamic scenes.",
+      "llm_tldr_cn": "针对现有可控视频生成需预知完整控制序列、且以像素位置而非物理动力学进行控制的局限，本文提出PhysStream自回归图像到视频模型。它从已生成帧在线构建位置图与目标跟踪图作为结构化场景记忆，并用稀疏速度增量信号编码物理量，实现细粒度运动控制。实验显示该方法可流式、物理合理地操控动态场景并保持一致性，为交互式物理视频生成提供了新思路。",
+      "llm_tldr": "针对现有可控视频生成需预知完整控制序列、且以像素位置而非物理动力学进行控制的局限，本文提出PhysStream自回归图像到视频模型。它从已生成帧在线构建位置图与目标跟踪图作为结构化场景记忆，并用稀疏速度增量信号编码物理量，实现细粒度运动控制。实验显示该方法可流式、物理合理地操控动态场景并保持一致性，为交互式物理视频生成提供了新思路。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.18430v1",
+      "source": "arxiv",
+      "title": "StrucPhysVideo: Learning Physical Dynamics from Structured Captions and Robot Actions",
+      "abstract": "Modeling physical dynamics, including how objects move, interact, and change state, is central to video world models for embodied AI. We present StrucPhysVideo, a family of video world models that bridges physics-focused data curation with language- and action-conditioned prediction of scene evolution. Our data pipeline combines motion-aware video segmentation, quality and content filtering, and physical relevance verification with structured annotations of objects, materials, and temporally localized interactions. By disentangling camera motion from object behavior and explicitly describing contact, deformation, and state transitions, the pipeline provides supervision grounded in observable physical events. Building on these data, we introduce StrucPhysVideo-TI2V, a sparse Mixture-of-Experts (MoE) text-image-to-video model trained with a curriculum that progressively emphasizes physical dynamics while retaining general-domain video data. StrucPhysVideo-TI2V achieves state-of-the-art performance on Physics-IQ Verified, scoring 45.5% and outperforming Cosmos3-Super-Image2Video by 2.8 percentage points. Caption ablations across backbones further demonstrate the effectiveness of physics-focused supervision. We further extend StrucPhysVideo-TI2V to StrucPhysVideo-IA2V, an interactive image-action-to-video world model that predicts visual outcomes from robot end-effector commands. Action conditioning, causal autoregressive generation, and few-step distillation enable incremental robot rollouts with only four denoising steps. Together, StrucPhysVideo advances physical dynamics modeling from image- and language-conditioned video prediction toward action-driven interaction.",
+      "authors": [
+        "Awomo-WM Team",
+        ":",
+        "Enhui Ma",
+        "Kaiwen Guo",
+        "Tingrui Zhang",
+        "Wei Song",
+        "Yingshui Tan",
+        "Jianhua Xu",
+        "Tong Zhang",
+        "Kaicheng Yu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-16T10:23:00+00:00",
+      "link": "https://arxiv.org/pdf/2609.18430v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "video world models learning physical dynamics with physics-focused data curation",
+      "llm_evidence_cn": "以物理数据策展学习物理动力学的视频世界模型",
+      "llm_evidence": "以物理数据策展学习物理动力学的视频世界模型",
+      "canonical_evidence": "以物理数据策展学习物理动力学的视频世界模型",
+      "llm_tldr_en": "StrucPhysVideo builds video world models that learn physical dynamics via a physics-focused curation pipeline with structured annotations of contact, deformation and state transitions.",
+      "llm_tldr_cn": "该文针对视频世界模型难以建模物体运动、交互与状态变化的物理动力学问题，提出StrucPhysVideo系列模型。其数据流水线结合运动感知视频分割、质量与内容过滤、物理相关性验证，并对物体、材质与时间定位交互进行结构化标注，通过分离相机运动与物体行为显式描述接触、形变与状态转移，从而提供基于可观测物理事件的监督。模型在此基础上实现语言与动作条件下的场景演化预测，为具身智能的物理一致性视频生成提供数据与模型方案。",
+      "llm_tldr": "该文针对视频世界模型难以建模物体运动、交互与状态变化的物理动力学问题，提出StrucPhysVideo系列模型。其数据流水线结合运动感知视频分割、质量与内容过滤、物理相关性验证，并对物体、材质与时间定位交互进行结构化标注，通过分离相机运动与物体行为显式描述接触、形变与状态转移，从而提供基于可观测物理事件的监督。模型在此基础上实现语言与动作条件下的场景演化预测，为具身智能的物理一致性视频生成提供数据与模型方案。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.17414v1",
+      "source": "arxiv",
+      "title": "SlotDiT: Object-Centric Representations for Diffusion Transformers",
+      "abstract": "Text-conditioned latent diffusion models perform strongly in video generation and are promising backbones for robotic applications. However, existing approaches rely on pixel-level or VAE-based latent representations that lack explicit semantic structure, leaving the impact of the representation space largely unexplored. Slot-based object-centric representations offer a structured alternative by decomposing scenes into object-level latents, or slots. While they have shown success in dynamics modeling and planning, they have not yet been explored for diffusion-based generative modeling. We introduce SlotDiT, a text-guided Diffusion Transformer (DiT) that operates in a slot-based latent space. Given a reference image and a language instruction, SlotDiT decomposes the scene into object-centric slots representing individual entities. Conditioned on the instruction and observed scene context, the model autoregressively denoises future slot trajectories to predict scene dynamics. To systematically investigate latent-space design for diffusion transformers, we compare slot-based representations against VAE-based and semantics-aligned alternatives within a unified DiT framework. Our experiments show that using slots as DiT latents yields competitive video generation quality while consistently improving task-completion rates across four robotic datasets. Furthermore, their compact representation provides a computationally efficient alternative to VAE-based and semantics-aligned latent spaces. Overall, our results demonstrate that object-centric structure is a powerful inductive bias for diffusion-based generative modeling in robotic environments. The project page is available at https://slot-dit.github.io/.",
+      "authors": [
+        "Gjergj Plepi",
+        "Sven Behnke"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-09-15T16:38:33+00:00",
+      "link": "https://arxiv.org/pdf/2609.17414v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "text-guided diffusion transformer for video generation with object-centric latent dynamics",
+      "llm_evidence_cn": "面向视频生成的文本引导扩散Transformer，采用对象中心隐变量建模动态",
+      "llm_evidence": "面向视频生成的文本引导扩散Transformer，采用对象中心隐变量建模动态",
+      "canonical_evidence": "面向视频生成的文本引导扩散Transformer，采用对象中心隐变量建模动态",
+      "llm_tldr_en": "Existing latent diffusion video models use pixel or VAE latents lacking explicit semantic structure. SlotDiT introduces a text-guided Diffusion Transformer operating in object-centric slot space, improving structured dynamics for generative video and robotic applications.",
+      "llm_tldr_cn": "现有文本条件潜在扩散视频生成模型多依赖像素级或VAE隐表示，缺乏显式语义结构，表示空间对生成的影响未被充分研究。作者提出SlotDiT，一种在对象中心槽（slot）隐空间上运行的文本引导扩散Transformer，将场景分解为对象级隐变量。该方法借鉴槽表示在动态建模与规划中的优势，首次将其用于扩散式生成建模。工作表明结构化对象级表示有助于提升视频生成的语义可控性与动态建模能力。",
+      "llm_tldr": "现有文本条件潜在扩散视频生成模型多依赖像素级或VAE隐表示，缺乏显式语义结构，表示空间对生成的影响未被充分研究。作者提出SlotDiT，一种在对象中心槽（slot）隐空间上运行的文本引导扩散Transformer，将场景分解为对象级隐变量。该方法借鉴槽表示在动态建模与规划中的优势，首次将其用于扩散式生成建模。工作表明结构化对象级表示有助于提升视频生成的语义可控性与动态建模能力。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "video generation models and generative video synthesis",
+      "matched_requirement_id": "req-20",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.17524v1",
+      "source": "arxiv",
+      "title": "Modality-Autoregressive World-Action Models",
+      "abstract": "World-action models (WAMs) jointly model future observations and actions, typically predicting the future as RGB images. Other visual modalities such as depth, pretrained visual features, and point tracks can more efficiently capture geometric, semantic, and motion features. However, how best to combine these modalities within WAMs remains an open question. We introduce ModAR, the first WAM to autoregressively denoise multiple future modalities before predicting actions. This allows each prediction to condition on previously generated modalities. We train from scratch to systematically study how training-data mixtures, predicted modalities, and WAM formulations affect performance. In our evaluations, WAMs benefit from predicting point tracks, DINO features, and depth maps, while additionally predicting future RGB does not provide a consistent benefit. We also find that ModAR's sequential generation outperforms existing WAM formulations, with the highest average success rate at all evaluated data scales. We also fine-tune the video-model-initialized WAM Flex-$π$ on the same data; ModAR achieves a slightly higher observed average success rate (75% vs. 72%) while using approximately $20\\times$ fewer training FLOPs and no pretraining. On three real-world bimanual tasks, ModAR outperforms baselines and improves with human videos.",
+      "authors": [
+        "Adam Hung",
+        "Bardienus P. Duisterhof",
+        "Deva Ramanan",
+        "Jeffrey Ichnowski"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-15T17:56:24+00:00",
+      "link": "https://arxiv.org/pdf/2609.17524v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Autoregressively predicts multiple future visual modalities before actions",
+      "llm_evidence_cn": "自回归预测多种未来视觉模态后再预测动作",
+      "llm_evidence": "自回归预测多种未来视觉模态后再预测动作",
+      "canonical_evidence": "自回归预测多种未来视觉模态后再预测动作",
+      "llm_tldr_en": "ModAR is a world-action model that autoregressively denoises multiple future modalities such as depth, DINO features, and point tracks before predicting actions, improving future observation prediction.",
+      "llm_tldr_cn": "论文针对世界动作模型通常以RGB图像预测未来、忽视深度与点轨迹等更高效视觉模态的问题，提出ModAR。该方法自回归地依次去噪多种未来模态，使每次预测都能以先前生成的模态为条件，再据此预测动作。从头训练的系统实验表明，预测点轨迹、DINO特征与深度图能提升性能。该工作为多模态未来帧预测与世界建模提供了可复用范式，与视频未来帧预测需求直接相关。",
+      "llm_tldr": "论文针对世界动作模型通常以RGB图像预测未来、忽视深度与点轨迹等更高效视觉模态的问题，提出ModAR。该方法自回归地依次去噪多种未来模态，使每次预测都能以先前生成的模态为条件，再据此预测动作。从头训练的系统实验表明，预测点轨迹、DINO特征与深度图能提升性能。该工作为多模态未来帧预测与世界建模提供了可复用范式，与视频未来帧预测需求直接相关。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "predicting future frames in video sequences",
+      "matched_requirement_id": "req-23",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.18077v1",
+      "source": "arxiv",
+      "title": "vidax: A Unified JAX Framework for Video Generative Models on Accelerator Meshes",
+      "abstract": "Open-source video generative models ship almost exclusively as PyTorch/CUDA reference implementations. This leaves Cloud TPU pods without a production-ready inference path, despite offering large, cost-effective accelerator memory pools ideal for long-sequence spatiotemporal attention. We present vidax, an open-source JAX/Flax inference engine and zero-copy PyTorch-to-JAX weight translator for modern video generation architectures. vidax covers a diverse set of spatiotemporal models --- including Diffusion Transformers, omnimodal Mixture-of-Transformers, 3D VAEs, text encoders, and native samplers --- with zero PyTorch dependency in the execution path. The framework unifies 1D tensor parallelism with DeepSpeed-Ulysses sequence parallelism on a single JAX sharding mesh, integrates TPU flash-attention kernels, and implements per-layer weight offloading to support reference resolutions that exceed single-device memory. We benchmark compile times, latency, and peak memory utilization on TPU v4-8 hardware, and document real-world numerical bugs surfaced during checkpoint translation. vidax is released open-source as a baseline for JAX and TPU video generation research.",
+      "authors": [
+        "Congyue Deng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.DC",
+        "cs.LG"
+      ],
+      "published": "2026-09-16T03:26:45+00:00",
+      "link": "https://arxiv.org/pdf/2609.18077v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "unified JAX inference framework for video generative models",
+      "llm_evidence_cn": "面向视频生成模型的统一JAX推理框架",
+      "llm_evidence": "面向视频生成模型的统一JAX推理框架",
+      "canonical_evidence": "面向视频生成模型的统一JAX推理框架",
+      "llm_tldr_en": "Open-source video generative models ship mainly as PyTorch/CUDA code, leaving Cloud TPU pods without an inference path. vidax offers a JAX/Flax inference engine and zero-copy PyTorch-to-JAX weight translator for Diffusion Transformers, 3D VAEs and native samplers, unifying tensor and sequence parallelism on accelerator meshes.",
+      "llm_tldr_cn": "开源视频生成模型多以PyTorch/CUDA实现发布，使云端TPU集群缺乏可用的推理路径。本文提出vidax，一个基于JAX/Flax的视频生成推理引擎与零拷贝PyTorch到JAX权重转换器，覆盖Diffusion Transformer、3D VAE、文本编码器与原生采样器。框架在加速器网格上统一一维张量并行与DeepSpeed-Ulysses序列并行，实现无PyTorch依赖的长序列时空注意力推理，为视频生成模型的跨硬件高效部署提供实用基础。",
+      "llm_tldr": "开源视频生成模型多以PyTorch/CUDA实现发布，使云端TPU集群缺乏可用的推理路径。本文提出vidax，一个基于JAX/Flax的视频生成推理引擎与零拷贝PyTorch到JAX权重转换器，覆盖Diffusion Transformer、3D VAE、文本编码器与原生采样器。框架在加速器网格上统一一维张量并行与DeepSpeed-Ulysses序列并行，实现无PyTorch依赖的长序列时空注意力推理，为视频生成模型的跨硬件高效部署提供实用基础。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "video generation models and generative video synthesis",
+      "matched_requirement_id": "req-20",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.19137v1",
+      "source": "arxiv",
+      "title": "Dreaming the Sound of Contact: Leveraging Video and Audio Generation for Zero-Shot Force-Aware Manipulation and Data Generation",
+      "abstract": "Recent advances in video generation allow robots to learn manipulation trajectories from generated videos. However, these approaches produce purely kinematic trajectories that lack force information, causing failures in contact-rich tasks where appropriate contact forces are essential for success. In this work, we explore augmenting generated video with audio to shape a bounded, time-varying desired-force profile using the loudness of generated contact sounds. We present a pipeline that jointly leverages generated video and audio to derive motion trajectories and corresponding desired-force profiles from a structured natural-language task prompt. We execute these force-aware trajectories on a Franka Panda robot using a closed-loop force regulator that tracks the audio-shaped force profile during contact. We evaluate our pipeline on multiple tasks that require making contact and demonstrate successful manipulation where a kinematic-only baseline fails. We also use the pipeline as a data generation engine to train policies that achieve the tasks in a closed-loop manner. Project website, videos, and dataset: https://dreamingcontactsound.github.io/",
+      "authors": [
+        "Guanhua Ji",
+        "Tianyu Li",
+        "Dayoon Suh",
+        "Yuqian Zhang",
+        "Boyan Zhang",
+        "Nadia Figueroa"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-09-16T17:56:44+00:00",
+      "link": "https://arxiv.org/pdf/2609.19137v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "video generation augmented with contact audio for force-aware physical interaction",
+      "llm_evidence_cn": "结合接触音频的视频生成以实现力感知物理交互",
+      "llm_evidence": "结合接触音频的视频生成以实现力感知物理交互",
+      "canonical_evidence": "结合接触音频的视频生成以实现力感知物理交互",
+      "llm_tldr_en": "Notes that generated manipulation videos are purely kinematic and lack force, then uses contact-sound loudness from generated audio to shape time-varying force profiles, yielding physically grounded contact-rich trajectories.",
+      "llm_tldr_cn": "现有视频生成方法虽能让机器人从生成视频中学习操作轨迹，但产生的是纯运动学轨迹、缺乏力信息，导致接触密集型任务失败。本文探索用生成音频来辅助视频生成，依据接触声音的响度构造有界且随时间变化的期望力曲线，从而从自然语言任务提示中同时导出运动轨迹与力剖面。该流程在真实机器人上执行力感知轨迹，验证了视频与音频联合生成能提升接触交互的物理合理性。",
+      "llm_tldr": "现有视频生成方法虽能让机器人从生成视频中学习操作轨迹，但产生的是纯运动学轨迹、缺乏力信息，导致接触密集型任务失败。本文探索用生成音频来辅助视频生成，依据接触声音的响度构造有界且随时间变化的期望力曲线，从而从自然语言任务提示中同时导出运动轨迹与力剖面。该流程在真实机器人上执行力感知轨迹，验证了视频与音频联合生成能提升接触交互的物理合理性。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "videos depicting physically realistic behaviors and outcomes",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
