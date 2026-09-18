@@ -1,0 +1,105 @@
+{
+  "date": "20260918",
+  "date_label": "",
+  "generated_at": "2026-09-18 21:56:03 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.18430v1",
+      "route": "202609/18/2609.18430v1-strucphysvideo-learning-physical-dynamics-from-structured-captions-and-robot-actions",
+      "title": "StrucPhysVideo: Learning Physical Dynamics from Structured Captions and Robot Actions",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "面向物理的数据整理与物理动力学视频世界模型",
+      "first_seen_at": "2026-09-18 21:56:03 UTC",
+      "updated_at": "2026-09-18 21:56:03 UTC"
+    },
+    {
+      "paper_id": "2609.19674v1",
+      "route": "202609/18/2609.19674v1-conservation-buys-stability-and-factoring-buys-counterfactuals-in-physical-world-models",
+      "title": "Conservation Buys Stability and Factoring Buys Counterfactuals in Physical World Models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "保持 rollout 物理合理且有界",
+      "first_seen_at": "2026-09-18 21:56:03 UTC",
+      "updated_at": "2026-09-18 21:56:03 UTC"
+    },
+    {
+      "paper_id": "2609.20818v1",
+      "route": "202609/18/2609.20818v1-splashsplat-reconstructing-splashing-liquids-from-real-world-multi-view-videos",
+      "title": "SplashSplat: Reconstructing Splashing Liquids from Real-World Multi-View Videos",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "真实世界多视角液体飞溅物理数据集",
+      "first_seen_at": "2026-09-18 21:56:03 UTC",
+      "updated_at": "2026-09-18 21:56:03 UTC"
+    },
+    {
+      "paper_id": "2609.10943v1",
+      "route": "202609/18/2609.10943v1-campilot-a-multi-agent-cinematic-assistant-for-camera-controlled-movie-generation",
+      "title": "CamPilot: A Multi-Agent Cinematic Assistant for Camera-Controlled Movie Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于LLM的视频生成，用GRPO强化学习提升连贯性",
+      "first_seen_at": "2026-09-18 21:56:03 UTC",
+      "updated_at": "2026-09-18 21:56:03 UTC"
+    },
+    {
+      "paper_id": "2609.19729v1",
+      "route": "202609/18/2609.19729v1-recency-forcing-bridging-the-long-horizon-gap-in-autoregressive-video-generation",
+      "title": "Recency Forcing: Bridging the Long-Horizon Gap in Autoregressive Video Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "保持运动连贯的长时自回归视频生成",
+      "first_seen_at": "2026-09-18 21:56:03 UTC",
+      "updated_at": "2026-09-18 21:56:03 UTC"
+    },
+    {
+      "paper_id": "2609.20819v1",
+      "route": "202609/18/2609.20819v1-can-4d-foundation-models-remember",
+      "title": "Can 4D Foundation Models Remember?",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向4D视频模型的物体恒存与运动连续性基准",
+      "first_seen_at": "2026-09-18 21:56:03 UTC",
+      "updated_at": "2026-09-18 21:56:03 UTC"
+    }
+  ]
+}

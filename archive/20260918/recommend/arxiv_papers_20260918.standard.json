@@ -1,0 +1,282 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-18T21:50:04.019653+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 4,
+    "deep_divecandidates": 2,
+    "deep_cap": 9,
+    "deep_selected": 2,
+    "quick_candidates": 4,
+    "quick_skim_target": 14,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2609.18430v1",
+      "source": "arxiv",
+      "title": "StrucPhysVideo: Learning Physical Dynamics from Structured Captions and Robot Actions",
+      "abstract": "Modeling physical dynamics, including how objects move, interact, and change state, is central to video world models for embodied AI. We present StrucPhysVideo, a family of video world models that bridges physics-focused data curation with language- and action-conditioned prediction of scene evolution. Our data pipeline combines motion-aware video segmentation, quality and content filtering, and physical relevance verification with structured annotations of objects, materials, and temporally localized interactions. By disentangling camera motion from object behavior and explicitly describing contact, deformation, and state transitions, the pipeline provides supervision grounded in observable physical events. Building on these data, we introduce StrucPhysVideo-TI2V, a sparse Mixture-of-Experts (MoE) text-image-to-video model trained with a curriculum that progressively emphasizes physical dynamics while retaining general-domain video data. StrucPhysVideo-TI2V achieves state-of-the-art performance on Physics-IQ Verified, scoring 45.5% and outperforming Cosmos3-Super-Image2Video by 2.8 percentage points. Caption ablations across backbones further demonstrate the effectiveness of physics-focused supervision. We further extend StrucPhysVideo-TI2V to StrucPhysVideo-IA2V, an interactive image-action-to-video world model that predicts visual outcomes from robot end-effector commands. Action conditioning, causal autoregressive generation, and few-step distillation enable incremental robot rollouts with only four denoising steps. Together, StrucPhysVideo advances physical dynamics modeling from image- and language-conditioned video prediction toward action-driven interaction.",
+      "authors": [
+        "Awomo-WM Team",
+        ":",
+        "Enhui Ma",
+        "Kaiwen Guo",
+        "Tingrui Zhang",
+        "Wei Song",
+        "Yingshui Tan",
+        "Jianhua Xu",
+        "Tong Zhang",
+        "Kaicheng Yu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-16T10:23:00+00:00",
+      "link": "https://arxiv.org/pdf/2609.18430v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "physics-focused data curation and physical dynamics video world models",
+      "llm_evidence_cn": "面向物理的数据整理与物理动力学视频世界模型",
+      "llm_evidence": "面向物理的数据整理与物理动力学视频世界模型",
+      "canonical_evidence": "面向物理的数据整理与物理动力学视频世界模型",
+      "llm_tldr_en": "Modeling physical dynamics is central to video world models. StrucPhysVideo couples physics-focused data curation (motion-aware segmentation, filtering, physical relevance verification, structured annotations) with language- and action-conditioned prediction, grounding supervision in observable physical events.",
+      "llm_tldr_cn": "视频世界模型的核心是建模物体如何运动、交互并改变状态等物理动力学，但缺乏物理聚焦的高质量监督数据。本文提出StrucPhysVideo系列视频世界模型，构建融合运动感知视频分割、质量与内容过滤、物理相关性验证的数据管线，并对物体、材质与时间局部化交互做结构化标注。通过分离相机运动与物体行为，显式描述接触、形变和状态转移，实现语言与动作条件的场景演化预测，为具身智能提供扎根于可观测物理事件的监督。",
+      "llm_tldr": "视频世界模型的核心是建模物体如何运动、交互并改变状态等物理动力学，但缺乏物理聚焦的高质量监督数据。本文提出StrucPhysVideo系列视频世界模型，构建融合运动感知视频分割、质量与内容过滤、物理相关性验证的数据管线，并对物体、材质与时间局部化交互做结构化标注。通过分离相机运动与物体行为，显式描述接触、形变和状态转移，实现语言与动作条件的场景演化预测，为具身智能提供扎根于可观测物理事件的监督。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "datasets containing physical interactions and dynamics for training video models",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.19674v1",
+      "source": "arxiv",
+      "title": "Conservation Buys Stability and Factoring Buys Counterfactuals in Physical World Models",
+      "abstract": "A learned simulator can reproduce its training conditions accurately yet fail in two distinct ways once those conditions change. Over long rollouts, small errors accumulate until the trajectory drifts away from physically plausible behavior; under an intervention on a physical parameter, the model may continue to follow the law seen during training rather than the intervened one. We show that these two failures require different structural remedies. Evolving a learned energy with a symplectic integrator preserves the geometry of the conservative dynamics and keeps rollouts bounded and physically meaningful for up to $100\\times$ the training horizon, while equal-capacity predictors, an energy-regularized predictor, and a tuned neural ODE diverge. By contrast, encoding the physical coupling through an explicit linear factorization enables the model to follow a never-seen sign of that coupling, whereas an unrestricted parameterization remains locked to the training law. Crucially, the two mechanisms are separable: removing the structure responsible for long-horizon stability leaves counterfactual transfer intact, while removing the factorized coupling destroys counterfactual transfer without eliminating stability. This double dissociation, established with matched controls that remove or replace one structural component at a time, persists beyond the headline three-body system and remains visible when the physical state must be inferred from pixels rather than provided directly. The result is a concrete design principle for physical world models: long-horizon stability and changed-law generalization arise from distinct structural commitments, and each can be imposed deliberately without requiring the other.",
+      "authors": [
+        "Yufeng Wang",
+        "Parivesh Priye",
+        "Lu Wei",
+        "Haibin Ling"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-09-17T04:16:51+00:00",
+      "link": "https://arxiv.org/pdf/2609.19674v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:video-gen-rl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "keeping rollouts physically plausible and bounded",
+      "llm_evidence_cn": "保持 rollout 物理合理且有界",
+      "llm_evidence": "保持 rollout 物理合理且有界",
+      "canonical_evidence": "保持 rollout 物理合理且有界",
+      "llm_tldr_en": "This work shows that learned physical world models drift from plausible behavior over long rollouts and fail under parameter interventions, proposing conservation via symplectic integrators for stability and factoring for counterfactuals.",
+      "llm_tldr_cn": "学习到的物理世界模型虽能复现训练条件，但在长程rollout中误差累积偏离物理合理轨迹，且在物理参数干预下会沿用训练时的规律。本文指出这两类失败需要不同的结构性补救：用辛积分器演化学习能量以保持保守动力学几何，使轨迹在百倍训练时长内仍有界且物理有意义；并通过因子化支持反事实预测。该工作为提升物理世界模型的长期物理一致性与可干预性提供了结构性方法。",
+      "llm_tldr": "学习到的物理世界模型虽能复现训练条件，但在长程rollout中误差累积偏离物理合理轨迹，且在物理参数干预下会沿用训练时的规律。本文指出这两类失败需要不同的结构性补救：用辛积分器演化学习能量以保持保守动力学几何，使轨迹在百倍训练时长内仍有界且物理有意义；并通过因子化支持反事实预测。该工作为提升物理世界模型的长期物理一致性与可干预性提供了结构性方法。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "how to ensure physical consistency in generated videos",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.20818v1",
+      "source": "arxiv",
+      "title": "SplashSplat: Reconstructing Splashing Liquids from Real-World Multi-View Videos",
+      "abstract": "A splash lives for a fraction of a second: sheets tear into ligaments and droplets, appearance is view-dependent and nearly textureless, and little persists long enough to track. Reconstruction research has consequently focused on smoke, synthetic liquids, or gently deforming surfaces. To our knowledge, no synchronized multi-view dataset of splashing liquids exists. We therefore introduce a benchmark of 20 real scenes, from coherent streams to violent splashes, captured by seven synchronized, calibrated 4K cameras at 60 fps, with manually refined per-view liquid and container masks and fixed evaluation splits. We further present SplashSplat, built on a single principle: impose physical structure only where the observations can constrain it. Per-frame liquid SDFs fused from the masks provide the geometry, level-set transport between consecutive SDFs yields a coarse velocity field, and Lagrangian carriers advected along this flow, corrected against each new observation and reseeded where coverage is lost, decode local Gaussians for differentiable rendering. SplashSplat outperforms state-of-the-art dynamic Gaussian splatting methods on our real captures and on a synthetic benchmark, with physically more plausible motion and a lower training cost. The same representation supports temporal interpolation and style transfer without re-optimization.",
+      "authors": [
+        "Peiyu Liu",
+        "Dingxi Zhang",
+        "Federico Tombari",
+        "Marc Pollefeys",
+        "Christina Tsalicoglou",
+        "Daniel Barath"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-09-17T17:59:41+00:00",
+      "link": "https://arxiv.org/pdf/2609.20818v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "real-world multi-view dataset of splashing liquid physics for reconstruction",
+      "llm_evidence_cn": "真实世界多视角液体飞溅物理数据集",
+      "llm_evidence": "真实世界多视角液体飞溅物理数据集",
+      "canonical_evidence": "真实世界多视角液体飞溅物理数据集",
+      "llm_tldr_en": "SplashSplat builds the first synchronized multi-view benchmark of real splashing liquids (20 scenes, seven 4K cameras at 60fps) and a reconstruction method that imposes physical structure only where observations can constrain it.",
+      "llm_tldr_cn": "液体飞溅转瞬即逝、外观视角相关且难以追踪，此前重建研究多聚焦烟雾、合成液体或缓慢形变表面，缺乏真实飞溅数据。作者构建了首个同步多视角飞溅液体基准，用七台标定4K相机以60fps拍摄20个真实场景，并提供人工精修的液体与容器掩码及固定评测划分。基于只在观测可约束处施加物理结构的原则提出SplashSplat重建方法。该数据集与基准填补了真实物理液体动态数据的空白，可支撑物理一致性视频建模。",
+      "llm_tldr": "液体飞溅转瞬即逝、外观视角相关且难以追踪，此前重建研究多聚焦烟雾、合成液体或缓慢形变表面，缺乏真实飞溅数据。作者构建了首个同步多视角飞溅液体基准，用七台标定4K相机以60fps拍摄20个真实场景，并提供人工精修的液体与容器掩码及固定评测划分。基于只在观测可约束处施加物理结构的原则提出SplashSplat重建方法。该数据集与基准填补了真实物理液体动态数据的空白，可支撑物理一致性视频建模。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "datasets containing physical interactions and dynamics for training video models",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.10943v1",
+      "source": "arxiv",
+      "title": "CamPilot: A Multi-Agent Cinematic Assistant for Camera-Controlled Movie Generation",
+      "abstract": "The integration of large language models (LLMs) into video generation has enabled rapid text-to-video creation and improved visual quality. However, it still falls short of professional filmmaking, where cinematographic language is less refined than human-crafted camera work and multi-shot continuity remains challenging. To address these limitations, we introduce CamPilot, a multi-agent framework that integrates cinematographic planning and camera-work control to produce more coherent, logically structured, and human-aesthetic movies. CamPilot adopts a GRPO-based learning paradigm to learn camera work planning from 14K real-world professional movies, internalizing motion patterns and composition principles that support reasoning over shooting techniques (e.g., camera angle, motion, and focal behavior) and cross-shot relationships for controllable camera-viewpoint generation. Multiple agents further collaborate and evolve to improve overall output quality. To support this work and further studies in this domain, we establish CamEval, a benchmark for evaluating camera work quality and cinematic engagement. Empirical results show that CamPilot outperforms state-of-the-art text-to-movie generation methods on cinematographic control and quality, highlighting the impact of professional camera design on movie generation.",
+      "authors": [
+        "Yang Wu",
+        "Stefano Petrangeli",
+        "Ishita Dasgupta",
+        "Yu Shen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-10T01:06:14+00:00",
+      "link": "https://arxiv.org/pdf/2609.10943v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "LLM-based video generation with GRPO reinforcement learning for coherent movies",
+      "llm_evidence_cn": "基于LLM的视频生成，用GRPO强化学习提升连贯性",
+      "llm_evidence": "基于LLM的视频生成，用GRPO强化学习提升连贯性",
+      "canonical_evidence": "基于LLM的视频生成，用GRPO强化学习提升连贯性",
+      "llm_tldr_en": "CamPilot is a multi-agent framework combining cinematographic planning and camera-work control, using a GRPO-based learning paradigm trained on 14K professional movies to produce more coherent, logically structured, human-aesthetic movies.",
+      "llm_tldr_cn": "针对LLM驱动的视频生成视觉质量提升但镜头语言粗糙、多镜头连续性差的问题，本文提出CamPilot多智能体框架，把电影摄影规划与相机运镜控制结合，并采用基于GRPO的学习范式从1.4万部真实专业电影中学习运镜与构图原则。方法能推理镜头组织并生成更连贯、结构更合理的电影级视频，为可控且连贯的视频生成提供了强化学习思路。",
+      "llm_tldr": "针对LLM驱动的视频生成视觉质量提升但镜头语言粗糙、多镜头连续性差的问题，本文提出CamPilot多智能体框架，把电影摄影规划与相机运镜控制结合，并采用基于GRPO的学习范式从1.4万部真实专业电影中学习运镜与构图原则。方法能推理镜头组织并生成更连贯、结构更合理的电影级视频，为可控且连贯的视频生成提供了强化学习思路。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "video generation models and generative video synthesis",
+      "matched_requirement_id": "req-20",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.19729v1",
+      "source": "arxiv",
+      "title": "Recency Forcing: Bridging the Long-Horizon Gap in Autoregressive Video Generation",
+      "abstract": "Autoregressive (AR) video generation degrades over long horizons due to an overlooked train-inference discrepancy we term KV eviction mismatch: models train on short clips where all context frames reside in the KV cache, but at inference, memory constraints force distant frames to be evicted from the KV cache - removing context the model was conditioned on. Rather than simulating eviction via context truncation - which discards temporal information the model still needs and degrades motion coherence - we keep the context but while progressively reducing the influence of distant frames, making their eventual eviction negligible. To guide this design, we introduce the positional response $R( Δ, \\, t_{\\text{denoise}})$, a perturbation-based sensitivity measure revealing that context influence decays steeply with temporal distance and varies systematically across denoising steps. Motivated by this analysis, we propose Recency Forcing, which applies a non-positive, timestep-dependent bias, termed Temporal Response Bias (TRB), on pre-softmax attention logits derived directly from $R$, closing the train-inference gap without modifying context length or training objectives. We further introduce Biased Attention Reparameterization (BAR), an exact reformulation that moves the bias outside the softmax, making TRB a standard FlashAttention call at zero overhead. Recency Forcing operates in both training-free mode and training-based mode. Experiments on VBench and VBench-Long demonstrate state-of-the-art long-horizon generation quality at no additional inference cost.",
+      "authors": [
+        "Tri Cao",
+        "Hung Nguyen",
+        "Phong Nguyen",
+        "Khoi Nguyen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-17T05:40:53+00:00",
+      "link": "https://arxiv.org/pdf/2609.19729v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "long-horizon autoregressive video generation preserving motion coherence",
+      "llm_evidence_cn": "保持运动连贯的长时自回归视频生成",
+      "llm_evidence": "保持运动连贯的长时自回归视频生成",
+      "canonical_evidence": "保持运动连贯的长时自回归视频生成",
+      "llm_tldr_en": "Recency Forcing tackles long-horizon degradation in autoregressive video generation caused by KV eviction mismatch, keeping context while progressively reducing the influence of distant frames to preserve motion coherence.",
+      "llm_tldr_cn": "自回归视频生成在长时段上会退化，作者指出其根源是训练与推理间的KV缓存驱逐不匹配：训练时全部上下文帧都在缓存中，推理时远帧被迫驱逐。与直接截断上下文不同，Recency Forcing保留上下文但逐步降低远帧影响，使其最终驱逐可忽略，并引入基于扰动的位置响应量指导设计。该方法缓解了长时生成的连贯性下降。该工作直接面向视频生成模型的帧间依赖与连贯性建模。",
+      "llm_tldr": "自回归视频生成在长时段上会退化，作者指出其根源是训练与推理间的KV缓存驱逐不匹配：训练时全部上下文帧都在缓存中，推理时远帧被迫驱逐。与直接截断上下文不同，Recency Forcing保留上下文但逐步降低远帧影响，使其最终驱逐可忽略，并引入基于扰动的位置响应量指导设计。该方法缓解了长时生成的连贯性下降。该工作直接面向视频生成模型的帧间依赖与连贯性建模。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "maintaining inter-frame coherence in video generation",
+      "matched_requirement_id": "req-22",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.20819v1",
+      "source": "arxiv",
+      "title": "Can 4D Foundation Models Remember?",
+      "abstract": "Perceiving and remembering the visual world is fundamental to navigating and interacting with our environment. Current 4D foundation models, such as camera-controllable video models or 4D reconstruction models, can perceive and reconstruct dynamic environments, but how well they remember what they have perceived remains an open question. Existing benchmarks largely rely on pixel-level metrics and lack ground truth for objects once they leave the field of view, making them unable to evaluate visual memory in an object-centric manner against references. To fill this gap, we introduce PersistBench, a dataset and metric suite that leverages 360° videos as omniscient ground truth and proposes three evaluation aspects: object permanence, motion continuity, and appearance preservation. Evaluating various models across diverse categories reveals that current models can only maintain short-term consistency that degrades significantly once objects leave the field of view. Our findings highlight the gap between current model capabilities and robust visual memory (\"seeing is not remembering\"), providing guidance for future development of 4D foundation models. Dataset and code are available on the project page: https://guangzhaohe.com/persistbench.",
+      "authors": [
+        "Guangzhao He",
+        "Hadar Averbuch-Elor",
+        "Wei-Chiu Ma"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-17T17:59:50+00:00",
+      "link": "https://arxiv.org/pdf/2609.20819v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "benchmark for object permanence and motion continuity in 4D video models",
+      "llm_evidence_cn": "面向4D视频模型的物体恒存与运动连续性基准",
+      "llm_evidence": "面向4D视频模型的物体恒存与运动连续性基准",
+      "canonical_evidence": "面向4D视频模型的物体恒存与运动连续性基准",
+      "llm_tldr_en": "PersistBench uses 360° videos as omniscient ground truth to evaluate object permanence, motion continuity and appearance preservation in 4D foundation models, showing pixel metrics cannot assess memory.",
+      "llm_tldr_cn": "当前4D基础模型（如相机可控视频模型与4D重建模型）能感知与重建动态环境，但能否记住所见内容仍缺乏评估手段。现有基准多依赖像素级指标，且对离开视野的物体缺少真值，难以进行以物体为中心的视觉记忆评测。本文提出PersistBench数据集与指标套件，以360°视频作为全知真值，从物体恒存、运动连续性与外观保持三方面进行评估。该工作为视频模型的时序一致性与记忆能力提供了新的评测基准。",
+      "llm_tldr": "当前4D基础模型（如相机可控视频模型与4D重建模型）能感知与重建动态环境，但能否记住所见内容仍缺乏评估手段。现有基准多依赖像素级指标，且对离开视野的物体缺少真值，难以进行以物体为中心的视觉记忆评测。本文提出PersistBench数据集与指标套件，以360°视频作为全知真值，从物体恒存、运动连续性与外观保持三方面进行评估。该工作为视频模型的时序一致性与记忆能力提供了新的评测基准。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "maintaining inter-frame coherence in video generation",
+      "matched_requirement_id": "req-22",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

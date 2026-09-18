@@ -1,0 +1,584 @@
+Title: SplashSplat: Reconstructing Splashing Liquids from Real-World Multi-View Videos
+
+URL Source: https://arxiv.org/pdf/2609.20818v1
+
+Published Time: Fri, 18 Sep 2026 01:46:44 GMT
+
+Number of Pages: 18
+
+Markdown Content:
+# SplashSplat: Reconstructing Splashing Liquids from Real-World Multi-View Videos 
+
+# Peiyu Liu 1∗ Dingxi Zhang 2∗ Federico Tombari 3 Marc Pollefeys 2,4
+
+# Christina Tsalicoglou 3 Daniel Barath 21 EPFL 2 ETH 3 Google 4 Microsoft 
+
+Figure 1. SplashSplat reconstructs splashing liquids from real multi-view video. Left: our benchmark captures pouring and splashing across diverse containers, liquids, and backgrounds with seven calibrated cameras, with fluid and container masks and scanned container meshes. Right: from these observations, SplashSplat synthesizes novel views, recovers a velocity field, and supports temporal interpolation and style transfer. 
+
+# Abstract 
+
+A splash lives for a fraction of a second: sheets tear into ligaments and droplets, appearance is view-dependent and nearly textureless, and little persists long enough to track. Reconstruction research has consequently focused on smoke, synthetic liquids, or gently deforming surfaces. To our knowledge, no synchronized multi-view dataset of splashing liquids exists. We therefore introduce a bench-mark of 20 real scenes, from coherent streams to violent splashes, captured by seven synchronized, calibrated 4K cameras at 60 fps, with manually refined per-view liquid and container masks and fixed evaluation splits. We fur-ther present SplashSplat, built on a single principle: im-pose physical structure only where the observations can constrain it . Per-frame liquid SDFs fused from the masks provide the geometry, level-set transport between consec-utive SDFs yields a coarse velocity field, and Lagrangian carriers advected along this flow, corrected against each    
+
+> ∗Equal Contribution. Email:
+
+peiyu.liu@epfl.ch 
+
+new observation and reseeded where coverage is lost, de-code local Gaussians for differentiable rendering. Splash-Splat outperforms state-of-the-art dynamic Gaussian splat-ting methods on our real captures and on a synthetic bench-mark, with physically more plausible motion and a lower training cost. The same representation supports tempo-ral interpolation and style transfer without re-optimization. Project Page: https://niko- creater.github. io/splashsplat-web/ 
+
+# 1. Introduction 
+
+A falling stream shatters into sheets, the sheets tear into ligaments, the ligaments into droplets, and an instant later the surface is calm again. Almost nothing in the scene per-sists long enough to be tracked. Capturing such events dig-itally has long been a goal spanning computer graphics, vi-sion, and experimental fluid mechanics [9, 10]: a faithful replica of a real splash would benefit visual effects, pro-vide reference data for validating fluid simulators, and sup-ply dynamic assets for embodied AI. Yet, while 3D Gaus-1arXiv:2609.20818v1 [cs.CV] 17 Sep 2026 sian Splatting [20] has made photorealistic reconstruction of general dynamic scenes practical [24, 26, 44], splashing liquids have remained out of reach. This gap has two causes. The first is intrinsic difficulty. Liquid appearance is view-dependent and weakly textured, undermining correspondence. Thin sheets, ligaments, and droplets emerge and vanish within a few frames, defeating representations that assume persistent geometry. And the boundary conditions a simulator would need, such as inflow rate and total volume, cannot be observed from images. Ex-isting approaches are strained from both directions. Clas-sic capture systems recovered gently deforming water with specialized apparatus [19, 29, 40], and modern fluid recon-struction methods model the medium as a semi-transparent density field whose interior is optically observable, an as-sumption that holds for smoke [6, 15, 46, 51] but not for an opaque liquid surface. General dynamic 3DGS meth-ods [5, 24, 25, 48] make no such assumption, but grant ev-ery primitive independent motion, far more freedom than a few views of near-textureless liquid can constrain, and in practice let primitives fade and reappear rather than move with the liquid [16, 47]. The second cause is the absence of data. Real liquid captures are limited to gently deforming surfaces, static states [41], or two-view observations of boiling [16], so no benchmark has been able to measure how existing methods behave on liquids in motion. We address this with the first synchronized multi-view video benchmark of splashing liq-uids: 20 scenes recorded by seven calibrated cameras at 4K and 60 fps, spanning coherent streams to violent splashing across a range of containers, liquids, and backgrounds, each with manually refined per-view liquid and container masks and a scanned container mesh. We further present SplashSplat, built on a simple princi-ple: impose physical structure only where observations can constrain it . Without the boundary conditions that images do not reveal, a fluid solver produces motion that is confi-dent but unverifiable. We instead retain only the kinematics 
+
+of fluids, level-set transport of the interface [11, 40], ap-proximate incompressibility, and continuum deformation, and let observations close the loop. Concretely, SplashSplat fuses the per-frame multi-view masks into liquid SDFs, fits a coarse velocity field between consecutive SDFs, and ad-vects Lagrangian carriers along this flow. Each carrier is corrected against the next observation and reseeded where coverage is lost, then decodes a small set of local Gaus-sians. Motion is thus estimated at the granularity the data supports, while fine geometry and view-dependent appear-ance are recovered by differentiable rendering. We evaluate SplashSplat against state-of-the-art dynamic Gaussian splatting methods [5, 24, 48] on our real captures and on the synthetic NeuroFluid benchmark [18]. Across the baselines, rendering quality and physical plausibility trade off against each other, the expected consequence of recovering motion from appearance alone on a weakly tex-tured surface: a fit that explains the training views need not correspond to how the liquid actually moved. SplashSplat improves both, with the lowest training time and peak mem-ory of all methods compared. Our contributions are summa-rized as follows: • We introduce, to our knowledge, the first synchronized multi-view video benchmark of splashing liquids: 20 scenes captured with a calibrated seven-camera rig, an-notated with refined per-view liquid and container masks and scanned container meshes. • We present SplashSplat, which imposes physical struc-ture only where observations can constrain it: fluid kine-matics transports Lagrangian carriers between frames, and each new observation corrects them, avoiding the unobservable inflow and volume conditions a simulator would require. • We show that this design outperforms deformation-based baselines and a full fluid solver in reconstruction quality and physical plausibility, at lower training cost, and yields a representation that supports temporal interpolation and style transfer. 
+
+# 2. Related Work 
+
+Dynamic 3D Reconstruction. Dynamic neural rendering extends static reconstruction to time-varying scenes, ini-tially via canonical-space deformation or motion fields [23, 33–35]. Gaussian-based representations render substan-tially faster: Dynamic 3D Gaussians [26] tracks persis-tent primitives, deformation-based methods [44, 48] warp canonical Gaussians through learned fields, others model native 4D spatiotemporal primitives [49] or equip primi-tives with temporal opacity and polynomial motion trajec-tories [24], and anchor-based variants decode local Gaus-sians from a sparse scaffold [5, 25], a scheme our repre-sentation builds upon. These methods achieve high-quality novel-view synthesis on textured scenes, but recover mo-tion from photometric gradients, which are ineffective when appearance provides little spatial signal: primitives tend to remain in place and adjust their scale and color to match the target rather than translate with the surface [16, 47]. A near-textureless liquid is exactly this regime, and our carri-ers instead follow a flow fitted to the observed interface. 
+
+Fluid Reconstruction from Video. Capturing real liquids predates neural rendering: fluorescent labeling [19], refrac-tion stereo [29], camera arrays [7], angular-domain surface recovery [50], appearance transfer from sparse views [32], and physically guided stereoscopic modeling [40] recov-ered water geometry with specialized apparatus. These sys-tems address gently deforming surfaces, producing geom-etry without appearance or novel-view synthesis. Modern approaches reconstruct fluid states from video under phys-ical constraints, from tomographic and transport-based for-2Table 1. Comparison with existing fluid datasets. Real-world fluid data is dominated by smoke, while real liquid data is confined to static states or to interfacial dynamics from at most two viewpoints. Ours is the only synchronized, metrically calibrated multi-view video benchmark of splashing liquids. Sync.: synchronized multi-camera capture. Masks: per-view liquid masks. ‡Rendered virtual cameras rather than a physical rig. †A single hand-held camera moved around static scenes. –: not applicable or not reported. Dataset Source Medium Scenes Views Sync. Resolution FPS Dynamics Masks ScalarFlow [9] Real Smoke 104 5 ✓ 1080 × 1920 60 rising plume ✗                                                                         
+
+> FluidNexus [15] Real Smoke 240 5✓1080 ×1920 30 jet, solid interaction ✗
+> NeuroFluid [18] Synth. Liquid 35‡–400 ×400 –simulated free surface ✗
+> TransProteus [12] Synth. Liquid 50k imgs. 1‡–––liquid in vessels ✓
+> Phys-Liquid [27] Synth. Liquid 56‡–1280 ×720 –container-induced sloshing ✓
+> DTLD [41] Real Liquid 31†✗1280 ×720 30 static levels ✓
+> SurfPhase [16] Real Liquid 12✓–2000 pool boiling ✗
+> SplashSplat (Ours) Real Liquid 20 7✓3840 ×2160 60 splashing, break-up ✓
+
+mulations [2, 9, 14, 17] to physics-informed neural and Gaussian methods [6, 15, 31, 38, 39, 42, 46, 51, 54]. All are developed and evaluated on smoke, a participating medium with diffuse boundaries. An opaque liquid instead termi-nates rays at a sharp, topology-changing interface: the in-terior is never observed, so the unknown is a free surface rather than a volumetric field [16]. This is what leads us to represent the liquid by an observed SDF and surface-bound carriers rather than by a density field. For liquids, NeuroFluid [18] and GaussFluids [8] cou-ple particle transition models or transported Gaussians with differentiable rendering, a formulation close to ours, but evaluate on synthetic DFSPH/Blender sequences whose liq-uids are rendered transparent. SurfPhase [16] works with real liquid, but on the interfacial dynamics of boiling from two views, compensating for the sparse viewpoints with a video diffusion prior rather than with physical struc-ture. Contained-liquid geometry is also estimated from sin-gle images for perception and manipulation [12, 27, 36], on quasi-static laboratory liquids, while PhysGaussian [45] and Gaussian Splashing [13] couple simulation with Gaus-sians to synthesize motion in already-reconstructed scenes rather than to reconstruct it. Reconstructing free-surface liquids undergoing splashing and break-up from real multi-view video therefore remains open. 
+
+Fluid Datasets. Real-world fluid benchmarks are domi-nated by smoke: ScalarFlow [9] provides five-view captures of buoyant plumes, and FluidNexus [15] adds two 120-scene five-view smoke datasets with textured backgrounds, one of them featuring fluid–solid interaction. Liquid data is either synthetic (NeuroFluid [18], TransProteus [12], and Phys-Liquid [27] render simulated liquids) or restricted in dynamics and viewpoints: DTLD [41] records static liquid states scanned by a hand-held moving camera, laboratory captures target segmentation from static single views [30], and SurfPhase [16] provides a single synchronized dual-view boiling sequence alongside uncalibrated monocular footage. As Tab. 1 summarizes, no existing dataset provides synchronized multi-view video of splashing liquids, which is what our benchmark contributes. 
+
+# 3. The SplashSplat Benchmark 
+
+Splashing liquids are unlike the smoke that existing physics-informed benchmarks target: reflection and refraction make correspondence unreliable, and thin structures form and break up within a few frames. No existing capture records these dynamics in synchronized multi-view video (Tab. 1). We therefore introduce a benchmark for novel-view recon-struction of splashing liquids (Fig. 1). 
+
+Capture and calibration. Each scene is recorded by seven GoPro cameras at 3840 × 2160 and 60 fps, distributed along a sparse arc that subtends 77 ◦ on average about the scene center. The cameras are free-running, so we recover a com-mon timeline post hoc by cross-correlating per-camera au-dio envelopes; the residual synchronization error is bounded by half a frame interval ( 8.3 ms, RMS 4.8 ms). Intrinsics are calibrated per camera with a ChArUco board. Estimat-ing relative poses is harder, as the sparse viewpoints share limited feature overlap: we therefore record a texture-rich static scene to provide sufficient visual features for robust COLMAP-based camera registration, additionally sweep-ing a handheld camera across the setup to bridge other-wise weakly connected fixed viewpoints. Bundle adjust-ment converges to a mean reprojection error of 0.9 px, and the cameras remain fixed for the session. 
+
+Scenes. The benchmark contains 20 scenes spanning a range of pouring dynamics, from thin coherent streams impacting a shallow container to larger volumes released into a deep tank, which produce violent splashes, thin sheets, detached droplets, and frequent topology changes. Scenes vary in container shape and size, liquid color, and background; transparent containers additionally introduce view-dependent refraction, making those scenes substan-tially harder for multi-view reconstruction. For each scene we identify the interval of effective liquid motion and uni-formly sample 50 synchronized frames from it, giving 7,000 
+
+images that cover the main phases of the deformation at a consistent sampling density. 
+
+Annotations and protocol. Per-view liquid and container masks are initialized with SAM3 [4] and manually refined; 3Figure 2. Overview of SplashSplat. At each frame, per-view liquid masks are fused into an observed liquid SDF, while the static scene is represented by pretrained background Gaussians (Sec. 4.1). Consecutive SDFs yield a coarse velocity field that advects Lagrangian carriers through a forecast–correct–resample loop: carriers are propagated by the flow, corrected against the next-frame SDF to suppress exterior drift, and resampled to restore missing surface coverage (Sec. 4.2). Each carrier decodes local Gaussians, which are rasterized together with the frozen background and optimized under photometric and mask supervision (Secs. 4.3 and 4.4). 
+
+refinement is almost entirely additive, since SAM3 under-segments thin streams and water seen through glass. We additionally reconstruct a mesh of each container using [1], providing the static geometry the liquid interacts with. The benchmark defines a fixed split: five cameras for training and two test cameras, 8◦–15 ◦ from their nearest training view, reserved for novel-view evaluation. All observation quantities consumed by any method, including the fused SDFs of Sec. 4, are computed from training views only. Full calibration and annotation details are in the supplementary. 
+
+# 4. Method 
+
+Given the synchronized, calibrated images I = {It,v } and liquid masks M = {Mt,v }, we reconstruct a dynamic fore-ground Gfg  
+
+> t
+
+and render it with a static background Gbg ,
+
+ˆIt,v = R
+
+
+
+Gbg ∪ G fg  
+
+> t
+
+; Π v
+
+
+
+, (1) where R is differentiable Gaussian rasterization [20] and 
+
+Πv the calibrated camera v. Our design follows a single principle: impose physical structure only where the obser-vations can constrain it . A momentum-based solver re-quires pressure and boundary conditions that are not ob-servable from real-world captures, and when misspecified it produces motion that is self-consistent yet incompatible with the observed liquid (Sec. 5.2). We therefore retain only fluid kinematics : observed geometry, interface trans-port under approximate incompressibility, and continuum deformation. We recover observation fields from the masks (Sec. 4.1), advect Lagrangian carriers through a forecast– correct–resample loop (Sec. 4.2), and decode them into Gaussians optimized by rendering (Secs. 4.3 and 4.4). The overview of our pipeline is shown in Fig. 2. 
+
+4.1. Observation Fields from Multi-View Masks 
+
+Observed geometry. For each frame t, we fuse the cali-brated training-view masks into a 3D occupancy by visual-hull carving on an isotropic voxel grid and compute its signed distance field (SDF) ϕt : R3 → R, with ϕt < 0
+
+inside the observed liquid. The hull is asymmetric evi-dence: a point outside it is contradicted by at least one view, whereas the interior remains uncertain, since concav-ities that no view can carve are retained. This determines where the observations may overrule the motion model. 
+
+Observed motion. Motion is far less constrained by the ob-servations: liquid appearance is weakly textured and view-dependent, and motion within the volume is not observ-able. The evolving interface nonetheless provides a kine-matic constraint, since it approximately satisfies the level-set equation ∂tϕ + u · ∇ ϕ = 0 under approximate incom-pressibility, ∇ · u ≈ 0. We therefore fit a coarse velocity field ut to this transport relation between consecutive ob-servations [40], 
+
+ut = arg min 
+
+> u
+
+X
+
+> q∈N t
+
+
+
+ϕt+1 (q) − ϕt
+
+ q − ∆t u (q)2
+
+, (2) where u is defined on a coarse grid and Nt is a narrow band around the two interfaces. The objective is minimized it-eratively, smoothing each iterate and projecting it toward its divergence-free component, which propagates the inter-face constraint into the interior, under a bound on velocity magnitude. Since level-set transport is insensitive to motion tangential to the interface, Eq. (2) does not recover the full flow; ut therefore serves as a short-range transport prior, with the residual left to the per-frame observations. 44.2. Forecast, Correct, Resample 
+
+A motion estimate is useful for propagating information be-tween adjacent observations, but too uncertain to determine the liquid geometry in an open loop. We therefore combine the Eulerian fields above with advected Lagrangian carri-ers: the fields provide per-frame geometry and a one-step motion proposal, while the carriers convert this proposal into positions and local deformations that drive the Gaus-sian representation. The carrier set is 
+
+P =   bi, e i, {xi,t , F i,t }ei
+
+> t=bi
+
+ Np 
+
+> i=1
+
+, (3) where xi,t ∈ R3 is position, Fi,t ∈ R3×3 a local deforma-tion gradient, and bi, e i the birth and end frames; only the active set At = {i | bi ≤ t ≤ ei} is decoded at time t.Finite lifetimes let the representation follow inflow, break-up, and topology change without requiring one particle set to remain valid over the entire sequence. 
+
+Forecast. Each active carrier is propagated with midpoint RK2, and its deformation gradient updated from the local velocity gradient: 
+
+xi,t + 12 = xi,t + ∆t 
+
+> 2
+
+ut(xi,t ),x− 
+
+> i,t +1
+
+= xi,t + ∆ t u t(xi,t + 12 ),F − 
+
+> i,t +1
+
+= ( I + ∆ t ∇ut(xi,t )) Fi,t , (4) with the singular values of F bounded to avoid degener-ate stretching. The field ut transports carrier centers, while its gradient evolves F by the standard continuum relation 
+
+˙F = ∇u F , so each carrier records how the flow has locally rotated and stretched its neighborhood. This frame later ori-ents the decoded Gaussians, which is how the transported motion reaches the rendered image. 
+
+Correction. Coarse transport drifts from the observed sur-face. Since the fused SDF is a visual hull, its evidence is one-sided: a carrier predicted outside the hull is contra-dicted by at least one view, while one predicted inside is not. We therefore correct exterior predictions and leave in-terior carriers untouched. With ϕ− 
+
+> i
+
+= ϕt+1 (x−
+
+> i,t +1
+
+) and unit normal ˆni at that point, 
+
+xi,t +1 = x− 
+
+> i,t +1
+
+− 1{ϕ−  
+
+> i>0}
+
+min( ϕ− 
+
+> i
+
+, δ ) ˆ ni, (5) which is not written back into ut. Carriers remaining out-side the observed liquid beyond a distance threshold are de-activated. 
+
+Resampling. Correction moves carriers but does not create them, while liquid enters the scene continuously. We there-fore restore coverage from the current observation: the near-surface band is discretized into cells, and any cell whose active carrier count falls below a target ¯n receives new car-riers, inheriting the local deformation of nearby active car-riers when available. The three steps close a cycle in which the fitted field propagates motion, the carriers hold local temporal structure, and each new observation removes drift and restores coverage. 
+
+4.3. Decoding Carriers into Gaussians 
+
+Since the liquid interior is unobservable, we spend represen-tational capacity near the interface: carriers live in a near-surface band and their Gaussians are suppressed away from it, making the foreground a thin deforming shell. Each ac-tive carrier i carries a learnable feature fi and base scale 
+
+si, which together with its propagated deformation gradi-ent define a local frame Ai,t = Fi,t diag( si). Following anchor-based decoding [5, 25], a set of heads shared across all carriers and frames maps fi to K child Gaussians ex-pressed in this frame. The offset head go gives a bounded residual oi,k = β tanh( go(fi)k), and the scale head gs ascale residual, yielding 
+
+μi,k,t = xi,t +Ai,t oi,k , B i,k,t = 1√K Ai,t diag   exp( ηsgs(fi)k),
+
+(6) with Σi,k,t = Bi,k,t B⊤
+
+> i,k,t
+
+. Both the offset and the covari-ance are expressed in Ai,t , so the children remain bounded within their carrier and inherit its orientation and stretch. Opacity is modulated by the observed SDF, 
+
+αi,k,t = σ gα(fi)k
+
+ σ κα(τα − | ϕt(xi,t )|), (7) suppressing Gaussians far from the interface. Geometry is view independent, while colour is conditioned on the view-ing direction ωi,t,v through gc([ fi, ω i,t,v ]) , letting the chil-dren absorb specular highlights and the background seen through the liquid without modelling refraction explicitly. 
+
+4.4. Optimization 
+
+The static background Gbg is pretrained per scene with Scaffold-GS [25] and kept frozen. At each iteration we sample a time–camera pair (t, v ) and rasterize the active foreground Gaussians together with the background. Since the frozen background cannot absorb residuals on back-ground pixels, a whole-image loss would push the fore-ground to explain them. We therefore supervise the liquid region only, normalizing by the masked pixel count so that thin streams and large splashes contribute equally. On top of this photometric term we add a gradient term under the same normalization, which sharpens thin structures; a D-SSIM term [20] on the mask bounding box; a silhouette term matching rendered foreground opacity to Mt,v ; and a regularizer on Gaussian covariance. Two terms follow [15]: 
+
+Lsep keeps the K children of a carrier from collapsing onto one another, and Lcol penalizes colour variance among chil-dren whose carriers share a grid cell, suppressing flicker as carriers are replaced. The objective is their weighted sum. Definitions and weights are in the supplementary material. 5Table 2. Quantitative comparison on our real-world benchmark. Foreground novel-view synthesis, temporal consistency, physical plausibility, and efficiency. All methods use the same protocol on native-resolution fluid-centric crops, with training time on a single NVIDIA V100; ours includes SDF preprocessing and both foreground and background reconstruction. Novel View Synthesis Physical Plausibility Efficiency Method PSNR ↑ SSIM ↑ LPIPS ↓ |∆Jitter | ↓ σD ↓ ∆E ↓ Train Time ↓ Memory ↓                                           
+
+> Deformable-3DGS [48] 12.95 0.9243 0.1307 0.0501 529.4 0.426 194.2 min 17.53 GiB SpacetimeGaussians [24] 15.78 0.9442 0.1088 0.0504 878.8 0.478 68.8 min 6.58 GiB 4D-Scaffold-GS [5] 18.92 0.9552 0.0898 0.0428 1005.1 0.436 42.1 min 16.78 GiB SplashSplat (Ours) 20.13 0.9570 0.0806 0.0276 219.9 0.373 37.8 min 5.31 GiB Ground Truth D3G STG 4DSG Ours Ground Truth D3G STG 4DSG Ours
+> Figure 3. Qualitative comparison on real captures. Training views (left) and test views (right), one scene per row. On test views the baselines place liquid Gaussians away from the observed surface: D3G collapses into a full-frame plume, while STG and 4DSG leave haze that occludes the container. SplashSplat keeps the stream continuous and the liquid confined to the observed surface.
+
+# 5. Experiments 
+
+Datasets. Our primary evaluation is on our real multi-view captures of splashing liquids (Sec. 3). To further ver-ify reconstruction quality, we also evaluate on the widely-adopted synthetic NeuroFluid dataset [18], generated with DFSPH [3] and rendered in Blender from 5 frontal cameras. 
+
+Baselines. We compare against three dynamic Gaus-sian splatting methods: Deformable-3DGS (D3G) [48], SpacetimeGaussians (STG) [24], and 4D-Scaffold-GS (4DSG) [5]. All methods are trained on the same views with their released implementations and recommended set-tings. Fluid-specific methods are either inapplicable, since a volumetric density model cannot represent an opaque free surface (Sec. 2), or not open-sourced [8]. 
+
+Metrics. To evaluate novel view synthesis quality, we re-port PSNR, SSIM [43], and LPIPS [53] on test views. Tem-poral consistency is measured by |∆Jitter |, the absolute difference between the jitter of a rendered sequence and that of the ground-truth video. Jitter [8] is defined as the stan-dard deviation of per-pixel intensity differences between ad-jacent frames, pooled over fluid-mask pixels. We report the jitter error rather than the raw jitter, since a static or overly smoothed foreground can trivially achieve near-zero jitter without matching the true temporal dynamics. To quan-tify physical fidelity, we follow GaussFluids [8] by tracking two key metrics on foreground fluid: the per-frame standard deviation of SPH density estimates σD to evaluate incom-pressibility, and the deviation of mechanical energy from monotone dissipation ∆E to assess plausible dissipation dynamics. Finally, we report computational cost: training time and peak memory. 
+
+Implementation details. For each scene, we carve the ob-served liquid hull on a near-isotropic grid with 176 cells along its longest axis and fit the velocity field on a coarser 
+
+96 -cell grid within a narrow band around the interface. Each carrier holds a 32 -dimensional feature decoded by three lin-ear heads (offset, scale, opacity) and a two-layer colour MLP of width 64 conditioned on the viewing direction, pro-ducing K = 2 Gaussian children. Since the liquid occupies 6Ground Truth D3G STG 4DSG Ours 
+
+> t = 2 t = 8 t = 14 t = 19
+
+Figure 4. Novel view synthesis on NeuroFluid WaterSphere .
+
+The baselines remain plausible while the surface is smooth but degrade as it deforms, losing rim structure and detached droplets at impact; SpacetimeGaussians additionally bakes a static specular highlight into the moving surface. 
+
+only 5–8% of the raw image area, we crop each view around the liquid region using the bounding box of the union of multi-view foreground masks before training, giving an av-erage input resolution of 1200 × 1800 . We first optimize the static background for 20 k iterations and keep it fixed thereafter, while the dynamic foreground is optimized for 
+
+3k iterations at the cropped resolution using Adam [21] with learning rate 2 × 10 −3. All experiments run on a single NVIDIA V100-32GB GPU. Further details are provided in the supplementary material. 
+
+5.1. Comparison to Baselines 
+
+Novel view synthesis. Fig. 3 compares novel-view synthe-sis on our real captures. On training views all methods re-produce the scene reasonably, but the baselines already blur or drop the thin pouring stream, the structure with the least photometric support. The gap widens on test views, the baselines place liquid Gaussians away from the observed surface, which fills the scene with haze and occludes the container, since a single dynamic representation has nothing holding the liquid to its own region. SplashSplat keeps the stream continuous and the liquid confined to the observed surface. Tab. 2 presents the quantitative comparison, and shows the trade-off anticipated in Sec. 1: 4D-Scaffold-GS attains the best baseline PSNR but the largest density devi-ation, while Deformable-3DGS is the most physically con-sistent of the three and the weakest photometrically. Splash-Splat bypasses this trade-off. By advecting carriers along a velocity field fitted to the observed interface while preserv-ing coverage across observations, motion is resolved prior to appearance optimization, leaving the decoder to model only residuals. Consequently, SplashSplat attains the best 
+
+Table 3. Foreground novel-view synthesis on NeuroFluid Wa-terSphere [18], over all 61 held-out frames.                           
+
+> Method PSNR ↑SSIM ↑LPIPS ↓|∆Jitter | ↓
+> D3G [48] 25.87 0.8763 0.2670 0.0239 STG [24] 22.05 0.8178 0.3523 0.0307 4DSG [5] 26.10 0.8730 0.2538 0.0213
+> Ours 27.94 0.8761 0.2329 0.0099
+> Reference Capture t4DSG Ours Ground truth Capture t+1
+
+Figure 5. Temporal interpolation. Every method is fitted to the even captured frames only, so the frame in the middle columns was withheld during training and serves as ground truth. The outer columns are the two captures that bracket it, and the amber box in the reference marks the crop. 4D-Scaffold-GS attenuates the falling stream into a faint band, while ours preserves its colour, thickness, and position. 
+
+novel-view quality together with the lowest density devia-tion and energy drift, and reduces temporal jitter by a third relative to the strongest baseline. The sparse carrier repre-sentation is also the cheapest to fit, with the lowest training time and peak memory. The synthetic WaterSphere scene [18] isolates the effect without the appearance ambiguity of real water (Fig. 4). On synthetic renders the silhouette is trivially recoverable from the images and carries no information beyond the photo-metric signal, so no method holds privileged input. The baselines remain plausible at early timesteps but degrade as the surface deforms, losing the rim structure and detached droplets at impact, and STG bakes a static specular high-light into the moving surface. SplashSplat tracks the defor-mation throughout and attains the best PSNR, LPIPS, and temporal jitter (Tab. 3). 
+
+Temporal interpolation. Fitting a sequence well does not require having recovered its motion: the observed frames can be explained in many ways. Rendering at an instant that was never trained on separates the two, so we fit our method and strongest baseline [5] to the even frames only and com-pare against the withheld ones. A deformation field can be queried there too, but it interpolates appearance, whereas advecting carriers transports material. Fig. 5 shows the qualitative comparison: 4DSG attenuates the falling stream into a faint band, while ours keeps its colour and thickness and lands where the withheld capture places it. 
+
+Style transfer. Because our carriers are placed by the ob-served geometry rather than by appearance, the liquid’s op-tical properties are not entangled with its shape: the SDF 7Reconstructed Clear water Brown dye Blue dye 
+
+Figure 6. Style transfer. New optical properties are assigned to the reconstructed liquid and light transport is re-solved against the scene behind it, with no mesh extraction and no re-optimization. Refraction of the background and the ripples of the recording are preserved. Ground truth Full w/o resampling w/o Lsep FLIP 
+
+> t = 14 t = 25 t = 36
+
+Figure 7. Qualitative ablation on test views. Without resampling the stream degrades into a diffuse veil and the accumulated liquid disappears by the end of the sequence; without Lsep the thin early stream is washed out; and open-loop FLIP transports the liquid toward the bottom of the bowl but drifts from the observed surface. The full model preserves both the stream and accumulated liquid. 
+
+and the carrier positions stay fixed while the material is re-placed. Re-rendering then needs only what the reconstruc-tion already provides, the optical path length along a ray and the orientation of the interface, so light transport can be re-solved against the frozen background without extracting a mesh or re-optimizing anything [28, 37, 52]. Removing the dye leaves clear water through which the vessel stays visible, while absorbing dielectrics deepen in colour with accumulated volume, and the stream keeps the width, rip-ples, and highlights of the recording (Fig. 6). 
+
+5.2. Ablation Study 
+
+We ablate on 10 scenes from our real captures. Since the liq-uid is largely transparent, pixel error within the foreground mask remains dominated by the static scene visible through it, and PSNR spans only 2.84 dB between our full model and a rendering with no liquid at all. We therefore also report mIoU@0.5 between the annotated liquid mask and the thresholded rendered opacity, which measures whether the reconstruction occupies the observed liquid region. We compare the full model against four variants: w/o resam-
+
+Table 4. Ablation on our real captures. Foreground metrics on held-out views, averaged over ten scenes. mIoU@0.5 is the IoU between the annotated liquid mask and the foreground mask ob-tained by thresholding rendered foreground-Gaussian opacity at 0.5; # Carr. is the mean number of active carriers per frame.                           
+
+> Variant mIoU@0.5 ↑PSNR ↑LPIPS ↓σD↓# Carr. w/o resampling 0.3116 19.05 0.093 384.7 0.8k Per-frame 0.7598 20.06 0.077 243.3 56.4k FLIP 0.2999 18.26 0.091 784.3 0.4k
+> Full 0.7696 20.31 0.076 234.2 26.7k
+
+pling , where carriers are never reseeded after initialization; 
+
+w/o Lsep , without the separation term between the K chil-dren of a carrier; Per-frame , where carriers are reseeded from the SDF at every frame without transport; and FLIP ,where they are advected by an open-loop solver instead of the fitted velocity field. Further ablations are in the supple-mentary material. 
+
+Effect of resampling. An opaque liquid exposes only its free surface, so the mask-fused SDF is the primary evidence of where material exists, and resampling is what converts this evidence into foreground Gaussians. Without it, carrier deaths are not replenished and the active population falls from 26.7k to 0.8k, and every metric degrades. The stream thins into a diffuse veil and the accumulated water body has largely disappeared by the end of the sequence (Fig. 7). Coverage of the observed liquid is therefore not something transport can maintain on its own; it has to be restored from each new observation. 
+
+Role of Transport. The Per-frame variant reaches compa-rable image quality, which is expected, since the per-frame SDF already pins the geometry. It does so with 56.4k car-riers against our 26.7k and a less uniform distribution, as each frame rediscovers the liquid rather than inheriting it. Advecting carriers along the fitted field keeps the coverage compact, and since their motion is defined between obser-vations, the representation can also be decoded at sub-frame times, which per-frame reseeding cannot do (Fig. 5). 
+
+Child separation. w/o Lsep leaves the carrier pool and its density uniformity unchanged, since the term acts only within a carrier to prevent its child Gaussians from collaps-ing. Its effect is visible in the accumulated liquid in Fig. 7, which renders thinner and less saturated when the K chil-dren overlap instead of covering distinct volume. 
+
+Physics-constrained optimization vs. physical simula-tion. The FLIP variant produces large degradation, in both appearance and density uniformity. The solver is not at fault: it runs without the inflow rate, total volume, and boundary conditions that images do not reveal, so its mo-tion is internally consistent but unrelated to the observed liquid, and the photometric objective cannot recover from the mismatch. Fig. 7 shows the mechanism: Gaussians are transported toward the bottom of the bowl but drift from the observed surface once nothing corrects them. A 8simulator imposes physical structure everywhere, including where evidence is insufficient, and our loop constrains only observation-supported area. 
+
+# 6. Conclusion 
+
+We presented SplashSplat, a benchmark and a method for reconstructing splashing liquids from real-world multi-view video. Reconstruction research on fluids has so far relied on smoke or simulation. Our benchmark provides synchro-nized, calibrated captures of real liquids in violent motion, and our method shows the setting is tractable when physical structure is imposed only where the observations support it. SplashSplat reconstructs real splashes more accurately and with more plausible motion than dynamic Gaussian splat-ting baselines, at a lower training cost, and the same repre-sentation supports temporal interpolation and style transfer. 
+
+Limitations. SplashSplat reconstructs the liquid from sil-houettes, which constrain coarse surface geometry and in-terface motion but not the specular glints and refraction that give water its character. Transient structures such as im-pact bubbles and foam are also missed, being too small and short-lived to be carved from multi-view masks. Our veloc-ity field is likewise kinematic: consistent with the observed interface, but not with a momentum balance. Recovering interpretable dynamics from real captures of this kind re-mains open, and is the direction this benchmark is built to support. 
+
+# References 
+
+[1] AR code: Augmented reality QR codes. https://ar-code.com/ , 2024. Accessed: 08-28-2026. 4, S1 [2] Bradley Atcheson, Ivo Ihrke, Wolfgang Heidrich, Art Tevs, Derek Bradley, Marcus Magnor, and Hans-Peter Seidel. Time-resolved 3D capture of non-stationary gas flows. ACM Transactions on Graphics , 27(5), 2008. 3 [3] Jan Bender and Dan Koschier. Divergence-free smoothed particle hydrodynamics. In Proceedings of the 14th ACM SIGGRAPH/Eurographics symposium on computer anima-tion , pages 147–155, 2015. 6 [4] Nicolas Carion, Laura Gustafson, Yuan-Ting Hu, Shoub-hik Debnath, Ronghang Hu, Didac Suris Coll-Vinent, Chai-tanya Ryali, Kalyan Vasudev Alwala, Haitham Khedr, An-drew Huang, et al. SAM 3: Segment anything with con-cepts. In International Conference on Learning Representa-tions (ICLR) , 2026. 3 [5] Woong Oh Cho, In Cho, Seoha Kim, Jeongmin Bae, Youngjung Uh, and Seon Joo Kim. 4D scaffold Gaussian splatting with dynamic-aware anchor growing for efficient and high-fidelity dynamic scene reconstruction. In Proceed-ings of the AAAI Conference on Artificial Intelligence , pages 3363–3371, 2026. 2, 5, 6, 7, S3 [6] Mengyu Chu, Lingjie Liu, Quan Zheng, Aleksandra Franz, Hans-Peter Seidel, Christian Theobalt, and Rhaleb Zayer. Physics informed neural fields for smoke reconstruction with sparse data. ACM Transactions on Graphics (ToG) , 41(4): 119:1–119:14, 2022. 2, 3 [7] Yuanyuan Ding, Feng Li, Yu Ji, and Jingyi Yu. Dynamic fluid surface acquisition using a camera array. In IEEE In-ternational Conference on Computer Vision (ICCV) , pages 2478–2485, 2011. 2 [8] Feilong Du, Yalan Zhang, Yihang Ji, Xiaokun Wang, Chao Yao, Jiˇ r´ ı Kosinka, Steffen Frey, Alexandru Telea, and Xiao-juan Ban. GaussFluids: Reconstructing Lagrangian fluid par-ticles from videos via Gaussian splatting. In Pacific Graphics Conference Papers, Posters, and Demos . The Eurographics Association, 2025. 3, 6 [9] Marie-Lena Eckert, Kiwon Um, and Nils Thuerey. ScalarFlow: A large-scale volumetric data set of real-world scalar transport flows for computer animation and machine learning. ACM Transactions on Graphics (TOG) , 38(6):1– 16, 2019. 1, 3 [10] Gerrit E Elsinga, Fulvio Scarano, Bernhard Wieneke, and Bas W van Oudheusden. Tomographic particle image ve-locimetry. Experiments in fluids , 41(6):933–947, 2006. 1 [11] Douglas Enright, Stephen Marschner, and Ronald Fedkiw. Animation and rendering of complex water surfaces. ACM Transactions on Graphics , 21(3):736–744, 2002. 2 [12] Sagi Eppel, Haoping Xu, Yi Ru Wang, and Alan Aspuru-Guzik. Predicting 3D shapes, masks, and properties of ma-terials inside transparent containers using the TransProteus CGI dataset. Digital Discovery , 1(1):45–60, 2022. 3 [13] Yutao Feng, Xiang Feng, Yintong Shang, Ying Jiang, Chang Yu, Zeshun Zong, Tianjia Shao, Hongzhi Wu, Kun Zhou, Chenfanfu Jiang, and Yin Yang. Gaussian splashing: Uni-fied particles for versatile motion synthesis and rendering. In 
+
+2025 IEEE/CVF Conference on Computer Vision and Pat-tern Recognition (CVPR) , pages 518–529. IEEE, 2025. 3 [14] Erik Franz, Barbara Solenthaler, and Nils Thuerey. Global transport for fluid reconstruction with learned self-supervision. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pages 1632–1642, 2021. 3 [15] Yue Gao, Hong-Xing Yu, Bo Zhu, and Jiajun Wu. Fluid-Nexus: 3D fluid reconstruction and prediction from a sin-gle video. In 2025 IEEE/CVF Conference on Computer Vi-sion and Pattern Recognition (CVPR) , pages 26091–26101. IEEE, 2025. 2, 3, 5, S3 [16] Yue Gao, Hong-Xing Yu, Sanghyeon Chang, Qianxi Fu, Bo Zhu, Yoonjin Won, Juan Carlos Niebles, and Jiajun Wu. SurfPhase: 3D interfacial dynamics in two-phase flows from sparse videos. arXiv preprint arXiv:2602.11154 , 2026. 2, 3 [17] James Gregson, Ivo Ihrke, Nils Thuerey, and Wolfgang Hei-drich. From capture to simulation: connecting forward and inverse problems in fluids. ACM Transactions on Graphics (ToG) , 33(4):1–11, 2014. 3 [18] Shanyan Guan, Huayu Deng, Yunbo Wang, and Xiaokang Yang. NeuroFluid: Fluid dynamics grounding with particle-driven neural radiance fields. In International conference on machine learning , pages 7919–7929. PMLR, 2022. 2, 3, 6, 7[19] Ivo Ihrke, Bastian Goldluecke, and Marcus Magnor. Recon-structing the geometry of flowing water. In IEEE Interna-
+
+9tional Conference on Computer Vision (ICCV) , pages 1055– 1060, 2005. 2 [20] Bernhard Kerbl, Georgios Kopanas, Thomas Leimk¨ uhler, and George Drettakis. 3D Gaussian splatting for real-time radiance field rendering. ACM Transactions on Graphics , 42 (4):139:1–139:14, 2023. 2, 4, 5 [21] Diederik P Kingma and Jimmy Ba. Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980 ,2014. 7 [22] C. Knapp and G. Carter. The generalized correlation method for estimation of time delay. IEEE Transactions on Acous-tics, Speech, and Signal Processing , 24(4):320–327, 1976. S1 [23] Zhengqi Li, Simon Niklaus, Noah Snavely, and Oliver Wang. Neural scene flow fields for space-time view synthesis of dy-namic scenes. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pages 6498– 6508, 2021. 2 [24] Zhan Li, Zhang Chen, Zhong Li, and Yi Xu. Spacetime Gaussian feature splatting for real-time dynamic view syn-thesis. In Proceedings of the IEEE/CVF Conference on Com-puter Vision and Pattern Recognition (CVPR) , pages 8508– 8520, 2024. 2, 6, 7, S3 [25] Tao Lu, Mulin Yu, Linning Xu, Yuanbo Xiangli, Limin Wang, Dahua Lin, and Bo Dai. Scaffold-GS: Structured 3D Gaussians for view-adaptive rendering. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 20654–20664, 2024. 2, 5 [26] Jonathon Luiten, Georgios Kopanas, Bastian Leibe, and Deva Ramanan. Dynamic 3D Gaussians: Tracking by per-sistent dynamic view synthesis. In 2024 International Con-ference on 3D Vision (3DV) , pages 800–809. IEEE, 2024. 2 [27] Ke Ma, Yizhou Fang, Jean-Baptiste Weibel, Shuai Tan, Xinggang Wang, Yang Xiao, Yi Fang, and Tian Xia. Phys-Liquid: A physics-informed dataset for estimating 3D geom-etry and volume of transparent deformable liquids. In Pro-ceedings of the AAAI Conference on Artificial Intelligence ,pages 7782–7790, 2026. 3 [28] Nelson Max. Optical models for direct volume rendering. 
+
+IEEE Transactions on Visualization and Computer Graphics ,1(2):99–108, 1995. 8, S5 [29] Nigel J. W. Morris and Kiriakos N. Kutulakos. Dynamic refraction stereo. IEEE Transactions on Pattern Analysis and Machine Intelligence , 33(8):1518–1531, 2011. 2 [30] Gautham Narayan Narasimhan, Kai Zhang, Ben Eisner, Xingyu Lin, and David Held. Self-supervised transparent liquid segmentation for robotic pouring. In 2022 Inter-national Conference on Robotics and Automation (ICRA) ,pages 4555–4561. IEEE, 2022. 3 [31] Xingyu Ni, Jingrui Xing, Xingqiao Li, Bin Wang, and Bao-quan Chen. Representing flow fields with divergence-free kernels for reconstruction. Proceedings of the ACM on Com-puter Graphics and Interactive Techniques , 8(4):52:1–52:21, 2025. 3 [32] Makoto Okabe, Yoshinori Dobashi, Ken Anjyo, and Rikio Onai. Fluid volume modeling from sparse multi-view images by appearance transfer. ACM Transactions on Graphics , 34 (4), 2015. 2 [33] Keunhong Park, Utkarsh Sinha, Jonathan T Barron, Sofien Bouaziz, Dan B Goldman, Steven M Seitz, and Ricardo Martin-Brualla. Nerfies: Deformable neural radiance fields. In 2021 IEEE/CVF International Conference on Computer Vision (ICCV) , pages 5845–5854. IEEE, 2021. 2 [34] Keunhong Park, Utkarsh Sinha, Peter Hedman, Jonathan T Barron, Sofien Bouaziz, Dan B Goldman, Ricardo Martin-Brualla, and Steven M Seitz. HyperNeRF: A higher-dimensional representation for topologically varying neu-ral radiance fields. ACM Transactions on Graphics , 40(6): 238:1–238:12, 2021. [35] Albert Pumarola, Enric Corona, Gerard Pons-Moll, and Francesc Moreno-Noguer. D-NeRF: Neural radiance fields for dynamic scenes. In 2021 IEEE/CVF Conference on Com-puter Vision and Pattern Recognition (CVPR) , pages 10313– 10322. IEEE, 2021. 2 [36] Florian Richter, Ryan K. Orosco, and Michael C. Yip. Image-based reconstruction of liquids from 2D surface de-tections. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 13811–13820, 2022. 3 [37] Christophe Schlick. An inexpensive BRDF model for physically-based rendering. Computer Graphics Forum , 13 (3):233–246, 1994. 8, S5 [38] Ningxiao Tao, Liru Zhang, Xingyu Ni, Mengyu Chu, and Baoquan Chen. FlowCapX: Physics-grounded flow capture with long-term consistency. Computer Graphics Forum , 44 (7):e70274, 2025. 3 [39] Ningxiao Tao, Baoquan Chen, and Mengyu Chu. La-grangianSplats: Divergence-free transport of Gaussian prim-itives for fluid reconstruction. In ACM SIGGRAPH 2026 Conference Papers , 2026. 3 [40] Huamin Wang, Miao Liao, Qing Zhang, Ruigang Yang, and Greg Turk. Physically guided liquid surface modeling from videos. ACM Transactions on Graphics (TOG) , 28(3):90:1– 90:11, 2009. 2, 4 [41] Xiayu Wang, Ke Ma, Ruiyun Zhong, Xinggang Wang, Yi Fang, Yang Xiao, and Tian Xia. Towards dual transparent liquid level estimation in biomedical lab: Dataset, methods and practices. In European Conference on Computer Vision ,pages 198–214. Springer, 2024. 2, 3 [42] Yiming Wang, Siyu Tang, and Mengyu Chu. Physics-informed learning of characteristic trajectories for smoke re-construction. In ACM SIGGRAPH 2024 Conference Papers ,2024. 3 [43] Zhou Wang, Alan C. Bovik, Hamid R. Sheikh, and Eero P. Simoncelli. Image quality assessment: From error visibility to structural similarity. IEEE Transactions on Image Pro-cessing , 13(4):600–612, 2004. 6 [44] Guanjun Wu, Taoran Yi, Jiemin Fang, Lingxi Xie, Xiaopeng Zhang, Wei Wei, Wenyu Liu, Qi Tian, and Xinggang Wang. 4D Gaussian splatting for real-time dynamic scene render-ing. In 2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 20310–20320. IEEE, 2024. 2 [45] Tianyi Xie, Zeshun Zong, Yuxing Qiu, Xuan Li, Yutao Feng, Yin Yang, and Chenfanfu Jiang. PhysGaussian: Physics-integrated 3D Gaussians for generative dynamics. In 2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 4389–4398. IEEE, 2024. 3 
+
+10 [46] Youchen Xie, Chen Li, Sheng Qiu, Zhi-Jun Wang, Chen-hui Li, Yibo Zhao, Zan Gao, and Changbo Wang. FluidGS: Physics informed Gaussian splatting for dynamic fluid re-construction from sparse views. In Proceedings of the 33rd ACM International Conference on Multimedia , pages 8438– 8447, 2025. 2, 3 [47] Jiankai Xing, Fujun Luan, Ling-Qi Yan, Xuejun Hu, Houde Qian, and Kun Xu. Differentiable rendering using RGBXY derivatives and optimal transport. ACM Transactions on Graphics (TOG) , 41(6):189:1–189:13, 2022. 2 [48] Ziyi Yang, Xinyu Gao, Wen Zhou, Shaohui Jiao, Yuqing Zhang, and Xiaogang Jin. Deformable 3D Gaussians for high-fidelity monocular dynamic scene reconstruction. In 
+
+Proceedings of the IEEE/CVF Conference on Computer Vi-sion and Pattern Recognition (CVPR) , pages 20331–20341, 2024. 2, 6, 7, S3 [49] Zeyu Yang, Hongye Yang, Zijie Pan, and Li Zhang. Real-time photorealistic dynamic scene representation and render-ing with 4D Gaussian splatting. In International Conference on Learning Representations (ICLR) , 2024. 2 [50] Jinwei Ye, Yu Ji, Feng Li, and Jingyi Yu. Angular domain re-construction of dynamic 3D fluid surfaces. In IEEE Confer-ence on Computer Vision and Pattern Recognition (CVPR) ,pages 310–317, 2012. 2 [51] Hong-Xing Yu, Yang Zheng, Yuan Gao, Yitong Deng, Bo Zhu, and Jiajun Wu. Inferring hybrid neural fluid fields from videos. Advances in Neural Information Processing Systems ,36:63595–63608, 2023. 2, 3 [52] Dingxi Zhang, Yu-Jie Yuan, Zhuoxun Chen, Fang-Lue Zhang, Zhenliang He, Shiguang Shan, and Lin Gao. Styl-izedgs: Controllable stylization for 3d gaussian splatting. 
+
+IEEE Transactions on Pattern Analysis and Machine Intel-ligence , 2025. 8 [53] Richard Zhang, Phillip Isola, Alexei A. Efros, Eli Shecht-man, and Oliver Wang. The unreasonable effectiveness of deep features as a perceptual metric. In IEEE/CVF Confer-ence on Computer Vision and Pattern Recognition (CVPR) ,2018. 6 [54] Wenran Zhang, Yuxiang Cai, Letian Huang, Dongwei Ye, Jie Guo, and Bo Ren. GauSmoke: Hybrid physics-optical Gaussian splatting for sparse smoke reconstruction. In ACM SIGGRAPH 2026 Conference Papers , 2026. 3 
+
+11 SplashSplat: Reconstructing Splashing Liquids from Real-World Multi-View Videos 
+
+# Supplementary Material 
+
+In this supplementary material, we provide additional details on the benchmark (Sec. S1), more implementa-tion and evaluation details (Sec. S2), together with ad-ditional comparison results (Sec. S3), and extended ab-lation studies (Sec. S4) that complement the main pa-per. Please note that our supplementary video results (splashsplat video.mp4 ) are provided as a separate file accompanying this submission. 
+
+# S1. Benchmark Details 
+
+S1.1. Capture Setup 
+
+Seven GoPro cameras record each of the 20 scenes at 
+
+3840 × 2160 and 60 fps, arranged along an arc spanning 
+
+77 ◦ on average around the scene center; each held-out cam-era is 8◦–15 ◦ from its nearest training view. Since the cam-eras free-run, we synchronize each capture session offline using audio. Specifically, we estimate each camera’s tem-poral offset to a reference by cross-correlating loudness en-velopes and apply the resulting whole-frame shift to all se-quences from that session. The half-frame figure reported in the main paper characterizes the quantization introduced by this whole-frame alignment: at 60 fps, rounding contributes at most 8.33 ms, corresponding to 4.8 ms RMS under a uni-form rounding error. Beyond this quantization term, residual misalignment can arise from offset-estimation uncertainty and clock-rate drift, so the measured sequence-level residual can exceed 
+
+8.33 ms. Two cameras exhibit measured rate offsets of 
+
+−49 μs/s and −81 μs/s, which cannot be corrected by a single session-level shift. Over the longest 640 s session, the larger drift accumulates to 52 ms, or approximately three source frames. Consequently, the ten scenes extracted from this session have a higher mean residual synchronization error ( 7.5 ms) than the ten scenes from shorter sessions (4.1 ms). To quantify the residual synchronization of each released sequence, we re-estimate the camera offsets within its own temporal window using GCC-PHAT [22]. We report the RMS of the seven offsets after centering them by their mean as Sync RMS in Tab. S1. The median Sync RMS across the dataset is 5.2 ms; 17 of the 20 scenes are below 8.33 ms, while the three higher-error sequences are marked with ‡.
+
+S1.2. Scene Overview 
+
+Tab. S1 lists all 20 scenes. Every sequence is 7 cameras 
+
+× 50 timesteps. Interval is the wall-clock span the 50 timesteps cover and Eff. ∆t their mean spacing, so the 50 timesteps subsample the 60 fps capture to an effective 9– 16 fps, chosen to span the full deformation rather than a short burst of it; the sampling step is not an integer num-ber of source frames, so consecutive gaps alternate about the mean by up to half a source frame. Sync RMS is the residual synchronization error defined in Sec. S1. In three sequences it leaves one camera a full source frame or more from the reference ( ‡) — the clock drift above at its worst; these are released and evaluated exactly as trained on, and flagged so the effect is visible. Fig. S2 shows one represen-tative frame per scene. 
+
+S1.3. Annotation Protocol 
+
+We compare the uncorrected SAM3 output and against the refined, annotated masks. The mean IoU is 0.772 and the median 0.967 : most masks are accepted almost unchanged and a minority require most of the refinement effort. Cor-rection is almost entirely additive, 20 .1% of the union added against 2.7% removed, and 8.6% of the raw masks are empty, i.e. SAM3 returns nothing at all. Averaged over a frame the editing touches 1.00% of the pixels and raises mask coverage from 1.89% to 2.70% . The effort is far from uniform: per-scene mean IoU ranges from 0.36 to 0.96 ,lowest for dyed liquid seen through glass, where SAM3 most often does not segment the liquid. Fig. S1 shows what the correction consists of. Against an opaque container SAM3 recovers the falling stream but stops at the liquid surface; behind a glass wall it recovers the stream but almost none of the water standing below it. To extend the dataset modalities and its possible appli-cations, we scan the three primary containers used in our captures with AR Code [1]. The reconstructed meshes are imported into Blender, where we manually remove scan-ning artifacts, fill missing surface regions, and refine noisy boundaries to obtain clean, watertight geometry. We then align the processed meshes with the capture setup and verify their geometry by projecting them into the calibrated multi-view images. 
+
+S1.4. Evaluation Protocol 
+
+Every scene uses the same seven-camera rig, with cameras 1–5 for training and 6–7 held out; both test views are brack-eted by training cameras. Each camera is cropped to a win-dow fixed in size and position: the union of its mask bound-ing boxes over all frames and both splits, padded by 96 px and rounded up to a multiple of eight. Only the principal point is shifted, and all methods are trained and scored on these crops. S1 Table S1. Benchmark scenes. The 20 sequences, with the wall-clock interval their 50 timesteps span, the mean spacing between them, and the residual synchronization error across the seven cameras. †: fewer than 7 cameras could be measured. ‡: one camera is a full source frame or more from the reference. Scene Container Interval Eff. ∆t Sync RMS Scene Container Interval Eff. ∆t Sync RMS (s) (ms) (ms) (s) (ms) (ms) bowl 001 Bowl 5.34 109.0 5.2 bowl 011 Bowl 3.34 68.1 5.4 †
+
+bowl 002 Bowl 3.84 78.3 4.1 † bowl 012 Bowl 4.34 88.5 7.0 †
+
+bowl 003 Bowl 3.92 80.0 2.4 † bowl 013 Bowl 3.85 78.6 7.7 bowl 004 Bowl 4.57 93.3 2.1 bowl 014 Bowl 5.17 105.5 9.3 ‡
+
+bowl 005 Bowl 5.22 106.6 5.3 bowl 015 Bowl 3.97 81.0 11.7 †‡ 
+
+bowl 006 Bowl 4.84 98.7 5.2 bowl 016 Bowl 3.00 61.3 3.5 bowl 007 Bowl 3.67 74.9 8.1 † bowl 017 Bowl 3.54 72.2 3.7 bowl 008 Bowl 3.22 65.7 9.4 †‡ tank 001 Tank 4.19 85.5 4.5 †
+
+bowl 009 Bowl 4.00 81.7 6.3 tank 002 Tank 4.49 91.6 3.5 †
+
+bowl 010 Bowl 4.70 96.0 4.6 tank 003 Tank 3.67 74.9 6.9 †
+
+Figure S1. Raw SAM3 versus refined masks. Five frames, or-dered by increasing disagreement. Top: frame. Middle: SAM3 at confidence 0.5. Bottom: the released mask. Columns 1–3 miss the pooled liquid in an opaque bowl, and columns 4–5 recover the stream but not the water standing in the tank. 
+
+All methods are exported as per-frame positions and ac-tivity flags and scored by one routine. Our carriers represent fluid by construction; for baselines that mix background and fluid, we keep only primitives projecting inside the ground-truth silhouette in all training views, a conservative criterion that excludes background Gaussians at the cost of discard-ing fluid primitives visible in only part of the rig. σD is the per-frame standard deviation of an SPH density estimate, using a Poly6 kernel of radius 0.3 over the 64 nearest neigh-bours with unit mass and the self term excluded, averaged over frames; primitive counts are capped by subsampling so that the statistic is comparable across methods whose counts differ by orders of magnitude. ∆E averages the mechanical energy of carriers alive in consecutive frames, from finite-difference velocities and a gravitational poten-tial. Both statistics depend on particle count, and since our resampling maintains near-uniform coverage, σD partially reflects our design; we therefore also report the normalized 
+
+σD /μ D .
+
+# S2. Method and Training Details 
+
+S2.1. Loss Definitions and Weights 
+
+We use the notation of Sec. 4: ˆIt,v is the composite of Gfg 
+
+> t
+
+over the frozen Gbg (Eq. 1), ˆαt,v the accumulated opacity obtained by rasterizing Gfg  
+
+> t
+
+alone under Πv , Mt,v the binary liquid mask, Ω the pixel domain, and At the set of active carriers. All image terms are computed per sampled pair 
+
+(t, v ).
+
+Photometric terms. The foreground-normalized objec-tive is 
+
+Lfg =
+
+P 
+
+> p∈Ω
+
+Mt,v (p) ˆIt,v (p) − It,v (p) 1
+
+3 P 
+
+> p∈Ω
+
+Mt,v (p) + ϵ , (S1) with ϵ = 10 −6. Dividing by the masked area rather than the image makes a thin jet and a wide splash contribute equally. The gradient term applies the same normalization to finite differences ∇pq I = I(q) − I(p) over adjacent pixel pairs 
+
+(p, q ) along the image axes, 
+
+Lgrad =
+
+P 
+
+> (p,q )
+
+wpq ∇pq ˆIt,v − ∇ pq It,v 1
+
+3 P 
+
+> (p,q )
+
+wpq + ϵ ,wpq = max  Mt,v (p), M t,v (q),
+
+(S2) so that pairs straddling the silhouette are kept. The struc-tural term is Lssim = 1 − SSIM   ˆIt,v |Wt,v , I t,v |Wt,v 
+
+, eval-uated on the bounding box Wt,v of Mt,v padded by 8 px. 
+
+Silhouette and covariance. The silhouette term is awhole-image L1 between the foreground opacity and the mask, Lsil = 1
+
+> |Ω|
+
+P 
+
+> p∈Ω
+
+ˆαt,v (p) − Mt,v (p) ; its outside-mask half forbids opacity where no liquid was observed. The covariance regularizer penalizes the total extent of the decoded Gaussians, Lreg = 1
+
+> K|A t|
+
+P
+
+> i∈A t
+
+P 
+
+> k
+
+tr  Σi,k,t 
+
+.S2 Separation and colour consistency. Following the pair-wise separation regularization of [15], but restricted to the 
+
+K children of one carrier (the only pairs that can collapse, since a child is bounded to its own carrier frame Ai,t ), we penalize small distances between the bounded offsets 
+
+oi,k = β tanh  go(fi)k
+
+ with a squared hinge penalty on distances below a margin. 
+
+Lsep = 1
+
+|A t| K
+
+> 2
+
+ X
+
+> i∈A t
+
+X
+
+> k<l
+
+max  0, τ sep − ∥ oi,k − oi,l ∥2
+
+2.
+
+(S3) We set τsep = 0 .6 in carrier-local units, while the chil-dren are initialized approximately one unit apart. Temporal consistency within a carrier is maintained by construction, since its feature fi is shared over the car-rier’s lifetime. The remaining flicker arises when carriers are removed and replaced, so that independently decoded colours differ between nearby carriers. We therefore regu-larize colour consistency spatially. Carriers are assigned to the voxel grid of ϕt by cell( i) = ⌊xi,t /h ⌋ with voxel size h,and for each voxel j we compute the mean colour ¯cj over all children of carriers in that voxel. Each decoded child colour ci,k = gc([ fi, ω i,t,v ]) k is then pulled toward this lo-cal mean, 
+
+Lcol = 13K|A t|
+
+X
+
+> i∈A t
+
+X
+
+> k
+
+ci,k − ¯ccell( i)
+
+> 22
+
+. (S4) 
+
+Total objective. The training objective of the main paper (Sec. 4.4) is the weighted sum: 
+
+L = λfg Lfg + λgrad Lgrad + λssim Lssim + λsil Lsil 
+
++ λreg Lreg + λsep Lsep + λcol Lcol . (S5) 
+
+S2.2. Implementation Details 
+
+Observation fields. The hull grid spans the union of the sequence-wide visual hulls with 10% padding, 176 near-cubic cells along the longest axis. A voxel is occupied only if it projects inside the liquid masks of all five training views, and ϕt is the signed distance to this region. Eq. (2) is solved on a 96-cell grid with ut parameterized by a 24 3
+
+control grid: 35 residual-descent steps of size 0.45 within a four-voxel band around the two interfaces. After each step the field is Gaussian-smoothed ( σ = 0 .6 voxel), blended with 35% of its divergence-free projection, and clipped to eight voxels per frame. 
+
+Carriers. All distances are in transport-grid voxels. Carri-ers advance one frame by midpoint RK2, with the singular values of F clamped to [1 /3, 3] , and are deactivated once 
+
+ϕt+1 > 0.5. Coverage is restored within the interior shell 
+
+−3 ≤ ϕt ≤ 0, where each occupied cell is assigned a tar-get population ¯n ∈ { 2, . . . , 5} from its proximity to the                          
+
+> PSNR ↑SSIM ↑LPIPS ↓|∆Jitter | ↓
+> D3G [48] 13.94 0.930 0.121 0.065 STG [24] 17.92 0.947 0.092 0.061 4DSG [5] 19.16 0.949 0.077 0.046 Ours 19.92 0.944 0.066 0.024
+> Table S2. Hidden-frame interpolation , mean over 10 scenes on held-out cameras.
+
+training-view silhouettes and the local curvature of ϕt. New carriers are drawn uniformly within the cell with F = I.
+
+Decoder and optimization. Each carrier stores a 32-D la-tent feature and decodes K = 2 child Gaussians. Offset, scale, and opacity are predicted by lightweight linear heads, while colour is decoded by a two-layer MLP with hidden width 64 and a separate RGB output for each child. We first train the Scaffold-GS background on frame 0 for 20k iterations and keep it fixed thereafter. The dynamic foreground is then optimized for 3k iterations using Adam with a learning rate of 2 × 10 −3, sampling one training frame–camera pair per iteration at the native crop resolu-tion. We use fixed loss weights for all experiments: λfg =0.5, λgrad = 0 .1, λssim = 0 .2, λsil = 0 .7, λreg = 0 .01 ,
+
+λsep = 0 .1, and λcol = 1 .
+
+Sub-frame decoding. Our carrier representation supports continuous-time queries between two observed frames. For an intermediate time t + τ , 0 < τ < 1, we advect each carrier from frame t using the fitted velocity field ut. Be-cause no observation is available at the intermediate time, we apply neither observation correction nor carrier resam-pling. The SDF used for decoding is instead obtained by linearly interpolating the two neighboring observed SDFs, 
+
+ϕt+τ (x) = (1 − τ )ϕt(x) + τ ϕ t+1 (x). All learned carrier attributes remain unchanged during this interpolation. For the interpolation experiment in Fig. 5, only the ob-served frames are used to construct the SDFs and motion fields; the withheld intermediate frames are used solely for evaluation. Thus, their images, masks, and geometry pro-vide no input to the reconstruction. 
+
+Baselines. All baselines use their released implementations and recommended configurations, with the same data, cam-era split, crops, and evaluation protocol. The only changes are to data loading, extending Deformable-3DGS [48] and SpacetimeGaussians [24] to per-camera intrinsics and our two-view test split. The baselines don’t supports mask su-pervision natively, and grafting such terms on would require per-method re-tuning that risks misrepresenting their behav-ior. The Per-frame variant of the main paper serves as the supervision-matched control. On the synthetic scenes ev-ery method, including ours, starts from a point cloud sam-pled from the mask-derived visual hull of the training views, never from ground-truth particles. S3 Figure S2. Scene gallery. One representative frame from each of the 20 benchmark scenes. reference captured t D3G STG 4DSG Ours ground truth captured t+1   
+
+> Figure S3. Rendering between captured frames, all baselines. The instant in the four middle columns was never trained on; the outer columns are the captures that bracket it and the amber box in the reference marks the crop. Neither the deformation-field nor the polynomial-motion baselines place the falling stream where the withheld capture puts it.
+
+# S3. Additional Comparison with Baselines 
+
+S3.1. Additional Temporal Interpolation Compari-son. 
+
+We extend the comparison of the main paper to the two re-maining baselines under the same protocol. Deformable-3DGS conditions on a normalised time and SpacetimeGaus-sians give each Gaussian a polynomial trajectory; both can therefore be queried between the frames they were fitted to, and both interpolate appearance rather than transport mate-rial. Tab. S2 reports the means over all 10 scenes and Fig. S3 the corresponding renderings. Ours is best on every metric except SSIM, and best on 10 /10 scenes for both LPIPS and 
+
+|∆Jitter |, where its temporal error is less than half that of the closest baseline. 4D-Scaffold-GS retains a small SSIM advantage but the motion it reproduces is not the captured one. The deformation field of Deformable-3DGS overfits severely with five training views, which the qualitative com-S4 Table S3. Additional metrics for baselines. Rendering speed and storage for all methods. Metric D3G STG 4DSG Ours FPS ↑ 21.6 208.6 96.7 92.6 Storage (MB) ↓ 74.0 54.9 40.4 42.6                             
+
+> σD/μ D↓0.686 0.429 0.642 0.198
+> Table S4. Additional NeuroFluid scenes. Foreground novel-view synthesis on scene WaterCube under the protocol of the main pa-per. Method PSNR ↑SSIM ↑LPIPS ↓|∆Jitter | ↓
+> D3G 31.89 0.9325 0.1861 0.0065 STG 28.13 0.8633 0.2778 0.0138 4DSG 31.48 0.9340 0.1725 0.0057 Ours 31.93 0.9355 0.1721 0.0012
+
+parison makes plain. 
+
+S3.2. Additional Comparison on Real Capture 
+
+Our carriers show substantially more uniform spatial cov-erage than the baselines: even after normalizing by mean density, σD /μ D is 0.198 against 0.429 –0.686 (Tab. S3). Since the normalized form controls for primitive count, the difference reflects how the primitives are placed rather than how many there are: observation-guided resampling redistributes carriers over the reconstructed liquid each frame, whereas unconstrained Gaussian optimization con-centrates primitives where the appearance objective favours them. Rendering speed and storage are competitive: Space-timeGaussians renders fastest, since its per-Gaussian at-tributes are evaluated in closed form from stored polyno-mial and temporal RBF parameters, while our runtime re-mains comparable to 4D-Scaffold-GS despite the per-frame carrier update, and the shared decoder heads keep the model compact. We provide additional qualitative comparision in Fig. S4 and Fig. S5. 
+
+S3.3. Additional NeuroFluid Evaluation 
+
+We extend the evaluation of the main paper to the Neu-roFluid WaterCube scene under the same protocol (Tab. S4, Fig. S7). On this smooth-deformation scene the image met-rics separate the methods by fractions of a dB, while our temporal error is several times lower than the best base-line’s, the pattern the main paper predicts: a fit that ex-plains held-out views need not reproduce the captured mo-tion. Qualitatively, STG scatters debris off the surface and D3G and 4DSG smooth away the rim droplets, while ours preserves the rim and splash structure. 
+
+S3.4. Additional Style Transfer Results. 
+
+A dye is an absorbing dielectric: it attenuates the refracted background along the optical path, Tc = exp( −σc ℓ) per colour channel c, with ℓ the path length through the liquid and σc its absorption coefficient [28]. A multiple-scattering  
+
+> Figure S4. Training views on real captures , cropped to the fluid. One scene per column (two frames each), one method per row. Even on held-in views the baselines thin out or drop the falling stream, whereas our reconstruction keeps it continuous down to the pool.
+
+term lets a thick pool converge to a saturated colour, and the interface is composited with a Fresnel term [37]. Both quantities the model needs, the optical path length and the interface normal, are read directly from the reconstructed surface and carriers, so a new material is a change of co-efficients rather than a re-fit and costs a few seconds. The recorded stream structure is preserved throughout: the rip-ples and highlights of Fig. S6 are the captured ones, modu-lated by the new absorption rather than replaced. 
+
+# S4. Extended Ablation Studies 
+
+S4.1. Mask Robustness 
+
+We assess the dependence on manual annotation by train-ing the full model on raw SAM3 masks (Fig. S1) instead of the refined ones. Removing the refinement pass costs sil-houette accuracy, while the photometric and physical scores degrade only slightly (Tab. S5). The dependence on manual annotation is therefore concentrated in the recovered geom-etry rather than in the rendering metrics. 
+
+S4.2. Number of Training Views 
+
+We reduce the number of training views from five to three and measure how reconstruction degrades as the visual hull S5 Figure S5. Held-out views on real captures , cropped to the fluid. Same layout as the training-view figure. On novel views the base-lines lose the stream and smear the container, while ours keeps the stream and the pool readable. Reconstruction Amber Dye Brown Dye Green Dye 
+
+Figure S6. Further dyes and vessels. Each row is a single recon-struction re-rendered with a different absorption spectrum. The vessel, the table and the background are untouched, and both con-tainers are transparent, so the wall stays visible in front of the liq-uid while the pool deepens in colour with accumulated volume. Table S5. Mask robustness. Full model trained on raw SAM3 masks and on manually refined masks. Masks mIoU@0.5 ↑ PSNR ↑ LPIPS ↓ σD ↓
+
+Raw SAM3 0.665 19.60 0.0858 258.5 Refined 0.770 20.31 0.0764 234.2 
+
+loosens, delineating the operating range of the benchmark (Tab. S6). Every mask-derived stage—SDF, flow fields, background scaffold, and foreground—is rebuilt from the 
+
+Table S6. Number of training views. Full model trained with five, four, and three of the seven calibrated cameras on 
+
+bowl 001 –bowl 010 .Views mIoU@0.5 ↑ PSNR ↑ LPIPS ↓
+
+5 (full) 0.770 20.31 0.0764 
+
+4 0.753 18.52 0.0840 3 0.680 18.34 0.0845 Table S7. Hyperparameter sensitivity. Single-knob variants of the full model (defaults: grid 96 , K = 2 , pmin = 2 ); ten se-quences, held-out views, foreground metrics as in the main paper. 
+
+σD /μ D is count-matched at 16 k, and the K variants share the full model’s pool. Gauss./fr. counts the Gaussians decoded per frame, and Storage is the dynamic model’s checkpoint (training peaks at 
+
+≈5 GiB for every variant).                                                    
+
+> Variant PSNR ↑LPIPS ↓σD/μ D↓∆E↓Gauss./fr. Storage Grid 64 19.81 0.0808 0.417 0.426 30k 6 MB Grid 128 19.91 0.0752 0.158 0.366 179k 39 MB
+> K=1 19.83 0.0816 0.162 0.374 57k 17 MB
+> K=4 19.91 0.0756 0.162 0.374 171k 17 MB
+> pmin =4 19.95 0.0758 0.163 0.373 140k 27 MB
+> pmin =1 19.87 0.0789 0.280 0.385 78k 15 MB
+> Full model 20.31 0.0764 0.162 0.374 85k 17 MB
+
+reduced set, so each arm is a genuine N -camera capture rather than a five-camera pipeline scored on fewer views; the held-out cameras are unchanged, and the nested subsets keep both as interpolation views. Silhouette accuracy holds at four views and drops at three, as fewer carving planes inflate the hull. PSNR falls earlier, but much of that drop comes from the frozen background, which is also refit from the reduced views. 
+
+S4.3. Hyperparameter Sensitivity 
+
+Tab. S7 sweeps the main hyperparameters one at a time. Grid resolution has the clearest effect: a coarser grid lacks the spatial resolution to represent the liquid geome-try and transport, giving less uniform carrier distributions and larger energy deviations, while a finer grid improves the physical measures only marginally at roughly twice the decoded Gaussians and storage. The number of children be-haves similarly, with K=1 reducing capacity and larger K
+
+adding rendering cost without appearance gain, and raising the minimum carrier density adds primitives throughout the liquid for negligible benefit. The default setting is therefore not a narrow optimum but the point where further capacity no longer benefits the model. 
+
+S4.4. One-Step Solver Comparison 
+
+The main paper reports that replacing our fitted transport with an open-loop FLIP solver degrades reconstruction. To test whether this stems from the solver rather than from its interaction with the reconstruction, we isolate a single trans-port step from an aligned observed state. For every t → t+1 
+
+all predictors start from the same ϕt and ut; FLIP addition-S6 Table S8. One-step carrier transport under matched initializa-tion. All predictors start from the same observed state. Validity is the fraction of carriers still inside the observed liquid after one step, measured by sampling ϕt+1 at each carrier ( ϕ < 0.5 voxel); 
+
+Eout is the mean escape distance max( ϕ, 0) in voxels. Lower block: solver variants on one B OWL scene.                      
+
+> Predictor Validity ↑Eout ↓
+> Ours 0.956 0.06
+> No motion 0.928 0.11 FLIP 0.840 0.25 FLIP, 2×substeps 0.868 0.19 FLIP, 2×press. iters 0.858 0.21 FLIP, 2×grid 0.846 0.22
+
+Ground Truth D3G STG 4DSG Ours 
+
+Figure S7. Novel view synthesis on NeuroFluid WaterCube (held-out view, t = 6 , 18 , 40 ). 
+
+ally receives particle and grid velocities sampled from ut,the registered container geometry, and gravity in the metric scale of the capture. Our transport keeps 95 .6% of carriers inside the ob-served liquid after one step, against 84 .0% for FLIP. Leav-ing the carriers in place scores 92 .8% , since over one frame the interface moves little relative to the voxel scale. FLIP falls below this because its initial and boundary conditions are incomplete rather than incorrect: the interior veloc-ity field is unobservable and is therefore seeded from the surface-derived ut, and the pour has no inflow specification, so the simulated volume stays fixed while the observed vol-ume grows. Under these conditions the step is dominated by free fall and carries carriers past the observed interface. Doubling substeps, pressure iterations, or grid resolution does not close the gap, so the discrepancy is not one of dis-cretization or convergence. Supplying the missing condi-tions would require knowing the inflow rate and the interior state, neither of which the images reveal. S7
