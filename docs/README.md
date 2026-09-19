@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-18</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-19</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 6 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 0 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>4</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>0</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-18 21:56:03 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-19 21:10:12 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日筛选6篇物理世界建模与视频生成论文，精读2篇、速读4篇。最值得看的是9.0分的StrucPhysVideo，用结构化描述与机器人动作学习物理动态，以及8.0分关于守恒性带来稳定性、因子分解带来反事实能力的研究。普通读者可优先了解机器人如何从视频和动作中学会预测物理变化，再按兴趣跟进液体重建与长时视频生成。</p>
+<p>今日无新推荐，系统未产出可展示论文。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -71,12 +71,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">2 篇</strong>
+    <strong class="dpr-home-dashboard-count">0 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="StrucPhysVideo: Learning Physical Dynamics from Structured Captions and Robot Actions">StrucPhysVideo: Learning Physical Dynamics from Structured Captions and Robot Actions</span></li><li><span class="dpr-home-dashboard-paper-title" title="Conservation Buys Stability and Factoring Buys Counterfactuals in Physical World Models">Conservation Buys Stability and Factoring Buys Counterfactuals in Physical World Models</span></li></ul>
+<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>2</strong></span></div>
+
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -84,12 +84,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">4 篇</strong>
+    <strong class="dpr-home-dashboard-count">0 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="SplashSplat: Reconstructing Splashing Liquids from Real-World Multi-View Videos">SplashSplat: Reconstructing Splashing Liquids from Real-World Multi-View Videos</span></li><li><span class="dpr-home-dashboard-paper-title" title="CamPilot: A Multi-Agent Cinematic Assistant for Camera-Controlled Movie Generation">CamPilot: A Multi-Agent Cinematic Assistant for Camera-Controlled Movie Generation</span></li><li><span class="dpr-home-dashboard-paper-title" title="Recency Forcing: Bridging the Long-Horizon Gap in Autoregressive Video Generation">Recency Forcing: Bridging the Long-Horizon Gap in Autoregressive Video Generation</span></li></ul>
+<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">video-gen-rl <strong>3</strong></span><span class="dpr-home-dashboard-tag">phys-video <strong>1</strong></span></div>
+
 </section>
 </div>
 
