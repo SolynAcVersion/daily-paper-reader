@@ -1,0 +1,114 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-21T23:01:13.502276+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 4,
+    "deep_divecandidates": 1,
+    "deep_cap": 9,
+    "deep_selected": 1,
+    "quick_candidates": 1,
+    "quick_skim_target": 14,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2609.21455v1",
+      "source": "arxiv",
+      "title": "CompAdapt: Adaptable Composite Motion Modeling for Physics-Consistent Text-to-Video Generation",
+      "abstract": "While diffusion-based text-to-video (T2V) models have demonstrated impressive capability in generating realistic and temporally coherent videos, they often fail to respect fundamental physical dynamics. Although recent physics-constrained methods incorporate explicit dynamics priors to improve physical plausibility, they remain limited to simple single-type motions, depend on manually specified parameters, and struggle to generalize to unseen physical laws. In this work, we propose CompAdapt, a physics-consistent T2V framework for adaptable generation across complex real-world scenarios. It extends neural dynamics modeling beyond single-type motions to encompass composite physical behaviors, including coupled motions, multi-stage transitions, and multi-object collisions. Furthermore, CompAdapt translates natural language prompts into structured physical semantics, enabling end-to-end specification of motion types, temporal relations, and initial physical parameters. To generalize to novel physical environments, CompAdapt introduces dynamics-aware prior matching, achieving one-shot adaptation without retraining the core dynamics module. In addition, a physics-aware latent feature fusion module improves visual fidelity under fast and complex motion. Experiments on physics-focused T2V benchmarks demonstrate that CompAdapt improves physical consistency over both general T2V models and physics-constrained baselines, while preserving high visual quality and adaptability to unseen dynamics. The project page is available at https://makapic.github.io/CompAdapt/ .",
+      "authors": [
+        "Haoran Qin",
+        "Renlong Wu",
+        "Tianyu Huang",
+        "Yukang Ding",
+        "Hui Li",
+        "Wangmeng Zuo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-18T08:04:49+00:00",
+      "link": "https://arxiv.org/pdf/2609.21455v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "physics-consistent text-to-video generation via composite motion modeling",
+      "llm_evidence_cn": "通过复合运动建模实现物理一致的文本到视频生成",
+      "llm_evidence": "通过复合运动建模实现物理一致的文本到视频生成",
+      "canonical_evidence": "通过复合运动建模实现物理一致的文本到视频生成",
+      "llm_tldr_en": "Diffusion text-to-video models often violate physical dynamics, and existing physics-constrained methods handle only single-type motions with manual parameters. CompAdapt extends neural dynamics modeling to composite physical behaviors like coupled and multi-stage motions for physics-consistent generation.",
+      "llm_tldr_cn": "扩散式文本到视频模型虽能生成真实且时间连贯的视频，却常违背基本物理动力学，现有物理约束方法局限于单一运动类型、依赖手工参数且难以泛化到未见的物理规律。作者提出CompAdapt物理一致T2V框架，将神经动力学建模扩展到耦合运动、多阶段等复合物理行为，实现可适配的物理一致生成。该工作直接面向物理合理性视频生成，是核心相关研究。",
+      "llm_tldr": "扩散式文本到视频模型虽能生成真实且时间连贯的视频，却常违背基本物理动力学，现有物理约束方法局限于单一运动类型、依赖手工参数且难以泛化到未见的物理规律。作者提出CompAdapt物理一致T2V框架，将神经动力学建模扩展到耦合运动、多阶段等复合物理行为，实现可适配的物理一致生成。该工作直接面向物理合理性视频生成，是核心相关研究。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "generating videos that obey physical laws and constraints",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.20744v1",
+      "source": "arxiv",
+      "title": "Video DeltaNet: A Video-Native Hybrid Attention for Livestream Video Generation",
+      "abstract": "Video diffusion models repeatedly process long spatiotemporal token sequences during denoising, making attention a major computational bottleneck. Linear attention offers an appealing alternative and has been widely adopted in recent large language models, but directly applying it to video models often fails to preserve the fine-grained interactions required for high-quality generation. We present Video DeltaNet (VDN), which combines local Softmax attention with bidirectional linear memory for long-range video context. Its linear branch introduces Video Delta Attention (VDA), which updates memory once per frame by jointly incorporating its spatial tokens. Separate output projections and learnable gates calibrate the two branches, while a staged teacher-alignment recipe progressively introduces the new pathway into pretrained models. We instantiate VDN on MiniMax H3, applying the hybrid to video-to-video interactions while retaining Softmax for interactions involving text or audio. With eight-step distillation and an optimized SGLang serving stack, VDN-H3 completes DiT denoising for a 14.3-second, 768p video in 6.70 seconds on eight NVIDIA B200 GPUs, corresponding to a 14.5x speedup over the 50-step dense H3 baseline on the same GPU count.",
+      "authors": [
+        "Haocheng Xi",
+        "Yiming Xie",
+        "Hexu Zhao",
+        "Yiwen Zhang",
+        "Michael Liu",
+        "Thomas Creavin",
+        "Kurt Keutzer",
+        "Xiuyu Li",
+        "Zhaoyang Lv",
+        "Chenfeng Xu",
+        "Haiwen Feng"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-09-17T17:33:15+00:00",
+      "link": "https://arxiv.org/pdf/2609.20744v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "per-frame memory update for long-range video context",
+      "llm_evidence_cn": "逐帧更新记忆以建模长程视频上下文",
+      "llm_evidence": "逐帧更新记忆以建模长程视频上下文",
+      "canonical_evidence": "逐帧更新记忆以建模长程视频上下文",
+      "llm_tldr_en": "Video diffusion models repeatedly process long spatiotemporal token sequences, making attention a bottleneck while linear attention loses fine-grained interactions; Video DeltaNet combines local Softmax attention with bidirectional linear memory updating once per frame.",
+      "llm_tldr_cn": "视频扩散模型在去噪时反复处理长时空token序列，注意力计算成为主要瓶颈，而直接套用线性注意力又难以保持高质量生成所需的细粒度交互。本文提出Video DeltaNet，将局部Softmax注意力与双向线性记忆相结合，其线性分支引入Video Delta注意力，每帧联合空间token更新一次记忆。该方法在长程视频上下文中兼顾效率与帧间交互质量，为视频生成的时序建模提供了高效架构。",
+      "llm_tldr": "视频扩散模型在去噪时反复处理长时空token序列，注意力计算成为主要瓶颈，而直接套用线性注意力又难以保持高质量生成所需的细粒度交互。本文提出Video DeltaNet，将局部Softmax注意力与双向线性记忆相结合，其线性分支引入Video Delta注意力，每帧联合空间token更新一次记忆。该方法在长程视频上下文中兼顾效率与帧间交互质量，为视频生成的时序建模提供了高效架构。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "maintaining inter-frame coherence in video generation",
+      "matched_requirement_id": "req-22",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

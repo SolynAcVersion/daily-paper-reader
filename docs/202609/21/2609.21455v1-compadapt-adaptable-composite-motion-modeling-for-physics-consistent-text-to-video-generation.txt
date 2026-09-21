@@ -1,0 +1,682 @@
+Title: CompAdapt: Adaptable Composite Motion Modeling for Physics-Consistent Text-to-Video Generation
+
+URL Source: https://arxiv.org/pdf/2609.21455v1
+
+Published Time: Mon, 21 Sep 2026 00:39:37 GMT
+
+Number of Pages: 23
+
+Markdown Content:
+# CompAdapt: Adaptable Composite Motion Modeling for Physics-Consistent Text-to-Video Generation 
+
+Haoran Qin 1, Renlong Wu 1, Tianyu Huang 1, Yukang Ding 2, Hui Li 1, Wangmeng Zuo 11Harbin Institute of Technology, China 
+
+> 2
+
+Taobao, Alibaba Group, China 
+
+## Abstract 
+
+While diffusion-based text-to-video (T2V) models have demonstrated impressive capability in generating realistic and temporally coherent videos, they often fail to respect fundamental physical dynamics. Although recent physics-constrained methods incorporate explicit dynamics priors to improve physical plausibility, they remain limited to simple single-type motions, depend on manually spec-ified parameters, and struggle to generalize to unseen physical laws. In this work, we propose CompAdapt, a physics-consistent T2V framework for adapt-able generation across complex real-world scenarios. It extends neural dynamics modeling beyond single-type motions to encompass composite physical behav-iors, including coupled motions, multi-stage transitions, and multi-object colli-sions. Furthermore, CompAdapt translates natural language prompts into struc-tured physical semantics, enabling end-to-end specification of motion types, tem-poral relations, and initial physical parameters. To generalize to novel physical environments, CompAdapt introduces dynamics-aware prior matching, achiev-ing one-shot adaptation without retraining the core dynamics module. In addi-tion, a physics-aware latent feature fusion module improves visual fidelity un-der fast and complex motion. Experiments on physics-focused T2V benchmarks demonstrate that CompAdapt improves physical consistency over both general T2V models and physics-constrained baselines, while preserving high visual qual-ity and adaptability to unseen dynamics.The project page is available at https: //makapic.github.io/CompAdapt/ .
+
+## 1 Introduction 
+
+Diffusion-based text-to-video (T2V) models [Ho et al., 2022b,a, Singer et al., 2023, Yang et al., 2025, Bar-Tal et al., 2024, Chen et al., 2023, 2024a, Guo et al., 2023] have recently achieved im-pressive progress in generating realistic and temporally coherent videos, supporting applications in content creation, simulation, and immersive media. However, visual realism alone does not guaran-tee physical correctness. Most T2V models are trained to reproduce motion patterns from large-scale video data, where motion is learned mainly through visual correlations rather than explicit physical dynamics [Guo et al., 2025, Chen et al., 2025]. As a result, they may generate videos that appear plausible at first glance but violate basic physical rules, such as gravity, force-induced acceleration, collision response, and coherent transitions between different motion components. To address physical inconsistency in T2V generation, recent works incorporate explicit physical pri-ors to guide the generation process with physical dynamics constraints. NewtonGen [Yuan et al., 2025] is a representative one, which builds upon physics-informed neural ordinary differential equa-tions (ODEs) [Chen et al., 2018, Raissi et al., 2019] and introduces a Neural Newtonian Dynamics (NND) module to model basic Newtonian motion. This design improves the physical plausibility and enables controllable single-object motion synthesis. However, existing physics-constrained T2V   
+
+> Preprint. arXiv:2609.21455v1 [cs.CV] 18 Sep 2026 (a) Composite Motion Modeling Supported by CompAdapt (b) One -Shot Adaptation Capability
+> Projectile + Rotation + Collision
+> Free Fall + Deformation + Collision
+> 3D Move + Rotation + Decelerate
+> 3D Move + Oblique Elastic Collision
+> Linear Motion + Head -on Elastic Collision
+> Slope Sliding + Linear Motion
+> Lunar Gravity Projectile
+> One -shot Reference
+> Zero -Shot(Earth Gravity)
+> Fine -tuning
+> One -Shot(Lunar Gravity)
+
+Figure 1: CompAdapt generates physically-consistent composite motion videos from texts, with (a) unified composite motion modeling and (b) efficient one-shot adaptation to novel physical laws. methods are still limited in complex real-world scenarios. First, they mainly focus on single-type fun-damental motions and lack support for composite motion, where multiple motion components may occur in parallel, sequentially, or be interrupted by discrete dynamic events such as collisions [Gill-man et al., 2025, 2026, Zhang et al., 2026]. Second, their motion parameters are typically manually specified, which limits their practicality in open-world generation. Third, these methods have lim-ited adaptability to novel physical laws. When encountering out-of-distribution environments, such as lunar gravity or low-friction surfaces, they usually require retraining the core dynamics module with large-scale physics-clean synthetic data, lacking efficiency for adaptation [Chen et al., 2018, Rubanova et al., 2019, Greydanus et al., 2019, Cranmer et al., 2020]. Therefore, physics-aware T2V generation requires a more flexible framework for handling complex real-world scenarios, which should flexibly compose multiple motion dynamics and rapidly adapt to unseen physical conditions. Based on these observations, we propose CompAdapt, an adaptable physics-consistent T2V gen-eration framework for complex real-world scenarios, as shown in Figure 1. CompAdapt provides three key capabilities. First, it represents complex real-world motion through parallel and sequen-tial composition, supporting coupled motions, multi-stage transitions, and multi-object collisions beyond single-type fundamental motion. Second, it translates natural language prompts into struc-tured physical semantics, including motion categories, temporal relations, and initial physical param-eters. Third, it enables one-shot adaptation to unseen physical laws through dynamics-aware prior matching, allowing efficient adaptation to conditions such as lunar gravity or low-friction surfaces. Specifically, CompAdapt realizes these capabilities through a language-to-dynamics-to-video pipeline. A text-to-physical parser first converts the input prompt into a standardized motion se-quence and initial physical state. Based on an augmented 10-dimensional physical state represen-tation, neural ODE-based dynamics modules predict object-level motion trajectories. The Motion Type Composite Module (MTC) then composes parallel and multi-stage motions into a coherent physical trajectory, while the Multi-Object Interaction Module (MOT) handles discrete multi-object interactions such as collisions. The predicted trajectory is further used to guide a physics-aware video generator with state-dependent latent feature propagation. For novel physical environments, dynamics-aware prior matching selects and adapts the most compatible dynamics module from a single observation. We evaluate CompAdapt on physics-focused benchmarks covering motion parsing, composite mo-tion generation, multi-object collision, and adaptation to unseen physical laws. Extensive exper-iments show that CompAdapt consistently improves physical consistency over both general T2V models and physics-constrained baselines. In particular, it better handles composite motions and collision dynamics, and can adapt to novel physical environments from one sample. These results demonstrate the effectiveness of CompAdapt for physics-consistent T2V generation in complex real-world scenarios. The main contributions are summarized as follows: • We propose CompAdapt, a physics-consistent T2V generation framework, which integrates prompt-based physical parameter parsing, composite dynamics modeling, and one-shot adaptation to novel physical laws for producing videos in complex physical scenarios. • We introduce a text-to-physical parsing and composite motion modeling scheme. It con-verts prompts into structured physical semantics and composes parallel, sequential, and collision motions into coherent physical trajectories. 2• We design a dynamics-aware one-shot adaptation strategy for unseen physical laws. By matching a single observation to the most compatible pre-trained dynamics module, Com-pAdapt can handle novel physical conditions with limited updates. • We conduct extensive experiments on physics-focused T2V generation benchmarks. The results demonstrate that CompAdapt achieves stronger physical consistency than general T2V models and physics-constrained baselines, while maintaining high visual fidelity. 
+
+## 2 Related Work 
+
+2.1 Physics-Aware and Motion-controllable Video Generation 
+
+Recent text-to-video models can generate visually impressive videos, but they often violate basic physical laws [Huang et al., 2023, 2024]. Existing physics-aware generation methods improve phys-ical consistency through simulation-based pipelines, embedded dynamics priors, or post-hoc opti-mization [Zhang et al., 2024, Liu et al., 2024a, Xie et al., 2024, Zhang et al., 2026, Guo et al., 2025, Chen et al., 2025]. NewtonGen [Yuan et al., 2025] is closely related to our work, as it introduces Neu-ral Newtonian Dynamics for controllable physical motion generation. However, it mainly focuses on fundamental motion types and relies on manually specified physical parameters, limiting its ap-plicability to composite motions, collisions, and unseen physical environments. Motion-controllable video generation provides another important direction for improving generation controllability. Rep-resentative methods guide video generation with trajectories, drag signals, camera motion, or motion prompts [Guo et al., 2023, Yin et al., 2023, Geng et al., 2025, Shi et al., 2024, Li et al., 2025, Liao et al., 2025, Ling et al., 2025, He et al., 2024b,a]. These methods improve motion alignment but gen-erally do not explicitly model physical dynamics. We build upon Wan-Move [Chu et al., 2025] and introduce physics-aware feature propagation guided by predicted physical states. Complementary to physical dynamics, recent works improve other facets of world-consistent video generation, in-cluding multi-view geometry consistency via epipolar constraints [Kupyn et al., 2025] and 4D latent reward optimization [An et al., 2026b], as well as multi-shot narrative coherence [An et al., 2026a]. Our work addresses object-level physical dynamics consistency, a complementary dimension. 
+
+2.2 Neural Dynamics Modeling and Physical Evaluation 
+
+Neural dynamics models, including PINNs, Neural ODEs, Hamiltonian Neural Networks, and La-grangian Neural Networks, have been widely studied for modeling physical systems [Raissi et al., 2019, Chen et al., 2018, Rubanova et al., 2019, Greydanus et al., 2019, Cranmer et al., 2020]. Re-lational and graph-based dynamics models further extend this idea to multi-object interaction mod-eling [Kipf et al., 2018, Sanchez-Gonzalez et al., 2020]. Despite their progress, applying neural dynamics to open-ended T2V generation remains difficult due to the need for text-conditioned pa-rameter parsing, composite motion composition, and adaptation to novel physical laws. Physical reasoning benchmarks such as PHYRE, Physion, and I-PHYRE provide controlled environments for evaluating physical understanding [Bakhtin et al., 2019, Bear et al., 2021, Li et al., 2023]. Re-cent T2V-oriented benchmarks further show that current video generation models still lack physical consistency [Guo et al., 2025, Chen et al., 2025]. We address these limitations by incoporating text-to-physical parsing, composite dynamics modeling, and one-shot adaptation. 
+
+## 3 Methodology 
+
+Given a text prompt that describes a physical scene and its intended motion, our goal is to gen-erate a visually realistic and physically consistent video, which presents four challenges. First, a free-form prompt does not directly provide the physical quantities required by a dynamics model, such as velocity, acceleration, mass, or collision timing. Second, real-world motion often contains multiple components that occur in parallel, unfold sequentially, or interact through discrete events such as collisions. Third, trajectory-guided video generators tend to produce texture distortion under complex motion. This occurs because naively replicating first-frame features along a motion path ig-nores how deformation and rotation modulate visual appearance across frames. Fourth, pre-trained dynamics modules learned under standard physical conditions fail when the environment changes, such as under lunar gravity or on low-friction surfaces, requiring adaptation to novel physical laws. To address these challenges, we propose CompAdapt, as shown in Fig. 2. CompAdapt first converts 3Motion Type Composite (MTC) Module           
+
+> xyvxvyθωslaμZ
+> NND NND
+
++                              
+
+> Zsyn
+> Multi -Object Interaction (MOT) Module
+> Before ZA−
+> ZB−
+> Contact Eq. ( 7)
+> After ZA+
+> ZB+
+> (a) NewtonGen
+> Prompt Appearance Only, No Physics
+> Preset Parameters Z₀ NND ZtVideo
+> One Object, One Motion Type
+> 1Text -to -Physical Parsing 2Per -object Dynamics 3Explicit Interaction 4Video Generation
+> (b) CompAdapt
+> Prompt
+> Text -To -Physical
+> Parser
+> Preset Parameters
+> Z₀
+> Motion Types
+> ANND MTC
+> Module
+> BNND MTC
+> Module
+> Objects
+> Touching? MOT
+> Module
+> Yes
+> No
+> Video
+> Next Timestamp
+> New Laws Adaption Observation, One Clip Matching, Pick Prior Adapt, Updates NND
+> Symbols
+> Either Input Works
+> AObject A
+> BObject B
+> +Add: Composite Fusion
+> Z₀ Initial Physical State
+> ZtStates at t -timestamp
+> Zˢʸⁿ Synthesized State
+> NND Neural Newtonian Dynamics
+> Zt
+> Optical Flow
+
+Figure 2: Overview of CompAdapt. (a) NewtonGen serves as the baseline, integrating a single NND from preset parameters for one object with one motion type. (b) CompAdapt extends this framework with text-to-physical parsing, composite motion modeling, explicit interaction, and one-shot adapta-tion. A text-to-physical parser or presets yield the motion composition and Z0. Each object’s NND outputs are fused by the Motion Type Composite Module (MTC), and contacts between objects are resolved by the Multi-Object Interaction Module (MOT). For new laws, one-shot observation, prior matching, and Adapt update the NND. Z(t) guides video generation. the input text into structured physical semantics, then models composite physical motion into trajec-tories, and finally renders a physics-aware video guided by the predicted trajectory. In addition, we introduce a one-shot adaptation paradigm for novel physical laws. We first formulate the physical state representation in Sec. 3.1 and then detail the text-to-physical parser in Sec. Sec. 3.2. Next, we describe composite motion modeling in Sec. 3.3. Finally, we present the physics-aware video generation pipeline in Sec. 3.4 and the one-shot adaptation paradigm in Sec. 3.5. 
+
+3.1 Physical State Representation 
+
+NewtonGen [Yuan et al., 2025] introduces a physics-informed neural ODE framework for modeling single-object continuous motion, where the physical state is represented as a 9-dimensional latent vector, i.e ., 
+
+Z = [ x, y, v x, v y , θ, ω, s, l, a ].
+
+(x, y ) and (vx, v y ) denote the 2D centroid position and velocity, respectively. θ and ω are the rotation angle and angular velocity. s and l are the shortest and longest dimensions, and a is the projected area. Because momentum transfer during multi-object collisions depends on mass, a quantity that cannot be inferred from kinematics or geometry alone, we augment the physical state representation with an explicit mass dimension μ, i.e ., 
+
+Z′ = {Z, μ }.
+
+For notational simplicity, we use Z to denote Z′ hereafter. Following NewtonGen [Yuan et al., 2025], the temporal dynamics of each element z in Z follows a second-order ODE that combines linear physics terms with a nonlinear residual, i.e ., 
+
+az ¨z + bz ˙z + cz z + dz + MLP( Z) = 0 , (1) where az , b z , c z , d z are learnable parameters capturing the dominant Newtonian dynamics, and an MLP models the unknown residuals. Given an initial state Z0, the future state Zt is obtained via a 4neural ODE integrator [Chen et al., 2018], i.e ., 
+
+Zt = Z0 +
+
+∫ tt0
+
+Func( Z(τ )) dτ. (2) 
+
+Func( Z(τ )) denotes the set of individual dz 
+
+> dt
+
+ODEs governing each element, and Z0 = Z(t0) is the known initial physical state at time t0.
+
+3.2 Text-to-Physical Parser 
+
+Real-world composite motion is inherently hierarchical, i.e ., motions at a timestamp are executed in parallel, while consecutive timestamps unfold sequentially. Translating such motion from a free-form text prompt into a structured physical state further requires two distinct capabilities, i.e ., recognizing motion semantics ( e.g ., category and temporal order) and estimating numerical phys-ical parameters ( e.g ., velocity and mass). We design a dual-LLM parser based on Qwen2.5-7B-Instruct [Yang et al., 2024], i.e ., LLM seq and LLM param , to decouple these objectives. Let P denote the input text prompt. LLM seq extracts the motion components and determines their temporal re-lations, where each motion is classified into one of 12 predefined categories, e.g ., uniform motion, accelerated motion, and collision. It outputs a set of motion sequences S for N objects, i.e ., 
+
+S = LLM seq (P) = {S(1) , S(2) , . . . , S(N )}, (3) where S(n) = ( M(n)1 , . . . , M(n) 
+
+> T
+
+) is the motion sequence for the n-th object, and T is the number of timestamps. M(n) 
+
+> i
+
+is the synchronous motion components in the i-th timestamp, which can be written as, 
+
+M(n) 
+
+> i
+
+= {m(n) 
+
+> i, 1
+
+, . . . , m (n) 
+
+> i,o i
+
+}. (4) 
+
+m(n) 
+
+> i,j
+
+denotes the j-th motion component and oi denotes the total number of components in the i-th timestamp. LLM param takes P and S as inputs and estimates the physical state Z0 for the initial timestamp, which can be written as, 
+
+Z0 = LLM param (P, S) = {Z(1) 0 , Z(2) 0 , . . . , Z(N )0 }. (5) 
+
+Z(n)0 is the physical state for the n-th object. 
+
+3.3 Composite Motion Modeling 
+
+Given per-object motion sequences S(n) and their initial physical states Z(n)0 , we instantiate the corresponding executable neural dynamics for each object. Specifically, each motion component 
+
+m(n) 
+
+> i,j
+
+∈ M (n) 
+
+> i
+
+activates its category-specific pre-trained NND module Dcat( m(n) 
+
+> i,j )
+
+, which takes 
+
+Z(n)0 as the initial condition and propagates it into a time-continuous physical state Z(n) 
+
+> i,j
+
+(t). To compose Z(n) 
+
+> i,j
+
+(t) into physically consistent object-level trajectories, we introduce a unified compo-sitional framework in which the Motion Type Composite Module (MTC) fuses concurrent motion components at each timestamp, and the Multi-Object Interaction Module (MOT) resolves discrete multi-object contacts when interactions occur. 
+
+Motion Type Composite Module. When multiple motion components act on an object simultane-ously, their corresponding NND modules operate on mostly disjoint subsets of Z-space variables, so simultaneous motions such as rotation paired with deceleration naturally superpose at the kine-matic level within the physical state representation. Furthermore, since all components share the same initial state Zinit , this composition rule is strictly commutative. This additivity and commu-tativity motivate an additive composition scheme for parallel motion components. Concretely, at timestamp ti the object is subject to oi parallel motion components M(n) 
+
+> i
+
+. The contribution of the 
+
+j-th component is its Z-space displacement Z(n) 
+
+> i,j
+
+(t) − Zinit relative to the common initial state. The composed state Zsyn (t) is obtained by summing all per-component displacements onto the common initial state, i.e ., 
+
+Zsyn (t) = Zinit +
+
+> oi
+
+∑
+
+> j=1
+
+r ⊙ (Z(n) 
+
+> i,j
+
+(t) − Zinit 
+
+). (6) 5Here, ⊙ denotes element-wise multiplication. The vector r = [1 , 1, 1, 1, 1, 1, 1, 1, 1, 0] is a binary mask that zeros out the mass dimension, as mass remains invariant during composition. Under the temporal chaining paradigm, Zinit is set to Z(n)0 at the first timestamp, and to the synthesized termi-nal state Zsyn (ti−1) from the preceding timestamp for all subsequent steps. This ensures continuous trajectory concatenation across the full sequence. 
+
+Multi-Object Interaction Module. While the MTC handles smooth continuous motion, collisions introduce instantaneous, discontinuous state transitions that fall outside the scope of standard con-tinuous NND evolution. To capture these discrete events, we introduce a collision dynamics module 
+
+Dcol , a separately trained NND that maps pre-collision physical states to post-collision physical states, which can be written as, 
+
+(Z(A, +)  
+
+> tc
+
+, Z(B, +)  
+
+> tc
+
+) = Dcol (Z(A, −) 
+
+> tc
+
+, Z(B, −) 
+
+> tc
+
+). (7) 
+
+Z(A, −) 
+
+> tc
+
+and Z(B, −) 
+
+> tc
+
+denote the pre-collision physical states of objects A and B at collision time 
+
+tc. Z(A, +)  
+
+> tc
+
+and Z(B, +)  
+
+> tc
+
+are the post-collision states. We detect collisions by tracking the minimum boundary distance dt between objects at each timestamp to locate the collision time tc. We model each object as a convex shape K parameterized by its centroid ct = ( xt, y t), orientation θt, and dimensions (s, l ) extracted from Zt. The minimum distance dt is expressed via support functions 
+
+dt = max 
+
+> ∥d∥=1
+
+[ d · (c(B) 
+
+> t
+
+− c(A) 
+
+> t
+
+) − h(A)(d) − h(B)(−d) ]. (8) 
+
+h(n)(d) = max x∈K (n) d · x is the support function. When dt ≤ ϵ, where ϵ is a predefined collision threshold, a collision is registered at tc = t and Dcol is applied via Eq. (7) to resolve the discon-tinuous transition. When dt > ϵ , each object continues to evolve independently under the NND temporal chaining framework. After collision the two objects continue from Z(A, +)  
+
+> tc
+
+and Z(B, +) 
+
+> tc
+
+until the next collision event or the end of the motion sequence. 
+
+3.4 Physics-Aware Video Generation 
+
+The composite motion modeling module outputs a full sequence of Z-space physical states with guaranteed physical consistency. As the rendering branch of our decoupled framework, the video generation module translates these abstract kinematic states into realistic video frames, allowing independent optimization of physical accuracy and visual quality. We build our rendering pipeline on Wan-Move [Chu et al., 2025], a trajectory-conditioned video diffusion model, as per-frame centroid trajectories can be directly projected from physical states. Its core motion guidance mechanism relies on latent feature replication. Given the first-frame latent feature map F0 and per-frame point coordinates (uf , v f ) projected from each Zf , it copies feature values from the initial trajectory position to all subsequent frames in a hard manner, formulated as, 
+
+Ff (uf , v f , :) = F0(u0, v 0, :) . (9) Here Ff denotes the latent condition feature map at frame f . However, this global hard copying scheme only models translational displacement and causes severe texture distortion under rotation and scaling. To mitigate this issue, we inject physical geometric priors into the diffusion feature propagation process. Specifically, we design two complementary modules to implement this idea. One is a spatial warp module dedicated to explicit geometric transformation modeling, and the other is an adaptive blending module for fine-grained artifact compensation. 
+
+Spatial Warp Module. Instead of global feature copying, we adopt spatially transformed local patch propagation. For each decoder block, a local latent patch H0 is extracted from F0 centered at the initial object position (u0, v 0). For frame f , this patch is warped according to the transformation matrix, i.e ., 
+
+Mf = R(θf − θ0) · diag( sf 
+
+> s0
+
+, lf 
+
+> l0
+
+), (10) where Mf denotes the spatial transformation matrix for frame f , R(·) is the 2D rotation matrix, and diag( ·) constructs a diagonal scaling matrix. This design explicitly models rotation and scaling during feature propagation. 
+
+Adaptive Blending Module. To further compensate for artifacts from latent-space scaling and out-of-plane appearance changes, we introduce a lightweight MLP that takes the relative dimensional 6change vector ρf = ( sf 
+
+> s0
+
+, lf 
+
+> l0
+
+, af 
+
+> a0
+
+) as input and predicts a channel-wise gate G to perform adaptive feature blending. The blending operation is formulated as, 
+
+hf = G ⊙ Mf (H0) + ( 1 − G) ⊙ ˜hf , (11) where hf is the final fused feature for frame f , and ˜hf is the native diffusion feature at the current denoising step. 
+
+3.5 One-Shot Adaptation to Novel Physical Laws 
+
+To enable one-shot adaptation to novel physical laws, we first extract a structured physical state sequence from the given observation. We use SAM2 [Ravi et al., 2024] to track the target object and estimate the corresponding physical state sequence {ˆZf }Ff =0 from object masks and trajectories, which serves as the observation basis for subsequent adaptation. Adapting a dynamics module to a novel physical environment must satisfy two core requirements. First, selecting a strong initializa-tion that matches the target dynamics to improve convergence efficiency and adaptation reliability. Second, preserving the learned physical prior during fine-tuning to avoid overfitting to a single ob-servation. To address these requirements, we perform a two-step adaptation based on the extracted observation sequence with the Prior Matching Module and the Optimization Loss. 
+
+Prior Matching Module. After that, we perform dynamics-aware prior matching to select the most suitable pre-trained dynamics module. Let {D k}Kk=1 denote the set of pre-trained single-object dynamics modules, where each module Dk is parameterized by ϕ0
+
+> k
+
+. Starting from the observed initial state ˆZ0, each module predicts a trajectory, i.e ., 
+
+˜Z(k) 
+
+> f
+
+= Dk( ˆZ0, f ; ϕ0
+
+> k
+
+), f = 0 , . . . , F. (12) We select the module Dk∗ whose predicted trajectory best matches {ˆZf }, which provides a better initialization for one-shot adaptation. It can be written as, 
+
+k∗ = arg min 
+
+> k
+
+1
+
+F
+
+> F
+
+∑ 
+
+> f=0
+
+∥∥∥˜Z(k) 
+
+> f
+
+− ˆZf
+
+∥∥∥22
+
+. (13) 
+
+Optimization Loss. Finally, we fine-tune Dk∗ on the extracted trajectory with the proposed opti-mization loss, which can be written as, 
+
+Ladapt = 1
+
+F
+
+> F
+
+∑ 
+
+> f=0
+
+∥∥∥Dk∗ ( ˆZ0, f ; ϕ) − ˆZf
+
+∥∥∥22
+
++ λ ∥∥ϕ − ϕ0
+
+> k∗
+
+∥∥22 . (14) 
+
+ϕ0 
+
+> k∗
+
+denotes the original pre-trained parameters, and λ controls the regularization strength. The first term fits the observed trajectory, while the second term prevents the adapted model from drifting too far from the learned dynamics prior. CompAdapt employs the updated dynamics module to generate videos under the new physical condition. 
+
+## 4 Experiments 
+
+4.1 Experimental Settings Datasets. We construct four physics-focused datasets ( i.e ., Text2Phys , CollidePhys , CompoPhys ,and OODPhys ) from physical reasoning benchmarks ( i.e ., PHYRE [Bakhtin et al., 2019], Phys-ion [Bear et al., 2021], and I-PHYRE [Li et al., 2023]) and large-scale T2V datasets ( i.e ., Panda-70M [Chen et al., 2024b] and OpenVid-1M [Nan et al., 2025]), following the physics-clean simula-tion protocol in NewtonGen [Yuan et al., 2025]. These datasets are with standardized annotations for motion categories, temporal boundaries, object states, and physical parameters. Text2Phys contains 10,000 text prompts with structured physical annotations, which are used to train the text-to-physical parser. CollidePhys contains 1,000 two-object elastic collision videos, where 800 samples are used for training and 200 ones are for evaluating the collision-specific module. CompoPhys contains 1,500 composite motion videos, with 1,200 training and 300 testing samples. It provides per-frame 7physical state annotations for parallel, sequential, and hybrid motion compositions. OODPhys con-tains 34 controlled out-of-distribution scenarios spanning seven dynamical categories, including shifted gravity, friction, damping, and thrust parameters, coupled rolling dynamics, and structurally novel mechanisms such as spring oscillation, spiral motion, and chaotic double pendulums. The scenarios are organized into four difficulty tiers by their structural gap to the pre-trained dynamics modules: 22 near-domain (parameter shift), 5 mid-domain (partial structure shift), 5 far-domain (structural OOD), and 2 adversarial (capacity limit). Each scenario contains 10 trajectories of 84 frames sampled at dt = 0 .01 s. We further validate on three real-world physics videos covering lunar free-fall, low-friction curling, and a damped pendulum laboratory experiment. Full scenario definitions are provided in Sec. D. 
+
+Implementation Details. We fine-tune a Qwen2.5-7B-Instruct [Yang et al., 2024] with LoRA as the dual-branch text-to-physical parser. The learning rate, LoRA rank and batch size are set to 2 × 10 −5,8, and 8 respectively. For the dynamics modules, we use the pre-trained models from Newton-Gen [Yuan et al., 2025]. The collision-specific module is trained on CollidePhys with AdamW optimizer [Loshchilov and Hutter, 2017] for 15,000 training steps. The learning rate and batch size are set to 1 × 10 −4 and 32 respectively. The proposed physics-aware video generation are trained on CollidePhys and CompoPhys with the learning rate of 5 × 10 −6. All experiments are conducted on a single NVIDIA RTX A6000 GPU. 
+
+Evaluation Configurations. We evaluate methods in terms of physical consistency and visual fi-delity. For physical consistency, we adopt the Physical Invariance Score (PIS) following Newton-Gen [Yuan et al., 2025], which measures the relative stability of motion-invariant physical quantities and is normalized to [0 , 1] . For visual fidelity, we use standard video generation metrics, including FID, FVD, PSNR, SSIM, and EPE [Huang et al., 2023, Unterthiner et al., 2018, Huang et al., 2024, Liu et al., 2024b]. These metrics assess spatial quality, temporal quality, and trajectory accuracy. 
+
+4.2 Comparison with State-of-the-Art Methods Comparison Configurations. We compare CompAdapt with both general T2V models and physics-constrained T2V methods. For general T2V baselines, we include Sora [Liu et al., 2024c], Veo3 [Wiedemer et al., 2025], CogVideoX-5B [Yang et al., 2025], Wan2.2 [Wan et al., 2025], and vanilla Wan-Move [Chu et al., 2025]. For physics-constrained baselines, we compare with retrained NewtonGen [Yuan et al., 2025] and PhysT2V [Xue et al., 2025]. 
+
+Quantitative Results. We evaluate physical consistency following the standard protocol of New-tonGen [Yuan et al., 2025], which includes 9 motion categories, covering 7 composite motions and 2 elastic collision motions. As shown in Table 1, we report the per-parameter PIS, with the best 
+
+and second-best results highlighted. First, CompAdapt obtains the highest PIS across all physical parameters, showing its strong overall physical consistency. Second, General T2V models perform worse because they rely mainly on visual correlations rather than explicit physical constraints. Third, although retrained NewtonGen consistently ranks second on composite motion scenarios, its gap to CompAdapt confirms the benefit of explicit composite motion modeling. Besides, for elastic col-lision scenarios, NewtonGen cannot generate valid videos due to the lack of multi-object collision dynamics, whereas CompAdapt reaches PIS values close to the simulation reference, validating the effectiveness of the collision-specific module. 
+
+Qualitative Results. We further present some qualitative comparison results on representative phys-ical motion scenarios in Fig. 3 to verify the physical consistency and visual fidelity of different methods. General T2V models often produce physically implausible trajectories ( e.g ., inconsistent rotation speed, incorrect collision rebound direction), while physics-constrained baselines suffer from blurry textures and motion artifacts. In contrast, our method generates videos with accurate physical motion trajectories, sharp visual details, and consistent object appearance across frames. 
+
+4.3 Ablation Studies Effect of Composite Motion Modeling. We first evaluate the components for composite motion synthesis by comparing CompAdapt with three variants. The w/o MTC variant processes all mo-tion components sequentially, while the w/o Temporal variant processes all motion components synchronously. The w/o Dual LLM variant uses a single LLM for both motion decomposition and physical parameter prediction. As shown in Table 2, removing each unit leads to a clear decrease in 8NewtonGen Wan2.2 
+
+Projectile +  Rotation ：“Under soft diffused overcast autumn daylight, a thin natural beige wooden chopstick starts from the top -left … 
+
+”
+
+> Sora
+
+Uniform Deceleration  → Deformation + Collision  → Uniform  Motion ：“A vibrant matte orange rubber dodgeball is positioned … 
+
+”
+
+Projectile  → Damped  Oscillation ：“A flawless mirror -like chrome metal ball hangs motionless at a moderate height above the … 
+
+”
+
+> Voe3
+
+Rotation + 3D Move + Size  Changing ：
+
+“A sleek matte charcoal gray rectangular block with subtle light gray edge trim rests … 
+
+”
+
+Uniform Acceleration → Uniform  Motion ：“A sleek futuristic toy truck with a smooth white body, vibrant blue details, and a … 
+
+”
+
+Damped Oscillation +  Rotation ：“A brushed golden brass pear -shaped pendulum bob hangs from a delicate linked gold chain … 
+
+”
+
+> Physt2v CogVideoX -5B
+> CompAdapt CompAdapt CompAdapt CompAdapt CompAdapt CompAdapt
+
+Figure 3: Qualitative comparison results on some representative physical motion scenarios. Our CompAdapt generates videos with accurate physical motion and consistent appearance. Table 1: Per-parameter quantitative comparison of physical consistency (PIS). Reference is calcu-lated on simulated ground-truth videos. * denotes retrained version. Motion Type PIS ↑ Methods Reference Sora Veo3 CogVideoX-5B Wan2.2 PhysT2V NewtonGen* Ours 
+
+Composite Motions 
+
+Projectile + Synchronous Rotation 
+
+vx 0.9988 0.6548 0.7621 0.5392 0.6395 0.3474 0.8914 0.9803 
+
+ay 0.9487 0.5723 0.6187 0.4230 0.5571 0.3567 0.7802 0.8189 
+
+ω 0.9829 0.4267 0.5285 0.3380 0.3425 0.4119 0.8905 0.9289 
+
+Uniform Acceleration + Synchronous Scaling 
+
+ax 0.8489 0.3437 0.5033 0.4010 0.3077 0.5012 0.6012 0.6568 
+
+∆r 0.8501 0.2840 0.4167 0.4774 0.1972 0.3410 0.6105 0.6362 
+
+Circular Motion Post-collision Linear 
+
+ω 0.9933 0.6391 0.7726 0.5392 0.4677 0.6012 0.8807 0.9788 
+
+v 0.9972 0.5349 0.6395 0.4774 0.5285 0.4310 0.9784 0.9830 
+
+Oblique Parabola Damped Oscillation 
+
+vx 0.9988 0.6370 0.7747 0.5392 0.6187 0.4010 0.8914 0.9803 
+
+ay 0.9402 0.2841 0.3494 0.3083 0.3516 0.4418 0.5107 0.5240 
+
+Approaching + Rotation Post-collision Rebound 
+
+∆l 0.7388 0.2911 0.4583 0.3026 0.5013 0.5932 0.6214 0.6472 
+
+ω 0.9836 0.4267 0.5285 0.6596 0.3425 0.7842 0.8593 0.8827 
+
+vy 0.9986 0.6510 0.8384 0.6690 0.8481 0.8913 0.9205 0.9371 
+
+ay 0.9487 0.3567 0.5571 0.4230 0.5723 0.7662 0.7802 0.8189 
+
+Uniform Acceleration + Scaling Uniform Motion 
+
+ax 0.8489 0.3437 0.5033 0.4010 0.3077 0.5012 0.6012 0.6568 
+
+∆r 0.8501 0.2840 0.4167 0.4774 0.1972 0.3410 0.6105 0.6362 
+
+v 0.9972 0.5349 0.6395 0.4774 0.5285 0.4310 0.9784 0.9830 
+
+Damped Oscillation + Rotation Uniform Translation 
+
+ay 0.9402 0.2841 0.3494 0.3083 0.3516 0.4418 0.5107 0.5240 
+
+ω 0.9836 0.4267 0.5285 0.6596 0.3425 0.7842 0.8601 0.8831 
+
+v 0.9972 0.5349 0.6395 0.4774 0.5285 0.4310 0.9784 0.9830 
+
+Elastic Collision Motions 
+
+2-object Direct Elastic Collision 
+
+vx1 0.9891 0.4812 0.4675 0.4563 0.4704 0.5217 - 0.9315 
+
+vy1 0.9876 0.4784 0.4591 0.4485 0.4672 0.5182 - 0.9287 
+
+vx2 0.9884 0.4905 0.4703 0.4617 0.4736 0.5279 - 0.9294 
+
+vy2 0.9869 0.4847 0.4656 0.4552 0.4691 0.5225 - 0.9276 
+
+2-object Oblique Elastic Collision 
+
+vx1 0.9857 0.4773 0.4602 0.4531 0.4665 0.5154 - 0.9182 
+
+vy1 0.9842 0.4715 0.4564 0.4493 0.4627 0.5108 - 0.9157 
+
+vx2 0.9851 0.4802 0.4637 0.4575 0.4689 0.5191 - 0.9169 
+
+vy2 0.9838 0.4756 0.4598 0.4514 0.4643 0.5146 - 0.9148 
+
+average PIS. This confirms that the two units model complementary temporal structures. The single-parser variant also performs worse, showing that decoupling motion decomposition and parameter prediction helps produce more reliable physical representation. 9Table 2: Effect of composite motion modeling. Methods PIS ↑ FID ↓ FVD ↓ PSNR ↑ SSIM ↑                    
+
+> w/o MTC 0.615 18.7 102.3 15.1 0.55 w/o Temporal 0.589 19.2 105.7 14.8 0.54 w/o Dual LLM 0.724 16.8 96.2 16.3 0.58 Ours 0.862 15.0 91.4 17.2 0.61
+
+Table 3: Comparison of video generators. Methods FID ↓ FVD ↓ PSNR ↑ SSIM ↑ EPE ↓                   
+
+> Go-with-the-Flow 17.5 96.7 14.9 0.56 3.2 Wan-Move 16.3 93.5 16.5 0.58 2.9 Ours 15.0 91.4 17.2 0.61 2.9 Go -with -the -Flow Vanilla Wan -Move Go -with -the -Flow Vanilla Wan -Move Fine -tuned Wan -Move (ours) Fine -tuned Wan -Move (ours)
+
+Figure 4: Qualitative comparison of different video generators. Our method maintains consistent visual appearance while ensuring accurate physical motion and sharper texture details. Table 4: One-shot adaptation on the expanded OODPhys benchmark (PIS ↑). Scenarios are grouped by their structural gap to the pre-trained dynamics modules. Var-PIS is the mean test PIS over 5 reference-sample selections, and Std is the standard deviation across selections. Difficulty Tier # Scenarios Avg. Var-PIS Avg. Std Near-domain (parameter shift) 22 0.888 0.013 Mid-domain (partial structure shift) 5 0.854 0.015 Far-domain (structural OOD) 5 0.515 0.042 Adversarial (capacity limit) 2 0.730 0.009 
+
+Real-world videos 
+
+Lunar free-fall (NASA footage) 1 0.938 0.012 Curling low-friction sliding (sports broadcast) 1 0.921 0.015 Damped pendulum (physics laboratory) 1 0.907 0.013 
+
+Effect of Physics-Aware Video Generation. We evaluate the effect of the physics-aware video generator. We compare with Go-with-the-Flow [Burgert et al., 2025] used in NewtonGen [Yuan et al., 2025] and the Wan-Move [Chu et al., 2025] without fine-tuning. Table 3 and Figure 4 show that our physics-aware Wan-Move consistently improves visual quality. Compared with Go-with-the-Flow, it achieves better scores, indicating improved spatial quality, temporal consistency, and trajectory alignment. It also outperforms the original Wan-Move, which confirms that effectiveness of the proposed physics-aware feature modulation. 
+
+Effect of One-shot Adaptation. Finally, we evaluate one-shot adaptation on the expanded OOD-Phys benchmark with 34 controlled scenarios and 3 real-world videos. For each scenario, we adapt the prior-matched dynamics module with the regularized loss in Eq. (14) on a single reference tra-jectory and evaluate on the remaining 9 trajectories. To quantify the sensitivity to the adaptation example, we repeat the experiment with 5 different reference selections and report the mean test PIS (Var-PIS) and the standard deviation across selections. As shown in Table 4, one-shot adapta-tion achieves high physical consistency in near-domain and mid-domain scenarios, with 24 of 34 scenarios showing a standard deviation below 0.02, indicating that adaptation is largely insensitive to the reference sample. Higher variance is concentrated in scenarios whose dynamics have no close pre-trained prior. Temporal extrapolation, where the module is trained on the first third of frames and evaluated on the full sequence, further shows that 12 of 34 scenarios retain PIS with a drop below 0.02, indicating that adaptation learns reusable physical laws rather than memorizing the reference trajectory. On three real-world videos, the adapted modules reach Var-PIS above 0.90 under natural imaging noise and tracking errors. Per-scenario results, extrapolation analysis, and failure cases are provided in Secs. C and D. Near-domain scenarios only involve numerical shifts of physical parameters such as gravity or friction, and the adapted modules remain highly consistent. Mid-domain scenarios contain partial structural changes that remain compatible with pre-trained pri-ors. Far-domain scenarios correspond to dynamical mechanisms with essential structural differences 10 from the pre-trained modules, and adversarial scenarios reach the inherent capacity limit of the 2D ODE architecture; these two tiers define the current applicability boundary of one-shot adaptation, which we analyze in Sec. C. 
+
+## 5 Conclusion 
+
+We presented CompAdapt, an adaptable physics-consistent framework for text-to-video generation in complex physical scenarios. Unlike existing T2V models that mainly learn motion from visual correlations, CompAdapt introduces structured physical semantics and explicit dynamics modeling into the generation process. By supporting composite motion composition, collision-aware trajec-tory prediction, and one-shot adaptation to unseen physical laws, our framework extends physics-constrained T2V generation beyond simple single-type motions. Experiments on physics-focused benchmarks show that CompAdapt achieves stronger physical consistency than general T2V models and existing physics-constrained methods, while preserving high visual fidelity. 11 References 
+
+Zhaochong An, Menglin Jia, Haonan Qiu, Zijian Zhou, Xiaoke Huang, Zhiheng Liu, Weiming Ren, Kumara Kahatapitiya, Ding Liu, Sen He, Chenyang Zhang, Tao Xiang, Fanny Yang, Serge Belongie, and Tian Xie. OneStory: Coherent multi-shot video generation with adaptive memory. 
+
+CoRR , abs/2512.07802, 2026a. doi: 10.48550/arXiv.2512.07802. URL https://arxiv.org/ abs/2512.07802 .Zhaochong An, Orest Kupyn, Théo Uscidda, Andrea Colaco, Karan Ahuja, Serge Belongie, Mar Gonzalez-Franco, and Marta Tintore Gazulla. VGGRPO: Towards world-consistent video gen-eration with 4d latent reward. CoRR , abs/2603.26599, 2026b. doi: 10.48550/arXiv.2603.26599. URL https://arxiv.org/abs/2603.26599 .Anton Bakhtin, Laurens van der Maaten, Justin Johnson, Laura Gustafson, and Ross B. Gir-shick. Phyre: A new benchmark for physical reasoning. In Advances in Neural Informa-tion Processing Systems , pages 5083–5094, 2019. URL https://dblp.org/rec/conf/nips/ BakhtinM0GG19 .Omer Bar-Tal, Hila Chefer, Omer Tov, Charles Herrmann, Roni Paiss, Shiran Zada, Ariel Ephrat, Junhwa Hur, Guanghui Liu, Amit Raj, Yuanzhen Li, Michael Rubinstein, Tomer Michaeli, Oliver Wang, Deqing Sun, Tali Dekel, and Inbar Mosseri. Lumiere: A space-time diffusion model for video generation. In ACM SIGGRAPH Asia 2024 Conference Papers , 2024. doi: 10.1145/ 3680528.3687614. URL https://dblp.org/rec/conf/siggrapha/Bar-TalCTHPZEHL24 .Daniel M. Bear, Elias Wang, Damian Mrowca, Felix J. Binder, Hsiau-Yu Fish Tung, R. T. Pramod, Cameron Holdaway, Sirui Tao, Kevin A. Smith, Fan-Yun Sun, Li Fei-Fei, Nancy Kanwisher, Joshua B. Tenenbaum, Daniel L. K. Yamins, and Judith E. Fan. Physion: Evaluating physical prediction from vision in humans and machines. CoRR , abs/2106.08261, 2021. URL https: //arxiv.org/abs/2106.08261 .Ryan Burgert, Yuancheng Xu, Wenqi Xian, Oliver Pilarski, Pascal Clausen, Mingming He, Li Ma, Yitong Deng, Lingxiao Li, Mohsen Mousavi, et al. Go-with-the-flow: Motion-controllable video diffusion models using real-time warped noise. In Proceedings of the Computer Vision and Pattern Recognition Conference , pages 13–23, 2025. Haoxin Chen, Menghan Xia, Yingqing He, Yong Zhang, Xiaodong Cun, Shaoshu Yang, Jinbo Xing, Yaofang Liu, Qifeng Chen, Xintao Wang, Chao Weng, and Ying Shan. Videocrafter1: Open diffusion models for high-quality video generation. CoRR , abs/2310.19512, 2023. doi: 10.48550/ arXiv.2310.19512. URL https://arxiv.org/abs/2310.19512 .Haoxin Chen, Yong Zhang, Xiaodong Cun, Menghan Xia, Xintao Wang, Chao Weng, and Ying Shan. Videocrafter2: Overcoming data limitations for high-quality video diffusion models. In 
+
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) ,pages 7310–7320, 2024a. doi: 10.1109/CVPR52733.2024.00698. URL https://dblp.org/ rec/conf/cvpr/ChenZCXWWS24 .Tian Qi Chen, Yulia Rubanova, Jesse Bettencourt, and David Duvenaud. Neural ordinary differential equations. In Advances in Neural Information Processing Systems , pages 6572–6583, 2018. URL 
+
+https://dblp.org/rec/conf/nips/ChenRBD18 .Tsai-Shien Chen, Aliaksandr Siarohin, Willi Menapace, Ekaterina Deyneka, Hsiang wei Chao, Byung Eun Jeon, Yuwei Fang, Hsin-Ying Lee, Jian Ren, Ming-Hsuan Yang, and Sergey Tulyakov. Panda-70m: Captioning 70m videos with multiple cross-modality teachers. In 
+
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 13320–13331, 2024b. doi: 10.1109/CVPR52733.2024.01265. URL https: //openaccess.thecvf.com/content/CVPR2024/html/Chen_Panda-70M_Captioning_ 70M_Videos_with_Multiple_Cross-Modality_Teachers_CVPR_2024_paper.html .Yongfan Chen, Xiuwen Zhu, Tianyu Li, Hao Chen, and Chunhua Shen. A physical coherence bench-mark for evaluating video generation models via optical flow-guided frame prediction. CoRR ,abs/2502.05503, 2025. doi: 10.48550/arXiv.2502.05503. URL https://arxiv.org/abs/ 2502.05503 .12 Ruihang Chu, Yefei He, Zhekai Chen, Shiwei Zhang, Xiaogang Xu, Bin Xia, Dingdong Wang, Hongwei Yi, Xihui Liu, Hengshuang Zhao, Yu Liu, Yingya Zhang, and Yujiu Yang. Wan-move: Motion-controllable video generation via latent trajectory guidance. CoRR , abs/2512.08765, 2025. doi: 10.48550/arXiv.2512.08765. URL https://arxiv.org/abs/2512.08765 .Miles D. Cranmer, Sam Greydanus, Stephan Hoyer, Peter W. Battaglia, David N. Spergel, and Shirley Ho. Lagrangian neural networks. CoRR , abs/2003.04630, 2020. URL https://arxiv. org/abs/2003.04630 .Daniel Geng, Charles Herrmann, Junhwa Hur, Forrester Cole, Serena Zhang, Tobias Pfaff, Tatiana Lopez-Guevara, Yusuf Aytar, Michael Rubinstein, Chen Sun, Oliver Wang, Andrew Owens, and Deqing Sun. Motion prompting: Controlling video generation with motion trajectories. In Pro-ceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) ,2025. URL https://dblp.org/rec/conf/cvpr/GengHHCZPLAR0WO25 .Nate Gillman, Charles Herrmann, Michael Freeman, Daksh Aggarwal, Evan Luo, Deqing Sun, and Chen Sun. Force prompting: Video generation models can learn and generalize physics-based control signals. CoRR , abs/2505.19386, 2025. doi: 10.48550/arXiv.2505.19386. URL https: //arxiv.org/abs/2505.19386 .Nate Gillman, Yinghua Zhou, Zitian Tang, Evan Luo, Arjan Chakravarthy, Daksh Aggarwal, Michael Freeman, Charles Herrmann, and Chen Sun. Goal force: Teaching video models to accomplish physics-conditioned goals. CoRR , abs/2601.05848, 2026. doi: 10.48550/arXiv.2601. 05848. URL https://arxiv.org/abs/2601.05848 .Samuel Greydanus, Misko Dzamba, and Jason Yosinski. Hamiltonian neural networks. In Advances in Neural Information Processing Systems , pages 15353–15363, 2019. URL https://dblp. org/rec/conf/nips/GreydanusDY19 .Xuyang Guo, Jiayan Huo, Zhenmei Shi, Zhao Song, Jiahao Zhang, and Jiale Zhao. T2vphysbench: A first-principles benchmark for physical consistency in text-to-video generation. CoRR ,abs/2505.00337, 2025. doi: 10.48550/arXiv.2505.00337. URL https://arxiv.org/abs/ 2505.00337 .Yuwei Guo, Ceyuan Yang, Anyi Rao, Zhengyang Liang, Yaohui Wang, Yu Qiao, Dahua Lin, and Bo Dai. Animatediff: Animate your personalized text-to-image diffusion models without specific tuning. CoRR , abs/2307.04725, 2023. doi: 10.48550/arXiv.2307.04725. URL https://arxiv. org/abs/2307.04725 .Hao He, Yinghao Xu, Yuwei Guo, Gordon Wetzstein, Bo Dai, Hongsheng Li, and Ceyuan Yang. Cameractrl: Enabling camera control for text-to-video generation. CoRR , abs/2404.02101, 2024a. doi: 10.48550/arXiv.2404.02101. URL https://arxiv.org/abs/2404.02101 .Xuehai He, Shuohang Wang, Jianwei Yang, Xiaoxia Wu, Yiping Wang, Kuan Wang, Zheng Zhan, Olatunji Ruwase, Yelong Shen, and Xin Eric Wang. Mojito: Motion trajectory and intensity control for video generation. CoRR , abs/2412.08948, 2024b. doi: 10.48550/arXiv.2412.08948. URL https://arxiv.org/abs/2412.08948 .Jonathan Ho, William Chan, Chitwan Saharia, Jay Whang, Ruiqi Gao, Alexey A. Gritsenko, Diederik P. Kingma, Ben Poole, Mohammad Norouzi, David J. Fleet, and Tim Salimans. Imagen video: High definition video generation with diffusion models. CoRR , abs/2210.02303, 2022a. doi: 10.48550/arXiv.2210.02303. URL https://arxiv.org/abs/2210.02303 .Jonathan Ho, Tim Salimans, Alexey A. Gritsenko, William Chan, Mohammad Norouzi, and David J. Fleet. Video diffusion models. In Advances in Neural Information Processing Systems , pages 8633–8646, 2022b. URL https://dblp.org/rec/conf/nips/HoSGC0F22 .Ziqi Huang, Yinan He, Jiashuo Yu, Fan Zhang, Chenyang Si, Yuming Jiang, Yuanhan Zhang, Tianxing Wu, Qingyang Jin, Nattapol Chanpaisit, Yaohui Wang, Xinyuan Chen, Limin Wang, Dahua Lin, Yu Qiao, and Ziwei Liu. Vbench: Comprehensive benchmark suite for video generative models. CoRR , abs/2311.17982, 2023. doi: 10.48550/arXiv.2311.17982. URL 
+
+https://arxiv.org/abs/2311.17982 .13 Ziqi Huang, Fan Zhang, Xiaojie Xu, Yinan He, Jiashuo Yu, Ziyue Dong, Qianli Ma, Nattapol Chan-paisit, Chenyang Si, Yuming Jiang, Yaohui Wang, Xinyuan Chen, Ying-Cong Chen, Limin Wang, Dahua Lin, Yu Qiao, and Ziwei Liu. Vbench++: Comprehensive and versatile benchmark suite for video generative models. CoRR , abs/2411.13503, 2024. doi: 10.48550/arXiv.2411.13503. URL https://arxiv.org/abs/2411.13503 .Thomas N. Kipf, Ethan Fetaya, Kuan-Chieh Wang, Max Welling, and Richard S. Zemel. Neural relational inference for interacting systems. In Proceedings of the 35th International Conference on Machine Learning , pages 2693–2702, 2018. URL https://dblp.org/rec/conf/icml/ KipfFWWZ18 .Orest Kupyn, Théo Uscidda, Marta Tintore Gazulla, Fabian Manhardt, Federico Tombari, and Chris-tian Rupprecht. Epipolar geometry improves video generation models. CoRR , abs/2510.21615, 2025. doi: 10.48550/arXiv.2510.21615. URL https://arxiv.org/abs/2510.21615 .Quanhao Li, Zhen Xing, Rui Wang, Hui Zhang, Qi Dai, and Zuxuan Wu. Magicmotion: Controllable video generation with dense-to-sparse trajectory guidance. CoRR , abs/2503.16421, 2025. doi: 10.48550/arXiv.2503.16421. URL https://arxiv.org/abs/2503.16421 .Shiqian Li, Kewen Wu, Chi Zhang, and Yixin Zhu. I-phyre: Interactive physical reasoning. CoRR ,abs/2312.03009, 2023. doi: 10.48550/arXiv.2312.03009. URL https://arxiv.org/abs/ 2312.03009 .Xinyao Liao, Xianfang Zeng, Liao Wang, Gang Yu, Guosheng Lin, and Chi Zhang. Motionagent: Fine-grained controllable video generation via motion field agent. CoRR , abs/2502.03207, 2025. doi: 10.48550/arXiv.2502.03207. URL https://arxiv.org/abs/2502.03207 .Pengyang Ling, Jiazi Bu, Pan Zhang, Xiaoyi Dong, Yuhang Zang, Tong Wu, Huaian Chen, Jiaqi Wang, and Yi Jin. Motionclone: Training-free motion cloning for controllable video generation. In International Conference on Learning Representations , 2025. URL https://dblp.org/ rec/conf/iclr/LingB0DZWC0025 .Shaowei Liu, Zhongzheng Ren, Saurabh Gupta, and Shenlong Wang. Physgen: Rigid-body physics-grounded image-to-video generation. In Computer Vision – ECCV 2024 , pages 360–378, 2024a. doi: 10.1007/978-3-031-73007-8_21. URL https://dblp.org/rec/conf/eccv/LiuRGW24 .Yaofang Liu, Xiaodong Cun, Xuebo Liu, Xintao Wang, Yong Zhang, Haoxin Chen, Yang Liu, Tiey-ong Zeng, Raymond H. Chan, and Ying Shan. Evalcrafter: Benchmarking and evaluating large video generation models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 22139–22149, 2024b. doi: 10.1109/CVPR52733.2024.02090. URL https://dblp.org/rec/conf/cvpr/LiuC0WZCLZCS24 .Yixin Liu, Kai Zhang, Yuan Li, Zhiling Yan, Chujie Gao, Ruoxi Chen, Zhengqing Yuan, Yue Huang, Hanchi Sun, Jianfeng Gao, Lifang He, and Lichao Sun. Sora: A review on background, technol-ogy, limitations, and opportunities of large vision models, 2024c. Ilya Loshchilov and Frank Hutter. Decoupled weight decay regularization. arXiv preprint arXiv:1711.05101 , 2017. Kepan Nan, Rui Xie, Penghao Zhou, Tiehan Fan, Zhenheng Yang, Zhijie Chen, Xiang Li, Jian Yang, and Ying Tai. Openvid-1m: A large-scale high-quality dataset for text-to-video generation. In 
+
+International Conference on Learning Representations , 2025. URL https://dblp.org/rec/ conf/iclr/NanXZFYCL0T25 .Maziar Raissi, Paris Perdikaris, and George E. Karniadakis. Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations. Journal of Computational Physics , 378:686–707, 2019. doi: 10.1016/j.jcp. 2018.10.045. URL https://dblp.org/rec/journals/jcphy/RaissiPK19 .Nikhila Ravi, Valentin Gabeur, Yuan-Ting Hu, Ronghang Hu, Chaitanya Ryali, Tengyu Ma, Haitham Khedr, Roman Rädle, Chloe Rolland, Laura Gustafson, et al. Sam 2: Segment anything in images and videos. arXiv preprint arXiv:2408.00714 , 2024. 14 Yulia Rubanova, Tian Qi Chen, and David Duvenaud. Latent ordinary differential equations for irregularly-sampled time series. In Advances in Neural Information Processing Systems , pages 5321–5331, 2019. URL https://dblp.org/rec/conf/nips/RubanovaCD19 .Alvaro Sanchez-Gonzalez, Jonathan Godwin, Tobias Pfaff, Rex Ying, Jure Leskovec, and Peter W. Battaglia. Learning to simulate complex physics with graph networks. In Proceedings of the 37th International Conference on Machine Learning , pages 8459–8468, 2020. URL https://dblp. org/rec/conf/icml/Sanchez-Gonzalez20 .Xiaoyu Shi, Zhaoyang Huang, Fu-Yun Wang, Weikang Bian, Dasong Li, Yi Zhang, Manyuan Zhang, Ka Chun Cheung, Simon See, Hongwei Qin, Jifeng Dai, and Hongsheng Li. Motion-i2v: Consistent and controllable image-to-video generation with explicit motion modeling. CoRR ,abs/2401.15977, 2024. doi: 10.48550/arXiv.2401.15977. URL https://arxiv.org/abs/ 2401.15977 .Uriel Singer, Adam Polyak, Thomas Hayes, Xi Yin, Jie An, Songyang Zhang, Qiyuan Hu, Harry Yang, Oron Ashual, Oran Gafni, Devi Parikh, Sonal Gupta, and Yaniv Taigman. Make-a-video: Text-to-video generation without text-video data. In International Conference on Learning Rep-resentations , 2023. URL https://dblp.org/rec/conf/iclr/SingerPH00ZHYAG23 .Thomas Unterthiner, Sjoerd van Steenkiste, Karol Kurach, Raphaël Marinier, Marcin Michalski, and Sylvain Gelly. Towards accurate generative models of video: A new metric & challenges. CoRR ,abs/1812.01717, 2018. URL https://arxiv.org/abs/1812.01717 .Team Wan, Ang Wang, Baole Ai, Bin Wen, Chaojie Mao, Chen-Wei Xie, Di Chen, Feiwu Yu, Haiming Zhao, Jianxiao Yang, Jianyuan Zeng, Jiayu Wang, Jingfeng Zhang, Jingren Zhou, Jinkai Wang, Jixuan Chen, Kai Zhu, Kang Zhao, Keyu Yan, Lianghua Huang, Mengyang Feng, Ningyi Zhang, Pandeng Li, Pingyu Wu, Ruihang Chu, Ruili Feng, Shiwei Zhang, Siyang Sun, Tao Fang, Tianxing Wang, Tianyi Gui, Tingyu Weng, Tong Shen, Wei Lin, Wei Wang, Wei Wang, Wenmeng Zhou, Wente Wang, Wenting Shen, Wenyuan Yu, Xianzhong Shi, Xiaoming Huang, Xin Xu, Yan Kou, Yangyu Lv, Yifei Li, Yijing Liu, Yiming Wang, Yingya Zhang, Yitong Huang, Yong Li, You Wu, Yu Liu, Yulin Pan, Yun Zheng, Yuntao Hong, Yupeng Shi, Yutong Feng, Zeyinzi Jiang, Zhen Han, Zhi-Fan Wu, and Ziyu Liu. Wan: Open and advanced large-scale video generative models, 2025. URL https://arxiv.org/abs/2503.20314 .Thaddäus Wiedemer, Yuxuan Li, Paul Vicol, Shixiang Shane Gu, Nick Matarese, Kevin Swersky, Been Kim, Priyank Jaini, and Robert Geirhos. Video models are zero-shot learners and reasoners, 2025. URL https://arxiv.org/abs/2509.20328 .Tianyi Xie, Zeshun Zong, Yuxing Qiu, Xuan Li, Yutao Feng, Yin Yang, and Chenfanfu Jiang. Physgaussian: Physics-integrated 3d gaussians for generative dynamics. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 4389–4398, 2024. doi: 10.1109/CVPR52733.2024.00420. URL https://dblp.org/rec/conf/cvpr/ XieZQLF0J24 .Qiyao Xue, Xiangyu Yin, Boyuan Yang, and Wei Gao. Phyt2v: Llm-guided iterative self-refinement for physics-grounded text-to-video generation, 2025. URL https://arxiv.org/abs/2412. 00596 .An Yang, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo Zheng, Bowen Yu, Chengyuan Li, Day-iheng Liu, Fei Huang, Haoran Wei, Huan Lin, Jian Yang, Jianhong Tu, Jianwei Zhang, Jianxin Yang, Jiaxi Yang, Jingren Zhou, Junyang Lin, Kai Dang, Keming Lu, Keqin Bao, Kexin Yang, Le Yu, Mei Li, Mingfeng Xue, Pei Zhang, Qin Zhu, Rui Men, Runji Lin, Tianhao Li, Tingyu Xia, Xingzhang Ren, Xuancheng Ren, Yang Fan, Yang Su, Yichang Zhang, Yu Wan, Yuqiong Liu, Zeyu Cui, Zhenru Zhang, and Zihan Qiu. Qwen2.5 technical report. CoRR , abs/2412.15115, 2024. doi: 10.48550/arXiv.2412.15115. URL https://arxiv.org/abs/2412.15115 .Zhuoyi Yang, Jiayan Teng, Wendi Zheng, Ming Ding, Shiyu Huang, Jiazheng Xu, Yuanming Yang, Wenyi Hong, Xiaohan Zhang, Guanyu Feng, Da Yin, Yuxuan Zhang, Weihan Wang, Yean Cheng, Bin Xu, Xiaotao Gu, Yuxiao Dong, and Jie Tang. Cogvideox: Text-to-video diffusion models with an expert transformer. In International Conference on Learning Representations , 2025. URL 
+
+https://dblp.org/rec/conf/iclr/YangTZ00XYHZFYZ25 .15 Shengming Yin, Chenfei Wu, Jian Liang, Jie Shi, Houqiang Li, Gong Ming, and Nan Duan. Drag-nuwa: Fine-grained control in video generation by integrating text, image, and trajectory. CoRR ,abs/2308.08089, 2023. doi: 10.48550/arXiv.2308.08089. URL https://arxiv.org/abs/ 2308.08089 .Yu Yuan, Xijun Wang, Tharindu Wickremasinghe, Zeeshan Nadir, Bole Ma, and Stanley H. Chan. Newtongen: Physics-consistent and controllable text-to-video generation via neural newtonian dynamics. CoRR , abs/2509.21309, 2025. doi: 10.48550/arXiv.2509.21309. URL https:// arxiv.org/abs/2509.21309 .Qiyuan Zhang, Biao Gong, Shuai Tan, Zheng Zhang, Yujun Shen, Xing Zhu, Yuyuan Li, Kelu Yao, Chunhua Shen, and Changqing Zou. Physrvg: Physics-aware unified reinforcement learning for video generative models. CoRR , abs/2601.11087, 2026. doi: 10.48550/arXiv.2601.11087. URL 
+
+https://arxiv.org/abs/2601.11087 .Tianyuan Zhang, Hong-Xing Yu, Rundi Wu, Brandon Y. Feng, Changxi Zheng, Noah Snavely, Jiajun Wu, and William T. Freeman. Physdreamer: Physics-based interaction with 3d objects via video generation. CoRR , abs/2404.13026, 2024. doi: 10.48550/arXiv.2404.13026. URL https:// arxiv.org/abs/2404.13026 .16 Appendix 
+
+The content of the supplementary material involves: – Physical parameter encoding in the 10D state in Sec. A.– More evaluation of the text-to-physical parser in Sec. B.– Extended one-shot adaptation evaluation in Sec. C.– More details of the OODPhys benchmark in Sec. D.– The Physical Invariance Score and implementation details in Sec. E.– Generalization to open-ended prompts in Sec. F.– Additional ablation studies in Sec. G.– Full text prompts of the qualitative comparison in Sec. H.
+
+## A Physical Parameter Encoding in the 10D State 
+
+The 10D state explicitly represents per-frame kinematics, while material and environmental proper-ties (friction, damping, viscosity, stiffness, etc .) are implicitly encoded in the learnable parameters of the NND modules. To verify that such properties are genuinely learned rather than absorbed by tra-jectory fitting, we probe the parameter encoding at two levels. At the parameter level , we train NND modules from scratch under systematically varying values of 8 physical quantities and compute the Pearson correlation between the learned ODE parameters and the ground-truth physical values. At the trajectory level , for each quantity we train a module on 40 trajectories under a fixed parameter value and evaluate it on (i) 10 unseen trajectories with the same parameter but different initial condi-tions and (ii) 10 trajectories under a distinctly different parameter value, reporting the PIS gap to the ground-truth trajectories and the MSE ratio between the incorrect- and correct-parameter settings. Table 5: Correlation between learned ODE parameters and ground-truth physical values across 8 probed quantities (each probed at 7 values, 50 trajectories per value). Physical Quantity Encoding Mechanism Pearson |r| Encoding Friction μf 6 linear ODE parameters jointly 0.999 Strong Oscillation frequency f second-order stiffness term 1.000 Strong Size expansion rate size ODE constant term βs 0.989 Strong Area conservation under compression emergent αs + αl ≈ 0 0.980 Strong Gravitational acceleration g constant acceleration term cy 0.914 Strong Damping coefficient dedicated damping parameter 0.817 Moderate Fluid viscosity η velocity damping term by 0.754 Moderate Spring stiffness k position- and velocity-dependent terms 0.630 Moderate Table 6: Trajectory-level generalization of the implicitly encoded parameters. PIS Gap is the differ-ence between the PIS of the correct-parameter module and the ground-truth trajectories on unseen initial conditions; MSE Ratio compares the incorrect-parameter setting against the correct-parameter setting. Physical Quantity PIS Gap ↓ MSE Ratio ↑ Tier Gravitational acceleration g 0.003 174 × Precise encoding Size expansion rate 0.045 82 × Precise encoding Area conservation under compression 0.000 54 × Precise encoding Spring stiffness k 0.022 51 × Solid encoding Oscillation frequency f 0.002 38 × Solid encoding Friction μf 0.126 6× Solid encoding Damping coefficient 0.001 3× Weak specificity Fluid viscosity η 0.128 1.6 × Weak specificity Three interpretable encoding patterns emerge from the probe. First, direct mapping , where a one-to-one correspondence exists between a physical quantity and an ODE parameter ( e.g ., the expansion rate maps to βs, and the oscillation frequency maps to the stiffness term). Second, multi-parameter 
+
+17 joint encoding , where a single property is distributed across several ODE components ( e.g ., friction is jointly represented by 6 linear parameters, consistent with friction affecting resultant acceleration). Third, automatic constraint discovery , where the NND satisfies conservation laws without explicit supervision ( e.g ., area conservation under compression emerges as αs + αl ≈ 0, and the residual MLP self-zeros for linear motions). The remaining structural boundaries are aligned with the scope of the framework: the collision module handles simple two-body elastic contacts via state mapping rather than detailed contact-surface mechanics; the framework operates on 2D planar dynamics and cannot directly represent 3D forces, dense multi-body contact, or articulated objects; and saturation at high parameter values and limited high-frequency response originate from ODE solver precision, frame sampling, and the properties of linear autonomous systems rather than insufficient model capacity. 
+
+## B Text-to-Physical Parser Evaluation 
+
+We evaluate the dual-LLM parser in isolation on a held-out test set of 2,000 annotated samples from 
+
+Text2Phys , covering all 12 motion categories and three composite structures (parallel, sequential, and hybrid), with an average of 2.3 motion components per sample. We compare against zero-shot Qwen2.5-7B-Instruct [Yang et al., 2024] and a single-LLM fine-tuned baseline that performs both decomposition and parameter prediction. 
+
+Motion decomposition. As shown in Table 7, the dedicated LLM seq branch achieves 99.1% sequence-level accuracy and 99.4% per-motion category accuracy, outperforming the single-LLM baseline by 20.7 percentage points on sequence-level accuracy. For samples with three or more sequential stages, sequence-level accuracy remains 98.3%. Table 7: Motion decomposition accuracy on the Text2Phys test set (2,000 samples). Method Sequence-level Acc. ↑ Per-motion Category Acc. ↑      
+
+> Zero-shot Qwen2.5-7B-Instruct 54.7% 70.2% Single-LLM fine-tuned baseline 78.4% 86.9% Ours (dual-LLM parser) 99.1% 99.4%
+
+Physical parameter prediction. The LLM param branch adopts a two-stage design in which the LLM performs semantic-level recognition and a deterministic post-processing program generates the final numerical values. The LLM distinguishes three input scenarios: explicit numerical values (extracted verbatim), qualitative adjectives ( e.g ., “high speed”, “heavy”; mapped to small /medium /large labels and sampled from the corresponding physical intervals), and absent descriptions (outputting a none 
+
+token and sampling from a globally reasonable range). Correctness is defined as ≤ 1% relative error for explicit values, exact label match for adjectives, and correct none detection for absent descrip-tions. As shown in Table 8, the parser exceeds 99% accuracy in all three scenarios, providing a reliable foundation for downstream dynamics modeling. Qualitative examples: for “A small steel ball falls freely from a height of 2 meters with an initial horizontal velocity of 3 m/s”, the parser outputs y=2.0, vx=3.0, mass=small ; for “A heavy wooden block slides quickly down a rough slope”, it outputs mass=large, initial_velocity=large ; for “A ball performs projectile mo-tion and then bounces off the wall”, it correctly outputs mass=none, initial_velocity=none .Table 8: Physical parameter parsing accuracy on 2,000 mixed test samples. Method Overall ↑ Explicit Num. ↑ Adjective Class. ↑ No-Description ↑            
+
+> Zero-shot Qwen2.5-7B-Instruct 51.8% 70.0% 46.5% 40.5% Single-LLM fine-tuned baseline 81.7% 88.0% 81.5% 75.5% Ours 99.3% 99.8% 99.2% 99.0%
+
+## C Extended One-Shot Adaptation Evaluation 
+
+Protocol. Each OODPhys scenario contains 10 trajectories (84 frames, dt=0 .01 s). For one-shot adaptation, we extract the reference trajectory, perform dynamics-aware prior matching over the 12 pre-trained modules by trajectory MSE (Eq. (14) initialization), fine-tune the matched module on the 18 single reference with the regularized loss in Eq. (14), and evaluate on the remaining 9 trajectories. This is repeated for 5 different reference selections to obtain Var-PIS and the standard deviation. For temporal extrapolation, the module is trained on the first 28 frames (one third) of the reference and evaluated on the full 84-frame sequence. 
+
+Prior matching behavior. The prior selected by trajectory MSE frequently differs from the se-mantically matching module: lunar-gravity projectiles are best matched by the 3D-motion module, damped pendulums by the deformation module, viscous settling by the 3D-motion module, and spring oscillators by the acceleration or damped-oscillation modules (ZS-PIS column of Table 9). This validates dynamics-aware selection over semantic matching: the matched prior alone already provides a strong initialization, and fine-tuning then adapts it to the target environment. 
+
+Sample sensitivity. Across the 34 scenarios, 24 have a standard deviation below 0.02 and 16 below 0.01, showing that one-shot adaptation is largely insensitive to the reference sample in near-domain and mid-domain scenarios. The four scenarios with standard deviations above 0.03 (outward and tight spirals, pure rotation, and the combined lunar-plus-low-friction-plus-size-change scenario) are exactly those without a close pre-trained prior or with multi-factor parameter shifts. 
+
+Temporal extrapolation. Training on the first third of frames and evaluating on the full sequence yields a PIS drop below 0.02 in 12 of 34 scenarios, indicating that adaptation learns reusable dynam-ical patterns rather than memorizing the reference trajectory. Larger drops (0.10–0.16) occur in only five scenarios: the two spring oscillators, the two deceleration scenarios, and super gravity, where the early segment insufficiently represents the full dynamics. In five further scenarios (pure rolling 
+
+×2, rotation ×2, and the double pendulum), PIS out exceeds PIS in , i.e ., the module is conservative under limited early information and remains stable in the extrapolated window. 
+
+Failure mode. Extreme parameter saturation : at g=980 (100 × gravity), ω=15 , or a=25 , the matched prior is far outside its pre-training range; PIS remains moderate (0.83 for extreme gravity) but trajectory error explodes, indicating that the consistency metric and trajectory accuracy diverge under extreme shifts. 
+
+Real-world validation. We validate the full adaptation pipeline on three public real-world physics videos: a NASA lunar free-fall experiment, a curling broadcast with low-friction sliding, and a damped-pendulum physics laboratory recording. For each video, SAM2 [Ravi et al., 2024] segments and tracks the target object, the state-extraction pipeline ( physical_encoder ) converts the track into a physical state sequence, and one-shot adaptation proceeds exactly as in simulation. Var-PIS is computed with the extracted real trajectory as reference, under natural imaging noise and tracking errors. As shown in Table 4 of the main text, the adapted modules reach Var-PIS above 0.90 in all three cases with standard deviations below 0.016, confirming that the adaptation remains effective beyond controlled simulation. 
+
+## D Details of the OODPhys Benchmark 
+
+Scenario tiers and overview. The expanded OODPhys benchmark contains 34 controlled scenarios spanning seven dynamical categories and 3 real-world videos. Scenarios are grouped into four tiers by the structural gap between the target dynamics and the 12 pre-trained dynamics modules, as summarized in Table 4 of the main text. The per-scenario results are listed in Table 9. Two scenarios deserve explanation. For standard and extreme deceleration, GT-PIS is bounded at 1.000 and 0.600 because the monitored invariant (constant acceleration) is inherently less stable for strongly decelerating motion, and Var-PIS closely tracks GT-PIS, i.e ., adaptation reaches the theoretically attainable consistency. For oscillating size, the ground-truth trajectory itself scores 0.106 on the size-change invariant, so the adapted module (0.955) exceeds the ground-truth score on this metric; we retain the scenario to document metric behavior rather than adaptation quality. 
+
+Dynamics of the new scenario families. The far- and mid-domain scenarios introduce dynamical mechanisms absent from the pre-trained module library: spring-mass oscillation, m¨x + kx = 0 ,with solution x(t) = A cos( ωt + φ) and ω = √k/m , whose invariant is the total spring energy  
+
+> 12
+
+k(x − xeq )2 + 12 mv 2; viscous settling under the three-force balance m¨y = ( m − ρf V )g − 6πηr ˙y,converging to the terminal velocity vt = 2r2(ρo − ρf )g/ (9 η); non-uniform gravity g(y) =
+
+g0 (R/ (R + y)) 2, which breaks the constant-g assumption; pure rolling with the no-slip constraint 19 Table 9: Per-scenario results of one-shot adaptation on the 34 controlled OODPhys scenarios. GT-PIS is the PIS of the ground-truth simulation, i.e ., the attainable upper bound. ZS-PIS is the PIS of the best matched pre-trained module without fine-tuning (prior matching only). Var-PIS and Std are the mean and standard deviation of the test PIS over 5 reference-sample selections. PIS in and PIS out 
+
+are the PIS on the seen first third and the extrapolated remaining window when training on the first third of frames only. Scenario Modified physics GT-PIS ZS-PIS Var-PIS Std PIS in PIS out 
+
+Near-domain: parameter shift (22) 
+
+Lunar gravity projectile g=1 .63 1.000 0.972 0.982 0.005 0.981 0.969 High gravity projectile g=12 1.000 0.971 0.961 0.018 0.990 0.982 Super gravity projectile g=30 1.000 0.974 0.891 0.009 0.962 0.815 Low-friction slope μf =0 .01 1.000 0.998 0.982 0.015 0.993 0.982 Standard slope μf =0 .1 1.000 0.998 0.978 0.011 0.997 0.992 Lunar slope g=1 .63 1.000 0.998 0.913 0.027 0.991 0.977 Low-damping pendulum d=0 .05 0.989 0.947 0.895 0.006 0.961 0.928 Standard-damping pendulum d=0 .8 0.880 0.947 0.896 0.006 0.961 0.929 Overdamped pendulum d=3 .0 0.833 0.947 0.901 0.007 0.961 0.930 Negative-damping pendulum d= − 0.5 0.878 0.947 0.894 0.006 0.961 0.928 Lunar pendulum g=1 .63 0.857 0.947 0.936 0.024 0.961 0.931 Standard acceleration a=4 1.000 0.997 0.942 0.005 0.987 0.964 Extreme acceleration a=15 1.000 0.997 0.916 0.001 0.989 0.968 Standard deceleration a=8 1.000 0.997 0.574 0.028 0.937 0.792 Extreme deceleration a=25 0.600 0.997 0.574 0.028 0.935 0.779 Pure rotation ω=1 .5 1.000 0.805 0.753 0.042 0.796 0.895 Fast rotation ω=15 1.000 0.823 0.737 0.006 0.780 0.836 Constant size expansion βs shift 1.000 0.999 0.969 0.001 0.995 0.989 Oscillating size periodic βs 0.106 0.999 0.955 0.006 0.992 0.981 Standard thrust a=3 1.000 0.990 0.987 0.002 0.990 0.984 Strong thrust a=8 1.000 0.990 0.987 0.002 0.990 0.984 Combined lunar g + low friction + size change multi-factor 1.000 0.998 0.904 0.032 0.991 0.977 
+
+Mid-domain: partial structure shift (5) 
+
+Viscous settling η=1 .0 0.736 0.959 0.940 0.029 0.981 0.975 Viscous settling, high viscosity η=5 .0 0.621 0.959 0.925 0.021 0.919 0.893 Non-uniform gravity g(y)= g0(R/ (R+y)) 2 1.000 0.930 0.825 0.017 0.971 0.940 Pure rolling on slope μr =0 .01 0.899 0.844 0.794 0.004 0.837 0.903 Pure rolling, high friction μr =0 .1 0.909 0.844 0.784 0.002 0.837 0.903 
+
+Far-domain: structural OOD (5) 
+
+Spring oscillator k=10 0.798 0.507 0.483 0.011 0.705 0.584 Stiff spring oscillator k=50 0.395 0.488 0.515 0.018 0.728 0.600 Outward spiral ˙r=0 .5 0.562 0.565 0.423 0.082 0.417 0.317 Tight spiral ˙r=2 .0 0.569 0.700 0.459 0.083 0.369 0.365 Large-amplitude circular motion large radius 0.776 0.761 0.693 0.017 0.746 0.724 
+
+Adversarial: capacity limit (2) 
+
+Chaotic double pendulum 4-DOF coupling 0.647 0.643 0.629 0.000 0.628 0.633 100 × extreme gravity g=980 1.000 0.946 0.830 0.017 0.966 0.942 
+
+v = ωr , yielding a = g(sin θ − μr cos θ)/(1 + I/ (mr 2)) and a = 23 g(sin θ − μr cos θ) for a solid cylinder; constrained spiral motion r(t) = r0 + ˙ rt with constant angular velocity; and the chaotic double pendulum, a 4-DOF nonlinear coupled system whose state dimensionality exceeds the 10D representation. 
+
+Generation protocol. Each scenario contains 10 trajectories of 84 frames simulated at dt = 0 .01 sby integrating the target dynamics with randomized initial conditions (initial positions, velocities, and object sizes). The 12 pre-trained single-object modules (uniform motion, acceleration, decelera-tion, parabolic motion, parabolic motion with rotation, circular motion, rotation, damped oscillation, slope sliding, size changing, deformation, and 3D motion) form the candidate set for prior matching. 
+
+## E Implementation Details 
+
+Physical Invariance Score (PIS). Following NewtonGen [Yuan et al., 2025], the Physical Invari-ance Score measures the relative stability of a motion-invariant physical quantity q over a trajectory and is normalized to [0 , 1] , i.e ., 
+
+PIS = 11 + std( q)/(|mean( q)| + ε) . (15) 20 Each scenario is evaluated only on the invariant associated with its own physical law ( e.g ., horizon-tal velocity and energy for projectiles, pendulum energy for pendulum-like motions, the v = ωr 
+
+coupling for pure rolling), so PIS reflects how well the generated trajectory obeys the target law. 
+
+Hyperparameters and reproducibility. Table 10 summarizes the key hyperparameters of each trainable component. All experiments are conducted on a single NVIDIA RTX A6000 GPU. All data generation, adaptation, and evaluation pipelines are deterministic, and every experiment uses fixed random seeds. To ensure reproducibility, we will release the code, the datasets ( Text2Phys ,
+
+CollidePhys , CompoPhys , and the expanded OODPhys ), the evaluation scripts, the state-extraction pipeline, and the generated videos upon acceptance. Table 10: Key hyperparameters of the trainable components. Component Setting Value Dual-LLM parser Backbone Qwen2.5-7B-Instruct + LoRA LoRA rank / learning rate / batch size 8 / 2×10 −5 / 8 Epochs 3Decoding greedy, ≤ 512 tokens Collision module Dcol               
+
+> Optimizer AdamW Learning rate / schedule 1×10 −4/ cosine annealing Training steps / batch size 15,000 / 32 Physics-aware video generator Learning rate 5×10 −6
+> Batch size 1Training data CollidePhys +CompoPhys
+> One-shot adaptation Optimizer AdamW Learning rate / schedule 5×10 −3/ cosine annealing Epochs / trajectory length 100 / 84 frames ( dt=0 .01 s)
+
+## F Generalization to Open-Ended Prompts 
+
+To test generalization beyond the controlled benchmark vocabulary, we collect 50 open-ended prompts with diverse object categories, materials, lighting, and scene contexts, with zero overlap with the original test set, and generate 10 videos per prompt. As shown in Table 11, the average PIS is 0.859 versus 0.862 on the CompoPhys test set, and FID/FVD remain essentially unchanged at 15.0/91.5 versus 15.0/91.4. Physical guidance therefore preserves both physical consistency and vi-sual quality across diverse visual contexts, consistent with the strictly decoupled design of physical-semantics extraction and visual rendering: the parser is trained to filter out appearance modifiers, and the video backbone renders all visual content. On the same prompts, the parser’s decomposition accuracy decreases by at most 0.2% relative to the in-distribution test set. Table 11: Physical consistency and visual quality on 50 open-ended prompts versus the CompoPhys 
+
+test set. Setting PIS ↑ FID ↓ FVD ↓       
+
+> CompoPhys test set 0.862 15.0 91.4 Open-ended prompts (50) 0.859 15.0 91.5
+
+## G Additional Ablations 
+
+Mass dimension and the MOT. The mass dimension μ and the collision-aware MOT are both prerequisite for physically correct collision modeling: without mass, the collision solver cannot enforce momentum conservation, and without the solver, colliding objects pass through each other with no interaction. As shown in Table 12, removing the mass dimension (9D state) reduces the average collision PIS from 0.923 to 0.689, and removing the MOT reduces it to 0.487, comparable to general T2V models. 
+
+Applicability of additive composition in the MTC. The additive composition in Eq. (6) is exact when parallel motion components act on disjoint subsets of the state space, which holds for typical 21 Table 12: Ablations on multi-object elastic collisions (PIS ↑). Variant Direct Collision Oblique Collision Avg w/o mass (9D state) 0.694 0.683 0.689 w/o MOT 0.492 0.481 0.487 Ours (10D state + MOT) 0.929 0.916 0.923 
+
+composite motions such as rotation paired with deceleration or scaling paired with translation. It is an approximation when components are physically coupled. Pure rolling is a representative coupled case: the no-slip constraint v = ωr ties translational and rotational dynamics together, so inde-pendently rolled-out NND modules composed additively cannot exactly satisfy the constraint. The 
+
+OODPhys results quantify this boundary: after one-shot adaptation, pure rolling scenarios reach Var-PIS 0.784–0.794, clearly below the 0.978–0.982 of uncoupled slope scenarios with compara-ble parameter shifts. Similarly, rotation scenarios with out-of-range angular velocity ( ω=15 ) reach 0.737. These results delineate the applicable scope of the MTC: quasi-independent parallel com-ponents compose accurately, while strongly coupled dynamics ( e.g ., no-slip rolling, dense contact, articulated chains) exceed the additive assumption. 
+
+## H Full Text Prompts of the Qualitative Comparison 
+
+Due to the limited space, each row of Fig. 3 in the main paper only displays a truncated prefix of its text prompt. For completeness and reproducibility, Tab. 13 re-typesets all six prompts in full, listed in the same top-to-bottom order as the rows of Fig. 3. Within each row, all compared methods are driven by exactly the same prompt, and no per-method prompt engineering is applied. 22 Table 13: Full text prompts used in the qualitative comparison of Fig. 3. The rows follow the top-to-bottom order of the figure, and the truncated prefixes shown in the figure are reproduced here in full. 
+
+Motion Type Full Text Prompt (1) Projectile + Syn-chronous Rotation “Under soft diffused overcast autumn daylight, a thin natural beige wooden chopstick starts from the top-left corner of the frame at a height of 0.9 meters above the deck. It is tossed diagonally downward at a 35-degree angle with a leisurely initial speed, traveling along a smooth parabolic path while rotating at a barely noticeable, glacial clockwise pace, barely turning a right angle throughout its entire descent. Below it lies a rustic weathered gray wooden deck scattered with curled, faded brown and amber fallen leaves, with a hazy backdrop of out-of-focus vibrant green bushes.” (2) Damped Oscilla-tion + Rotation “A brushed golden brass pear-shaped pendulum bob hangs from a delicate linked gold chain, initially held motionless at its leftmost swing position. It begins a gentle, rhythmic simple pendulum motion, swinging smoothly from side to side, and spins slowly and continuously clockwise as it moves. The scene is set on a pristine white laboratory surface, with a sleek silver precision gauge instrument featuring a circular dial and graduated scale resting to the right.” (3) Projectile →
+
+Damped Oscillation “A flawless mirror-like chrome metal ball hangs motionless at a moderate height above the ground. It accelerates downward in a smooth vertical free fall, touches the surface, and then begins a soft, rhythmic damped simple harmonic oscillation.” (4) Uniform Accelera-tion → Uniform Mo-tion “A sleek futuristic toy truck with a smooth white body, vibrant blue details, and a sunny yellow roof rests motionless on the soft pastel-colored interlocking foam play mat. It begins accelerating steadily to the left, its black wheels spinning faster and faster with gentle momentum, before reaching a constant, smooth cruising speed and moving uniformly across the mat toward the left side of the frame.” (5) Rotation + 3D Move + Size Chang-ing “A sleek matte charcoal gray rectangular block with subtle light gray edge trim rests motionless at the center of a clean empty space. It glides steadily forward in fluid 3D motion toward the viewer, spins slowly and continuously clockwise around its central vertical axis, and grows larger evenly in all dimensions as it approaches. The scene features a seamless matte light gray floor and background, with soft directional lighting casting a gentle elongated shadow that shifts and scales in sync with the block’s movement.” (6) Uniform Decelera-tion → Deformation + Collision → Uniform Motion “A vibrant matte orange rubber dodgeball is positioned in the left half of an empty industrial concrete room, initially traveling steadily straight toward the right wall at a moderate constant speed. It strikes the textured gray concrete wall with a firm impact, squishes noticeably into an oblate shape at the moment of collision, then bounces cleanly off the wall and continues moving straight to the left at an identical steady speed, with motion blur emphasizing its continuous movement.” 
+
+23

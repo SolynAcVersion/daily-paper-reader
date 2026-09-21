@@ -1,0 +1,39 @@
+{
+  "label": "2026-09-21",
+  "date": "2026-09-21",
+  "generated_at": "2026-09-21T23:04:58",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202609/21/2609.21455v1-compadapt-adaptable-composite-motion-modeling-for-physics-consistent-text-to-video-generation",
+      "section": "deep",
+      "title_en": "CompAdapt: Adaptable Composite Motion Modeling for Physics-Consistent Text-to-Video Generation",
+      "authors": "Haoran Qin, Renlong Wu, Tianyu Huang, Yukang Ding, Hui Li, Wangmeng Zuo",
+      "date": "2026-09-18",
+      "pdf": "https://arxiv.org/pdf/2609.21455v1",
+      "score": "9.0",
+      "evidence": "通过复合运动建模实现物理一致的文本到视频生成",
+      "tldr": "扩散式T2V模型能生成逼真视频，却违背物理动力学；现有物理约束方法局限于单一运动、依赖手动参数且难泛化。本文提出CompAdapt，将神经动力学建模扩展至耦合运动、多阶段过渡和多物体碰撞，并把语言提示转为结构化物理语义，指定运动类型、时间关系和初始参数。它引入动力学感知先验匹配实现一次适应，并用物理感知潜在特征融合提升视觉保真度。在物理聚焦基准上，CompAdapt物理一致性优于通用T2V和物理约束基线，保持高视觉质量并适应未见动力学。",
+      "tags": "query:phys-video",
+      "abstract_en": "While diffusion-based text-to-video (T2V) models have demonstrated impressive capability in generating realistic and temporally coherent videos, they often fail to respect fundamental physical dynamics. Although recent physics-constrained methods incorporate explicit dynamics priors to improve physical plausibility, they remain limited to simple single-type motions, depend on manually specified parameters, and struggle to generalize to unseen physical laws. In this work, we propose CompAdapt, a physics-consistent T2V framework for adaptable generation across complex real-world scenarios. It extends neural dynamics modeling beyond single-type motions to encompass composite physical behaviors, including coupled motions, multi-stage transitions, and multi-object collisions. Furthermore, CompAdapt translates natural language prompts into structured physical semantics, enabling end-to-end specification of motion types, temporal relations, and initial physical parameters. To generalize to novel physical environments, CompAdapt introduces dynamics-aware prior matching, achieving one-shot adaptation without retraining the core dynamics module. In addition, a physics-aware latent feature fusion module improves visual fidelity under fast and complex motion. Experiments on physics-focused T2V benchmarks demonstrate that CompAdapt improves physical consistency over both general T2V models and physics-constrained baselines, while preserving high visual quality and adaptability to unseen dynamics. The project page is available at https://makapic.github.io/CompAdapt/ .",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/21/2609.20744v1-video-deltanet-a-video-native-hybrid-attention-for-livestream-video-generation",
+      "section": "quick",
+      "title_en": "Video DeltaNet: A Video-Native Hybrid Attention for Livestream Video Generation",
+      "authors": "Haocheng Xi, Yiming Xie, Hexu Zhao, Yiwen Zhang, Michael Liu, Thomas Creavin, Kurt Keutzer, Xiuyu Li, Zhaoyang Lv, Chenfeng Xu, Haiwen Feng",
+      "date": "2026-09-17",
+      "pdf": "https://arxiv.org/pdf/2609.20744v1",
+      "score": "6.0",
+      "evidence": "逐帧更新记忆以建模长程视频上下文",
+      "tldr": "视频扩散模型去噪时反复处理长时空 token，注意力成为主要瓶颈；线性注意力虽高效，却难以保留高质量生成所需的细粒度交互。为此，作者提出 Video DeltaNet（VDN），将局部 Softmax 注意力与双向线性记忆结合，并用 Video Delta Attention 逐帧联合空间 token 更新记忆。在 MiniMax H3 上实例化后，14.3 秒 768p 视频去噪仅需 6.70 秒（8×B200），相比 50 步稠密 H3 提速 14.5 倍。",
+      "tags": "query:video-gen-rl",
+      "abstract_en": "Video diffusion models repeatedly process long spatiotemporal token sequences during denoising, making attention a major computational bottleneck. Linear attention offers an appealing alternative and has been widely adopted in recent large language models, but directly applying it to video models often fails to preserve the fine-grained interactions required for high-quality generation. We present Video DeltaNet (VDN), which combines local Softmax attention with bidirectional linear memory for long-range video context. Its linear branch introduces Video Delta Attention (VDA), which updates memory once per frame by jointly incorporating its spatial tokens. Separate output projections and learnable gates calibrate the two branches, while a staged teacher-alignment recipe progressively introduces the new pathway into pretrained models. We instantiate VDN on MiniMax H3, applying the hybrid to video-to-video interactions while retaining Softmax for interactions involving text or audio. With eight-step distillation and an optimized SGLang serving stack, VDN-H3 completes DiT denoising for a 14.3-second, 768p video in 6.70 seconds on eight NVIDIA B200 GPUs, corresponding to a 14.5x speedup over the 50-step dense H3 baseline on the same GPU count.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
