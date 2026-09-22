@@ -1,0 +1,380 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-22T22:32:50.160433+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 4,
+    "deep_divecandidates": 2,
+    "deep_cap": 9,
+    "deep_selected": 2,
+    "quick_candidates": 5,
+    "quick_skim_target": 14,
+    "quick_selected": 5
+  },
+  "deep_dive": [
+    {
+      "id": "2609.23658v1",
+      "source": "arxiv",
+      "title": "Why Do Video Diffusion Models Violate Physics? Unveiling the Flaws in Attention Mechanisms",
+      "abstract": "Despite impressive visual quality, state-of-the-art video diffusion models often generate content that violates real-world physical laws. While existing solutions rely on external priors or specialized data, we investigate the root cause by exploring the internal mechanisms of these models. Specifically, we present the first interpretability study on the ''motion planning'' process of text-to-video diffusion models, revealing how motion trajectories form during early denoising stages. Building upon the ''first shape, then details'' finding, we combine cross-attention trajectory patterns with causal head contributions to identify a specific subset of attention heads driving motion planning. Further, our self-attention analysis shows that Rotary Position Embedding (RoPE) induces excessive spatial attention decay. This causes early candidate regions to prematurely lock into physically implausible positions, suppressing reasonable trajectories in adjacent frames and triggering generation failure modes. To address this fundamental flaw, we propose a lightweight architectural modification that scales the frequency of RoPE across different denoising steps. This strategy reduces excessive attention decay, helping the model explore better candidate regions to establish coherent physical motion. Finally, training-free and training-based experiments confirm the effectiveness of our approach in enhancing the physical commonsense of generated videos.",
+      "authors": [
+        "Yueyan Li",
+        "Haibo Wang",
+        "Caixia Yuan",
+        "Xiaojie Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-09-20T14:09:58+00:00",
+      "link": "https://arxiv.org/pdf/2609.23658v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "interpreting why video diffusion models violate physical laws",
+      "llm_evidence_cn": "解释视频扩散模型为何违背物理规律",
+      "llm_evidence": "解释视频扩散模型为何违背物理规律",
+      "canonical_evidence": "解释视频扩散模型为何违背物理规律",
+      "llm_tldr_en": "This first interpretability study on text-to-video diffusion models uncovers why they violate physics, tracing motion planning to specific attention heads in early denoising stages and revealing flaws in attention mechanisms.",
+      "llm_tldr_cn": "论文针对视频扩散模型虽视觉质量高却常生成违背物理规律内容的问题，从模型内部机制入手探究其根本原因。作者首次对文生视频扩散模型的运动规划过程进行可解释性研究，揭示运动轨迹在去噪早期形成，并结合交叉注意力轨迹模式与因果注意力头贡献定位驱动运动规划的关键注意力头。自注意力分析进一步暴露出导致物理违规的机制缺陷。该工作为从架构层面提升生成视频物理一致性提供了重要洞见。",
+      "llm_tldr": "论文针对视频扩散模型虽视觉质量高却常生成违背物理规律内容的问题，从模型内部机制入手探究其根本原因。作者首次对文生视频扩散模型的运动规划过程进行可解释性研究，揭示运动轨迹在去噪早期形成，并结合交叉注意力轨迹模式与因果注意力头贡献定位驱动运动规划的关键注意力头。自注意力分析进一步暴露出导致物理违规的机制缺陷。该工作为从架构层面提升生成视频物理一致性提供了重要洞见。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "how to ensure physical consistency in generated videos",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.24997v1",
+      "source": "arxiv",
+      "title": "VideoGen-Agent: Reinforcing Video Generation Agents",
+      "abstract": "Recent advances in video generative models have enabled high-fidelity, temporally coherent video generation. However, these models often struggle to satisfy prompts requiring specialized knowledge, specific identities, physical consistency, or ordered events. In this paper, we present VideoGen-Agent, a multimodal agent trained through multitask agentic reinforcement learning to use external tools for video generation. The agent coordinates augmentation, generation, and verification tools through multi-turn interactions, using the prompt and intermediate observations to guide its decisions. We train a shared policy on a category-balanced dataset spanning six tasks. Supervised fine-tuning on teacher-generated trajectories establishes tool-use behavior, which is then refined through reinforcement learning. A category-aware hybrid reward evaluates tool-call validity, task-appropriate tool use, and generated video quality. We further introduce VABench, a held-out benchmark of 600 prompts covering procedural knowledge, single- and multi-entity identity preservation, physical consistency, scene composition, and multi-shot temporal structure. On VABench, VideoGen-Agent improves over its base text-to-video generator by 19.1 points, from 56.5 to 75.6. Upgrading the generation tools further raises the score to 86.1 without additional agent training. Human raters prefer the upgraded configuration over the strongest standalone baseline in 84.3% of comparisons. These results support learning tool use across video-generation tasks and show that the trained agent can benefit from subsequent advances in generation tools.",
+      "authors": [
+        "Binxu Li",
+        "Haoyi Duan",
+        "Yuhui Zhang",
+        "Yaohui Zhang",
+        "Zihao Lin",
+        "Kaituo Feng",
+        "Suozhi Huang",
+        "Xiangyi Li",
+        "Yu Li",
+        "Chunyuan Li",
+        "Shilong Liu",
+        "Mengdi Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-21T17:58:56+00:00",
+      "link": "https://arxiv.org/pdf/2609.24997v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "RL agent for physical consistency in video generation",
+      "llm_evidence_cn": "强化学习智能体提升视频生成物理一致性",
+      "llm_evidence": "强化学习智能体提升视频生成物理一致性",
+      "canonical_evidence": "强化学习智能体提升视频生成物理一致性",
+      "llm_tldr_en": "Video generative models often fail prompts requiring specialized knowledge, identities, physical consistency, or ordered events. VideoGen-Agent is a multimodal agent trained via multitask agentic reinforcement learning to coordinate augmentation, generation, and verification tools, improving hard-case physical consistency.",
+      "llm_tldr_cn": "视频生成模型虽能生成高保真、时序连贯的视频，但常难以满足需要专业知识、特定身份、物理一致性或有序事件的提示。本文提出VideoGen-Agent，一种通过多任务智能体强化学习训练的多模态智能体，可协调增强、生成与验证等外部工具，通过多轮交互完成视频生成。方法先在教师轨迹上监督微调建立工具使用行为，再经强化学习精炼，从而改善物理一致性等难例生成质量。",
+      "llm_tldr": "视频生成模型虽能生成高保真、时序连贯的视频，但常难以满足需要专业知识、特定身份、物理一致性或有序事件的提示。本文提出VideoGen-Agent，一种通过多任务智能体强化学习训练的多模态智能体，可协调增强、生成与验证等外部工具，通过多轮交互完成视频生成。方法先在教师轨迹上监督微调建立工具使用行为，再经强化学习精炼，从而改善物理一致性等难例生成质量。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "Reinforcement learning methods for enhancing physical plausibility in video generation",
+      "matched_requirement_id": "req-27",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.22947v1",
+      "source": "arxiv",
+      "title": "RewardVerse: Rubric-Guided Policy Optimization for Video Reward Modeling",
+      "abstract": "Reinforcement learning (RL) is vital for optimizing video generation models, with a robust reward model (RM) serving as the cornerstone. However, existing video reward models often produce unstable scalar scores because they directly map complex, subjective video quality into a single score without explicit evaluation criteria. This leads to scalar drift, where the scoring scale collapses or shifts across different prompts, making the reward unreliable for RL. Drawing inspiration from professional human annotation engineering, we address this problem with RewardVerse, a rubric-based video reward framework that introduces a dynamic rubric as an intermediate representation between the evaluation query and the scorer. Instead of unconstrained direct scoring, RewardVerse first generates explicit evaluation criteria and then performs rubric-guided scoring, providing a stable semantic anchor that mitigates scalar drift. To efficiently optimize this collaborative pipeline, we propose Rubric-Guided Policy Optimization (RGPO), a two-stage training algorithm. RGPO first warms up the scorer using self-evolving seed rubrics and then jointly optimizes the rubric generator to produce query-adaptive evaluation criteria while continuously aligning the scorer with human ratings. Extensive experiments on the 16-dimensional EvalVerse benchmark and external datasets demonstrate that RewardVerse mitigates scalar drift, achieves state-of-the-art performance on both pointwise and pairwise evaluation, and provides a robust and interpretable reward signal for RL in video generation.",
+      "authors": [
+        "Zhenchen Tang",
+        "Yang Li",
+        "Songlin Yang",
+        "Bo Peng",
+        "Xiaotong Zhao",
+        "Shuai Li",
+        "Haotian Fan",
+        "Alan Zhao",
+        "Jing Dong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-19T11:01:14+00:00",
+      "link": "https://arxiv.org/pdf/2609.22947v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "RL reward modeling for stable video generation optimization",
+      "llm_evidence_cn": "面向视频生成的RL奖励建模稳定性",
+      "llm_evidence": "面向视频生成的RL奖励建模稳定性",
+      "canonical_evidence": "面向视频生成的RL奖励建模稳定性",
+      "llm_tldr_en": "RewardVerse tackles unstable scalar rewards in video reward models that cause scalar drift in RL, introducing a rubric-based framework with a dynamic rubric as an intermediate representation between query and scorer to yield more stable rewards.",
+      "llm_tldr_cn": "强化学习是优化视频生成模型的关键手段，但其核心奖励模型常因缺乏显式评价标准而输出不稳定的标量分数，导致尺度漂移。本文提出RewardVerse，一种基于评分量规的视频奖励框架，将动态量规作为评价查询与打分器之间的中间表示。实验表明该方法能缓解标量漂移并提供更稳定的奖励信号，从而提升视频生成模型RL优化的可靠性，为视频奖励建模提供可解释范式。",
+      "llm_tldr": "强化学习是优化视频生成模型的关键手段，但其核心奖励模型常因缺乏显式评价标准而输出不稳定的标量分数，导致尺度漂移。本文提出RewardVerse，一种基于评分量规的视频奖励框架，将动态量规作为评价查询与打分器之间的中间表示。实验表明该方法能缓解标量漂移并提供更稳定的奖励信号，从而提升视频生成模型RL优化的可靠性，为视频奖励建模提供可解释范式。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "Reinforcement learning methods for enhancing physical plausibility in video generation",
+      "matched_requirement_id": "req-27",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.19815v1",
+      "source": "arxiv",
+      "title": "SnapPhysics: A Physics-Aware Scene Graph from a Single View for Interactive Mixed Reality Scenes",
+      "abstract": "We propose SnapPhysics, a training-free framework that reconstructs 3D objects and estimates their physical properties such as mass, friction, and center of gravity from a single image. For physically coherent interactions in mixed reality (MR), such properties are as important as geometry. Prior approaches infer them by analyzing object dynamics in video, which is computationally costly, or by querying vision-language models (VLMs) on single images, which lacks geometric grounding and inter-object relationships. We address these limitations by combining instance-level 3D reconstruction and spatial alignment with a physics-aware scene graph that encodes these relationships and per-object metric geometry as structured context for VLM-based property reasoning. Experiments on 3D-FRONT show that SnapPhysics improves scene-level F-Score by 18.6% over the best learning-based method, and on real captured scenes with ground-truth mass, it reduces the mean absolute log difference error (mALDE) by up to 20.5% and improves log-scale correlation ($r^2_{\\mathrm{ls}}$) by up to 19.6% over VLM-only estimation. SnapPhysics enables physically interactive MR experiences without manual parameter tuning. Project page: https://snapphysics-ismar2026.github.io/.",
+      "authors": [
+        "Suji Kang",
+        "Seok-Young Kim",
+        "Young Bin Kim",
+        "Taewook Ha",
+        "Dieter Schmalstieg",
+        "Shohei Mori",
+        "Woontack Woo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-17T07:26:56+00:00",
+      "link": "https://arxiv.org/pdf/2609.19815v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "physics-aware properties for physically coherent interactions",
+      "llm_evidence_cn": "物理感知属性保障物理一致交互",
+      "llm_evidence": "物理感知属性保障物理一致交互",
+      "canonical_evidence": "物理感知属性保障物理一致交互",
+      "llm_tldr_en": "Physically coherent interactions in mixed reality require object mass, friction, and center of gravity, but prior work relies on costly video dynamics or ungrounded VLM queries. SnapPhysics is a training-free framework combining instance-level 3D reconstruction with a physics-aware scene graph to estimate physical properties from a single image.",
+      "llm_tldr_cn": "针对混合现实中物理一致交互需要物体的质量、摩擦、重心等属性，已有方法依赖视频动力学分析或视觉语言模型查询，前者计算昂贵、后者缺乏几何接地与物体间关系。本文提出SnapPhysics，一种免训练框架，结合实例级三维重建与空间对齐，构建编码物体关系与度量的物理感知场景图。实验表明该方法能从单张图像估计物理属性并支撑交互式混合现实场景，为物理一致性建模提供结构化上下文。",
+      "llm_tldr": "针对混合现实中物理一致交互需要物体的质量、摩擦、重心等属性，已有方法依赖视频动力学分析或视觉语言模型查询，前者计算昂贵、后者缺乏几何接地与物体间关系。本文提出SnapPhysics，一种免训练框架，结合实例级三维重建与空间对齐，构建编码物体关系与度量的物理感知场景图。实验表明该方法能从单张图像估计物理属性并支撑交互式混合现实场景，为物理一致性建模提供结构化上下文。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "how to ensure physical consistency in generated videos",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.24984v1",
+      "source": "arxiv",
+      "title": "WorldCrafter: Consistent Video World Model with Implicit 3D-aware Memory",
+      "abstract": "Video world models enable interactive exploration of dynamic environments, yet struggle to respect prior observations over long horizons and across viewpoints. We present WorldCrafter, a video world model that learns a camera-queryable implicit 3D-aware memory for this purpose. The key insight is to let the requested viewpoint shape how multi-view evidence is compressed into the video generator's limited token budget. Trained jointly with the video generator, a memory encoder and pose-conditioned readout module integrate historical observations into a fixed set of target view-specific tokens before denoising, without explicit depth-based correspondences. By combining this memory with recent temporal context and few-step distillation, WorldCrafter enables streaming scene exploration from a single input image or text prompt. Experiments across static and dynamic scenes show substantial gains in long-horizon consistency and camera-control accuracy while preserving visual quality during minute-scale exploration.",
+      "authors": [
+        "Wangbo Yu",
+        "Kunhao Liu",
+        "Wenbo Hu",
+        "Shenghai Yuan",
+        "Chaoran Feng",
+        "Haiyang Zhou",
+        "Yukun Huang",
+        "Yiran Wang",
+        "Wang Zhao",
+        "Yingmin Luo",
+        "Ying Shan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.GR"
+      ],
+      "published": "2026-09-21T17:57:06+00:00",
+      "link": "https://arxiv.org/pdf/2609.24984v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "video world model keeping cross-frame and cross-viewpoint consistency",
+      "llm_evidence_cn": "视频世界模型跨帧与跨视角保持一致性",
+      "llm_evidence": "视频世界模型跨帧与跨视角保持一致性",
+      "canonical_evidence": "视频世界模型跨帧与跨视角保持一致性",
+      "llm_tldr_en": "WorldCrafter addresses video world models that fail to respect prior observations across long horizons and viewpoints via a camera-queryable implicit 3D-aware memory that compresses multi-view evidence into view-specific tokens.",
+      "llm_tldr_cn": "视频世界模型在长时程与跨视角探索中常无法保持对历史观测的一致性。本文提出WorldCrafter，学习一种可查询相机的隐式3D感知记忆，让目标视角决定多视角证据如何压缩进视频生成器有限的token预算。记忆编码器与位姿条件读出模块与生成器联合训练，无需显式深度对应。实验表明该方法在长时程一致性与交互式环境探索上更优，为视频世界模型的记忆机制提供了新思路。",
+      "llm_tldr": "视频世界模型在长时程与跨视角探索中常无法保持对历史观测的一致性。本文提出WorldCrafter，学习一种可查询相机的隐式3D感知记忆，让目标视角决定多视角证据如何压缩进视频生成器有限的token预算。记忆编码器与位姿条件读出模块与生成器联合训练，无需显式深度对应。实验表明该方法在长时程一致性与交互式环境探索上更优，为视频世界模型的记忆机制提供了新思路。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "maintaining inter-frame coherence in video generation",
+      "matched_requirement_id": "req-22",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.22641v1",
+      "source": "arxiv",
+      "title": "ConsistWorld: Evidence Routing for Consistent Multi-Agent World Models",
+      "abstract": "Autoregressive video world models enable temporally coherent generation for a single observer. Extending them to multiple agents requires consistency across independently controlled views and temporal gaps under causal streaming. We present ConsistWorld, a multi-agent world model that generates camera-controlled video streams of a static scene from one shared image. We formulate consistency as routing evidence from committed multi-agent history and concurrently generated peer views to the tokens being generated. Pose Conditioned Memory Retrieval selects relevant historical observations from all agents, recovering evidence beyond the recent context window. Visibility-Gated Peer Sharing regulates current peer information according to estimated historical coverage and current-view overlap. Together, they determine which historical observations enter the context and where concurrent peer information contributes, supporting long-term recall and coordinated exploration. Both mechanisms use camera geometry and maintain a bounded active context for a fixed agent count and retrieval budget. Experiments on evidence sharing cases and video length and agent number generalizations show that ConsistWorld achieves a strong cross-time and cross-agent consistency while preserving competitive generation quality.",
+      "authors": [
+        "Qianxun Xu",
+        "Xianfang Zeng",
+        "Xinyao Liao",
+        "Wei Cheng",
+        "Gang Yu",
+        "Chi Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-18T23:31:01+00:00",
+      "link": "https://arxiv.org/pdf/2609.22641v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "temporally coherent multi-agent video generation consistency",
+      "llm_evidence_cn": "时间连贯的多智能体视频生成一致性",
+      "llm_evidence": "时间连贯的多智能体视频生成一致性",
+      "canonical_evidence": "时间连贯的多智能体视频生成一致性",
+      "llm_tldr_en": "Autoregressive video world models generate temporally coherent video for a single observer, but multi-agent extension needs consistency across independently controlled views and time gaps. ConsistWorld routes committed history and peer-view evidence to generated tokens via pose-conditioned memory retrieval and visibility-gated sharing.",
+      "llm_tldr_cn": "自回归视频世界模型能为单一观察者生成时间连贯的视频，但扩展到多智能体时需在独立控制的视角与时间间隙间保持一致。本文提出ConsistWorld，将一致性建模为从已提交的多智能体历史与并行生成的同伴视角向待生成token路由证据，其中姿态条件记忆检索恢复超出上下文窗口的观测，可见性门控同伴共享按估计历史调节当前信息。方法提升了多智能体世界模型跨视角与跨时间的一致性，为共享场景的视频世界建模提供思路。",
+      "llm_tldr": "自回归视频世界模型能为单一观察者生成时间连贯的视频，但扩展到多智能体时需在独立控制的视角与时间间隙间保持一致。本文提出ConsistWorld，将一致性建模为从已提交的多智能体历史与并行生成的同伴视角向待生成token路由证据，其中姿态条件记忆检索恢复超出上下文窗口的观测，可见性门控同伴共享按估计历史调节当前信息。方法提升了多智能体世界模型跨视角与跨时间的一致性，为共享场景的视频世界建模提供思路。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "maintaining inter-frame coherence in video generation",
+      "matched_requirement_id": "req-22",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.24308v1",
+      "source": "arxiv",
+      "title": "HappyWorld-Bench",
+      "abstract": "Evaluating world models requires assessing both the quality of the worlds they generate and their consistency and responsiveness under exploration, interaction, and modification. We introduce HappyWorld-Bench, a comprehensive benchmark that evaluates whether generated worlds remain reliable as agents interact with them. Our design is built on a hierarchical capability framework of six world capabilities (W1-W6), from generative construction to unified world modeling, instantiated across three independent evaluation tracks: video world models, spatial world models, and embodied world models. HappyWorld-Bench comprises 1,138 video prompts, 300 spatial scenes, and 254 embodied test cases. Across all three tracks, we build and operate HappyWorld-Arena to organize human A/B comparisons and derive model-level Elo ratings, which complement newly designed automated metrics that capture behavioral correctness. We evaluate 14 video world models, 9 spatial systems, and 8 embodied candidates under this unified framework. Results reveal remaining reliability gaps across all three tracks: video models exhibit reduced consistency during extended rollouts and revisits, spatial models achieve at best 70.14% placement accuracy and 73.33% edit execution, and embodied models struggle to preserve state across multi-step actions and respond precisely to altered action conditions and physical rules. These findings highlight the need to evaluate world models not only by visual quality, but also by state consistency and the correctness of their responses to actions and interventions.",
+      "authors": [
+        "Zhiqi Bai",
+        "Junai Cai",
+        "Yixin Chen",
+        "Jingrun Du",
+        "Tao Feng",
+        "Wei Gong",
+        "Siyuan Huang",
+        "Xiao Lin",
+        "Jiaheng Liu",
+        "Jun Luo",
+        "Yongzhe Lyu",
+        "Liya Ma",
+        "Zenan Meng",
+        "Lin Qu",
+        "Wenbo Su",
+        "Jiaming Wang",
+        "Qinghe Wang",
+        "Shaofei Wang",
+        "Yanghai Wang",
+        "Zequn Wang",
+        "Ziming Wang",
+        "Hu Wei",
+        "Jiangtao Wu",
+        "Ruiqi Wu",
+        "Jiaxin Xie",
+        "Yuchi Xu",
+        "Ze Xu",
+        "Chengting Yu",
+        "Liangyu Yuan",
+        "Gang Zeng",
+        "Yawen Zeng",
+        "Xingyao Zhang",
+        "Zizheng Zhang",
+        "Bo Zheng",
+        "Jiancheng Zhu",
+        "Song-Chun Zhu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-21T09:07:30+00:00",
+      "link": "https://arxiv.org/pdf/2609.24308v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:video-gen-rl",
+        "query:phys-video"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "benchmark evaluating generated video world consistency",
+      "llm_evidence_cn": "评估生成视频世界一致性的基准",
+      "llm_evidence": "评估生成视频世界一致性的基准",
+      "canonical_evidence": "评估生成视频世界一致性的基准",
+      "llm_tldr_en": "HappyWorld-Bench is a comprehensive benchmark evaluating world models across video, spatial, and embodied tracks, assessing whether generated worlds stay consistent and responsive under agent interaction.",
+      "llm_tldr_cn": "论文针对世界模型评估需同时衡量生成质量与交互下一致性的问题，提出HappyWorld-Bench综合基准。该基准基于六项世界能力的分层框架，涵盖视频世界模型、空间世界模型与具身世界模型三条评估轨道，包含1138个视频提示、300个空间场景与254个具身测试用例，并通过HappyWorld-Arena组织人类A/B比较。其价值在于为生成世界（含视频）的可靠性与一致性提供系统化评测手段。",
+      "llm_tldr": "论文针对世界模型评估需同时衡量生成质量与交互下一致性的问题，提出HappyWorld-Bench综合基准。该基准基于六项世界能力的分层框架，涵盖视频世界模型、空间世界模型与具身世界模型三条评估轨道，包含1138个视频提示、300个空间场景与254个具身测试用例，并通过HappyWorld-Arena组织人类A/B比较。其价值在于为生成世界（含视频）的可靠性与一致性提供系统化评测手段。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "evaluation benchmarks for measuring physical correctness in generated videos",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

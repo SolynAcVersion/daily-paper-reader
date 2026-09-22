@@ -1,0 +1,121 @@
+{
+  "date": "20260922",
+  "date_label": "",
+  "generated_at": "2026-09-22 22:39:58 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.23658v1",
+      "route": "202609/22/2609.23658v1-why-do-video-diffusion-models-violate-physics-unveiling-the-flaws-in-attention-mechanisms",
+      "title": "Why Do Video Diffusion Models Violate Physics? Unveiling the Flaws in Attention Mechanisms",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "解释视频扩散模型为何违背物理规律",
+      "first_seen_at": "2026-09-22 22:39:58 UTC",
+      "updated_at": "2026-09-22 22:39:58 UTC"
+    },
+    {
+      "paper_id": "2609.24997v1",
+      "route": "202609/22/2609.24997v1-videogen-agent-reinforcing-video-generation-agents",
+      "title": "VideoGen-Agent: Reinforcing Video Generation Agents",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "强化学习智能体提升视频生成物理一致性",
+      "first_seen_at": "2026-09-22 22:39:58 UTC",
+      "updated_at": "2026-09-22 22:39:58 UTC"
+    },
+    {
+      "paper_id": "2609.22947v1",
+      "route": "202609/22/2609.22947v1-rewardverse-rubric-guided-policy-optimization-for-video-reward-modeling",
+      "title": "RewardVerse: Rubric-Guided Policy Optimization for Video Reward Modeling",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向视频生成的RL奖励建模稳定性",
+      "first_seen_at": "2026-09-22 22:39:58 UTC",
+      "updated_at": "2026-09-22 22:39:58 UTC"
+    },
+    {
+      "paper_id": "2609.24984v1",
+      "route": "202609/22/2609.24984v1-worldcrafter-consistent-video-world-model-with-implicit-3d-aware-memory",
+      "title": "WorldCrafter: Consistent Video World Model with Implicit 3D-aware Memory",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "视频世界模型跨帧与跨视角保持一致性",
+      "first_seen_at": "2026-09-22 22:39:58 UTC",
+      "updated_at": "2026-09-22 22:39:58 UTC"
+    },
+    {
+      "paper_id": "2609.19815v1",
+      "route": "202609/22/2609.19815v1-snapphysics-a-physics-aware-scene-graph-from-a-single-view-for-interactive-mixed-reality-scenes",
+      "title": "SnapPhysics: A Physics-Aware Scene Graph from a Single View for Interactive Mixed Reality Scenes",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "物理感知属性保障物理一致交互",
+      "first_seen_at": "2026-09-22 22:39:58 UTC",
+      "updated_at": "2026-09-22 22:39:58 UTC"
+    },
+    {
+      "paper_id": "2609.22641v1",
+      "route": "202609/22/2609.22641v1-consistworld-evidence-routing-for-consistent-multi-agent-world-models",
+      "title": "ConsistWorld: Evidence Routing for Consistent Multi-Agent World Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "时间连贯的多智能体视频生成一致性",
+      "first_seen_at": "2026-09-22 22:39:58 UTC",
+      "updated_at": "2026-09-22 22:39:58 UTC"
+    },
+    {
+      "paper_id": "2609.24308v1",
+      "route": "202609/22/2609.24308v1-happyworld-bench",
+      "title": "HappyWorld-Bench",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "评估生成视频世界一致性的基准",
+      "first_seen_at": "2026-09-22 22:39:58 UTC",
+      "updated_at": "2026-09-22 22:39:58 UTC"
+    }
+  ]
+}
