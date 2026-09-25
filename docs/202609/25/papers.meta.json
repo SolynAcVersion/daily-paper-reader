@@ -1,0 +1,69 @@
+{
+  "label": "2026-09-25",
+  "date": "2026-09-25",
+  "generated_at": "2026-09-25T22:05:00",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202609/25/2609.27656v1-internw0-a-foundational-physical-world-model-for-efficient-real-world-interactions",
+      "section": "quick",
+      "title_en": "InternW0: A Foundational Physical World Model for Efficient Real-World Interactions",
+      "authors": "Jisong Cai, Yao Mu, Ganlin Yang, Zhe Cao, Zhangzheng Tu, Xing Gao, Kailin Li, Xinyu Zhan, Lixin Yang, Yangkun Zhu, Haoxiang Ma, Ming Zhou, Qiaojun Yu, Yufei Xue, Liqun He, Yifei Yao, Yifan Zhu, Long Ling, Bingqi Jiang, Haoyu Guo, Xueyue Zhu, Bowen Zhou, Bin Zhao, Tianfan Xue, Chunhua Shen, Weinan Zhang",
+      "date": "2026-09-23",
+      "pdf": "https://arxiv.org/pdf/2609.27656v1",
+      "score": "7.0",
+      "evidence": "预测未来视觉动态与机器人控制的物理世界模型",
+      "tldr": "物理智能不仅需预测世界演化，还要让预测在持续变化中保持可执行。上海AI实验室提出InternW0，采用非对称视频-动作架构与流匹配，异步多频处理视觉动态和连续机器人控制，并复用层间K/V与观测条件上下文路由。模型在约7200小时异构机器人及自我中心数据上训练，含275小时EgoLab。它在仿真和真实科学任务中验证，如15阶段MOF合成与5阶段力触觉灵巧移液，推动可扩展、异步、科学原生世界模型。",
+      "tags": "query:phys-video",
+      "abstract_en": "Physical intelligence requires more than predicting how the world may evolve: predictions must remain actionable as the world continues to change. We introduce InternW0, the first instantiation of the InternW physical world model series from Shanghai AI Laboratory, built around omnimodal interfaces, asynchronous multi-frequency processing, and local physical modeling under partial observations and external influences. InternW0 jointly learns future visual dynamics and continuous robot control through an asymmetric video--action architecture with flow matching. A high-capacity video expert provides longer-horizon predictive context, while a lightweight action expert operates at a faster timescale. Instead of regenerating the future for every action update, InternW0 reuses layerwise K/V and adapts it to newly observed states through observation-conditioned context routing. Domain-specific interfaces and soft prompts support heterogeneous embodiments, while contact-aware post-training incorporates force and tactile signals for contact-rich manipulation. We train InternW0 on approximately 7,200 hours of heterogeneous robot and egocentric data, including EgoLab, a 275-hour real-laboratory egocentric dataset. Evaluation spans simulation benchmarks and real-world scientific tasks, including a 15-stage metal--organic framework synthesis workflow and 5-stage contact- and force-aware dexterous manipulation for general-purpose quantitative pipetting. These results advance scalable, asynchronous, and science-native physical world models for universal and efficient real-world interactions.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/25/2609.26314v1-triworldbench-a-tri-view-consistency-perspective-on-embodied-world-models",
+      "section": "quick",
+      "title_en": "TriWorldBench: A Tri-View Consistency Perspective on Embodied World Models",
+      "authors": "Xuanyi Liu, Haofeng Wang, Ruiqi Li, Danni Yu, Rui Wan, Ruixu Zhang, Siyu Tao, Xue Yang, Shaofeng Zhang, Zicheng Zhang, Jiaqi Zhang, Siwei Ma",
+      "date": "2026-09-22",
+      "pdf": "https://arxiv.org/pdf/2609.26314v1",
+      "score": "6.0",
+      "evidence": "面向具身世界模型的物理与三维一致性评测基准",
+      "tldr": "具身世界模型需预测机器人动作结果，但在头/腕多相机下，独立评估单视角无法判断它们是否描述同一动作与物体状态。为此提出 TRIWORLDBENCH，基于同步头、左腕、右腕视频，涵盖 50 个双手操作任务与 500 个 episode，并用 19 项指标衡量三视角一致性、任务对齐、物理/3D 连贯性、运动质量、时间一致性与视觉质量。该基准结合跨视角检查和各视角定制测量，并用 TWB-Score 汇总整体表现，同时保留分视角结果以定位失败。它把具身世界模型评估从单视角视觉质量推进到多视角一致预测。",
+      "tags": "query:phys-video",
+      "abstract_en": "Embodied world models predict the outcomes of robot actions to support learning and planning. For robots equipped with head and wrist cameras, this requires complementary views: the head view captures the overall task, while wrist views reveal local gripper-object interactions. However, evaluating these views independently cannot determine whether they describe the same action and object state. We introduce TRIWORLDBENCH, a benchmark for evaluating embodied world models through synchronized head, left-wrist, and right-wrist videos. It contains 500 episodes across 50 bimanual manipulation tasks and uses 19 metrics to assess tri-view consistency, task alignment, physical and 3D coherence, motion quality, temporal consistency, and visual quality. By combining cross-view checks with measurements tailored to each camera, the benchmark evaluates whether plausible individual videos also form a consistent prediction of the intended task. We summarize overall performance with TWB-Score and retain per-view results to identify where predictions fail. This extends world-model evaluation beyond single-view visual quality. Code, data, and metric definitions are available at https://github.com/TriWorldBench/TriWorldBench.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/25/2609.28466v1-the-past-frames-the-future-memory-for-autoregressive-video-generation",
+      "section": "quick",
+      "title_en": "The Past Frames the Future: Memory for Autoregressive Video Generation",
+      "authors": "Harold Haodong Chen, Rongjin Guo, Disen Lan, Wen-Jie Shu, Hongfei Zhang, Hanzhe Hu, Shengtao Yao, Zixin Zhang, Guibin Zhang, Zhefan Rao, Jinxiu Liu, Yexin Liu, Rui Peng, Yuhao Liu, Bin Ren, Shuai Yang, Yukang Chen, Salman Khan, Ying-Cong Chen, Ser-Nam Lim, Rynson W. H. Lau, Nicu Sebe, Yu Cheng, Ming-Hsuan Yang, Qifeng Chen",
+      "date": "2026-09-23",
+      "pdf": "https://arxiv.org/pdf/2609.28466v1",
+      "score": "6.0",
+      "evidence": "自回归视频生成中的时序持续与帧间连贯",
+      "tldr": "自回归视频生成随序列扩展，受限于有限上下文、存储与算力，实体身份、动态状态和干预因果等关键历史会过早离开活跃窗口，导致时序一致性难以维持。本文将记忆定义为跨外层自回归步骤持久保存、可在证据不可见后继续影响生成的历史信息，并从形式、功能、操作、学习与评估五个视角系统梳理记忆机制。最后总结可组合且资源感知的记忆架构、可信状态更新、自 rollout 学习与标准化评估等开放挑战。",
+      "tags": "query:video-gen-rl",
+      "abstract_en": "Advances in generative models have improved video fidelity, enabling long-horizon generation, interactive world modeling, and evolving visual environments. Autoregressive (AR) video generation extends visual sequences through causal rollouts. However, a fundamental bottleneck emerges: as the generated sequence expands, practical models must operate under strictly bounded context windows, storage, and computational limits. Consequently, critical historical information, e.g., entity identities, dynamic states, and intervention-induced causal changes, often leaves the active context long before its relevance diminishes. Overcoming this limitation and maintaining temporal persistence constitutes a fundamental memory problem. We present a systematic and comprehensive review of memory mechanisms in AR video generation. We formulate memory operationally as persistent historical information maintained across outer AR steps, capable of influencing future generation even after the originating evidence is no longer locally accessible. Building upon this unified framework, we organize the literature through five complementary perspectives: (I) Forms, the representational carriers of history; (II) Functions, the specific semantic and physical information requiring preservation; (III) Operations, the lifecycle of writing, reading, updating, managing, and integrating memory; (IV) Learning, the optimization of memory behaviors under closed-loop rollouts; and (V) Evaluation, the paradigms for diagnosing genuine memory capabilities. We conclude by synthesizing open challenges, including composable and resource-aware memory architectures, trustworthy state updating, self-rollout learning, and standardized evaluation. By bridging representations, mechanisms, and learning paradigms, this paper establishes a structured foundation for developing reliable, memory-conditioned video generation systems.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/25/2609.28923v1-virdm-taming-representation-distribution-matching-for-few-step-causal-video-generation",
+      "section": "quick",
+      "title_en": "ViRDM: Taming Representation Distribution Matching for Few-Step Causal Video Generation",
+      "authors": "Zichong Meng, Chongjian Ge, Chun-Hao P. Huang, Yang Zhou, Huaizu Jiang",
+      "date": "2026-09-24",
+      "pdf": "https://arxiv.org/pdf/2609.28923v1",
+      "score": "6.0",
+      "evidence": "面向因果视频生成的表征分布匹配",
+      "tldr": "少步自回归视频扩散可实现低延迟流式生成，但现有后训练依赖DMD，需大教师模型和在线critic，资源开销高。ViRDM将表征分布匹配RDM迁移到少步因果视频生成，通过随机截断clean-exit监督、轻量VAE解码器和分阶段向量-雅可比积解决显存与梯度难题，并加入轻量动态正则约束时序动态。仅20次生成器更新，在VBench达84.87，超越此前最佳少步因果基线0.36，仅需16 A100 GPU小时。",
+      "tags": "query:video-gen-rl",
+      "abstract_en": "Few-step autoregressive (AR) video diffusion enables low-latency streaming generation, but existing post-training methods predominantly rely on Distribution Matching Distillation (DMD), requiring both a large pretrained teacher and an online critic to estimate distributional discrepancies through diffusion scores. In this work, we ask whether this resource-intensive teacher--critic stack can be eliminated by post-training only the generator against a precomputed target distribution. Drawing inspiration from representation distribution matching (RDM) for one-step image generation, we systematically study its transfer to few-step causal video generation and identify three key barriers: a memory-intractable gradient path, a distinct video optimization regime, and representation distributions that underconstrain temporal dynamics. We introduce ViRDM, a teacher- and critic-free video post-training recipe that addresses these barriers sequentially. By coupling RDM with stochastically truncated clean-exit supervision, a lightweight VAE decoder, and staged vector--Jacobian products, ViRDM makes representation distribution matching memory-feasible for multi-step causal video rollouts. We further establish effective generated-population and initialization regimes for video RDM, and introduce lightweight dynamics regularization to compensate for the underconstrained temporal dynamics. ViRDM turns three-network distillation into generator-only post-training, reducing GPU memory use and training time while improving video quality. With only 20 generator updates, the recipe reaches 84.87 on the official VBench evaluation, outperforming the previous best few-step causal baseline by 0.36, while requiring 16 A100 GPU-hours. We additionally report exploratory results demonstrating the potential of the same recipe for lower causal sampling budget and for one-, two-, and four-step bidirectional generation.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

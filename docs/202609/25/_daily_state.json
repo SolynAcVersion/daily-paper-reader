@@ -1,0 +1,73 @@
+{
+  "date": "20260925",
+  "date_label": "",
+  "generated_at": "2026-09-25 22:04:57 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.27656v1",
+      "route": "202609/25/2609.27656v1-internw0-a-foundational-physical-world-model-for-efficient-real-world-interactions",
+      "title": "InternW0: A Foundational Physical World Model for Efficient Real-World Interactions",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "预测未来视觉动态与机器人控制的物理世界模型",
+      "first_seen_at": "2026-09-25 22:04:57 UTC",
+      "updated_at": "2026-09-25 22:04:57 UTC"
+    },
+    {
+      "paper_id": "2609.26314v1",
+      "route": "202609/25/2609.26314v1-triworldbench-a-tri-view-consistency-perspective-on-embodied-world-models",
+      "title": "TriWorldBench: A Tri-View Consistency Perspective on Embodied World Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向具身世界模型的物理与三维一致性评测基准",
+      "first_seen_at": "2026-09-25 22:04:57 UTC",
+      "updated_at": "2026-09-25 22:04:57 UTC"
+    },
+    {
+      "paper_id": "2609.28466v1",
+      "route": "202609/25/2609.28466v1-the-past-frames-the-future-memory-for-autoregressive-video-generation",
+      "title": "The Past Frames the Future: Memory for Autoregressive Video Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "自回归视频生成中的时序持续与帧间连贯",
+      "first_seen_at": "2026-09-25 22:04:57 UTC",
+      "updated_at": "2026-09-25 22:04:57 UTC"
+    },
+    {
+      "paper_id": "2609.28923v1",
+      "route": "202609/25/2609.28923v1-virdm-taming-representation-distribution-matching-for-few-step-causal-video-generation",
+      "title": "ViRDM: Taming Representation Distribution Matching for Few-Step Causal Video Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向因果视频生成的表征分布匹配",
+      "first_seen_at": "2026-09-25 22:04:57 UTC",
+      "updated_at": "2026-09-25 22:04:57 UTC"
+    }
+  ]
+}
