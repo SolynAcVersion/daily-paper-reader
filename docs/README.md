@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-25</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-26</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 4 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 2 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>4</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>2</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-25 22:04:57 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-26 21:50:21 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日速读4篇、精读0篇，世界模型与视频生成成为焦点。最值得看的是7.0分的《InternW0》物理世界模型，其次可关注具身世界模型的三视角一致性与自回归视频生成的记忆机制。普通读者不妨先读《InternW0》摘要，再按兴趣扫一眼另两篇，判断是否值得深入。</p>
+<p>今日速读双响：机器人模型真懂物理吗？视频生成能少步又因果吗？共2篇速读、0精读，均为6.0分。</p>
+<p>最值得看的是 RoboTwin-Phys 对 WAM/VLA 物理世界理解的追问，以及 ViRDM 用表示分布匹配做少步因果视频生成。</p>
+<p>普通读者可先读</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -84,12 +86,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">4 篇</strong>
+    <strong class="dpr-home-dashboard-count">2 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="InternW0: A Foundational Physical World Model for Efficient Real-World Interactions">InternW0: A Foundational Physical World Model for Efficient Real-World Interactions</span></li><li><span class="dpr-home-dashboard-paper-title" title="TriWorldBench: A Tri-View Consistency Perspective on Embodied World Models">TriWorldBench: A Tri-View Consistency Perspective on Embodied World Models</span></li><li><span class="dpr-home-dashboard-paper-title" title="The Past Frames the Future: Memory for Autoregressive Video Generation">The Past Frames the Future: Memory for Autoregressive Video Generation</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="RoboTwin-Phys: Do WAMs and VLAs Understand the Physical World?">RoboTwin-Phys: Do WAMs and VLAs Understand the Physical World?</span></li><li><span class="dpr-home-dashboard-paper-title" title="ViRDM: Taming Representation Distribution Matching for Few-Step Causal Video Generation">ViRDM: Taming Representation Distribution Matching for Few-Step Causal Video Generation</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>2</strong></span><span class="dpr-home-dashboard-tag">video-gen-rl <strong>2</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>1</strong></span><span class="dpr-home-dashboard-tag">video-gen-rl <strong>1</strong></span></div>
 </section>
 </div>
 

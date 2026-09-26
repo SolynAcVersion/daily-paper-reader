@@ -1,0 +1,107 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-26T21:46:49.511223+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 4,
+    "deep_divecandidates": 0,
+    "deep_cap": 9,
+    "deep_selected": 0,
+    "quick_candidates": 2,
+    "quick_skim_target": 14,
+    "quick_selected": 2
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2609.26292v1",
+      "source": "arxiv",
+      "title": "RoboTwin-Phys: Do WAMs and VLAs Understand the Physical World?",
+      "abstract": "Physical-condition diversity is largely missing from current benchmarks for robot manipulation. While large-scale simulation benchmarks increasingly incorporate variations in object appearance, scene layout, and visual observations, they typically keep the underlying physical parameters fixed. As a result, important sources of real-world variability, such as changes in mass, friction, and joint dynamics, remain largely untested. We introduce RoboTwin-Phys, a physics-diverse benchmark that treats physical-condition diversity as an explicit dimension of robot manipulation evaluation. The benchmark continuously varies 13 physical attributes within physically plausible ranges, providing a unified setting for evaluating policies across diverse physical operating conditions. We further release more than 5,000 expert demonstrations with ground-truth physical parameters, enabling physical-attribute estimation, condition-aware modeling, and physics-conditioned policy training. Evaluations of representative WAMs and VLAs reveal a substantial robustness gap: models that remain effective under existing visual and layout randomization can degrade markedly under changes in physical conditions. RoboTwin-Phys provides the benchmark, data, and evaluation protocol needed to systematically measure and improve robustness to physical-condition diversity in robot manipulation.",
+      "authors": [
+        "Jiaqi Zhang",
+        "Feng Ye",
+        "Mingjia Yang",
+        "Zhihong Chen",
+        "Mingkang Xiang",
+        "Xinglin Yao",
+        "Yanbin Li",
+        "Siwei Ma",
+        "Chuanmin Jia"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-22T12:04:52+00:00",
+      "link": "https://arxiv.org/pdf/2609.26292v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:psd"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "physics-diverse benchmark evaluating physical-condition understanding",
+      "llm_evidence_cn": "物理多样性基准，评估物理条件理解",
+      "llm_evidence": "物理多样性基准，评估物理条件理解",
+      "canonical_evidence": "物理多样性基准，评估物理条件理解",
+      "llm_tldr_en": "Current robot manipulation benchmarks fix underlying physical parameters, leaving mass, friction and joint dynamics untested. RoboTwin-Phys varies 13 physical attributes within plausible ranges to form a unified evaluation setting for policies across diverse physical conditions.",
+      "llm_tldr_cn": "当前机器人操作基准多固定底层物理参数，忽略质量、摩擦、关节动力学等真实世界变化。本文提出RoboTwin-Phys物理多样性基准，在合理范围内连续变化13种物理属性，为策略评估提供统一设置。该基准用于检验WAM与VLA是否真正理解物理世界。其贡献在于把物理条件多样性作为操作评估的显式维度，为物理正确性评测提供参考。",
+      "llm_tldr": "当前机器人操作基准多固定底层物理参数，忽略质量、摩擦、关节动力学等真实世界变化。本文提出RoboTwin-Phys物理多样性基准，在合理范围内连续变化13种物理属性，为策略评估提供统一设置。该基准用于检验WAM与VLA是否真正理解物理世界。其贡献在于把物理条件多样性作为操作评估的显式维度，为物理正确性评测提供参考。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "benchmark for evaluating physical correctness in video generation models",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.28923v1",
+      "source": "arxiv",
+      "title": "ViRDM: Taming Representation Distribution Matching for Few-Step Causal Video Generation",
+      "abstract": "Few-step autoregressive (AR) video diffusion enables low-latency streaming generation, but existing post-training methods predominantly rely on Distribution Matching Distillation (DMD), requiring both a large pretrained teacher and an online critic to estimate distributional discrepancies through diffusion scores. In this work, we ask whether this resource-intensive teacher--critic stack can be eliminated by post-training only the generator against a precomputed target distribution. Drawing inspiration from representation distribution matching (RDM) for one-step image generation, we systematically study its transfer to few-step causal video generation and identify three key barriers: a memory-intractable gradient path, a distinct video optimization regime, and representation distributions that underconstrain temporal dynamics. We introduce ViRDM, a teacher- and critic-free video post-training recipe that addresses these barriers sequentially. By coupling RDM with stochastically truncated clean-exit supervision, a lightweight VAE decoder, and staged vector--Jacobian products, ViRDM makes representation distribution matching memory-feasible for multi-step causal video rollouts. We further establish effective generated-population and initialization regimes for video RDM, and introduce lightweight dynamics regularization to compensate for the underconstrained temporal dynamics. ViRDM turns three-network distillation into generator-only post-training, reducing GPU memory use and training time while improving video quality. With only 20 generator updates, the recipe reaches 84.87 on the official VBench evaluation, outperforming the previous best few-step causal baseline by 0.36, while requiring 16 A100 GPU-hours. We additionally report exploratory results demonstrating the potential of the same recipe for lower causal sampling budget and for one-, two-, and four-step bidirectional generation.",
+      "authors": [
+        "Zichong Meng",
+        "Chongjian Ge",
+        "Chun-Hao P. Huang",
+        "Yang Zhou",
+        "Huaizu Jiang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-24T02:07:07+00:00",
+      "link": "https://arxiv.org/pdf/2609.28923v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "post-training video generator against precomputed target distribution",
+      "llm_evidence_cn": "面向预计算目标分布训练视频生成器",
+      "llm_evidence": "面向预计算目标分布训练视频生成器",
+      "canonical_evidence": "面向预计算目标分布训练视频生成器",
+      "llm_tldr_en": "ViRDM studies representation distribution matching for few-step causal video generation, removing the teacher-critic stack of DMD by post-training only the generator against a precomputed target distribution, and analyzes three key transfer barriers.",
+      "llm_tldr_cn": "少步自回归视频扩散可实现低延迟流式生成，但现有后训练方法依赖分布匹配蒸馏（DMD），需要大教师模型与在线判别器来估计分布差异，代价高昂。本文提出ViRDM，尝试仅让生成器对齐预计算的目标分布，从而省去教师-判别器结构，并系统分析其迁移到少步因果视频生成时的三个关键障碍，包括内存不可行的梯度路径。该工作为视频生成中的帧间分布匹配建模提供了更轻量的训练范式。",
+      "llm_tldr": "少步自回归视频扩散可实现低延迟流式生成，但现有后训练方法依赖分布匹配蒸馏（DMD），需要大教师模型与在线判别器来估计分布差异，代价高昂。本文提出ViRDM，尝试仅让生成器对齐预计算的目标分布，从而省去教师-判别器结构，并系统分析其迁移到少步因果视频生成时的三个关键障碍，包括内存不可行的梯度路径。该工作为视频生成中的帧间分布匹配建模提供了更轻量的训练范式。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "modeling the probability distribution of video frames",
+      "matched_requirement_id": "req-24",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

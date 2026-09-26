@@ -1,0 +1,41 @@
+{
+  "date": "20260926",
+  "date_label": "",
+  "generated_at": "2026-09-26 21:50:21 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.26292v1",
+      "route": "202609/26/2609.26292v1-robotwin-phys-do-wams-and-vlas-understand-the-physical-world",
+      "title": "RoboTwin-Phys: Do WAMs and VLAs Understand the Physical World?",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "物理多样性基准，评估物理条件理解",
+      "first_seen_at": "2026-09-26 21:50:21 UTC",
+      "updated_at": "2026-09-26 21:50:21 UTC"
+    },
+    {
+      "paper_id": "2609.28923v1",
+      "route": "202609/26/2609.28923v1-virdm-taming-representation-distribution-matching-for-few-step-causal-video-generation",
+      "title": "ViRDM: Taming Representation Distribution Matching for Few-Step Causal Video Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向预计算目标分布训练视频生成器",
+      "first_seen_at": "2026-09-26 21:50:21 UTC",
+      "updated_at": "2026-09-26 21:50:21 UTC"
+    }
+  ]
+}
