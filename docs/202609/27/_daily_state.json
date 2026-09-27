@@ -1,0 +1,57 @@
+{
+  "date": "20260927",
+  "date_label": "",
+  "generated_at": "2026-09-27 22:16:37 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.27656v1",
+      "route": "202609/27/2609.27656v1-internw0-a-foundational-physical-world-model-for-efficient-real-world-interactions",
+      "title": "InternW0: A Foundational Physical World Model for Efficient Real-World Interactions",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "物理世界模型，联合学习未来视觉动态与物理交互",
+      "first_seen_at": "2026-09-27 22:16:37 UTC",
+      "updated_at": "2026-09-27 22:16:37 UTC"
+    },
+    {
+      "paper_id": "2609.23442v1",
+      "route": "202609/27/2609.23442v1-physreflect-geometry-and-perception-guided-diffusion-for-physically-plausible-mirror-reflections",
+      "title": "PhysReflect: Geometry and Perception Guided Diffusion for Physically-Plausible Mirror Reflections",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "遵循物理反射定律的扩散生成",
+      "first_seen_at": "2026-09-27 22:16:37 UTC",
+      "updated_at": "2026-09-27 22:16:37 UTC"
+    },
+    {
+      "paper_id": "2609.25302v1",
+      "route": "202609/27/2609.25302v1-multi-agent-video-prediction-self-correcting-conditional-frames-for-dynamic-scene-forecasting",
+      "title": "Multi-Agent Video Prediction: Self-Correcting Conditional Frames for Dynamic Scene Forecasting",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "视频预测未来帧与条件帧重校正",
+      "first_seen_at": "2026-09-27 22:16:37 UTC",
+      "updated_at": "2026-09-27 22:16:37 UTC"
+    }
+  ]
+}

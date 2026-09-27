@@ -1,0 +1,170 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-27T22:15:24.896034+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 4,
+    "deep_divecandidates": 0,
+    "deep_cap": 9,
+    "deep_selected": 0,
+    "quick_candidates": 3,
+    "quick_skim_target": 14,
+    "quick_selected": 3
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2609.27656v1",
+      "source": "arxiv",
+      "title": "InternW0: A Foundational Physical World Model for Efficient Real-World Interactions",
+      "abstract": "Physical intelligence requires more than predicting how the world may evolve: predictions must remain actionable as the world continues to change. We introduce InternW0, the first instantiation of the InternW physical world model series from Shanghai AI Laboratory, built around omnimodal interfaces, asynchronous multi-frequency processing, and local physical modeling under partial observations and external influences. InternW0 jointly learns future visual dynamics and continuous robot control through an asymmetric video--action architecture with flow matching. A high-capacity video expert provides longer-horizon predictive context, while a lightweight action expert operates at a faster timescale. Instead of regenerating the future for every action update, InternW0 reuses layerwise K/V and adapts it to newly observed states through observation-conditioned context routing. Domain-specific interfaces and soft prompts support heterogeneous embodiments, while contact-aware post-training incorporates force and tactile signals for contact-rich manipulation. We train InternW0 on approximately 7,200 hours of heterogeneous robot and egocentric data, including EgoLab, a 275-hour real-laboratory egocentric dataset. Evaluation spans simulation benchmarks and real-world scientific tasks, including a 15-stage metal--organic framework synthesis workflow and 5-stage contact- and force-aware dexterous manipulation for general-purpose quantitative pipetting. These results advance scalable, asynchronous, and science-native physical world models for universal and efficient real-world interactions.",
+      "authors": [
+        "Jisong Cai",
+        "Yao Mu",
+        "Ganlin Yang",
+        "Zhe Cao",
+        "Zhangzheng Tu",
+        "Xing Gao",
+        "Kailin Li",
+        "Xinyu Zhan",
+        "Lixin Yang",
+        "Yangkun Zhu",
+        "Haoxiang Ma",
+        "Ming Zhou",
+        "Qiaojun Yu",
+        "Yufei Xue",
+        "Liqun He",
+        "Yifei Yao",
+        "Yifan Zhu",
+        "Long Ling",
+        "Bingqi Jiang",
+        "Haoyu Guo",
+        "Xueyue Zhu",
+        "Bowen Zhou",
+        "Bin Zhao",
+        "Tianfan Xue",
+        "Chunhua Shen",
+        "Weinan Zhang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-09-23T10:20:56+00:00",
+      "link": "https://arxiv.org/pdf/2609.27656v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "physical world model learning future visual dynamics and robot control",
+      "llm_evidence_cn": "物理世界模型，联合学习未来视觉动态与物理交互",
+      "llm_evidence": "物理世界模型，联合学习未来视觉动态与物理交互",
+      "canonical_evidence": "物理世界模型，联合学习未来视觉动态与物理交互",
+      "llm_tldr_en": "InternW0 is a foundational physical world model that jointly learns future visual dynamics and continuous robot control via an asymmetric video-action architecture with flow matching, targeting actionable long-horizon predictions in real-world interactions.",
+      "llm_tldr_cn": "现有世界模型多只预测世界如何演化，却难以保证预测在真实交互中持续可执行。本文提出 InternW0 物理世界模型，采用非对称视频—动作架构与流匹配，联合学习未来视觉动态与连续机器人控制，让大容量视频专家提供长时程预测、轻量动作专家快速响应。结果在部分观测与外部扰动下实现可操作的局部物理建模，为面向真实交互的基础世界模型提供新范式。",
+      "llm_tldr": "现有世界模型多只预测世界如何演化，却难以保证预测在真实交互中持续可执行。本文提出 InternW0 物理世界模型，采用非对称视频—动作架构与流匹配，联合学习未来视觉动态与连续机器人控制，让大容量视频专家提供长时程预测、轻量动作专家快速响应。结果在部分观测与外部扰动下实现可操作的局部物理建模，为面向真实交互的基础世界模型提供新范式。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.23442v1",
+      "source": "arxiv",
+      "title": "PhysReflect: Geometry and Perception Guided Diffusion for Physically-Plausible Mirror Reflections",
+      "abstract": "Diffusion models generate high-quality images, yet often violate the physical laws governing mirror reflections. Reflections often suffer from geometric aberrations, including positional offsets, directional misalignment, proportional imbalance, and structural distortion. These failures remain evident even in contemporary state-of-the-art generative systems. Existing methods itigate this problem through synthetic data scaling or auxiliary depth conditioning, yet their merely reliance on latent-space noise reconstruction losses as implicit supervision prevents direct enforcement of reflection-specific geometric and perceptual constraints. To bridge this gap, we present PhysReflect, a geometry and perception guided diffusion framework that decodes the predicted clean latent into pixel space at each training step and applies annealed supervision through two complementary differentiable objectives. The Geometric Loss enforces mirror-induced spatial consistency through sparse epipolar correspondence and dense boundary projection alignment, where a SAM2-based TwinTrack mechanism provides stable in-mirror localization for boundary-aware supervision. The Perceptual Loss preserves reflected appearance by combining Semantic Consistency Loss, which maintains reflected identity and appearance via DINOv2 features, and Lighting Consistency Loss, which regularizes depth, surface-normal, and illumination coherence under monocular geometry priors. Experiments on synthetic and real-world benchmarks show that PhysReflect outperforms prior mirror-reflection methods in geometric, perceptual, and physical-plausibility metrics, as well as qualitative visual results.",
+      "authors": [
+        "Shuheng Ge",
+        "Hongwei Ren",
+        "Li Zhang",
+        "Xiangqian Wu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-20T08:17:52+00:00",
+      "link": "https://arxiv.org/pdf/2609.23442v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "diffusion generation that obeys physical laws of mirror reflection",
+      "llm_evidence_cn": "遵循物理反射定律的扩散生成",
+      "llm_evidence": "遵循物理反射定律的扩散生成",
+      "canonical_evidence": "遵循物理反射定律的扩散生成",
+      "llm_tldr_en": "PhysReflect addresses how diffusion models violate the physical laws of mirror reflections, producing positional offsets and structural distortion. It introduces a geometry- and perception-guided diffusion framework that directly enforces reflection-specific constraints rather than relying on implicit noise-reconstruction losses. The method yields more physically plausible reflections than synthetic-data scaling or depth conditioning baselines.",
+      "llm_tldr_cn": "针对扩散模型生成镜面反射时常违背物理规律、出现位置偏移与结构畸变的问题，本文提出PhysReflect框架，用几何与感知先验引导扩散过程，直接约束反射特有的几何与感知一致性，而非仅依赖隐空间噪声重建损失。实验表明其反射结果比合成数据扩充和深度条件基线更符合物理规律，为生成模型注入显式物理约束提供了思路。",
+      "llm_tldr": "针对扩散模型生成镜面反射时常违背物理规律、出现位置偏移与结构畸变的问题，本文提出PhysReflect框架，用几何与感知先验引导扩散过程，直接约束反射特有的几何与感知一致性，而非仅依赖隐空间噪声重建损失。实验表明其反射结果比合成数据扩充和深度条件基线更符合物理规律，为生成模型注入显式物理约束提供了思路。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "videos depicting physically realistic behaviors and outcomes",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.25302v1",
+      "source": "arxiv",
+      "title": "Multi-Agent Video Prediction: Self-Correcting Conditional Frames for Dynamic Scene Forecasting",
+      "abstract": "Transmission latency significantly degrades user quality of experience in real-time interactive perception systems. In remote driving, maintaining reliable visual feedback is critical for safe operation under dynamic network variability. Although video prediction offers a promising approach to compensate for short-term transmission delays and approximate near-zero-latency streaming, prediction-only methods remain vulnerable in highly dynamic scenes, especially when newly emerged objects appear during uplink outages. To address these challenges, we propose a multi-agent video prediction framework that combines continuous edge-side video prediction with lightweight mask-guided conditional frame reconditioning. The framework consists of three role-specialized agents: a continuous prediction agent for low-latency visual continuity, a vehicle-side trigger agent for detecting newly appeared objects, and a conditional reconditioning agent that repairs the predictor conditioning state using sparse mask guidance. This design enables semantic recovery of exogenous scene changes without requiring full-frame retransmission. We validate the proposed framework through extensive experiments on benchmark video data under realistic 5G communication traces. Results show that our method improves semantic recovery of novel objects while preserving perceptual quality and practical runtime efficiency under network-induced disruptions.",
+      "authors": [
+        "Qixin Zhang",
+        "Ajay Kumar",
+        "Zhi-Li Zhang"
+      ],
+      "primary_category": "cs.NI",
+      "categories": [
+        "cs.NI"
+      ],
+      "published": "2026-09-21T18:53:05+00:00",
+      "link": "https://arxiv.org/pdf/2609.25302v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "video prediction of future frames with conditional frame reconditioning",
+      "llm_evidence_cn": "视频预测未来帧与条件帧重校正",
+      "llm_evidence": "视频预测未来帧与条件帧重校正",
+      "canonical_evidence": "视频预测未来帧与条件帧重校正",
+      "llm_tldr_en": "A multi-agent video prediction framework that couples edge-side continuous prediction with mask-guided conditional frame reconditioning to compensate for transmission latency and handle newly emerged objects in dynamic scenes.",
+      "llm_tldr_cn": "论文针对实时交互感知中传输延迟导致视觉反馈退化的问题，提出多智能体视频预测框架，将边缘侧连续视频预测与轻量级掩码引导的条件帧重校正相结合，以应对动态场景中新出现物体造成的预测失效。该框架通过条件帧再校正缓解纯预测方法的脆弱性，在动态网络条件下提升了未来帧预测的鲁棒性，为近似零延迟的流媒体视觉反馈提供了可行方案。",
+      "llm_tldr": "论文针对实时交互感知中传输延迟导致视觉反馈退化的问题，提出多智能体视频预测框架，将边缘侧连续视频预测与轻量级掩码引导的条件帧重校正相结合，以应对动态场景中新出现物体造成的预测失效。该框架通过条件帧再校正缓解纯预测方法的脆弱性，在动态网络条件下提升了未来帧预测的鲁棒性，为近似零延迟的流媒体视觉反馈提供了可行方案。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "predicting future frames in video sequences",
+      "matched_requirement_id": "req-23",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

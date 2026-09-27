@@ -1,0 +1,54 @@
+{
+  "label": "2026-09-27",
+  "date": "2026-09-27",
+  "generated_at": "2026-09-27T22:16:38",
+  "count": 3,
+  "papers": [
+    {
+      "paper_id": "202609/27/2609.27656v1-internw0-a-foundational-physical-world-model-for-efficient-real-world-interactions",
+      "section": "quick",
+      "title_en": "InternW0: A Foundational Physical World Model for Efficient Real-World Interactions",
+      "authors": "Jisong Cai, Yao Mu, Ganlin Yang, Zhe Cao, Zhangzheng Tu, Xing Gao, Kailin Li, Xinyu Zhan, Lixin Yang, Yangkun Zhu, Haoxiang Ma, Ming Zhou, Qiaojun Yu, Yufei Xue, Liqun He, Yifei Yao, Yifan Zhu, Long Ling, Bingqi Jiang, Haoyu Guo, Xueyue Zhu, Bowen Zhou, Bin Zhao, Tianfan Xue, Chunhua Shen, Weinan Zhang",
+      "date": "2026-09-23",
+      "pdf": "https://arxiv.org/pdf/2609.27656v1",
+      "score": "7.0",
+      "evidence": "物理世界模型，联合学习未来视觉动态与物理交互",
+      "tldr": "物理智能要求预测在动态世界中仍可执行。上海AI实验室推出InternW0，以全模态接口、异步多频处理和局部物理建模构建基础世界模型。它用非对称视频-动作架构与流匹配联合学习视觉动态和机器人控制，复用逐层K/V并按观测路由上下文，支持异构本体与力触觉后训练。基于约7200小时机器人及自我中心数据（含EgoLab 275小时），在仿真与真实科学任务中验证，涵盖15阶段MOF合成和5阶段力触觉灵巧移液。",
+      "tags": "query:phys-video",
+      "abstract_en": "Physical intelligence requires more than predicting how the world may evolve: predictions must remain actionable as the world continues to change. We introduce InternW0, the first instantiation of the InternW physical world model series from Shanghai AI Laboratory, built around omnimodal interfaces, asynchronous multi-frequency processing, and local physical modeling under partial observations and external influences. InternW0 jointly learns future visual dynamics and continuous robot control through an asymmetric video--action architecture with flow matching. A high-capacity video expert provides longer-horizon predictive context, while a lightweight action expert operates at a faster timescale. Instead of regenerating the future for every action update, InternW0 reuses layerwise K/V and adapts it to newly observed states through observation-conditioned context routing. Domain-specific interfaces and soft prompts support heterogeneous embodiments, while contact-aware post-training incorporates force and tactile signals for contact-rich manipulation. We train InternW0 on approximately 7,200 hours of heterogeneous robot and egocentric data, including EgoLab, a 275-hour real-laboratory egocentric dataset. Evaluation spans simulation benchmarks and real-world scientific tasks, including a 15-stage metal--organic framework synthesis workflow and 5-stage contact- and force-aware dexterous manipulation for general-purpose quantitative pipetting. These results advance scalable, asynchronous, and science-native physical world models for universal and efficient real-world interactions.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/27/2609.23442v1-physreflect-geometry-and-perception-guided-diffusion-for-physically-plausible-mirror-reflections",
+      "section": "quick",
+      "title_en": "PhysReflect: Geometry and Perception Guided Diffusion for Physically-Plausible Mirror Reflections",
+      "authors": "Shuheng Ge, Hongwei Ren, Li Zhang, Xiangqian Wu",
+      "date": "2026-09-20",
+      "pdf": "https://arxiv.org/pdf/2609.23442v1",
+      "score": "6.0",
+      "evidence": "遵循物理反射定律的扩散生成",
+      "tldr": "扩散模型常生成高质量图像，却在镜像反射中产生位置偏移、方向错位、比例失衡和结构扭曲。现有方法依赖合成数据或深度条件，但仅用潜空间噪声重建损失隐式监督，难以直接约束反射几何与感知一致性。PhysReflect在训练中把预测潜变量解码到像素空间，以几何损失和感知损失施加退火监督：几何损失用稀疏对极对应和密集边界投影对齐，并结合SAM2双轨机制；感知损失用DINOv2语义一致性和单目几何先验下的光照一致性。实验验证其指标与视觉效果更优。",
+      "tags": "query:phys-video",
+      "abstract_en": "Diffusion models generate high-quality images, yet often violate the physical laws governing mirror reflections. Reflections often suffer from geometric aberrations, including positional offsets, directional misalignment, proportional imbalance, and structural distortion. These failures remain evident even in contemporary state-of-the-art generative systems. Existing methods itigate this problem through synthetic data scaling or auxiliary depth conditioning, yet their merely reliance on latent-space noise reconstruction losses as implicit supervision prevents direct enforcement of reflection-specific geometric and perceptual constraints. To bridge this gap, we present PhysReflect, a geometry and perception guided diffusion framework that decodes the predicted clean latent into pixel space at each training step and applies annealed supervision through two complementary differentiable objectives. The Geometric Loss enforces mirror-induced spatial consistency through sparse epipolar correspondence and dense boundary projection alignment, where a SAM2-based TwinTrack mechanism provides stable in-mirror localization for boundary-aware supervision. The Perceptual Loss preserves reflected appearance by combining Semantic Consistency Loss, which maintains reflected identity and appearance via DINOv2 features, and Lighting Consistency Loss, which regularizes depth, surface-normal, and illumination coherence under monocular geometry priors. Experiments on synthetic and real-world benchmarks show that PhysReflect outperforms prior mirror-reflection methods in geometric, perceptual, and physical-plausibility metrics, as well as qualitative visual results.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/27/2609.25302v1-multi-agent-video-prediction-self-correcting-conditional-frames-for-dynamic-scene-forecasting",
+      "section": "quick",
+      "title_en": "Multi-Agent Video Prediction: Self-Correcting Conditional Frames for Dynamic Scene Forecasting",
+      "authors": "Qixin Zhang, Ajay Kumar, Zhi-Li Zhang",
+      "date": "2026-09-21",
+      "pdf": "https://arxiv.org/pdf/2609.25302v1",
+      "score": "6.0",
+      "evidence": "视频预测未来帧与条件帧重校正",
+      "tldr": "在远程驾驶等实时交互感知中，传输延迟会显著降低体验质量，视频预测虽可补偿短时延迟，但纯预测方法在动态场景尤其上行中断时新物体出现时易失效。为此，论文提出多智能体视频预测框架，将边缘侧连续预测与轻量掩码引导的条件帧重调理结合，通过连续预测、车端触发和条件修复三类智能体协同工作。在真实5G通信轨迹下的基准视频实验表明，该方法能更好恢复新出现物体的语义，同时保持感知质量与运行效率，为网络中断下的动态场景预测提供新思路。",
+      "tags": "query:video-gen-rl",
+      "abstract_en": "Transmission latency significantly degrades user quality of experience in real-time interactive perception systems. In remote driving, maintaining reliable visual feedback is critical for safe operation under dynamic network variability. Although video prediction offers a promising approach to compensate for short-term transmission delays and approximate near-zero-latency streaming, prediction-only methods remain vulnerable in highly dynamic scenes, especially when newly emerged objects appear during uplink outages. To address these challenges, we propose a multi-agent video prediction framework that combines continuous edge-side video prediction with lightweight mask-guided conditional frame reconditioning. The framework consists of three role-specialized agents: a continuous prediction agent for low-latency visual continuity, a vehicle-side trigger agent for detecting newly appeared objects, and a conditional reconditioning agent that repairs the predictor conditioning state using sparse mask guidance. This design enables semantic recovery of exogenous scene changes without requiring full-frame retransmission. We validate the proposed framework through extensive experiments on benchmark video data under realistic 5G communication traces. Results show that our method improves semantic recovery of novel objects while preserving perceptual quality and practical runtime efficiency under network-induced disruptions.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
