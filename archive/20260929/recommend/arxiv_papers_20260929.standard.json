@@ -1,0 +1,220 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-29T00:25:43.880812+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 4,
+    "deep_divecandidates": 1,
+    "deep_cap": 9,
+    "deep_selected": 1,
+    "quick_candidates": 3,
+    "quick_skim_target": 14,
+    "quick_selected": 3
+  },
+  "deep_dive": [
+    {
+      "id": "2609.30946v1",
+      "source": "arxiv",
+      "title": "OneWorld: Learning Consistent Physics Across Actions in World Models",
+      "abstract": "Action-conditioned video world models aim to predict scene evolution under different actions, a capability that is essential for reliable planning, decision-making, and interaction in dynamic environments. However, futures generated independently from the same initial scene may each appear plausible while implying incompatible physical properties, such as friction or mass. This inconsistency can lead to contradictory predictions across interventions, making it difficult for the model to maintain a coherent understanding of the underlying world and limiting its reliability for planning and decision-making. To address these issues, we propose OneWorld, a shared-mechanism counterfactual generation framework that jointly models multiple action-conditioned futures under a common latent physical mechanism. A physical mechanism interpreter first infers a distribution over latent mechanisms from each action-outcome branch. These distributions are then aggregated into shared-world evidence, which captures whether the branches admit a common physical explanation while accounting for uncertainty in less informative branches. This evidence constrains flow training and guides sampling, encouraging consistency in the underlying physical mechanism while preserving the distinct outcomes induced by different actions. We further introduce a multi-intervention evaluation protocol in controlled environments, following the interaction settings of ACWM-Phys, to assess whether generated futures can be jointly explained by the same physical parameters, alongside standard measures of single-rollout prediction quality. Experiments in these environments show that OneWorld improves cross-intervention physical consistency while maintaining competitive single-rollout prediction quality.",
+      "authors": [
+        "Ke He",
+        "Yichen Ding",
+        "Bin Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-25T07:59:11+00:00",
+      "link": "https://arxiv.org/pdf/2609.30946v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "consistent physics across generated futures in world models",
+      "llm_evidence_cn": "世界模型生成未来中的一致物理规律",
+      "llm_evidence": "世界模型生成未来中的一致物理规律",
+      "canonical_evidence": "世界模型生成未来中的一致物理规律",
+      "llm_tldr_en": "OneWorld addresses inconsistent physical properties such as friction and mass across independently generated futures in action-conditioned world models, proposing a shared-mechanism counterfactual generation framework that jointly models multiple action-conditioned futures for more coherent physics.",
+      "llm_tldr_cn": "动作条件视频世界模型在预测场景演化时，同一初始场景下独立生成的未来可能各自看似合理，却隐含摩擦、质量等不相容的物理属性，导致跨干预预测自相矛盾。为此作者提出OneWorld，一种共享机制的反事实生成框架，联合建模多个动作条件下的未来，使不同干预共享一致的物理机制。实验表明该方法能缓解物理不一致，提升世界模型在规划与决策中的可靠性，为一致物理规律建模提供了新框架。",
+      "llm_tldr": "动作条件视频世界模型在预测场景演化时，同一初始场景下独立生成的未来可能各自看似合理，却隐含摩擦、质量等不相容的物理属性，导致跨干预预测自相矛盾。为此作者提出OneWorld，一种共享机制的反事实生成框架，联合建模多个动作条件下的未来，使不同干预共享一致的物理机制。实验表明该方法能缓解物理不一致，提升世界模型在规划与决策中的可靠性，为一致物理规律建模提供了新框架。",
+      "llm_tags": [
+        "query:phys-video"
+      ],
+      "matched_query_tag": "query:phys-video",
+      "matched_query_text": "how to ensure physical consistency in generated videos",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.27656v1",
+      "source": "arxiv",
+      "title": "InternW0: A Foundational Physical World Model for Efficient Real-World Interactions",
+      "abstract": "Physical intelligence requires more than predicting how the world may evolve: predictions must remain actionable as the world continues to change. We introduce InternW0, the first instantiation of the InternW physical world model series from Shanghai AI Laboratory, built around omnimodal interfaces, asynchronous multi-frequency processing, and local physical modeling under partial observations and external influences. InternW0 jointly learns future visual dynamics and continuous robot control through an asymmetric video--action architecture with flow matching. A high-capacity video expert provides longer-horizon predictive context, while a lightweight action expert operates at a faster timescale. Instead of regenerating the future for every action update, InternW0 reuses layerwise K/V and adapts it to newly observed states through observation-conditioned context routing. Domain-specific interfaces and soft prompts support heterogeneous embodiments, while contact-aware post-training incorporates force and tactile signals for contact-rich manipulation. We train InternW0 on approximately 7,200 hours of heterogeneous robot and egocentric data, including EgoLab, a 275-hour real-laboratory egocentric dataset. Evaluation spans simulation benchmarks and real-world scientific tasks, including a 15-stage metal--organic framework synthesis workflow and 5-stage contact- and force-aware dexterous manipulation for general-purpose quantitative pipetting. These results advance scalable, asynchronous, and science-native physical world models for universal and efficient real-world interactions.",
+      "authors": [
+        "Jisong Cai",
+        "Yao Mu",
+        "Ganlin Yang",
+        "Zhe Cao",
+        "Zhangzheng Tu",
+        "Xing Gao",
+        "Kailin Li",
+        "Xinyu Zhan",
+        "Lixin Yang",
+        "Yangkun Zhu",
+        "Haoxiang Ma",
+        "Ming Zhou",
+        "Qiaojun Yu",
+        "Yufei Xue",
+        "Liqun He",
+        "Yifei Yao",
+        "Yifan Zhu",
+        "Long Ling",
+        "Bingqi Jiang",
+        "Haoyu Guo",
+        "Xueyue Zhu",
+        "Bowen Zhou",
+        "Bin Zhao",
+        "Tianfan Xue",
+        "Chunhua Shen",
+        "Weinan Zhang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-09-23T10:20:56+00:00",
+      "link": "https://arxiv.org/pdf/2609.27656v1",
+      "tags": [
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "physical world model predicting future visual dynamics",
+      "llm_evidence_cn": "预测未来视觉动态的物理世界模型",
+      "llm_evidence": "预测未来视觉动态的物理世界模型",
+      "canonical_evidence": "预测未来视觉动态的物理世界模型",
+      "llm_tldr_en": "InternW0 is a foundational physical world model using omnimodal interfaces and an asymmetric video-action architecture with flow matching, jointly learning future visual dynamics and robot control under partial observations for real-world interaction.",
+      "llm_tldr_cn": "物理智能要求预测在世界持续变化时仍保持可执行性。本文提出InternW0，作为InternW物理世界模型系列的首个实例，采用全模态接口、异步多频处理与部分观测下的局部物理建模，通过非对称视频-动作架构与流匹配联合学习未来视觉动态与连续机器人控制。高容量视频专家提供长时程预测上下文，轻量动作专家以更快时间尺度运行，为真实世界交互提供了基础物理世界模型与统一建模范式。",
+      "llm_tldr": "物理智能要求预测在世界持续变化时仍保持可执行性。本文提出InternW0，作为InternW物理世界模型系列的首个实例，采用全模态接口、异步多频处理与部分观测下的局部物理建模，通过非对称视频-动作架构与流匹配联合学习未来视觉动态与连续机器人控制。高容量视频专家提供长时程预测上下文，轻量动作专家以更快时间尺度运行，为真实世界交互提供了基础物理世界模型与统一建模范式。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "predicting future frames in video sequences",
+      "matched_requirement_id": "req-23",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.30609v1",
+      "source": "arxiv",
+      "title": "MVAgent: Multi-Agent Video Generation via Consistent Condition Construction and Shot-Level Policy Optimization",
+      "abstract": "Multi-shot agentic video generation requires consistent character appearance, stable spatial layout across camera angles, and continuous character state between shots. When every shot is a separate request to a frozen generator, repeated text does not determine appearance, layout or state. We therefore recast the problem as condition construction and present MVAgent, a multi-agent pipeline whose agents collaborate through typed conditioning inputs. Because an environment image shows one viewpoint, a Spatial Grounding agent samples views from generated camera-traversal clips and anchors each shot to the view matching its framing. As generated shots drift from the plan, an Observer records how each shot ends in a continuity memory, from which a Transition agent builds character action and spatial references for the next shot. An Orchestrator composes these inputs into each request. Since a request reveals its effect only after rendering, we train it by agentic reinforcement learning with Trunk-GDPO, which compares rendered candidates at every shot rather than once per video and continues the best as the trunk. With generator and judges frozen, MVAgent attains the highest cross-shot consistency and narrative-planning quality among the compared methods on ViMax-Bench and is preferred over the strongest agentic baseline in human evaluation.",
+      "authors": [
+        "Xiangyu Kong",
+        "Wenjie Zhou",
+        "Fengping Tian",
+        "Lihua Fang",
+        "Haoqin Sun",
+        "Chenyang Lyu",
+        "Longyue Wang",
+        "Weihua Luo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-24T22:47:40+00:00",
+      "link": "https://arxiv.org/pdf/2609.30609v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-shot video generation with consistent state and layout across shots",
+      "llm_evidence_cn": "多镜头视频生成，跨镜头状态与布局一致",
+      "llm_evidence": "多镜头视频生成，跨镜头状态与布局一致",
+      "canonical_evidence": "多镜头视频生成，跨镜头状态与布局一致",
+      "llm_tldr_en": "MVAgent recasts multi-shot video generation as condition construction, using a multi-agent pipeline with typed conditioning and shot-level policy optimization to keep character appearance, layout and state coherent across shots.",
+      "llm_tldr_cn": "多镜头视频生成要求角色外观、空间布局与状态在镜头间保持一致，但把每个镜头作为独立请求时重复文本难以约束这些属性。论文将问题重构为条件构建，提出MVAgent多智能体流水线，通过类型化条件输入协作，并用空间锚定与观察智能体对齐各镜头视角与结尾状态。该方法提升了跨镜头的一致性与连贯性，为智能体式视频生成提供了可复用的条件构建与镜头级优化框架。",
+      "llm_tldr": "多镜头视频生成要求角色外观、空间布局与状态在镜头间保持一致，但把每个镜头作为独立请求时重复文本难以约束这些属性。论文将问题重构为条件构建，提出MVAgent多智能体流水线，通过类型化条件输入协作，并用空间锚定与观察智能体对齐各镜头视角与结尾状态。该方法提升了跨镜头的一致性与连贯性，为智能体式视频生成提供了可复用的条件构建与镜头级优化框架。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "maintaining inter-frame coherence in video generation",
+      "matched_requirement_id": "req-22",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.31349v1",
+      "source": "arxiv",
+      "title": "DyMD: Preserving Interaction Dynamics through Distribution Matching Distillation in Few-Step Video World Models",
+      "abstract": "Large video diffusion models offer expressive priors for embodied prediction and learning, yet their many-step sampling remains costly for interactive downstream use. Distribution Matching Distillation (DMD) enables few-step video generation, but can suppress robot--object motion while preserving visual quality. Examining DMD's teacher and fake-score signals, we find that weak re-noising keeps the teacher posterior concentrated near motion-deficient rollouts, limiting motion-restoring guidance. Meanwhile, stronger-motion rollouts tend to incur larger fake-score fitting errors, which can hinder the generator's learning of interaction dynamics. We propose DyMD, a DMD framework that adapts both teacher supervision and critic fitting to the evolving student. Temporal affinity--conditioned re-noise sampling adapts the timestep distribution to each rollout's current interaction fidelity by mixing the base schedule with a teacher prior motivated by local posterior variation, thereby balancing motion recovery and appearance refinement. To better track stronger-motion rollouts, dynamics-guided fake-score tracking uses a noise-conditioned predictor to estimate noise-relative fitting difficulty from latent temporal dynamics, then upweights predicted-hard rollouts in the critic loss. Using DyMD, we distill a 14B teacher into a four-step 1.3B student with no auxiliary modules at inference. On embodied-video benchmarks, the student improves R-Bench task adherence by $9.6$ percentage points and PAI-Bench-G Domain score by $5.1$ points over Base DMD while maintaining comparable visual quality. As a backbone for downstream action planning, our student achieves 34% mean success across two WorldArena tasks, compared with 16% for Base DMD.",
+      "authors": [
+        "Haojun Xu",
+        "Jie Huang",
+        "Xin Lu",
+        "Mingchen Zhong",
+        "Zihao Fan",
+        "Linjiang Huang",
+        "Si Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-25T14:47:17+00:00",
+      "link": "https://arxiv.org/pdf/2609.31349v1",
+      "tags": [
+        "keyword:frame-dist",
+        "keyword:phys-video",
+        "keyword:psd",
+        "keyword:video-gen-rl",
+        "query:frame-dist",
+        "query:phys-video",
+        "query:psd",
+        "query:video-gen-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "few-step video world models preserving interaction dynamics via distribution matching distillation",
+      "llm_evidence_cn": "通过分布匹配蒸馏保留交互动力学的少步视频世界模型",
+      "llm_evidence": "通过分布匹配蒸馏保留交互动力学的少步视频世界模型",
+      "canonical_evidence": "通过分布匹配蒸馏保留交互动力学的少步视频世界模型",
+      "llm_tldr_en": "Few-step video diffusion via Distribution Matching Distillation can suppress robot-object motion. DyMD adapts teacher and fake-score supervision to preserve interaction dynamics in video world models.",
+      "llm_tldr_cn": "大型视频扩散模型采样成本高，而分布匹配蒸馏虽能实现少步生成，却会抑制机器人与物体的运动。作者分析教师与假分数信号，发现弱重加噪使教师后验集中在运动不足的样本上。为此提出DyMD，自适应调整教师监督以保留交互动力学。该方法在少步视频世界模型中兼顾视觉质量与运动保真，对具身预测有实用价值。",
+      "llm_tldr": "大型视频扩散模型采样成本高，而分布匹配蒸馏虽能实现少步生成，却会抑制机器人与物体的运动。作者分析教师与假分数信号，发现弱重加噪使教师后验集中在运动不足的样本上。为此提出DyMD，自适应调整教师监督以保留交互动力学。该方法在少步视频世界模型中兼顾视觉质量与运动保真，对具身预测有实用价值。",
+      "llm_tags": [
+        "query:video-gen-rl"
+      ],
+      "matched_query_tag": "query:video-gen-rl",
+      "matched_query_text": "video generation models and generative video synthesis",
+      "matched_requirement_id": "req-20",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

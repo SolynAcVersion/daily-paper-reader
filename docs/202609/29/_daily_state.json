@@ -1,0 +1,73 @@
+{
+  "date": "20260929",
+  "date_label": "",
+  "generated_at": "2026-09-29 00:29:45 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.30946v1",
+      "route": "202609/29/2609.30946v1-oneworld-learning-consistent-physics-across-actions-in-world-models",
+      "title": "OneWorld: Learning Consistent Physics Across Actions in World Models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "世界模型生成未来中的一致物理规律",
+      "first_seen_at": "2026-09-29 00:29:45 UTC",
+      "updated_at": "2026-09-29 00:29:45 UTC"
+    },
+    {
+      "paper_id": "2609.27656v1",
+      "route": "202609/29/2609.27656v1-internw0-a-foundational-physical-world-model-for-efficient-real-world-interactions",
+      "title": "InternW0: A Foundational Physical World Model for Efficient Real-World Interactions",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "预测未来视觉动态的物理世界模型",
+      "first_seen_at": "2026-09-29 00:29:45 UTC",
+      "updated_at": "2026-09-29 00:29:45 UTC"
+    },
+    {
+      "paper_id": "2609.30609v1",
+      "route": "202609/29/2609.30609v1-mvagent-multi-agent-video-generation-via-consistent-condition-construction-and-shot-level-policy-optimization",
+      "title": "MVAgent: Multi-Agent Video Generation via Consistent Condition Construction and Shot-Level Policy Optimization",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "多镜头视频生成，跨镜头状态与布局一致",
+      "first_seen_at": "2026-09-29 00:29:45 UTC",
+      "updated_at": "2026-09-29 00:29:45 UTC"
+    },
+    {
+      "paper_id": "2609.31349v1",
+      "route": "202609/29/2609.31349v1-dymd-preserving-interaction-dynamics-through-distribution-matching-distillation-in-few-step-video-world-models",
+      "title": "DyMD: Preserving Interaction Dynamics through Distribution Matching Distillation in Few-Step Video World Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "video-gen-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "通过分布匹配蒸馏保留交互动力学的少步视频世界模型",
+      "first_seen_at": "2026-09-29 00:29:45 UTC",
+      "updated_at": "2026-09-29 00:29:45 UTC"
+    }
+  ]
+}

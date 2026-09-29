@@ -1,0 +1,69 @@
+{
+  "label": "2026-09-29",
+  "date": "2026-09-29",
+  "generated_at": "2026-09-29T00:29:48",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202609/29/2609.30946v1-oneworld-learning-consistent-physics-across-actions-in-world-models",
+      "section": "deep",
+      "title_en": "OneWorld: Learning Consistent Physics Across Actions in World Models",
+      "authors": "Ke He, Yichen Ding, Bin Yang",
+      "date": "2026-09-25",
+      "pdf": "https://arxiv.org/pdf/2609.30946v1",
+      "score": "9.0",
+      "evidence": "世界模型生成未来中的一致物理规律",
+      "tldr": "问题背景：动作条件视频世界模型独立生成的多条未来轨迹看似合理，却可能隐含不相容的物理属性（如摩擦、质量）。核心方法：OneWorld提出共享机制反事实生成框架，用物理机制解释器从各动作-结果分支推断潜在机制分布，聚合成共享世界证据，约束流训练与采样。关键结果：在受控环境多干预评估中，提升跨干预物理一致性，同时保持单轨迹预测质量。贡献意义：为可靠规划与决策提供物理一致的未来生成。",
+      "tags": "query:phys-video",
+      "abstract_en": "Action-conditioned video world models aim to predict scene evolution under different actions, a capability that is essential for reliable planning, decision-making, and interaction in dynamic environments. However, futures generated independently from the same initial scene may each appear plausible while implying incompatible physical properties, such as friction or mass. This inconsistency can lead to contradictory predictions across interventions, making it difficult for the model to maintain a coherent understanding of the underlying world and limiting its reliability for planning and decision-making. To address these issues, we propose OneWorld, a shared-mechanism counterfactual generation framework that jointly models multiple action-conditioned futures under a common latent physical mechanism. A physical mechanism interpreter first infers a distribution over latent mechanisms from each action-outcome branch. These distributions are then aggregated into shared-world evidence, which captures whether the branches admit a common physical explanation while accounting for uncertainty in less informative branches. This evidence constrains flow training and guides sampling, encouraging consistency in the underlying physical mechanism while preserving the distinct outcomes induced by different actions. We further introduce a multi-intervention evaluation protocol in controlled environments, following the interaction settings of ACWM-Phys, to assess whether generated futures can be jointly explained by the same physical parameters, alongside standard measures of single-rollout prediction quality. Experiments in these environments show that OneWorld improves cross-intervention physical consistency while maintaining competitive single-rollout prediction quality.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/29/2609.27656v1-internw0-a-foundational-physical-world-model-for-efficient-real-world-interactions",
+      "section": "quick",
+      "title_en": "InternW0: A Foundational Physical World Model for Efficient Real-World Interactions",
+      "authors": "Jisong Cai, Yao Mu, Ganlin Yang, Zhe Cao, Zhangzheng Tu, Xing Gao, Kailin Li, Xinyu Zhan, Lixin Yang, Yangkun Zhu, Haoxiang Ma, Ming Zhou, Qiaojun Yu, Yufei Xue, Liqun He, Yifei Yao, Yifan Zhu, Long Ling, Bingqi Jiang, Haoyu Guo, Xueyue Zhu, Bowen Zhou, Bin Zhao, Tianfan Xue, Chunhua Shen, Weinan Zhang",
+      "date": "2026-09-23",
+      "pdf": "https://arxiv.org/pdf/2609.27656v1",
+      "score": "6.0",
+      "evidence": "预测未来视觉动态的物理世界模型",
+      "tldr": "物理智能不仅需预测世界演化，还需让预测在动态变化中保持可执行。上海AI实验室提出InternW0，首个InternW物理世界模型，采用全模态接口、异步多频处理与局部物理建模。其非对称视频-动作架构用流匹配联合学习视觉动态和连续机器人控制，通过复用K/V和观测条件路由避免重复生成未来。基于约7200小时异构数据训练，并在15阶段MOF合成与5阶段力触觉灵巧操作中验证。",
+      "tags": "query:video-gen-rl",
+      "abstract_en": "Physical intelligence requires more than predicting how the world may evolve: predictions must remain actionable as the world continues to change. We introduce InternW0, the first instantiation of the InternW physical world model series from Shanghai AI Laboratory, built around omnimodal interfaces, asynchronous multi-frequency processing, and local physical modeling under partial observations and external influences. InternW0 jointly learns future visual dynamics and continuous robot control through an asymmetric video--action architecture with flow matching. A high-capacity video expert provides longer-horizon predictive context, while a lightweight action expert operates at a faster timescale. Instead of regenerating the future for every action update, InternW0 reuses layerwise K/V and adapts it to newly observed states through observation-conditioned context routing. Domain-specific interfaces and soft prompts support heterogeneous embodiments, while contact-aware post-training incorporates force and tactile signals for contact-rich manipulation. We train InternW0 on approximately 7,200 hours of heterogeneous robot and egocentric data, including EgoLab, a 275-hour real-laboratory egocentric dataset. Evaluation spans simulation benchmarks and real-world scientific tasks, including a 15-stage metal--organic framework synthesis workflow and 5-stage contact- and force-aware dexterous manipulation for general-purpose quantitative pipetting. These results advance scalable, asynchronous, and science-native physical world models for universal and efficient real-world interactions.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/29/2609.30609v1-mvagent-multi-agent-video-generation-via-consistent-condition-construction-and-shot-level-policy-optimization",
+      "section": "quick",
+      "title_en": "MVAgent: Multi-Agent Video Generation via Consistent Condition Construction and Shot-Level Policy Optimization",
+      "authors": "Xiangyu Kong, Wenjie Zhou, Fengping Tian, Lihua Fang, Haoqin Sun, Chenyang Lyu, Longyue Wang, Weihua Luo",
+      "date": "2026-09-24",
+      "pdf": "https://arxiv.org/pdf/2609.30609v1",
+      "score": "6.0",
+      "evidence": "多镜头视频生成，跨镜头状态与布局一致",
+      "tldr": "多镜头智能体视频生成中，冻结生成器逐镜头请求难以保证角色外观、空间布局与人物状态跨镜头一致。MVAgent 将问题重构为条件构建，通过多智能体协作生成类型化条件：空间定位采样视角、观察者记录连续性、过渡构建参考、编排器组合请求。方法用 Trunk-GDPO 进行镜头级智能体强化学习，逐镜头比较渲染候选并延续最优主干。在 ViMax-Bench 上取得最高跨镜头一致性与叙事规划质量，人类评估也优于最强基线。",
+      "tags": "query:video-gen-rl",
+      "abstract_en": "Multi-shot agentic video generation requires consistent character appearance, stable spatial layout across camera angles, and continuous character state between shots. When every shot is a separate request to a frozen generator, repeated text does not determine appearance, layout or state. We therefore recast the problem as condition construction and present MVAgent, a multi-agent pipeline whose agents collaborate through typed conditioning inputs. Because an environment image shows one viewpoint, a Spatial Grounding agent samples views from generated camera-traversal clips and anchors each shot to the view matching its framing. As generated shots drift from the plan, an Observer records how each shot ends in a continuity memory, from which a Transition agent builds character action and spatial references for the next shot. An Orchestrator composes these inputs into each request. Since a request reveals its effect only after rendering, we train it by agentic reinforcement learning with Trunk-GDPO, which compares rendered candidates at every shot rather than once per video and continues the best as the trunk. With generator and judges frozen, MVAgent attains the highest cross-shot consistency and narrative-planning quality among the compared methods on ViMax-Bench and is preferred over the strongest agentic baseline in human evaluation.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/29/2609.31349v1-dymd-preserving-interaction-dynamics-through-distribution-matching-distillation-in-few-step-video-world-models",
+      "section": "quick",
+      "title_en": "DyMD: Preserving Interaction Dynamics through Distribution Matching Distillation in Few-Step Video World Models",
+      "authors": "Haojun Xu, Jie Huang, Xin Lu, Mingchen Zhong, Zihao Fan, Linjiang Huang, Si Liu",
+      "date": "2026-09-25",
+      "pdf": "https://arxiv.org/pdf/2609.31349v1",
+      "score": "6.0",
+      "evidence": "通过分布匹配蒸馏保留交互动力学的少步视频世界模型",
+      "tldr": "大型视频扩散模型虽具强先验，但多步采样难以用于交互式具身预测；DMD可少步生成，却常削弱机器人-物体运动。DyMD通过时序亲和度条件重噪采样，按交互保真度自适应教师监督，并用动力学引导的假分数跟踪提升强运动样本权重。将14B教师蒸馏为四步1.3B学生后，R-Bench任务遵循率提升9.6个百分点，PAI-Bench-G Domain提升5.1分，WorldArena平均成功率从16%升至34%。",
+      "tags": "query:video-gen-rl",
+      "abstract_en": "Large video diffusion models offer expressive priors for embodied prediction and learning, yet their many-step sampling remains costly for interactive downstream use. Distribution Matching Distillation (DMD) enables few-step video generation, but can suppress robot--object motion while preserving visual quality. Examining DMD's teacher and fake-score signals, we find that weak re-noising keeps the teacher posterior concentrated near motion-deficient rollouts, limiting motion-restoring guidance. Meanwhile, stronger-motion rollouts tend to incur larger fake-score fitting errors, which can hinder the generator's learning of interaction dynamics. We propose DyMD, a DMD framework that adapts both teacher supervision and critic fitting to the evolving student. Temporal affinity--conditioned re-noise sampling adapts the timestep distribution to each rollout's current interaction fidelity by mixing the base schedule with a teacher prior motivated by local posterior variation, thereby balancing motion recovery and appearance refinement. To better track stronger-motion rollouts, dynamics-guided fake-score tracking uses a noise-conditioned predictor to estimate noise-relative fitting difficulty from latent temporal dynamics, then upweights predicted-hard rollouts in the critic loss. Using DyMD, we distill a 14B teacher into a four-step 1.3B student with no auxiliary modules at inference. On embodied-video benchmarks, the student improves R-Bench task adherence by $9.6$ percentage points and PAI-Bench-G Domain score by $5.1$ points over Base DMD while maintaining comparable visual quality. As a backbone for downstream action planning, our student achieves 34% mean success across two WorldArena tasks, compared with 16% for Base DMD.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

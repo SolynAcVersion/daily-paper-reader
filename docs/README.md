@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-27</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-29</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 3 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 4 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>3</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-27 22:16:37 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-29 00:29:45 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日速读3篇，聚焦物理世界模型与视频预测：InternW0以7.0分领跑，另两篇分别探索镜面反射生成与多智能体动态场景预测。最值得看物理世界交互建模和几何引导的反射生成这两个方向。普通读者可先了解InternW0如何让模型高效理解真实世界交互，再按兴趣跟进后两篇。</p>
+<p>今日精读1篇、速读3篇，世界模型与视频生成成主线，OneWorld以9.0分领跑。</p>
+<p>最值得看：OneWorld聚焦“跨动作一致物理”；速读可顺带关注InternW0、MVAgent、DyMD在物理交互、多智能体视频和少步蒸馏上的探索。</p>
+<p>普通读者建议先读OneWorld，再按兴趣扫速读，重点留意“物理一致性”和“少步/多智能体生成”能否落地。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -71,12 +73,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">0 篇</strong>
+    <strong class="dpr-home-dashboard-count">1 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="OneWorld: Learning Consistent Physics Across Actions in World Models">OneWorld: Learning Consistent Physics Across Actions in World Models</span></li></ul>
   </div>
-
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>1</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -87,9 +89,9 @@
     <strong class="dpr-home-dashboard-count">3 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="InternW0: A Foundational Physical World Model for Efficient Real-World Interactions">InternW0: A Foundational Physical World Model for Efficient Real-World Interactions</span></li><li><span class="dpr-home-dashboard-paper-title" title="PhysReflect: Geometry and Perception Guided Diffusion for Physically-Plausible Mirror Reflections">PhysReflect: Geometry and Perception Guided Diffusion for Physically-Plausible Mirror Reflections</span></li><li><span class="dpr-home-dashboard-paper-title" title="Multi-Agent Video Prediction: Self-Correcting Conditional Frames for Dynamic Scene Forecasting">Multi-Agent Video Prediction: Self-Correcting Conditional Frames for Dynamic Scene Forecasting</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="InternW0: A Foundational Physical World Model for Efficient Real-World Interactions">InternW0: A Foundational Physical World Model for Efficient Real-World Interactions</span></li><li><span class="dpr-home-dashboard-paper-title" title="MVAgent: Multi-Agent Video Generation via Consistent Condition Construction and Shot-Level Policy Optimization">MVAgent: Multi-Agent Video Generation via Consistent Condition Construction and Shot-Level Policy Optimization</span></li><li><span class="dpr-home-dashboard-paper-title" title="DyMD: Preserving Interaction Dynamics through Distribution Matching Distillation in Few-Step Video World Models">DyMD: Preserving Interaction Dynamics through Distribution Matching Distillation in Few-Step Video World Models</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">phys-video <strong>2</strong></span><span class="dpr-home-dashboard-tag">video-gen-rl <strong>1</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">video-gen-rl <strong>3</strong></span></div>
 </section>
 </div>
 

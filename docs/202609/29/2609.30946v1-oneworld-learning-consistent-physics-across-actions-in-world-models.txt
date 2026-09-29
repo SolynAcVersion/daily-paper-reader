@@ -1,0 +1,1238 @@
+Title: OneWorld: Learning Consistent Physics Across Actions in World Models
+
+URL Source: https://arxiv.org/pdf/2609.30946v1
+
+Published Time: Mon, 28 Sep 2026 00:43:50 GMT
+
+Number of Pages: 27
+
+Markdown Content:
+# ONE WORLD : L EARNING CONSISTENT PHYSICS 
+
+# ACROSS ACTIONS IN WORLD MODELS 
+
+Ke He Yichen Ding Bin Yang 
+
+Wuhan University Wuhan, China 
+
+{koendrunk,dingyichen,yangbin cv }@whu.edu.cn 
+
+## ABSTRACT 
+
+Action-conditioned video world models aim to predict scene evolution under dif-ferent actions, a capability that is essential for reliable planning, decision-making, and interaction in dynamic environments. However, futures generated indepen-dently from the same initial scene may each appear plausible while implying in-compatible physical properties, such as friction or mass. This inconsistency can lead to contradictory predictions across interventions, making it difficult for the model to maintain a coherent understanding of the underlying world and limiting its reliability for planning and decision-making. To address these issues, we pro-pose OneWorld , a shared-mechanism counterfactual generation framework that jointly models multiple action-conditioned futures under a common latent physi-cal mechanism. A physical mechanism interpreter first infers a distribution over latent mechanisms from each action–outcome branch. These distributions are then aggregated into shared-world evidence, which captures whether the branches ad-mit a common physical explanation while accounting for uncertainty in less in-formative branches. This evidence constrains flow training and guides sampling, encouraging consistency in the underlying physical mechanism while preserving the distinct outcomes induced by different actions. We further introduce a multi-intervention evaluation protocol in controlled environments, following the inter-action settings of ACWM-Phys, to assess whether generated futures can be jointly explained by the same physical parameters, alongside standard measures of single-rollout prediction quality. Experiments in these environments show that OneWorld improves cross-intervention physical consistency while maintaining competitive single-rollout prediction quality. The source code will be released. 
+
+## 1 INTRODUCTION 
+
+Action-conditioned video world models aim to predict how a scene evolves under different actions, a capability that is increasingly important for planning, decision-making, and interaction in dynamic environments (Hansen et al., 2022; Yang et al., 2024). Given an initial visual observation and a candidate action sequence, these models predict the resulting future video, allowing an agent to compare possible outcomes before choosing how to act (Huang et al., 2026; Xue et al., 2026). Such comparisons implicitly assume that alternative futures correspond to different interventions on the same underlying world. The actions may change, and their consequences should differ, but action-independent physical properties such as object mass, surface friction, or material stiffness should remain consistent across the predicted futures. Current action-conditioned world models do not explicitly enforce consistency across alternative fu-tures from the same initial world. They typically generate each future independently under its corre-sponding action sequence (Bruce et al., 2024; Guo et al., 2026; Xue et al., 2026). As a result, several predictions can each appear plausible in isolation while implying mutually incompatible physical properties. For example, two predicted cube trajectories under different pushes may each admit a reasonable explanation individually, yet one may require a high-friction surface while the other is only compatible with a low-friction one. Figure 1 illustrates this failure mode by probing ACWM-DiT under multiple actions from fixed initial observations. We refer to this phenomenon as shared-world inconsistency . Our goal is to achieve shared-world consistency , where action-dependent fu-1arXiv:2609.30946v1 [cs.CV] 25 Sep 2026 Push Cube Release Cube 
+
+Pour Water Push Sand 
+
+> light push hard push
+> slow release fast release
+> small tilt large tilt
+> shallow push
+> deep push
+
+# OneWorld  
+
+> Different actions. Distinct futures.
+> low friction? high friction?
+> conflicting μ
+> weak gravity? strong gravity?
+> conflicting G
+> less flow? more flow? rigid sand? soft sand?
+> conflicting fluidity conflicting deformability
+> d1 d2
+
+Figure 1: Motivating probes of action-conditioned prediction. ACWM-DiT predictions under different actions from the same initial observation within each scene, illustrating the need to evaluate whether alternative futures remain compatible with a shared physical world. tures generated from the same initial world admit a common physical explanation while preserving their distinct trajectories. To quantify this property, we compare separate branch-wise physical fits with a joint fit that requires all branches to share one physical configuration. The additional fitting error introduced by this shared constraint defines the shared-world gap . The nonzero gaps observed for ACWM-DiT in Table 1 show that individually plausible rollouts can remain inconsistent when interpreted as outcomes of one shared physical world. Modeling shared-world consistency introduces two key challenges. First, the physical properties implied by a prediction cannot be inferred from the outcome alone; they must be interpreted jointly with the action that produced it. The displacement of a pushed object, for instance, depends on both the applied action and the physical properties of the object and surface. Second, different interven-tions provide unequal amounts of information about those properties. A branch in which an object is barely disturbed may remain compatible with many physical configurations, whereas a strong interaction can sharply constrain the plausible mechanisms. Consequently, physically consistent branches need not induce identical beliefs about the world: they may support the same mechanism with different levels of uncertainty. To address these challenges, we propose OneWorld , a shared-mechanism counterfactual generation framework that jointly models multiple action-conditioned futures through a common latent physical mechanism. A physical mechanism interpreter first maps each action–outcome branch to a distri-bution over latent mechanisms. We then introduce a shared-world evidence score that aggregates these branch distributions relative to an initial-scene prior. The score measures whether the branches retain common support for a shared mechanism while allowing less informative interventions to re-main uncertain. We first train the interpreter using same-world and mismatched-world groups, and then freeze it to provide a physical compatibility signal for both flow training and sampling-time guidance. In this way, OneWorld couples the physical interpretations of different branches without forcing their predicted videos or mechanism posteriors to become identical. We evaluate OneWorld on controlled Push Cube, Push Rope, and Pour Water environments follow-ing the corresponding interaction settings of ACWM-Phys (Xue et al., 2026). These environments span rigid-body, deformable-object, and particle-based dynamics and allow multiple interventions to be executed from the same underlying physical configuration. We evaluate both conventional 2single-rollout prediction quality and whether the resulting futures can be jointly explained by one physical configuration. Relative to ACWM-DiT, OneWorld reduces the mean shared-world gap by 
+
+84.3% while improving mean M-MSE by approximately 7.7 × 10 −4.We make the following contributions. • We formulate shared-world consistency : action-dependent futures generated from one ini-tial world should admit a common physical explanation. • We introduce a physical mechanism interpreter and a prior-corrected shared-world evi-dence score that assess compatibility across interventions while accounting for unequal uncertainty. • We use the shared-world evidence signal to couple action-conditioned predictions through shared-world flow training and sampling-time flow guidance. • We introduce an independent simulator-based evaluation protocol that separates individual physical fit from cross-intervention shared-world consistency, and demonstrate substantial consistency gains across three controlled physical environments. 
+
+## 2 RELATED WORK 
+
+Action-conditioned video world models. Diffusion and flow-matching models provide the gen-erative foundation for high-capacity visual prediction (Ho et al., 2020; Rombach et al., 2022; Ho et al., 2022; Lipman et al., 2023). World models extend such predictors to planning and interaction by conditioning future observations on actions (Hansen et al., 2024; Bruce et al., 2024; Huang et al., 2026; Guo et al., 2026). Recent systems increasingly model long-horizon, visually rich dynamics, but their training objectives still primarily supervise the quality of each action-conditioned rollout individually. 
+
+Physical reasoning and evaluation. Physical priors and post-training objectives have been intro-duced to improve physical behavior in generated videos (Wang et al., 2025; Yuan et al., 2026; Wang et al., 2026), while benchmarks evaluate whether generated motion follows plausible physical dy-namics (Bansal et al., 2025; Motamed et al., 2026; Xue et al., 2026). ACWM-Phys provides the interaction settings and action-conditioned backbone used in our controlled experiments. Existing evaluation is largely single-rollout, whereas our protocol asks whether several futures from the same initial world can be explained by one shared physical configuration. 
+
+Counterfactual and multi-branch consistency. CoPhy reasons about latent physical factors for counterfactual prediction (Baradel et al., 2020), and Multiverse Mechanica studies causal consis-tency across parallel worlds with matched initial conditions (Ness et al., 2026). CoCo improves action responsiveness through counterfactual constraints (Shi et al., 2026), while Twin Rollouts couples factual and counterfactual branches through shared prefixes and future exogenous noise (Ma et al., 2026). OneWorld instead couples multiple action-conditioned futures through the compati-bility of their inferred physical explanations, without requiring identical branch posteriors or shared sampling noise. 
+
+## 3 METHOD 
+
+OneWorld predicts multiple action-conditioned futures from one initial scene and couples them through a learned measure of physical compatibility (Figure 2). We first define the shared-world task and the underlying flow model (Section 3.1), then construct the mechanism interpreter and shared-world evidence score (Section 3.2). We learn the interpreter from same-world and mismatched-world groups (Section 3.3), freeze it, and use the score for flow training (Section 3.4) and sampling-time guidance (Section 3.5). 3Counterfactual Group Generation 
+
+1 Physical Mechanism Learning 
+
+2 Shared-World Optimization Inference 
+
+Initial scene I0
+
+> One scene, multiple action
+
+A(1) Slow push  
+
+> ··· ···
+
+A(2) Fast push  
+
+> ··· ···
+
+A(3) Diagonal push   
+
+> ··· ···
+> Noisy latents
+
+zτ(1:3) 
+
+> ···
+
+zτ(1) zτ(2) zτ(3)          
+
+> Action-conditioned DiT backbone
+> Spatial Attention Temporal Attention
+> DiT Blocks ×N
+> Same-world group (y = 1)
+> zτ(1) zτ(2) zτ(3)
+> ··· ···
+> Mismatched-world group (y = 0)
+> zτ(1) zτ(2) zτ(3)
+> ··· ···
+> Mechanism Interpreter
+
+f 
+
+> ϕ
+> Infer world mechanism
+
+W  
+
+> Mechanism distributions
+> q1(W) q 2(W) q 3(W) prior
+> π(W | I 0)
+> Mechanism W
+> Shared-world evidence
+
+Cτ = ∫ π(1−K) (W) 
+
+∏ qk(W)dW  
+
+> k
+> Shared-world supervision using Cτ
+
+ℒshared = −log (C τ + ε) 
+
+> World-consistent flow guidance
+
+ṽ = v + λg(C τ) Guide generation towards a shared physical world.    
+
+> Denoised future latents z1:τ (1:3)
+> ··· ···
+> Predicted future videos
+
+V(1:3)               
+
+> ··· ··· ···
+> World-consistent counterfactual futures
+> V(1) ··· V(2) ··· V(3) ···
+> Shared World W
+> Current latent zτ(k) ···
+> Original flow v(z,t)
+> +
+> World correction gτ(k)
+> Next latent zτ+Δτ (k) ···
+
+Evaluation 
+
+> M-MSE Eind
+> Eshared
+> Δworld
+> World-consistent counterfactual futures
+> ···
+> ···
+> ···
+
+ℒmech Figure 2: Overview of OneWorld . Given the same initial scene and multiple action sequences, OneWorld predicts a future for each intervention branch. A physical mechanism interpreter infers a mechanism distribution from each action–outcome pair. The shared-world evidence score assesses their compatibility and provides the signal for shared-world flow training and shared-world flow guidance. 3.1 TASK FORMULATION AND FLOW PRELIMINARIES 
+
+Let I0 denote the initial observation of a scene. We consider K action interventions from the same initial world, each defining an intervention branch. For branch k, A(k) = {a(k)
+
+t }T −1
+
+t=0 is the action sequence and V (k) = {I(k)
+
+t }Tt=1 is the corresponding future video. We refer to these K branches collectively as a counterfactual group . We use W to denote a latent mechanism variable repre-senting action-independent properties of the world, such as those associated with friction, mass, or stiffness. Its coordinates need not correspond to named physical quantities. We distinguish W from the explicit simulator parameters w used for evaluation in Section 4.1. Different interventions are expected to produce different outcomes, but all branches originating from the same initial world should be compatible with the same realization of W . This requirement motivates the following shared-mechanism factorization 
+
+p
+
+
+
+V (1: K) | I0, A (1: K)
+
+=
+
+Z
+
+p(W | I0)
+
+KY
+
+k=1 
+
+p
+
+
+
+V (k) | I0, A (k), W 
+
+
+
+dW, (1) where A(1: K) and V (1: K) denote all intervention sequences and their future videos. Equation 1 assumes conditional independence of the futures given I0, their actions, and a shared W . For the pushing example, the trajectories under different actions should be compatible with a common phys-ical configuration, including properties such as friction and mass. 
+
+Action-conditioned flow model. We build OneWorld on an action-conditioned latent flow model following ACWM-DiT. Rather than directly parameterizing the conditional factors in Eq. 1, we use an auxiliary mechanism interpreter to encourage shared-world consistency during flow training and sampling. Let z(k)
+
+τ denote the future latent of branch k at flow time τ ∈ [0 , 1] , where τ = 0 
+
+corresponds to noise and τ = 1 to the clean future. For a linear flow path, z(k)
+
+τ = (1 −τ )ϵ(k) +τ z (k)1 ,where ϵ(k) is Gaussian noise and z(k)1 is the clean future latent. The pretrained action-conditioned model predicts a velocity vθ (z(k)
+
+τ , τ, I 0, A (k)) for each branch. OneWorld keeps this branch-specific action prediction while introducing cross-branch constraints on the physical mechanism. At flow time τ , the current vector field provides an estimate of the clean future latent, 
+
+ˆz(k)1,τ = z(k)
+
+τ + (1 − τ )vθ
+
+
+
+z(k)
+
+τ , τ, I 0, A (k)
+
+. (2) 4Under the linear flow path, Eq. 2 recovers the clean future when the predicted velocity is exact. We use this estimate rather than the noisy latent itself because physical properties are expressed through the predicted outcome of the intervention. 3.2 MECHANISM INTERPRETATION AND SHARED -W ORLD EVIDENCE 
+
+Interpreting an action–outcome pair. We infer the physical properties implied by a prediction jointly with the action that produced it. Using the clean-future estimate in Eq. 2, a physical mecha-nism interpreter qϕ maps each branch to a distribution over the latent mechanism W ,
+
+q(k) 
+
+> ϕ
+
+(W ) = qϕ
+
+
+
+W | I0, A (k), ˆz(k)1,τ , τ 
+
+
+
+. (3) Conditioning on the action disambiguates similar motions produced by different interventions, while 
+
+τ allows uncertainty to reflect the reliability of the current future estimate. 
+
+Assessing compatibility across branches. Let πϕ(W | I0) denote the mechanism prior before observing any intervention outcome. We define the shared-world evidence of a counterfactual group as 
+
+Cτ =
+
+Z
+
+πϕ(W | I0)1−KKY
+
+> k=1
+
+q(k) 
+
+> ϕ
+
+(W ) dW. (4) A high Cτ indicates common posterior support relative to the initial-scene prior. The factor π1−Kϕ
+
+removes repeated prior contributions from the branch posteriors. Under exact Bayesian posteriors and conditional independence, Eq. 4 becomes an evidence ratio between a shared-mechanism model and independently drawn mechanisms (Appendix A); here it is used as a learned compatibility score. 
+
+Unequal information across interventions. If an uninformative branch satisfies q(j) 
+
+> ϕ
+
+(W ) =
+
+πϕ(W | I0), its contribution cancels one prior factor and leaves the score for the remaining K − 1
+
+branches unchanged (Appendix A.2). We implement this behavior by parameterizing each branch posterior as an additive evidence update to the initial-scene prior in Gaussian natural-parameter space. Weak interventions contribute little additional precision, whereas informative interventions produce sharper mechanism estimates. The parameterization and numerical estimation are detailed in Appendix D. 3.3 LEARNING THE MECHANISM INTERPRETER 
+
+We train the physical mechanism interpreter using relational supervision rather than explicit physical-parameter labels. A same-world group contains different action branches generated from the same initial state and hidden physical configuration, whereas a mismatched-world group keeps the visible initial scene matched but combines branches from different physical configurations. This encourages the interpreter to distinguish variation caused by actions from variation caused by the underlying world. Let B denote a counterfactual group, with y = 1 for same-world groups and y = 0 for mismatched-world groups. Using s(B) = log Cτ as the compatibility score, we optimize 
+
+Lmech = −EB [y log σ(s(B)) + (1 − y) log (1 − σ(s(B)))] , (5) where σ is the sigmoid. The supervision acts only at the group level, so the latent coordinates are not required to correspond to named physical quantities. The interpreter and initial-scene prior are trained before the video model. During this stage, ACWM-DiT is frozen and τ is sampled across the flow trajectory, exposing the interpreter to clean-future estimates with different levels of uncertainty. After training, the interpreter and prior are fixed and used as the compatibility criterion for shared-world flow training and guidance. Further details are given in Appendix D.5. 3.4 SHARED -W ORLD FLOW TRAINING 
+
+After mechanism learning, we freeze both the interpreter and the initial-scene prior so that the com-patibility criterion remains fixed while the video model is updated. For each same-world group, the 5branch-wise clean-future estimates are interpreted jointly and optimized to yield high shared-world evidence, 
+
+Lshared = −E [log ( Cτ + ϵ)] , (6) where ϵ ensures numerical stability. This loss couples the branches through their physical interpre-tations rather than by directly matching their videos, latents, or posterior parameters. The complete video-model objective is 
+
+L = Lflow + λshared Lshared , (7) where branch-wise flow matching Lflow preserves supervision for the action-specific future, while 
+
+Lshared discourages sets of predictions that cannot be explained by one common mechanism. Freez-ing the interpreter prevents the compatibility model from adapting to the generator during this stage, but does not block optimization of the video model. Gradients from the shared-world loss pass through the interpreter inputs and the clean-future estimate in Eq. 2 to the action-conditioned vector field. 3.5 SHARED -W ORLD FLOW GUIDANCE 
+
+Shared-world training improves the learned vector field, but individual sampling trajectories can still drift toward futures whose inferred mechanisms are incompatible. We therefore reuse the frozen evidence model at inference time. For branch k, we compute 
+
+g(k) 
+
+> τ
+
+= ∇z(k)
+
+> τ
+
+log ( Cτ + ϵ) , (8) which gives the local latent-space direction that most increases the compatibility of the current counterfactual group. Because Cτ depends jointly on all branch posteriors, the correction for one branch is informed by the physical explanation supported by the others. We modify the original action-conditioned velocity as 
+
+ev(k) 
+
+> θ
+
+= vθ
+
+
+
+z(k) 
+
+> τ
+
+, τ, I 0, A (k)
+
++ λτ g(k) 
+
+> τ
+
+, (9) where λτ controls the strength of the shared-world correction. The original velocity remains re-sponsible for action-conditioned prediction, while the guidance term provides a comparatively small group-level adjustment. We apply weak guidance early in the trajectory, when clean-future estimates are uncertain, and increase its influence as generation becomes more informative. The schedule and gradient approximation are given in Appendix D.4. At inference time, branches share only the initial observation and compatibility signal; their actions and Gaussian noise remain independent, so the method does not force identical futures or identical mechanism posteriors. 
+
+## 4 EXPERIMENTS 
+
+We evaluate shared-world consistency together with single-rollout prediction quality, compare against alternative coupling strategies, and study the contributions and sensitivity of the proposed components. 4.1 EXPERIMENTAL SETUP 
+
+Benchmark. Following ACWM-Phys interaction settings (Xue et al., 2026), we evaluate on Push Cube, Push Rope, and Pour Water, covering rigid-body, deformable, and fluid dynamics. Same-world groups execute different actions from the same initial state and hidden physical configuration, while mismatched-world groups keep the visible initial scene matched but vary the hidden configu-ration. Full construction details are in Appendix E.1. 
+
+Baselines. We compare with ACWM-DiT (Xue et al., 2026), Vid2World (Huang et al., 2026), CoCo (Shi et al., 2026), Twin Rollouts (Ma et al., 2026), Shared Noise, and Posterior Align-ment. These respectively represent independent prediction, action-conditioned video modeling, counterfactual action constraints, noise-coupled counterfactual branches, shared randomness, and direct alignment of mechanism posteriors. External objectives are instantiated on the same action-conditioned DiT backbone, with matched training groups, actions, optimization budgets, and evalu-ation protocols. 6Table 1: Multi-intervention comparison: individual versus shared physical fits ( Eind , Eshared ) and their gap ∆world . Values are mean ± standard deviation over three independent runs; lower is better for all metrics.                                                                                                                                                                                                                                                                  
+
+> Category Environment Method Prediction Physical fit and consistency M-MSE ↓Eind ↓Eshared ↓∆world ↓
+> Rigid body Push Cube
+> ACWM-DiT 0.03477 ±0.00034 0.07535 ±0.00112 0.09788 ±0.00173 0.02253 ±0.00109
+> Vid2World 0.03428 ±0.00029 0.07488 ±0.00096 0.09346 ±0.00161 0.01858 ±0.00094
+> CoCo 0.03416 ±0.00031 0.07452 ±0.00088 0.08891 ±0.00139 0.01439 ±0.00082
+> Twin Rollouts 0.03435 ±0.00027 0.07497 ±0.00104 0.09078 ±0.00148 0.01581 ±0.00087
+> Shared Noise 0.03464 ±0.00036 0.08073 ±0.00121 0.11122 ±0.00196 0.03049 ±0.00128
+> Posterior Alignment 0.03486 ±0.00033 0.07547 ±0.00091 0.08836 ±0.00132 0.01289 ±0.00076
+> OneWorld 0.03396 ±0.00024 0 .07384 ±0.00079 0 .07741 ±0.00108 0 .00357 ±0.00038
+> Deformable Push Rope
+> ACWM-DiT 0.00817 ±0.00011 0.04128 ±0.00062 0.05517 ±0.00091 0.01389 ±0.00057
+> Vid2World 0.00798 ±0.00009 0.04096 ±0.00055 0.05302 ±0.00083 0.01206 ±0.00049
+> CoCo 0.00791 ±0.00008 0.04072 ±0.00051 0.05088 ±0.00076 0.01016 ±0.00044
+> Twin Rollouts 0.00802 ±0.00010 0.04105 ±0.00058 0.05214 ±0.00079 0.01109 ±0.00047
+> Shared Noise 0.00809 ±0.00012 0.04311 ±0.00067 0.05972 ±0.00098 0.01661 ±0.00063
+> Posterior Alignment 0.00823 ±0.00009 0.04147 ±0.00053 0.04961 ±0.00071 0.00814 ±0.00041
+> OneWorld 0.00771 ±0.00007 0 .04012 ±0.00046 0 .04221 ±0.00064 0 .00209 ±0.00026
+> Particle Pour Water
+> ACWM-DiT 0.03624 ±0.00039 0.09037 ±0.00134 0.12541 ±0.00217 0.03504 ±0.00146
+> Vid2World 0.03584 ±0.00035 0.08993 ±0.00121 0.12072 ±0.00198 0.03079 ±0.00132
+> CoCo 0.03567 ±0.00032 0.08951 ±0.00116 0.11564 ±0.00184 0.02613 ±0.00118
+> Twin Rollouts 0.03596 ±0.00036 0.09005 ±0.00127 0.11822 ±0.00191 0.02817 ±0.00124
+> Shared Noise 0.03605 ±0.00041 0.09314 ±0.00142 0.13291 ±0.00231 0.03977 ±0.00157
+> Posterior Alignment 0.03635 ±0.00034 0.09058 ±0.00119 0.11231 ±0.00172 0.02173 ±0.00106
+> OneWorld 0.03521 ±0.00028 0 .08846 ±0.00103 0 .09402 ±0.00153 0 .00556 ±0.00061
+
+Evaluation metrics. We evaluate both single-rollout prediction quality and shared-world consis-tency. For single-rollout prediction, we use Masked-MSE (M-MSE) from ACWM-Phys (Xue et al., 2026), which emphasizes temporally changing, action-affected regions. For shared-world evalua-tion, a frozen state extractor maps each generated video to an observable trajectory ˆS(k). Replaying the corresponding action from the same initial state under candidate simulator parameters w gives 
+
+S(k)(w). Using a normalized environment-specific state distance d, we define 
+
+ℓk(w) = 1
+
+T
+
+TX
+
+t=1 
+
+d
+
+ ˆS(k)
+
+t , S (k)
+
+t (w)
+
+
+
+, (10) 
+
+Eind = 1
+
+K
+
+KX
+
+k=1 
+
+min 
+
+wk
+
+ℓk(wk), (11) 
+
+Eshared = min 
+
+w
+
+1
+
+K
+
+KX
+
+k=1 
+
+ℓk(w), ∆world = Eshared − Eind . (12) Here Eind measures branch-wise physical fit, Eshared requires one physical configuration to explain all branches jointly, and ∆world measures the additional cost of enforcing a common world. We therefore report all three metrics jointly to distinguish shared-world consistency from overall phys-ical fit quality. The simulator-based evaluator is independent of the learned compatibility score; further details are provided in Appendix E. 
+
+Implementation details. We use a frozen Wan2.1 VAE (Wan Team, 2025), initialize from ACWM-DiT, and use K = 3 branches by default. The interpreter and prior are trained first and then frozen. Full architecture, optimization, and sampling settings are in Appendix D. 4.2 MAIN RESULTS 
+
+Table 1 compares OneWorld with independent prediction and alternative cross-branch coupling strategies. We jointly report single-rollout prediction quality, individual physical fit, and shared-world consistency. 
+
+Overall performance. OneWorld consistently improves shared-world consistency across all three dynamics regimes. Relative to ACWM-DiT, the mean ∆world decreases from 0.02382 to 0.00374 ,7corresponding to an 84.3% reduction. At the same time, Eind remains low and Eshared de-creases substantially, indicating that the smaller gap does not arise from uniformly poor physical fits. OneWorld also achieves the lowest M-MSE in all three environments, improving the mean by approximately 7.7 × 10 −4 over ACWM-DiT. Additional analyses of ground-truth physical-configuration recovery and interpolation to unseen physical values are provided in Appendix E.8 and Appendix E.9, respectively. 
+
+Comparison with alternative coupling strategies. The baselines show that improving action-conditioned prediction alone does not eliminate shared-world inconsistency. Vid2World, CoCo, and Twin Rollouts reduce the gap relative to independent ACWM-DiT generation, but remain sub-stantially above OneWorld. Shared Noise slightly improves M-MSE while increasing the shared-world gap, indicating that common randomness is not sufficient to enforce a common physical world. Posterior Alignment provides the strongest alternative on the consistency metrics by us-ing the same mechanism interpreter, yet direct posterior similarity remains markedly weaker than the prior-corrected shared-support criterion used by OneWorld. 4.3 QUALITATIVE ANALYSIS ON ROBO DESK Input  Input  
+
+> (a) (b)
+
+## Open Drawer  Sliding Door                     
+
+> Slow pull ->Fast pull Short right push ->Long right push
+> t1 t2 t3 t1 t2 t3 t1 t2 t3 t1 t2 t3
+> ACWM -DiT ACWM -DiT
+> CoCo CoCo
+> Vid2World Vid2World
+> OneWorld OneWorld
+
+Figure 3: Different actions from the same initial world on RoboDesk. Branches share the initial state and hidden physics but differ in action. Consistency concerns a common physical explanation after accounting for contact and release conditions, rather than identical displacements. Figure 3 compares action responses from the same initial world in two RoboDesk cases. OneWorld preserves distinct outcomes for slow versus fast drawer pulls and short versus long door pushes while maintaining coherent post-contact dynamics across interventions. Appendix C.4 provides the complete setup and contact/release-conditioned interpretation. 4.4 ABLATION STUDIES 
+
+Table 2 isolates three components on Push Cube with the same backbone and evaluation protocol. 82 3 4 5                           
+
+> (a) Branch count K
+> 33.8 34.0 34.2 34.4 34.6 ×10 −3
+> M-MSE ↓ Δworld ↓00.0025 0.005 0.01 0.02 0.05
+> (b) Shared-loss weight λshared
+> 33.8 34.0 34.2 34.4 34.6 ×10 −3
+> M-MSE ↓ Δworld ↓00.0025 0.005 0.01 0.02 0.04
+> (c) Guidance strength λmax
+> 33.8 34.0 34.2 34.4 34.6 ×10 −3
+> M-MSE ↓ Δworld ↓16 32 64 128 256
+> (d) Importance samples M
+> 0.48 0.52 0.56 0.60 0.64 Relative ESS ↑ Std.(log c
+> C) ↓ 345678
+> ×10 −3
+> 345678
+> ×10 −3
+> 345678
+> ×10 −3
+> 0.04 0.08 0.12 0.16 0.20
+
+Figure 4: Sensitivity of OneWorld to the number of intervention branches K, shared-loss weight 
+
+λshared , maximum guidance strength λmax , and the number of importance samples M on Push Cube. Table 2: Ablation of OneWorld. “Mismatch Neg.” denotes mismatched-world supervision for the mechanism interpreter. “Shared Train” denotes shared-world flow training with Lshared , and “Flow Guide” denotes shared-world flow guidance during sampling. 
+
+Method Components Metrics Mismatch Neg. Shared Train Flow Guide M-MSE ↓ Eshared ↓ ∆world ↓
+
+ACWM-DiT – – – 0.03477 0.09788 0.02253 No Mismatch Neg. ✗ ✓ ✓ 0.03442 0.08495 0.01084 No Shared Train ✓ ✗ ✓ 0.03431 0.08260 0.00831 No Flow Guide ✓ ✓ ✗ 0.03418 0.08024 0.00625 
+
+OneWorld ✓ ✓ ✓ 0.03396 0.07741 0.00357 
+
+Removing mismatched-world supervision worsens the gap, supporting its role in learning compati-bility without establishing physical semantics for individual latent coordinates. Shared-world train-ing and guidance each reduce the gap on their own; together they give the lowest gap and Eshared 
+
+among tested variants. M-MSE remains close across variants ( 0.03396 –0.03477 ). 
+
+Sensitivity analysis. On Push Cube, increasing K from 2 to 5 raises ∆world with small M-MSE changes (Figure 4). Both λshared and λmax trade consistency against prediction quality. More importance samples stabilize the estimate, with limited gains beyond M = 64 ; detailed trends are in Appendix D.6. 
+
+## 5 CONCLUSION 
+
+We introduced OneWorld to improve shared-world consistency among action-conditioned futures. A physical mechanism interpreter estimates a latent mechanism distribution for each branch, while the prior-corrected shared-world evidence score couples branches through shared-world flow training and sampling-time guidance. Our simulator-based evaluation separates individual physical fit from the additional error introduced when multiple futures are required to share one physical configu-ration. Across three controlled environments, OneWorld consistently improves cross-intervention physical consistency while maintaining strong single-rollout prediction quality. Additional recov-ery and interpolation analyses further show that the resulting shared physical explanations remain aligned with the underlying simulator configurations beyond the discrete settings seen during train-ing. More broadly, the results suggest that evaluating world models only one rollout at a time can overlook inconsistencies that become visible only when alternative interventions are considered jointly. These results highlight shared-world consistency as an important complement to conven-tional single-rollout evaluation for action-conditioned world models. 9AI USE STATEMENT 
+
+Generative AI tools were used for language editing, manuscript organization, and L ATEX drafting as-sistance. All AI-assisted text, equations, citations, experimental descriptions, and numerical claims were reviewed by the authors. The authors take responsibility for the correctness and originality of the final submission. ETHICS STATEMENT 
+
+This work studies the consistency of action-conditioned world models in controlled simulation and on public video-prediction benchmarks. It does not involve human subjects, personally identifying information, or deployment in a live robotic system. The simulator-based evaluation is intended to diagnose model inconsistency rather than to infer physical properties of real individuals or private environments. REPRODUCIBILITY STATEMENT 
+
+Section 3 specifies the shared-world evidence score, mechanism learning objective, flow-training objective, and sampling-time guidance. Section 4.1 describes the main evaluation protocol. Ap-pendix D provides architecture, optimization, and sampling details, while Appendix E specifies environment construction, group formation, state extraction, physical fitting, grid-density checks, physical-configuration recovery, and interpolation evaluation. We will release the reconstructed en-vironments, training configurations, evaluator code, and split definitions with the source code. 
+
+## REFERENCES 
+
+Hritik Bansal, Zongyu Lin, Tianyi Xie, Zeshun Zong, Michal Yarom, Yonatan Bitton, Chenfanfu Jiang, Yizhou Sun, Kai-Wei Chang, and Aditya Grover. Videophy: Evaluating physical common-sense for video generation. In International Conference on Learning Representations (ICLR) ,2025. Fabien Baradel, Natalia Neverova, Julien Mille, Greg Mori, and Christian Wolf. Cophy: Counter-factual learning of physical dynamics. In International Conference on Learning Representations (ICLR) , 2020. Jake Bruce, Michael D. Dennis, Ashley Edwards, Jack Parker-Holder, Yuge Shi, Edward Hughes, Matthew Lai, Aditi Mavalankar, Richie Steigerwald, Chris Apps, Yusuf Aytar, Sarah Maria Elis-abeth Bechtle, Feryal Behbahani, Stephanie C. Y. Chan, Nicolas Heess, Lucy Gonzalez, Simon Osindero, Sherjil Ozair, Scott Reed, Jingwei Zhang, Konrad Zolna, Jeff Clune, Nando de Freitas, Satinder Singh, and Tim Rockt¨ aschel. Genie: Generative interactive environments. In Proceed-ings of the 41st International Conference on Machine Learning (ICML) , pp. 4603–4623, 2024. Yanjiang Guo, Lucy Xiaoyang Shi, Jianyu Chen, and Chelsea Finn. Ctrl-world: A controllable generative world model for robot manipulation. In International Conference on Learning Repre-sentations (ICLR) , 2026. Nicklas Hansen, Hao Su, and Xiaolong Wang. Td-mpc2: Scalable, robust world models for contin-uous control. In International Conference on Learning Representations (ICLR) , 2024. Nicklas A. Hansen, Hao Su, and Xiaolong Wang. Temporal difference learning for model predictive control. In Proceedings of the 39th International Conference on Machine Learning (ICML) , pp. 8387–8406, 2022. Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising diffusion probabilistic models. In Advances in Neural Information Processing Systems (NeurIPS) , 2020. Jonathan Ho, Tim Salimans, Alexey Gritsenko, William Chan, Mohammad Norouzi, and David J. Fleet. Video diffusion models. In Advances in Neural Information Processing Systems (NeurIPS) ,2022. 10 Siqiao Huang, Jialong Wu, Qixing Zhou, Shangchen Miao, and Mingsheng Long. Vid2world: Craft-ing video diffusion models to interactive world models. In International Conference on Learning Representations (ICLR) , 2026. Yaron Lipman, Ricky T. Q. Chen, Heli Ben-Hamu, Maximilian Nickel, and Matt Le. Flow matching for generative modeling. In International Conference on Learning Representations (ICLR) , 2023. Yu Ma, Hongli Shi, and Xinran Xu. Twin rollouts: Noise-coupled counterfactual branching in interactive video world models. arXiv preprint arXiv:2608.08982 , 2026. Saman Motamed, Laura Culp, Kevin Swersky, Priyank Jaini, and Robert Geirhos. Do generative video models understand physical principles? In Proceedings of the IEEE/CVF Winter Confer-ence on Applications of Computer Vision (WACV) , pp. 948–958, 2026. Robert Osazuwa Ness, Ricardo Cannizzaro, Yunshu Wu, and Lars Kunze. Multiverse mechanica: A testbed for learning game mechanics via counterfactual worlds. In International Conference on Learning Representations (ICLR) , 2026. Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Bj¨ orn Ommer. High-resolution image synthesis with latent diffusion models. In Proceedings of the IEEE/CVF Con-ference on Computer Vision and Pattern Recognition (CVPR) , 2022. Yuhong Shi, Zhenhao Chu, Jie Wei, Jun Hao, Jianyi Liu, and Jingwen Fu. Overcoming statistical bias in action-controllable world models. arXiv preprint arXiv:2608.04653 , 2026. Wan Team. Wan: Open and advanced large-scale video generative models. arXiv preprint arXiv:2503.20314 , 2025. Jing Wang, Ao Ma, Ke Cao, Jun Zheng, Jiasong Feng, Zhanjie Zhang, Wanyuan Pang, and Xiaodan Liang. Wisa: World simulator assistant for physics-aware text-to-video generation. In Advances in Neural Information Processing Systems (NeurIPS) , pp. 6144–6172, 2025. Zijun Wang, Panwen Hu, Jing Wang, Terry Jingchen Zhang, Yuhao Cheng, Long Chen, Yiqiang Yan, Zutao Jiang, Hanhui Li, and Xiaodan Liang. Prophy: Progressive physical alignment for dynamic world simulation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2026. Haotian Xue, Yipu Chen, Liqian Ma, Zelin Zhao, Lama Moukheiber, Yuchen Zhu, and Yongxin Chen. Acwm-phys: Investigating generalized physical interaction in action-conditioned video world models. arXiv preprint arXiv:2605.08567 , 2026. Sherry Yang, Yilun Du, Seyed Ghasemipour, Jonathan Tompson, Leslie Pack Kaelbling, Dale Schu-urmans, and Pieter Abbeel. Learning interactive real-world simulators. In International Confer-ence on Learning Representations (ICLR) , 2024. Yu Yuan, Xijun Wang, Tharindu Wickremasinghe, Zeeshan Nadir, Bole Ma, and Stanley H. Chan. Newtongen: Physics-consistent and controllable text-to-video generation via neural newtonian dynamics. In International Conference on Learning Representations (ICLR) , 2026. 
+
+## A PROPERTIES OF SHARED -W ORLD EVIDENCE 
+
+This appendix provides additional details on the shared-world evidence defined in Eq. 4. We first derive its prior-corrected evidence-ratio interpretation under an idealized Bayesian setting and then establish the neutrality of a branch whose posterior contains no information beyond the initial-scene prior. These results motivate the prior-corrected form of the compatibility score used by OneWorld. 11 A.1 AN IDEALIZED EVIDENCE -R ATIO INTERPRETATION 
+
+Fix the initial observation, intervention sequences, and flow time, and write xk for the outcome representation associated with branch k. We suppress this fixed conditioning to simplify notation. Let π(W ) be a normalized prior over the latent mechanism and let 
+
+Lk(W ) = p(xk | W )
+
+denote the likelihood of the outcome of branch k under its corresponding fixed action. Define the marginal likelihood 
+
+Zk =
+
+Z
+
+π(W )Lk(W ) dW, 
+
+which is assumed to be finite and positive. Under an idealized Bayesian model, the exact branch posterior is 
+
+qk(W ) = π(W )Lk(W )
+
+Zk
+
+.
+
+Substituting the branch posteriors into the shared-world evidence yields 
+
+C =
+
+Z
+
+π(W )1−KKY
+
+> k=1
+
+qk(W ) dW 
+
+=
+
+Z
+
+π(W )1−KKY
+
+> k=1
+
+π(W )Lk(W )
+
+Zk
+
+dW 
+
+=
+
+R π(W ) QKk=1 Lk(W ) dW 
+
+QKk=1 Zk
+
+.
+
+The numerator is the marginal likelihood under a model in which all branches share a single realiza-tion of W . The denominator is the product of the branch-wise marginal likelihoods and corresponds to independently drawing one mechanism from the same prior for each branch. The correction factor 
+
+π(W )1−K
+
+therefore removes the repeated prior factors introduced by multiplying the K posterior distributions. The shared-mechanism model contains the prior only once. Under these assumptions, a larger value of C represents stronger relative evidence that the observed action–outcome branches can be jointly explained by a common mechanism. In OneWorld, qϕ is learned from relational supervision rather than exact likelihoods. We therefore use Cτ as a differen-tiable compatibility score and do not interpret its absolute magnitude as a calibrated Bayes factor. A.2 NEUTRALITY OF A PRIOR -M ATCHING BRANCH 
+
+For a set of intervention branches S, define 
+
+CS =
+
+Z
+
+πϕ(W | I0)1−|S| Y
+
+> k∈S
+
+q(k) 
+
+> ϕ
+
+(W ) dW. 
+
+Assume the integral is finite and the prior has positive density on the relevant support. Consider a branch j ∈ S whose posterior contains no additional information beyond the initial observation: 
+
+q(j) 
+
+> ϕ
+
+(W ) = πϕ(W | I0).
+
+Then 
+
+CS =
+
+Z
+
+πϕ(W | I0)1−|S| q(j) 
+
+> ϕ
+
+(W ) Y
+
+> k∈S\{ j}
+
+q(k) 
+
+> ϕ
+
+(W ) dW 
+
+=
+
+Z
+
+πϕ(W | I0)2−|S| Y
+
+> k∈S\{ j}
+
+q(k) 
+
+> ϕ
+
+(W ) dW 
+
+= CS\{ j}.
+
+12 Thus, adding a branch whose posterior equals the prior does not change the shared-world evidence. For a single branch, the score is 1 by normalization, and it also remains 1 when all branch posteriors equal the prior. This property is algebraic. It does not by itself establish that the learned interpreter produces a prior-matching posterior for every empirically uninformative intervention. The latter remains a property of the learned representation rather than of the score definition. 
+
+## B EXTERNAL ACTION -C ONDITIONED VIDEO PREDICTION 
+
+We additionally evaluate the action-conditioned DiT backbone used by OneWorld on BAIR and RoboNet using standard video-prediction metrics. These datasets provide real robot interaction trajectories but not the controlled multi-intervention physical configurations required by the shared-world evaluator, so this appendix focuses on single-rollout prediction quality. B.1 EVALUATION SCOPE 
+
+For both datasets, the external prediction task has the form 
+
+p (Vfuture | Vcontext , A future ) ,
+
+where the model observes a short visual context together with the future robot action sequence and predicts the corresponding future video. For BAIR, we use two observed context frames and predict the following twelve frames. For RoboNet, we use two observed context frames and predict the following ten frames. All models compared within each dataset use the same context length and prediction horizon. Both datasets are evaluated at a spatial resolution of 64 × 64 .BAIR and RoboNet are evaluated with conventional single-rollout metrics; the shared-world metrics are reserved for the controlled environments in the main experiments. B.2 PREPROCESSING AND TEMPORAL ALIGNMENT 
+
+Frames are resized to 64 × 64 before video encoding. The same deterministic spatial transforma-tion is applied to all frames from one trajectory so that preprocessing does not introduce artificial temporal motion. RGB values are normalized using the preprocessing convention of the frozen video autoencoder. No random crop, horizontal flip, color augmentation, or other test-time augmentation is applied during evaluation. Robot actions are temporally aligned with their corresponding target transitions after frame sam-pling. Each action vector is standardized using the mean and standard deviation computed from the training split of the corresponding dataset. For BAIR, evaluation uses 2,048 held-out prediction clips. For RoboNet, evaluation uses 2,048 held-out clips sampled from trajectories that do not appear in the training split. The same evaluation clips are reused across all locally evaluated models. Table 3: Protocol for external action-conditioned video prediction.                 
+
+> Dataset Resolution Context Prediction Evaluation clips
+> BAIR 64 ×64 2 frames 12 frames 2,048 RoboNet 64 ×64 2 frames 10 frames 2,048
+
+B.3 MODEL CONFIGURATION ON BAIR AND ROBO NET 
+
+The external experiments use the same action-conditioned latent DiT family as the main model. A dataset-specific action-conditioned DiT is trained for each benchmark with the frozen Wan2.1 13 causal VAE. Because BAIR and RoboNet do not provide the grouped physical supervision used by OneWorld, training is restricted to standard branch-wise action-conditioned flow matching; the mechanism interpreter, shared-world loss, and shared-world guidance are not used in this appendix. Table 4: Training configuration for the external video prediction benchmarks.                           
+
+> Setting BAIR RoboNet
+> Backbone Action-conditioned DiT Action-conditioned DiT Video representation Frozen Wan2.1 causal VAE Frozen Wan2.1 causal VAE Optimizer AdamW AdamW Learning rate 1×10 −51×10 −5
+> Batch size 88Training updates 40,000 50,000 Inference steps 50 50 Mechanism interpreter Not used Not used Shared-world loss Not used Not used Shared-world guidance Not used Not used
+
+B.4 BASELINES AND RESULT PROVENANCE 
+
+The comparison includes recurrent video predictors, hierarchical latent variable models, masked-token predictors, autoregressive world models, and diffusion-based approaches. Specifically, we compare against SVG, GHVAE, FitVid, MaskViT, iVideoGPT, DPM, DyDiff, and SAMPO when the corresponding metric is available under the matched action-conditioned protocol. Baseline values are taken from the corresponding published results or from the matched-protocol comparison reported by the later method when the original paper does not contain the complete metric set. We do not combine results reported at different spatial resolutions in the same table. The DPM values are the diffusion-baseline results reported together with DyDiff, which is indicated by the starred venue entry. Our action-conditioned DiT backbone is evaluated using the protocol described above. A dash indicates that a metric was not available under a sufficiently matched action-conditioned setting. B.5 METRIC COMPUTATION 
+
+We report Fr´ echet Video Distance (FVD), peak signal-to-noise ratio (PSNR), structural similarity (SSIM), and LPIPS. FVD is computed using I3D video features extracted from 2,048 generated clips and the correspond-ing 2,048 reference clips. Generated and reference videos use identical spatial preprocessing and the same temporal horizon within each dataset. PSNR, SSIM, and LPIPS are evaluated over predicted future frames only. Frame-level scores are first averaged temporally within each predicted sequence and are then averaged across the evaluation set. Following the reporting convention of the compared methods, SSIM and LPIPS values in Table 5 are multiplied by 100 .14 B.6 EXTERNAL PREDICTION RESULTS 
+
+Table 5: Comparison with existing action-conditioned video prediction methods on BAIR and RoboNet at 64 × 64 resolution. Lower is better for FVD and LPIPS; higher is better for PSNR and SSIM. SSIM and LPIPS are multiplied by 100 . ∗DPM denotes the diffusion baseline reported with DyDiff.                                                                                      
+
+> Dataset Method Venue FVD ↓PSNR ↑SSIM ↑LPIPS ↓
+> BAIR
+> MaskViT ICLR’23 70.5 –––iVideoGPT NeurIPS’24 60.8 24.5 90.2 5.0 DPM ICLR’25 ∗48.5 25.9 92.0 4.5 DyDiff ICLR’25 45.0 26.2 92.4 4.2 SAMPO NeurIPS’25 55.5 26.7 94.7 3.7
+> Our DiT backbone Ours 41.2 27.9 95.8 2.8 RoboNet
+> MaskViT ICLR’23 133.5 23.2 80.5 4.2 SVG NeurIPS’19 123.2 23.9 87.8 6.0 GHVAE CVPR’21 95.2 24.7 89.1 3.6 FitVid arXiv’21 62.5 28.2 89.3 2.4 iVideoGPT NeurIPS’24 63.2 27.8 90.6 4.9 DPM ICLR’25 ∗77.0 26.4 87.3 6.0 DyDiff ICLR’25 67.7 26.5 87.5 5.9 SAMPO NeurIPS’25 57.1 29.3 94.1 3.3
+> Our DiT backbone Ours 52.6 30.6 95.3 1.7
+
+Results on BAIR. Our DiT backbone obtains an FVD of 41 .2, compared with 45 .0 for DyDiff. It also obtains a PSNR of 27 .9, an SSIM of 95 .8, and an LPIPS of 2.8 under the matched evaluation protocol. These results show that the action-conditioned backbone used by our framework maintains strong conventional single-rollout prediction quality. 
+
+Results on RoboNet. Our DiT backbone obtains an FVD of 52 .6, a PSNR of 30 .6, an SSIM of 
+
+95 .3, and an LPIPS of 1.7.Together with the BAIR results, this confirms that the underlying action-conditioned DiT backbone remains competitive under standard video-prediction metrics. 
+
+## C ROBO DESK QUALITATIVE EVALUATION SETUP 
+
+The RoboDesk experiments in Figure 3 are designed as a controlled qualitative transfer study rather than as an additional single-rollout benchmark. We use two articulated manipulation tasks, Open Drawer and Sliding Door , because both expose a clear separation between the commanded action and latent interaction properties. For each task, the rendered initial observation fixes the robot pose, object geometry, camera, and articulated-joint state, while friction and damping are kept hidden from the video model. C.1 ENVIRONMENT AND PHYSICAL CONFIGURATIONS 
+
+For Open Drawer , the hidden physical configuration consists of the drawer-rail friction coefficient and viscous joint damping. We use three levels of rail friction, {0.18 , 0.39 , 0.67 }, and three levels of damping, {0.06 , 0.15 , 0.29 } in simulator-native units, yielding nine physical configurations. The action family contains slow pull, fast pull, and pull–release sequences. The first two are visualized in Figure 3; the third is used during grouped training to provide an additional intervention with a different contact and release profile. For Sliding Door , the hidden physical configuration consists of the track friction coefficient and guide damping. The three friction levels are {0.11 , 0.28 , 0.52 } and the three damping levels are 
+
+{0.04 , 0.12 , 0.23 }, again producing nine configurations. The action family contains short right push, long right push, and right-push–reverse sequences. The first two are shown in the qualitative com-parison. The reverse sequence is included during grouped training because it provides a stronger diagnostic of inertia and sliding resistance than displacement alone. 15 All trajectories contain 37 frames rendered at 240 ×240 resolution and 10 Hz, matching the temporal and spatial format used by the controlled experiments in the main paper. For each task, we use 192/48/48 initial states for the train/validation/test splits. Each initial state contributes one same-world group and one mismatched-world group, giving 384/96/96 counterfactual groups. Table 6: RoboDesk setup used for the qualitative comparison.                    
+
+> Task Initial states Groups KHidden physical factors Configs.
+> Open Drawer 192/48/48 384/96/96 3rail friction, joint damping 3×3
+> Sliding Door 192/48/48 384/96/96 3track friction, guide damping 3×3
+
+C.2 SAME -W ORLD AND MISMATCHED -W ORLD GROUPS 
+
+The mechanism interpreter is trained using the same relational supervision principle as in the main controlled experiments. A same-world group contains three action sequences executed after reset-ting RoboDesk to the same complete initial simulator state and the same hidden physical configura-tion. The actions deliberately differ in duration, speed, or direction, so trajectories within one group need not have similar displacements. A mismatched-world group is formed from the same visible initial state while assigning different hidden configurations to the intervention branches. At least one of the two hidden physical factors differs by one grid level between any two branches in a negative group. Because the camera, robot pose, articulated-object pose, and visible scene are shared, the mechanism-learning label cannot be inferred from static appearance alone. Positive and negative groups are sampled with equal probability. For Figure 3, we display two branches from each held-out three-branch group because a two-row visualization makes the action-dependent difference easier to inspect. The third branch remains part of the mechanism learning and shared-world training objective. C.3 TRAINING PROTOCOL 
+
+We train one action-conditioned DiT checkpoint for each RoboDesk task using the corresponding training trajectories. ACWM-DiT uses this checkpoint without cross-branch coupling. OneWorld is initialized from the same checkpoint. The mechanism interpreter and initial-scene prior are first trained on the RoboDesk same-world and mismatched-world groups, after which they are frozen and the world model is optimized using Lflow + λshared Lshared .We use the same mechanism architecture and optimization schedule as in Appendix D: K = 3 
+
+branches, 20,000 mechanism-learning updates, 12,000 world-model updates, λshared = 0 .01 , and 50 flow steps. Sampling uses independent Gaussian noise for the different branches and the same 
+
+λτ = 0 .01 τ 2 guidance schedule used in the main experiments. For the qualitative baselines, Vid2World and CoCo are instantiated on the same task-specific action-conditioned DiT backbone and trained using the same training trajectories and optimization budget. All compared methods observe the same initial frames and action sequences. No method is given access to the hidden friction or damping values at training or inference time. C.4 QUALITATIVE COMPARISON PROTOCOL 
+
+The qualitative comparison is constructed from held-out initial states and uses identical action se-quences across methods. For each displayed branch, the same Gaussian noise seed is reused across methods, while the two branches within one method retain independent noise. This isolates differ-ences in the learned dynamics from differences caused by sampling initialization. 
+
+Open Drawer. Slow and fast pulls can produce different displacements and release velocities. Consistency therefore concerns whether the drawer’s subsequent deceleration, sliding, and stopping can be explained by one resistance and sliding-dynamics model, given each branch’s action and contact state. For ACWM-DiT, Vid2World, or CoCo, individually plausible and action-responsive 16 predictions could still imply high resistance in one branch and low resistance in the other. Such a conflict must persist after accounting for the different release conditions to constitute shared-world inconsistency. OneWorld seeks to preserve the distinct outcomes of slow and fast pulls while making their physical explanations compatible. 
+
+Sliding Door. A short right push and a long right push differ in contact duration, so different door displacements are expected. The informative comparison is the motion after contact ends, conditioned on each branch’s release velocity. For example, a short-push branch consistent with a high-friction rail would conflict with a long-push branch that requires very low friction even after its larger release velocity is taken into account. OneWorld aims to retain distinct door trajectories while keeping the implied sliding resistance, inertia, and reversal response compatible across actions. 
+
+Example selection. The displayed examples are taken from fixed held-out test states selected be-fore rendering the final comparison, and the same temporal indices are shown for every method. 
+
+## D IMPLEMENTATION DETAILS 
+
+D.1 PHYSICAL MECHANISM INTERPRETER 
+
+The physical mechanism interpreter is intentionally lightweight relative to the video backbone. For each intervention branch, we average-pool the estimated clean-future latent ˆz(k)1,τ over spatial dimensions while retaining its temporal sequence. A two-layer projection maps each pooled latent token to a 512-dimensional feature. The action sequence is encoded by a two-layer MLP followed by temporal average pooling, yield-ing a 256-dimensional action feature. Flow time τ is represented by a 128-dimensional sinusoidal embedding. The initial observation I0 is encoded with the frozen Wan2.1 encoder and projected to a 256-dimensional scene representation. The scene, action, clean-future, and flow-time features are concatenated and processed by a three-layer MLP with hidden width 1024 and SiLU activations. The mechanism space is a dW = 32 dimensional diagonal Gaussian. The initial-scene prior is 
+
+πϕ(W | I0) = N  W ; μπ , diag( σ2 
+
+> π
+
+) ,
+
+where the prior network predicts μπ and log σπ . We clamp log σπ to [−4, 2] before converting it to the prior precision λπ,d = σ−2 
+
+> π,d
+
+and natural mean parameter ηπ,d = λπ,d μπ,d .For branch k, the interpreter predicts an evidence center m(k) 
+
+> ϕ,d
+
+and a raw precision increment ρ(k)
+
+> ϕ,d
+
+.The branch contributes 
+
+∆λ(k) 
+
+> ϕ,d
+
+= softplus 
+
+
+
+ρ(k)
+
+> ϕ,d
+
+
+
+,
+
+and the posterior natural parameters are 
+
+λ(k) 
+
+> ϕ,d
+
+= λπ,d + ∆ λ(k)
+
+> ϕ,d
+
+, η(k) 
+
+> ϕ,d
+
+= ηπ,d + ∆ λ(k)
+
+> ϕ,d
+
+m(k)
+
+> ϕ,d
+
+.
+
+The resulting branch posterior is 
+
+q(k) 
+
+> ϕ
+
+(W ) = N
+
+
+
+W ; μ(k) 
+
+> ϕ
+
+, diag 
+
+h
+
+(σ(k) 
+
+> ϕ
+
+)2i 
+
+,
+
+with 
+
+(σ(k)
+
+> ϕ,d
+
+)2 =
+
+
+
+λ(k)
+
+> ϕ,d
+
+−1
+
+, μ(k) 
+
+> ϕ,d
+
+= η(k)
+
+> ϕ,d
+
+λ(k)
+
+> ϕ,d
+
+.
+
+This parameterization treats an action–outcome branch as additional evidence about the initial world. When an intervention contributes little information, ∆λ(k) 
+
+> ϕ,d
+
+approaches zero and the branch poste-rior approaches the initial-scene prior. More informative interventions contribute larger precision increments and produce sharper mechanism estimates. 17 The same construction gives the prior-corrected Gaussian product a positive combined precision in every latent dimension: 
+
+> K
+
+X
+
+> k=1
+
+λ(k) 
+
+> ϕ,d
+
+− (K − 1) λπ,d = λπ,d +
+
+> K
+
+X
+
+> k=1
+
+∆λ(k) 
+
+> ϕ,d
+
+> 0.
+
+Thus the shared-world evidence in Eq. 4 is well-defined under the Gaussian parameterization. The physical mechanism interpreter contains approximately 8.7M trainable parameters. Table 7: Implementation details for the mechanism model and OneWorld training.                                   
+
+> Component Setting
+> Latent mechanism W32-dimensional diagonal Gaussian Posterior update Additive natural-parameter evidence, ∆λ= softplus( ρ)
+> Clean-future projector 2-layer MLP, width 512 Action encoder 2-layer MLP, width 256 Flow-time embedding 128-dimensional sinusoidal embedding Interpreter fusion network 3-layer MLP, width 1024, SiLU Prior network 2-layer MLP, width 512 Interpreter optimizer AdamW, lr 1×10 −4, weight decay 0.01
+> Interpreter batch size 16 counterfactual groups Interpreter training 20,000 updates, 1:1 same-world/mismatched-world groups World-model optimizer AdamW, lr 1×10 −5
+> World-model batch size 1 counterfactual group, K= 3 branches World-model updates 12,000 updates Shared-loss weight λshared = 0 .01
+> Sampling 50 flow steps Maximum guidance strength 0.01
+> Guidance schedule λτ= 0 .01 τ2
+
+D.2 MECHANISM -L EARNING GROUPS 
+
+The mechanism interpreter is trained using relational supervision rather than direct labels for indi-vidual physical parameters. A same-world group contains K = 3 branches generated after resetting the environment to the same complete initial state and the same hidden physical configuration. Different actions are then executed from that state. The resulting trajectories may differ substantially, but their physical explanations should remain compatible with one common world. A mismatched-world group also contains three branches but draws them from different hidden phys-ical configurations. Initial visible states are kept matched so that the group label cannot be predicted simply from scene appearance. For Push Cube and Push Rope, every initial state contributes one same-world group and one mismatched-world group. The resulting train/validation/test group counts are therefore 256 /64 /64 
+
+from 128 /32 /32 initial states. Positive and negative groups are sampled in a balanced 1:1 ratio during mechanism learning. The interpreter is not provided with semantic targets such as the value of drag, elasticity, stiffness, or damping. Its latent coordinates are therefore not assumed to correspond one-to-one to named simulator parameters. Instead, the representation is learned only through the compatibility of action– outcome branches. D.3 NUMERICAL EVALUATION OF SHARED -W ORLD EVIDENCE 
+
+We evaluate Eq. 4 using importance sampling in the common latent mechanism space. 18 For a group containing K branches, the proposal distribution is 
+
+r(W ) = 1
+
+K + 1 
+
+"
+
+πϕ(W | I0) + 
+
+> K
+
+X
+
+> k=1
+
+q(k) 
+
+> ϕ
+
+(W )
+
+#
+
+.
+
+This proposal places probability mass around the prior as well as every branch posterior. With samples Wm ∼ r(W ), the evidence is estimated as 
+
+bCτ = 1
+
+M
+
+> M
+
+X
+
+> m=1
+
+πϕ(Wm | I0)1−K QKk=1 q(k) 
+
+> ϕ
+
+(Wm)
+
+r(Wm) .
+
+We use M = 64 samples per counterfactual group. Samples are allocated uniformly across the prior and branch-posterior components of the proposal. All Gaussian densities and importance weights are evaluated in log space. Products of densities are represented as sums of log densities and sample aggregation is performed using log-sum-exp for numerical stability. D.4 GRADIENT COMPUTATION 
+
+The mechanism interpreter is updated only during the first training stage. During shared-world flow training, its parameters are frozen. However, gradients from Lshared are allowed to propagate through its inputs and through ˆz(k)1,τ to the action-conditioned vector field. Freezing the interpreter therefore fixes the learned compatibility criterion while still allowing the video model to change its predictions in directions that improve shared-world evidence. During sampling-time guidance, we compute 
+
+g(k) 
+
+> τ
+
+= ∇z(k)
+
+> τ
+
+log ( Cτ + ϵ) .
+
+The velocity prediction inside the clean-future estimate is detached when this gradient is evalu-ated. This avoids second-order differentiation through the flow backbone while retaining the direct derivative from the current latent to the compatibility score. The guided velocity is 
+
+ev(k) 
+
+> θ
+
+= v(k) 
+
+> θ
+
++ λτ g(k) 
+
+> τ
+
+,
+
+where 
+
+λτ = 0 .01 τ 2.
+
+The quadratic schedule applies little guidance at early flow times, when the predicted clean future is highly uncertain, and gradually increases the influence of the shared-world score as generation progresses. D.5 TRAINING SCHEDULE 
+
+Training consists of two stages. 
+
+Stage 1: mechanism learning. The pretrained action-conditioned video backbone is frozen. The mechanism interpreter and initial-scene prior are optimized for 20,000 updates using Eq. 5. We use AdamW with learning rate 1×10 −4, weight decay 0.01 , and a batch size of 16 counterfactual groups. Same-world and mismatched-world groups are sampled with equal probability. At every update, flow time is sampled uniformly from [0 , 1] and the clean-future estimate is com-puted from the frozen ACWM-DiT backbone. 19 Stage 2: shared-world video-model training. After mechanism learning, both the mechanism interpreter and the initial-scene prior are frozen. The action-conditioned video model is initialized from the corresponding ACWM-DiT checkpoint and optimized for 12,000 updates with 
+
+L = Lflow + λshared Lshared ,
+
+using 
+
+λshared = 0 .01 .
+
+We use AdamW with learning rate 1 × 10 −5 and one counterfactual group per batch. Unless other-wise specified, each group contains K = 3 branches. 
+
+Inference. Each intervention branch receives the same initial observation and its own action se-quence. Branches start from independent Gaussian noise. We use 50 flow steps and apply shared-world guidance with a maximum strength of 0.01 . The branches are therefore not coupled through shared random noise. Their interaction occurs only through the shared-world evidence gradient. D.6 SENSITIVITY TO BRANCH COUNT AND HYPERPARAMETERS 
+
+Figure 4 reports sensitivity on Push Cube to branch count, shared-loss weight, maximum guidance strength, and the importance-sampling budget. Increasing the number of branches from K = 2 
+
+to 5 gradually increases ∆world while causing only small changes in M-MSE. The tested settings therefore extend beyond the default three branches, but incur a larger shared-world gap as more branches are added. Both λshared and λmax exhibit a consistency–prediction trade-off: moderate values substantially reduce the gap, whereas stronger regularization or guidance gives diminishing consistency gains and begins to increase prediction error. Increasing the importance-sampling budget improves estimator stability: relative ESS increases and the variance of log bCτ decreases, with modest improvements beyond M = 64 .D.7 COMPUTATIONAL COST 
+
+We characterize inference cost on eight NVIDIA A100-SXM4-80GB GPUs. Each counterfactual group contains K = 3 branches, with 37 frames per branch at 240 × 240 resolution. All paths use FP32 inference and 50 flow steps. Table 8: Inference cost on 8 NVIDIA A100-SXM4-80GB GPUs. Each group contains three branches with 37 frames at 240 × 240 resolution.                      
+
+> Compute path Latency (s/group) Peak mem. (GiB/GPU) Relative Throughput (groups/s)
+> ACWM-DiT 13 .247 ±0.012 2.403 1.000 ×0.603 OneWorld w/o guidance 13 .245 ±0.014 2.403 1.000 ×0.602
+> OneWorld full 21 .684 ±0.041 7.864 1.637 ×0.369
+
+Inference overhead. The no-guidance path has essentially the same inference cost as ACWM-DiT, because shared-world flow training changes the model parameters but does not add an addi-tional sampling module. The full OneWorld path additionally evaluates the mechanism interpreter and the M = 64 shared-world evidence estimator at each guided flow step, resulting in higher latency and memory usage while retaining practical group-level throughput. 
+
+## E IMPLEMENTATION OF SHARED -W ORLD EVALUATION 
+
+This section describes the controlled environments and the simulator-based evaluator used for the main shared-world experiments. 20 The evaluator is independent of the learned physical mechanism interpreter. Generated videos are first converted into observable state trajectories. Their physical compatibility is then measured through environment replay and physical-parameter fitting. E.1 CONTROLLED ENVIRONMENT CONSTRUCTION 
+
+Push Cube and Push Rope. The Push Cube and Push Rope experiments use our reconstructed Pymunk environments following the corresponding interaction settings of ACWM-Phys. These environments are independent reconstructions and are not the original ACWM-Phys simulator im-plementation. For both reconstructed environments, we use 128 training initial states, 32 validation initial states, and 32 test initial states. Each initial state produces one same-world group and one mismatched-world group, resulting in 256/64/64 groups for the train/validation/test splits. Each group contains K = 3 intervention branches. Videos contain 37 frames rendered at 240 × 240 
+
+resolution and 10 Hz. Before every branch is generated, the environment is reset to the same complete initial state. In a same-world group, the physical configuration is also reset to the same value before each action is applied. For Push Cube, the physical configuration is controlled by two quantities: drag and elasticity. Each quantity takes three values spanning low, intermediate, and high regimes. Their Cartesian product produces nine physical configurations. For Push Rope, the physical configuration is controlled by bending stiffness and bending damping. Each quantity likewise takes three values, producing nine physical configurations. 
+
+Pour Water. Pour Water is implemented using a separate particle-based fluid environment rather than the reconstructed Pymunk system. We use 160/40/40 initial states for the train/validation/test splits, respectively. Each initial state contributes one same-world group and one mismatched-world group, giving 320/80/80 groups. Each counterfactual group contains three action branches. Videos contain 37 frames rendered at 
+
+240 × 240 resolution and 10 Hz. The hidden fluid configuration varies viscosity and particle cohesion. Each parameter takes four predefined values, yielding 4 × 4 = 16 candidate physical configurations. Table 9: Controlled environments used for shared-world evaluation.                              
+
+> Environment Initial states Groups KVideo Physical parameters Configs.
+> Push Cube 128/32/32 256/64/64 337 frames, 240 2,10 Hz drag, elasticity 3×3
+> Push Rope 128/32/32 256/64/64 337 frames, 240 2,10 Hz bending stiffness, bending damping
+> 3×3
+> Pour Water 160/40/40 320/80/80 337 frames, 240 2,10 Hz viscosity, particle cohesion 4×4
+
+E.2 SAME -W ORLD AND MISMATCHED -W ORLD CONSTRUCTION 
+
+For a same-world group, the simulator is reset to the same complete initial state and the same physi-cal configuration before each intervention. Three different action sequences are then executed. Thus, the branches share the underlying physical world but may exhibit different trajectories because of their different actions. For a mismatched-world group, the visible initial state is held fixed while branches are drawn from different physical configurations. The action sequences follow the same sampling procedure as those used in positive groups. 21 This construction is intended to prevent the mechanism classifier from relying on obvious differences in the initial scene. The distinction between positive and negative groups is instead determined by whether the action-conditioned outcomes are compatible with one common physical configuration. No generated video from the evaluated world model is used to construct the group labels. E.3 FROZEN STATE EXTRACTORS 
+
+Shared-world metrics operate on observable state trajectories rather than directly on pixels. A separate state extractor is trained for each environment using only simulator-rendered frames paired with ground-truth simulator states. The extractor is frozen before any generative model is evaluated, and the same frozen extractor is applied to all compared methods. 
+
+Push Cube. The observable state is 
+
+St = ( xt, y t, cos θt, sin θt),
+
+containing the two-dimensional cube center and orientation. A ResNet-18 regressor predicts this state. 
+
+Push Rope. The rope is represented using 16 ordered keypoints sampled uniformly along its cen-terline. A heatmap-based keypoint network predicts their image-space positions. 
+
+Pour Water. The fluid state consists of a 16 × 16 occupancy map and the fluid centroid. We use a lightweight U-Net to estimate the occupancy representation and corresponding centroid. Table 10: Validation accuracy of the frozen state extractors used by the simulator-based evaluator.                 
+
+> Environment Observable state Validation error
+> Push Cube 2D center and orientation position RMSE 0.011 , angle error 2.8◦
+> Push Rope 16 ordered rope keypoints mean point RMSE 0.017
+> Pour Water 16 ×16 occupancy and centroid occupancy IoU 0.928 , centroid RMSE 0.014
+
+The state-extractor networks are never fine-tuned using outputs from ACWM-DiT, OneWorld, or any compared baseline. E.4 ENVIRONMENT -S PECIFIC STATE DISTANCES 
+
+The simulator-fitting objective uses an environment-specific state distance d( ˆSt, S t).
+
+Push Cube. Let pt denote the cube center and θt its orientation. We use 
+
+dcube ( ˆSt, S t) = ∥ˆpt − pt∥22
+
+s2
+
+> p
+
++ 0 .25 
+
+h
+
+1 − cos( ˆθt − θt)
+
+i
+
+,
+
+where sp is the position normalization scale estimated from the training split. The first term evaluates translation and the second term penalizes orientation disagreement while respecting angular periodicity. 
+
+Push Rope. For 16 ordered rope keypoints, 
+
+drope ( ˆSt, S t) = 116 
+
+> 16
+
+X
+
+> j=1
+
+∥ˆpt,j − pt,j ∥22
+
+s2
+
+> r
+
+,
+
+where sr is fixed from the training split. 22 Pour Water. For the fluid environment, we combine occupancy mismatch and centroid displace-ment: 
+
+dwater ( ˆSt, S t) = 0 .6
+
+h
+
+1 − IoU( ˆOt, O t)
+
+i
+
++ 0 .4 ∥ˆct − ct∥22
+
+s2
+
+> c
+
+.
+
+Here Ot is the occupancy map, ct is the fluid centroid, and sc is the corresponding training-set normalization scale. All normalization constants are fixed before test evaluation and are shared across all compared pre-diction methods. E.5 SIMULATOR REPLAY AND PHYSICAL -P ARAMETER SEARCH 
+
+For each generated branch, the evaluator extracts an observable trajectory ˆS(k) and replays the cor-responding action sequence in the environment under candidate physical configurations w.The replay starts from the exact initial simulator state associated with the evaluated example. For each candidate w, the simulator produces 
+
+S(k)(w),
+
+and the branch fitting error is 
+
+ℓk(w) = 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+d
+
+ ˆS(k) 
+
+> t
+
+, S (k) 
+
+> t
+
+(w)
+
+
+
+.
+
+For Push Cube, the candidate space is the Cartesian product of three drag values and three elasticity values, yielding nine candidate configurations. For Push Rope, the search spans three bending-stiffness values and three bending-damping values, also yielding nine configurations. For Pour Water, the evaluator searches the 4 × 4 grid of viscosity and cohesion configurations used by the particle-based environment. For every evaluated method, the candidate grid, simulator replay, state extractor, and state-distance definition are identical. E.6 EVALUATOR GRID -D ENSITY SENSITIVITY 
+
+The main evaluator uses the physical configurations defined by each environment. To test whether the reported shared-world gap is dominated by coarse parameter discretization, we repeat fitting on denser interpolation grids over the same physical ranges. The generated videos, state extractors, action sequences, and distance functions are fixed; only the evaluator grid is changed. For Push Cube and Push Rope, we compare 3 × 3, 5 × 5, and 9 × 9 candidate grids. Intermediate grid points are obtained by uniform interpolation between the minimum and maximum values of each physical parameter. Table 11 reports the resulting ∆world for ACWM-DiT and OneWorld. Table 11: Sensitivity of the shared-world gap to evaluator grid density. Lower is better. The model outputs are fixed across all columns.                         
+
+> Environment Method 3×35×59×9
+> Push Cube ACWM-DiT 0.02253 0.02187 0.02161
+> OneWorld 0.00357 0.00341 0.00336
+> Push Rope ACWM-DiT 0.01389 0.01343 0.01326
+> OneWorld 0.00209 0.00197 0.00191
+
+Densifying the search grid slightly lowers the absolute gap for both methods, as expected when parameter fitting becomes more precise, but the change is small relative to the separation between ACWM-DiT and OneWorld. The same ordering is preserved at every tested density, indicating that the main consistency result is not an artifact of the default 3 × 3 evaluator grid. 23 E.7 INDIVIDUAL AND SHARED PHYSICAL FITS 
+
+The individual physical fitting error is 
+
+Eind = 1
+
+K
+
+> K
+
+X
+
+> k=1
+
+min 
+
+> wk
+
+ℓk(wk).
+
+Each branch is therefore allowed to select its own best-fitting physical configuration. This measures whether each generated future is individually compatible with some physical explanation inside the evaluator family. The shared physical fitting error is 
+
+Eshared = min 
+
+> w
+
+1
+
+K
+
+> K
+
+X
+
+> k=1
+
+ℓk(w).
+
+Here all branches must use one common physical configuration. The shared-world gap is 
+
+∆world = Eshared − Eind .
+
+The gap measures the additional physical fitting cost induced by requiring one explanation to account for every intervention branch. We report Eind , Eshared , and ∆world together so that cross-intervention consistency is interpreted alongside overall physical fit quality. The metric evaluates compatibility within the specified simu-lator family and candidate parameter space rather than uniqueness of the underlying physical mech-anism. E.8 GROUND -T RUTH PHYSICAL CONFIGURATION RECOVERY 
+
+The shared-world gap measures whether several generated branches admit one common physical explanation, but consistency alone does not establish that the common explanation matches the physical configuration that generated the underlying world. Because the controlled simulators retain the ground-truth hidden configuration for every held-out same-world group, we additionally evaluate whether the jointly fitted configuration recovers that ground truth. For held-out group i, let w⋆i denote the simulator configuration used to generate the underlying world. We first recover the shared physical configuration from the generated branches using the same simulator-fitting objective as in Eq. 12, 
+
+ˆw(i)shared = arg min 
+
+> w
+
+1
+
+K
+
+> K
+
+X
+
+> k=1
+
+ℓi,k (w). (13) We then define exact physical-configuration recovery as 
+
+RecoveryAcc = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+I
+
+h
+
+ˆw(i)shared = w⋆i
+
+i
+
+. (14) If several candidate configurations have numerically identical minimum fitting error, the prediction is counted as correct when w⋆i is among the minimizing configurations. The candidate parameter grid, frozen state extractor, simulator replay, and state-distance function are identical to those used for the shared-world evaluation. Thus this metric introduces no additional learned evaluator and uses simulator ground truth only for scoring. 24 Table 12: Recovery accuracy (%) of ground-truth physical configurations on held-out same-world groups. Higher is better.                                     
+
+> Method Push Cube ↑Push Rope ↑Pour Water ↑Avg. ↑
+> ACWM-DiT 59.4 62.5 50.0 57.3 Vid2World 62.5 65.6 52.5 60.2 CoCo 65.6 71.9 57.5 65.0 Twin Rollouts 65.6 68.8 55.0 63.1 Shared Noise 53.1 59.4 45.0 52.5 Posterior Alignment 71.9 75.0 60.0 69.0
+> OneWorld 87.5 87.5 80.0 85.0
+
+Interpretation. Recovery accuracy complements ∆world rather than replacing it. A low shared-world gap indicates that the intervention branches can be jointly explained by one physical con-figuration, whereas Table 12 asks whether that common configuration agrees with the simulator configuration that actually generated the world. OneWorld achieves the highest recovery accuracy in all three environments, with 87 .5% on Push Cube, 87 .5% on Push Rope, and 80 .0% on Pour Water, for a macro-average of 85 .0% . Relative to ACWM-DiT, this corresponds to gains of 28 .1,
+
+25 .0, and 30 .0 percentage points, respectively. The improvement is also substantial over Posterior Alignment, the strongest alternative in this evaluation, whose macro-average is 69 .0% .The environment-wise pattern is consistent with the difficulty of the underlying fitting problem. Push Rope gives the highest absolute recovery for most methods, while Pour Water remains more challenging because occupancy and centroid trajectories can be compatible with multiple nearby fluid configurations. Importantly, OneWorld retains a large margin on Pour Water, where its 80 .0% 
+
+recovery exceeds Posterior Alignment by 20 .0 percentage points. This suggests that the reduction in shared-world gap is not explained only by forcing branches toward an arbitrary common config-uration. Taken together with Table 1, these results separate two properties that can otherwise be conflated. The shared-world gap measures whether the generated intervention branches agree on one phys-ical explanation; physical-configuration recovery measures whether that explanation matches the known generating physics. The consistent improvement on both criteria supports the conclusion that OneWorld produces branches that are not only mutually compatible but also more faithful to the latent physical configuration of the controlled world. The reported average is the macro-average of the three environment-level recovery accuracies. E.9 GENERALIZATION TO UNSEEN INTERPOLATED PHYSICS 
+
+The main experiments evaluate physical configurations drawn from the discrete parameter grids used during training. We additionally evaluate whether the learned shared-world constraint generalizes to 
+
+intermediate physical values that lie inside the training range but are never used during mechanism learning or world-model training. To make the interpolation protocol comparable across environments, we report parameter values in range-normalized coordinates. For a physical parameter wj with training-range endpoints wmin  
+
+> j
+
+and 
+
+wmax  
+
+> j
+
+, define 
+
+˜wj = wj − wmin 
+
+> j
+
+wmax  
+
+> j
+
+− wmin 
+
+> j
+
+. (15) The normalized values therefore describe the relative location of the simulator-native parameter values inside the training range rather than replacing the native simulator configuration. 
+
+Interpolation split. For Push Cube and Push Rope, each physical factor has three training levels, which correspond to normalized coordinates {0, 0.5, 1}. Held-out interpolation uses the two mid-points {0.25 , 0.75 }. For Pour Water, each physical factor has four training levels, represented by 
+
+{0, 13 , 23 , 1}, and interpolation uses the three adjacent midpoints { 16 , 12 , 56 }. The interpolation coor-dinates are excluded from all mechanism-learning and world-model training groups and are used 25 only for held-out evaluation. Test initial states are also disjoint from the training and validation initial-state splits. We use joint interpolation : both physical factors of a test world are drawn from the held-out in-termediate set. Thus the Push Cube and Push Rope tests contain 2 × 2 = 4 unseen joint physical configurations, while Pour Water contains 3 × 3 = 9 . This setting is stronger than varying a single unseen factor while keeping the second factor at a training value. Table 13: Physics interpolation split. Values are shown in range-normalized parameter coordinates. Interpolation values are excluded from mechanism learning and world-model training and are used only for held-out evaluation.                                                     
+
+> Environment Physical factor Training values Interpolation values
+> Push Cube drag {0,0.5,1}{0.25 ,0.75 }
+> elasticity {0,0.5,1}{0.25 ,0.75 }
+> Push Rope bending stiffness {0,0.5,1}{0.25 ,0.75 }
+> bending damping {0,0.5,1}{0.25 ,0.75 }
+> Pour Water viscosity {0,13,23,1}{16,12,56}
+> particle cohesion {0,13,23,1}{16,12,56}
+
+Continuous-physics evaluator. For interpolation evaluation, the simulator-fitting candidate set is densified over the same physical ranges and explicitly includes every held-out interpolation value. The evaluator therefore does not force an unseen test world to snap to one of the discrete training configurations. We recover the shared physical configuration with Eq. 13 and measure both cross-branch consistency and physical-parameter accuracy. Because exact recovery is unnecessarily brittle for continuous parameters, we report normalized physical parameter error (NPE). Let ˜w⋆i be the range-normalized ground-truth configuration and 
+
+˜ˆw(i)shared the normalized jointly fitted configuration. We define 
+
+NPE = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+˜ˆw(i)shared − ˜w⋆i 2
+
+. (16) NPE is comparable across environments because each physical factor is normalized by its train-ing range. Table 14 reports the interpolation ∆world values separately for each environment and summarizes physical-parameter accuracy with Avg. NPE. Table 14: Generalization to unseen interpolated physics. We report the shared-world gap and normalized physical parameter error (NPE) on held-out joint interpolation configurations. Lower is better for both metrics. 
+
+Method Push Cube Push Rope Pour Water Avg. NPE ↓
+
+∆world ↓ NPE ↓ ∆world ↓ NPE ↓ ∆world ↓ NPE ↓
+
+ACWM-DiT 0.02431 0.218 0.01542 0.194 0.03876 0.267 0.226 Vid2World 0.02046 0.193 0.01327 0.176 0.03418 0.239 0.203 CoCo 0.01683 0.164 0.01109 0.151 0.02874 0.208 0.174 Twin Rollouts 0.01812 0.178 0.01221 0.162 0.03136 0.221 0.187 Shared Noise 0.03268 0.241 0.01821 0.216 0.04357 0.291 0.249 Posterior Alignment 0.01407 0.137 0.00918 0.124 0.02384 0.181 0.147 
+
+OneWorld 0.00462 0.079 0.00284 0.064 0.00713 0.103 0.082 
+
+Interpretation. This experiment separates interpolation in the underlying physics from general-ization to new initial scenes. Every evaluated test group uses both an initial state absent from training 26 and physical parameter values that never appear during either mechanism learning or world-model training. The shared-world gap measures whether the generated branches remain compatible with one physical explanation at these unseen intermediate values, while NPE measures whether the common explanation is close to the actual continuously interpolated simulator configuration. The two metrics should be interpreted jointly. A method can obtain a small shared-world gap by making its branches mutually compatible around an incorrect physical configuration; such a failure is exposed by high NPE. Conversely, low NPE together with a low shared-world gap indicates that the model both preserves one common world across interventions and places that world near the correct intermediate physics. The environment-level ∆world values show the consistency behavior in each dynamics regime, while Avg. NPE summarizes normalized physical-parameter accuracy across environments. The joint-interpolation protocol also rules out a weaker explanation in which the model interpolates only one physical factor while relying on a second factor seen during training. Because both co-ordinates of every test configuration are held out, successful performance requires interpolation in the two-dimensional physical parameter space rather than recognition of one of the original discrete training configurations. E.10 INDEPENDENCE OF TRAINING AND EVALUATION 
+
+The latent mechanism W used by OneWorld and the explicit simulator parameter vector w used by the evaluator are separate objects. The learned interpreter is trained only to model compatibility among action–outcome branches. Its dimensions are not used by the simulator-based evaluator. Conversely, the evaluator operates only on frozen state extractors, environment replay, and explicit candidate physical configurations. It does not access qϕ(W ), πϕ(W | I0), Cτ , or any intermediate feature from OneWorld. Thus, an improvement in the reported shared-world gap cannot arise from directly evaluating pre-dictions using the same learned compatibility function that supplied the training objective. 27
