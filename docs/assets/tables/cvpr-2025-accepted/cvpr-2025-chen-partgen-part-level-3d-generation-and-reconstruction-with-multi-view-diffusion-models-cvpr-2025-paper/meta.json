@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "extractor": "papercropper",
+  "tables": [
+    {
+      "url": "assets/tables/cvpr-2025-accepted/cvpr-2025-chen-partgen-part-level-3d-generation-and-reconstruction-with-multi-view-diffusion-models-cvpr-2025-paper/table-001.webp",
+      "caption": "",
+      "page": 0,
+      "index": 1,
+      "width": 861,
+      "height": 403,
+      "label": "Table"
+    },
+    {
+      "url": "assets/tables/cvpr-2025-accepted/cvpr-2025-chen-partgen-part-level-3d-generation-and-reconstruction-with-multi-view-diffusion-models-cvpr-2025-paper/table-002.webp",
+      "caption": "",
+      "page": 0,
+      "index": 2,
+      "width": 1442,
+      "height": 326,
+      "label": "Table"
+    },
+    {
+      "url": "assets/tables/cvpr-2025-accepted/cvpr-2025-chen-partgen-part-level-3d-generation-and-reconstruction-with-multi-view-diffusion-models-cvpr-2025-paper/table-003.webp",
+      "caption": "",
+      "page": 0,
+      "index": 3,
+      "width": 789,
+      "height": 204,
+      "label": "Table"
+    }
+  ]
+}

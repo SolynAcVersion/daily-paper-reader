@@ -1,0 +1,368 @@
+Title: Leveraging 3D Geometric Priors in 2D Rotation Symmetry Detection
+
+URL Source: https://openaccess.thecvf.com/content/CVPR2025/papers/Seo_Leveraging_3D_Geometric_Priors_in_2D_Rotation_Symmetry_Detection_CVPR_2025_paper.pdf
+
+Published Time: Mon, 02 Jun 2025 12:08:49 GMT
+
+Number of Pages: 10
+
+Markdown Content:
+# Leveraging 3D Geometric Priors in 2D Rotation Symmetry Detection 
+
+# Ahyun Seo Minsu Cho Pohang University of Science and Technology (POSTECH), South Korea 
+
+> http://cvlab.postech.ac.kr/research/RotSymDETR
+
+# Abstract 
+
+Symmetry plays a vital role in understanding structural pat-terns, aiding object recognition and scene interpretation. This paper focuses on rotation symmetry, where objects re-main unchanged when rotated around a central axis, re-quiring detection of rotation centers and supporting ver-tices. Traditional methods relied on hand-crafted feature matching, while recent segmentation models based on con-volutional neural networks (CNNs) detect rotation centers but struggle with 3D geometric consistency due to viewpoint distortions. To overcome this, we propose a model that di-rectly predicts rotation centers and vertices in 3D space and projects the results back to 2D while preserving structural integrity. By incorporating a vertex reconstruction stage enforcing 3D geometric priors—such as equal side lengths and interior angles—our model enhances robustness and accuracy. Experiments on the DENDI dataset show supe-rior performance in rotation axis detection and validate the impact of 3D priors through ablation studies. 
+
+# 1. Introduction 
+
+Symmetry is a key visual cue in both natural and man-made objects, helping us understand structure. Detecting symmetry aids tasks like object recognition and scene un-derstanding by revealing consistent patterns across orien-tations. This paper focuses on rotational symmetry—when an object looks the same after rotation around a central axis. Detecting it involves predicting the rotation center and sup-porting vertices, providing a 3D interpretation of symmetry. The main challenge in this task lies in the annotation pro-cess: labels are assigned from a human perspective to cap-ture symmetry in 3D, even when it is not apparent in 2D. Traditional methods have explored symmetry character-istics such as rotation centers, symmetry group cardinal-ity, and types [11, 12], relying on hand-crafted feature ex-traction and matching. More recently, convolutional neural networks (CNNs) have improved the robustness of rotation symmetry detection on real-world datasets [7, 27]. How-     
+
+> zxyuv
+> (c) 3D detection model with geometric prior
+> zxyuv
+> (a) 3D detection baseline model (b) Result (3D baseline)
+> (d) Result (Ours)
+> Figure 1. Rotation symmetry detection models and results. (a) 3D detection baseline model without geometric priors, and (b) its qualitative results. (c) Our 3D detection model with geometric priors, and (d) its corresponding qualitative results. The results highlight the benefits of incorporating 3D geometric constraints.
+
+ever, these methods focus mainly on detecting rotation cen-ters while overlooking supporting vertices and symmetry groups. Additionally, their reliance on image segmentation limits their ability to analyze individual symmetries. A key limitation of 2D-based rotation symmetry detec-tion models is their inability to enforce inherent geometric properties, as real-world objects are often labeled from a 3D perspective. This discrepancy leads to 2D ground truths that fail to capture geometric constraints due to viewpoint varia-tion, requiring the model to infer 3D semantics from image features alone. While 2D models can be adapted for detec-tion of individual axes, enforcing 3D geometric constraints under perspective distortions remains challenging. To overcome this, we propose a 3D-based detection framework that directly predicts rotation centers and ver-tices in 3D space before projecting them back to 2D. Dif-ferent approaches to rotation symmetry detection are illus-trated in Fig. 1. (a) presents our 3D detection baseline, which improves upon 2D formulations but lacks explicit ge-ometric constraints. Our final model (c) integrates 3D ge-ometric priors, ensuring structural consistency and greater This CVPR paper is the Open Access version, provided by the Computer Vision Foundation. Except for this watermark, it is identical to the accepted version; the final published version of the proceedings is available on IEEE Xplore. 22109 robustness to viewpoint variations. Qualitative comparisons in (b) and (d) demonstrate how these priors enhance the ac-curacy of rotation symmetry detection across perspectives. To this end, we introduce a novel rotation symmetry de-tection model that leverages 3D geometric priors for a more comprehensive analysis of symmetry. Beyond detecting the rotation center, the model predicts rotation folds and sup-porting vertices, offering a richer representation of symme-try. Instead of regressing 2D coordinates, it outputs 3D co-ordinates for the rotation center and vertices, ensuring that symmetry is preserved in 3D space. The key component of our model is the vertex reconstruction stage, which predicts a seed point and rotation axis to generate vertices while en-forcing geometric constraints, eliminating the need for indi-vidual vertex predictions. Our model outperforms the state-of-the-art in rotation symmetry detection on the heatmap-based DENDI benchmark, and ablations confirm the effec-tiveness of its components for rotation vertex detection. Our contributions are summarized as follows: • We introduce a novel rotation symmetry detection model that predicts sets of rotation centers, folds, and supporting vertices within a detection framework. • We design a vertex reconstruction module that generates all vertices from a seed point and rotation axis, enforcing 3D geometric priors without per-vertex regression. • Our approach achieves state-of-the-art results on the DENDI benchmark, with ablation studies validating the effectiveness of each proposed component. 
+
+# 2. Related Work 
+
+Rotation symmetry detection. Rotation symmetry is of-ten detected as periodic signals using spatial autocorrela-tion [16, 18] or frequency-based methods such as spec-tral density and angular correlation [10–12]. Loy and Ek-lundh [22] leverage SIFT descriptors, normalized by domi-nant orientation, to match keypoints and identify rotational symmetries. Other methods utilize Gradient Vector Flow (GVF)[25], affine-invariant contour features[31], and polar domain representations [1]. Recent advances [7, 27] have applied deep CNNs for rotation center detection to tackle real-world challenges. More recently, research has shifted toward 3D rotational symmetry detection [8, 26, 28], given the complexities of 2D-based approaches. Motivated by the 3D-informed labeling of real-world 2D symmetry datasets, we propose a rotation symmetry detection model with 3D geometric priors for improved accuracy and robustness. 
+
+Set-based object detection. DETR [2] reformulates ob-ject detection as a set-matching task, leveraging a Trans-former [29] to model interactions between features and ob-jects. By directly assigning predictions to ground-truth boxes, DETR removes the need for post-processing to elim-inate duplicate detections. To improve training efficiency, Deformable DETR [34] introduces a deformable attention mechanism that focuses on relevant features. SOLQ [6] further extends DETR’s approach by using object queries to simultaneously perform classification, bounding box re-gression, and instance segmentation. Other advancements in this framework include conditional spatial queries [23], dynamic attention [3], unsupervised pre-training [4], and query denoising [13]. In this paper, we design a set-based framework for rotation symmetry detection. 
+
+Vision-based 3D perception. Due to the high cost of Li-DAR sensors, research has increasingly focused on camera-only 3D perception, projecting 2D image features into 3D space. LSS [24] introduced a multi-view BEV approach with non-parametric depth, later improved for scalabil-ity [32], geometry awareness [33], and depth-supervised 3D object detection [9, 14]. DETR3D [30] enhances BEV ob-ject detection with 3D-to-2D queries, while PETR [19] en-codes 3D positional information into 2D features, reducing projection errors. BEVFormer [15] improves view trans-formations with spatial cross-attention and temporal self-attention for multi-frame fusion. Inspired by [15], this work introduces camera-centric queries to enable 3D rota-tion symmetry detection from 2D features. 
+
+# 3. Proposed Method 
+
+Rotation symmetry detection involves predicting the rota-tion center and supporting vertices, with annotations de-signed to reflect perceived 3D symmetry rather than just the 2D shape appearance. This paper introduces a novel rotation symmetry detection model that integrates 3D ge-ometric priors to enhance accuracy and robustness. The model processes the input image using a backbone network followed by a transformer encoder, augmented with addi-tional camera queries. The detection head predicts the 3D rotation center, a seed vertex, the rotation axis vector, and a classification score for the rotation group. The symme-try detection module incorporates vertex reconstruction and perspective projection: the seed vertex is duplicated based on the predicted symmetry group and axis, ensuring evenly spaced vertices around the center while maintaining geo-metric consistency. Finally, the reconstructed 3D coordi-nates are projected back to 2D image space. An overview of the complete pipeline is shown in Fig. 2. 
+
+## 3.1. Feature Learning 
+
+Camera queries. The rotation symmetry detector pre-dicts rotation centers and vertices in 3D camera coordinates. To transform backbone features from image coordinates to camera coordinates, we introduce camera queries —a set of grid-shaped learnable parameters denoted as Q ∈
+
+RC×Nx×Ny . Here, Nx and Ny represent the spatial dimen-sions along the x- and y-axes, while C is the embedding 22110 Figure 2. Overall pipeline. The input image is processed through a backbone and transformer encoder with camera queries. The detection head predicts the 3D rotation center, seed vertex, rotation axis, and symmetry group. The seed vertex is then duplicated according to the predicted symmetry group before the 3D coordinates are projected to 2D. 
+
+dimension. Each query Qq ∈ RC , located at pq , corre-sponds to a grid cell in the camera’s local coordinate space, covering a predefined range along the x- and y-axes. 
+
+Camera Cross Attention (CCA). Given an input feature map F ∈ RC×H×W , let q index a query feature map Q
+
+with a 2D reference point pq . The camera cross attention is computed as: CCA (Q, q, F) = 
+
+> Nref
+
+∑
+
+> i=1
+
+Deform( Qq , P(pq , z i), F), (1) 
+
+P(pq , z i) = 
+
+(f 0 cx
+
+0 f cy
+
+) 
+
+> pq,x
+
+/zi
+
+> pq,y
+
+/zi
+
+1
+
+ , (2) where Deform denotes deformable attention [34], f is the focal length, and cx, c y is the focal center. For each x-y
+
+position, Nref depth values along the z-axis generate 3D reference points, which are projected to 2D to sample image features. See Fig. 3 for details. 
+
+Transformer encoder. The model employs six trans-former encoder layers [34], taking camera queries and multi-scale backbone features as inputs. Multi-scale deformable attention handles self-attention, while the proposed CCA performs cross-attention, linking cam-era queries with backbone features. Inspired by BEV-Former [15], this setup efficiently encodes 2D image fea-tures into 3D camera coordinates.      
+
+> Camera coordinate Image coordinate
+> yxz
+> Camera reference points Camera queries (N !×N "×C) (x’, y’, z’) (u’, v’)
+> Image features (N #×N $×C)
+> uv
+> Image reference points projection
+
+Figure 3. Camera Cross Attention. The 3D reference point grids in camera coordinates are projected onto image coordinates to query the backbone image features. 
+
+## 3.2. Rotation Symmetry Detection 
+
+Detection head. Each query is processed by the trans-former decoder and then passed to a classification branch and a regression branch. The classification branch predicts the rotation symmetry group g, defining the order of sym-metry N . The regression branch outputs four parameters that define the 3D geometric structure as 
+
+[c⊤ s⊤ a⊤ β]⊤ , (3) 22111 < No polygon >     
+
+> < Rotation Center Matching (RCM) >
+> C8
+> C8
+> C6
+> C4
+> Rotation Center Matching
+> C8
+> C8
+> C6
+> C4
+> < Rotation Vertex Matching (RVM) >
+> Initial predictions Input image Matched predictions Reconstructed vertices Rotation Vertex Matching
+> Figure 4. Overview of the training pipeline. The model employs a two-step bipartite matching process: first, rotation center matching aligns the centers of predictions with ground truth centers, followed by matching the rotation vertices after vertex reconstruction.
+
+where c ∈ R3 is the 3D center coordinate, s ∈ R3 is the 3D seed coordinate (a vertex on the polygon boundary), a ∈ R3
+
+is the 3D axis vector defining the rotation axis, and β is an angle bias for initial alignment in certain shapes (e.g., rect-angles). These parameters define the spatial structure and orientation needed to construct the polygon in 3D space. 
+
+Vertex reconstruction. To position vertices according to the predicted rotation symmetry group in 3D space, each vertex vk is computed by rotating a seed point s around a rotation axis vector a, centered at the rotation center c. The axis a is normalized to a unit vector. Each rotation vertex is given by vk = rk + c, where the rotated vector rk is calculated using Rodrigues’ rotation formula: 
+
+rk = r cos θk + ( a × r) sin θk + a(a · r)(1 − cos θk),
+
+(4) with the initial radial vector r = s − c, and rotation angle 
+
+θk = 2πk N . Given the predicted symmetry group order N ,we generate N vertices by setting k = 1 , 2, . . . , N .
+
+Vertex reconstruction for C 2 group. For the C 2 group, vertex reconstruction can be performed by rotating the seed vertex 180 degrees to obtain two vertices. However, C 2 ob-jects are typically rectangles consisting of two C 2 vertex pairs that share a single center. To efficiently predict these structures within the current framework, we modify the ap-proach to predict four vertices from one C 2 center. In this setup, the regression branch additionally predicts an angle bias β (ranging from 0 to 90 degrees). Vertex reconstruction is then performed with rotation angles of 0, π 
+
+> 4
+
++ β, π 
+
+> 2
+
+, and  
+
+> π
+> 2
+
++ β to obtain the vertices from the seed vertex. 
+
+3D-to-2D projection. The predicted center c and vertices 
+
+v1, · · · , vV are projected onto the 2D image plane using the focal length f and focal center (cx, c y ). The projection of a 3D point p = ( px, p y , p z )⊤ to its 2D image coordinates 
+
+p′ = ( p′
+
+> x
+
+, p ′ 
+
+> y
+
+)⊤ is expressed in matrix-vector form as 
+
+(p′
+
+> x
+
+p′
+
+> y
+
+)
+
+=
+
+(f 0 cx
+
+0 f cy
+
+) 
+
+> px
+
+/pz
+
+> py
+
+/pz
+
+1
+
+ . (5) By applying this projection to the center c and each vertex 
+
+vk, the 2D image coordinates of the rotation center c′ and vertices {v′
+
+> k
+
+}Vk=1 are obtained. 
+
+## 3.3. Training 
+
+Set-based training. Each image contains a ground-truth set of polygons Y. Each polygon Yi = ( c′
+
+> i
+
+, g i, Vi) where a rotation center coordinate c′, a rotation group g, and a set of vertices V = {v′
+
+> k
+
+}Vk=1 , where V is the number of ver-tices defined by the rotation group. The set of predictions, denoted as ˆY, each prediction additionally includes a binary classification logit for each group g as ˆp(g). During train-ing, a two-step matching process optimizes the detection of rotation centers and vertices. First, the model aligns pre-dicted polygon centers with ground-truth centers. For each matched polygon, the model then aligns the set of vertices. 
+
+Rotation Center Matching (RCM). The optimal assign-ment ˆσ is computed to minimize the matching cost Ccenter :
+
+ˆσ = arg min 
+
+> σ
+
+∑ 
+
+> i
+
+Ccenter (Yi, ˆYσ(i)), (6) where the matching cost is defined as 
+
+Ccenter = 1{gi̸ =∅} 
+
+[ − ˆpσ(i)(gi) + ∥c′ 
+
+> i
+
+− ˆc′
+
+> σ(i)
+
+∥1
+
+]. (7) 22112 Figure 5. Class distribution of rotational symmetry groups in the DENDI dataset, shown as object counts (log scale) per group. The x-axis shows rotation groups, and the y-axis shows object fre-quency. Train, validation, and test splits are shown side-by-side. 
+
+Following [2], the ground-truth set Y is augmented to in-clude N polygons by inserting ∅ for missing entries. 
+
+Rotation Vertex Matching (RVM). Once the centers are matched, the corresponding vertex sets (Vi, ˆVσ(i)) are aligned. The optimal vertex assignment ˆρ is defined to min-imize the vertex matching cost as 
+
+ˆρ = arg min 
+
+> ρV
+
+∑
+
+> j=1
+
+∥v′ 
+
+> j
+
+− ˆv′
+
+> ρ(j)
+
+∥1. (8) Only predictions matched with Yi with non-empty gi are included in the vertex matching process. 
+
+Training Objective. For each polygon pair (y, ˆy), the center loss Lcenter and the vertex loss Lvertex are defined as 
+
+Lcenter (Yi, ˆYσ(i)) = − log ˆ pσ(i)(gi) + Lreg (c′
+
+> i
+
+, ˆc′
+
+> σ(i)
+
+), (9) 
+
+Lvertex (Vi, ˆVσ(i)) = ∑ 
+
+> k
+
+Lreg (v′
+
+> k
+
+, ˆv′
+
+> ˆρ(k)
+
+), (10) where Lreg indicates the l1 loss. The overall training objec-tive Ltotal is defined as 
+
+Ltotal = ∑ 
+
+> i
+
+Lcenter (Yi, ˆYσ(i)) + Lvertex (Vi, ˆVσ(i)). (11) 
+
+# 4. Experiments 
+
+## 4.1. Experimental Settings 
+
+Datasets. The DENDI dataset [27] is a real-world dataset designed for symmetry detection. The rotational symmetry subset consists of 1,459 images for training, 313 for valida-tion, and 307 for testing. It includes annotated rotation cen-ters for objects belonging to the following rotational sym-metry groups: SO(2), C 2, C 3, C 4, C 5, C 6, and C 8. For polygonal objects with cyclic rotational symmetry, vertex 
+
+> Table 1. Rotation center detection results on DENDI.
+
+Method SO(2) C2 C3 C4 C5 C6 C8 mean Ours 62.1 30.7 6.3 5.3 48.6 9.0 65.9 31.3 
+
+> Table 2. Rotation vertex detection results on DENDI.
+
+Method C2 C3 C4 C5 C6 C8 mean Ours 39.4 14.3 27.1 27.3 28.8 46.7 30.6 coordinates are also provided. Only discrete rotation groups are used for vertex detection, resulting in 219 validation im-ages and 253 testing images. The class distribution across symmetry groups is highly imbalanced, as shown in Fig. 5. 
+
+Evaluation. Average Precision (AP) is used to evaluate rotation symmetry center and vertex detection. A predic-tion is considered correct if d < τ · max( w, h ), where d
+
+is the distance to the nearest ground-truth center, (w, h ) are the image dimensions, and τ = 0 .025 [17]. During evalua-tion, ground-truth and predicted centers are matched using bipartite matching, followed by vertex matching for each pair. Vertex AP is computed only for successfully matched polygons. To compare with prior work, we also report the F1-score of predicted rotation centers. Since this metric uses score maps, predicted centers are rendered as heatmaps with confidence scores. Following [27], ground-truth and predicted score maps are dilated by 5 pixels. 
+
+Implementation details. We use a Swin-T backbone [20] pretrained on ImageNet [5], mapping features from layers 1–3 to 256 dimensions. The model is trained for 200 epochs using AdamW [21] with a learning rate of 0.0002, weight decay of 0.001, and a backbone learning rate 10× lower. Training uses a batch size of 8 with images resized to a max side of 1333 pixels, and only random flipping is applied for rotation augmentation. The model predicts 3D points within a point cloud range of [−1, 1] meters in x-y and [0 , 4] meters in z. Since the DENDI dataset [27] lacks camera intrinsics, we set the focal center to the image center and the focal length to 1000. The regression cost is weighted at 10, while center and vertex losses are weighted at 1. We use 800 ob-ject queries and apply no test-time post-processing. 
+
+## 4.2. Evaluation of the Proposed Method 
+
+Rotation center detection. Rotation center detection re-sults on the DENDI test set are shown in Tab. 1. Perfor-mance for the C 3 and C 6 groups is relatively low, likely due to limited testing samples. For C 4, performance is affected by potential confusion with C 2 and the smaller size of the objects, which can lower AP. 22113 (a) Ground-truth (b) 2D baseline (c) 3D baseline (d) Ours Figure 6. Qualitative comparison of rotation vertex detection results on the DENDI dataset. Each set of four columns displays ground truth, the results of 2D baseline, 3D baseline, and ours. Only polygon predictions with all true-positive vertices are marked(green). 
+
+Rotation vertex detection. Rotation vertex detection re-sults on the DENDI test set are presented in Tab. 2. The SO(2) group is excluded from both training and evaluation. For C N groups (except C 2), objects are annotated with N
+
+vertices. For C 2, only rectangular objects are included, ex-cluding ellipses. Each image uses 800 object queries to predict polygons. Predicted polygons are first matched to ground-truth polygons based on center proximity. Vertex-level true positives are then determined by bipartite match-ing between the vertex sets of each matched pair, followed by classification using a distance threshold. 
+
+## 4.3. Ablation Study 
+
+Baseline models. To evaluate the impact of each compo-nent on rotation vertex detection, we compare three models: a 2D baseline, a 3D baseline, and our full model. The 2D baseline directly predicts rotation centers and vertices in im-age coordinates. The 3D baseline introduces camera cross attention to lift 2D features into 3D space, allowing pre-dictions in 3D coordinates that are then projected back to 2D. Our final model includes a vertex reconstruction stage, 
+
+> Table 3. Rotation vertex detection results on DENDI.
+
+Method 3D query/pred. vertex recon. mAP 2D baseline 24.7 3D baseline ✓ 23.5 Ours ✓ ✓ 30.6 
+
+where a seed vertex is duplicated around the center based on the predicted symmetry group for geometric consistency. 
+
+Quantitative results. As shown in Tab. 3, the 2D baseline achieves a mean AP of 24.7, while the naive 3D baseline drops slightly to 23.5, likely due to projection noise or mis-alignment without strong geometric constraints. With our vertex reconstruction scheme, which enforces symmetry-aware 3D priors, performance significantly improves to 30.6. These results demonstrate the importance of explicitly modeling 3D geometric constraints to enhance both accu-racy and structural consistency in rotation vertex detection. 22114 Input/output image 3D visualization 
+
+> Ours 3D Baseline
+> 2D Baseline GT Ours 3D Baseline 2D Baseline GT
+> Ours 3D Baseline
+> Ours 3D Baseline
+
+xzyxzyxzyxzy(a) (b) Figure 7. Qualitative comparison of rotation vertex detection on the DENDI dataset. Each row shows input images with detected vertices (true positives in green, others in cyan) for the ground truth, 2D baseline, 3D baseline, and our method, followed by 3D plots illustrating predicted points and geometric properties such as distances and co-planarity. 
+
+Qualitative results. Fig. 6 shows a qualitative compari-son of the baselines and our method. Our model follows geometric rules like equal side lengths and angles by re-constructing vertices instead of predicting them individu-ally. As seen in the last row, our method handles cluttered scenes well and performs notably better on C 6 objects. 
+
+## 4.4. Analysis in 3D 
+
+To evaluate the effect of 3D geometric priors, we compare our model against a 3D baseline that predicts 3D points and projects them into 2D in Fig. 7. Each row includes the in-put, ground truth, 2D baseline, 3D baseline, and our result, followed by 3D plots of predicted points. Detected vertices are overlaid on input images (green for true positives, cyan for others), while 3D plots show the rotation center (red), vertices (blue), and a triangle connecting the center to two nearby vertices to illustrate geometric alignment. In row (a), the object appears tilted. While the 3D base-line provides slightly better 2D localization, its 3D predic-tions show distorted vertex placements. Our model, by con-trast, correctly captures the rectangular structure in both 2D 
+
+> Table 4. Rotation symmetry detection results on DENDI.
+
+Method prediction max f1-score EquiSym [27] segmentation 22.5 Ours detection 33.2 
+
+and 3D, benefiting from geometric priors. In row (b), our model accurately detects overlapping rectangular windows, particularly those closer to the camera, preserving consis-tent 3D spacing and depth ordering—something the base-line struggles with. These examples demonstrate that while 2D accuracy alone does not guarantee proper 3D arrange-ment, incorporating 3D geometric constraints improves both spatial structure and projection quality. Nonetheless, some failure cases remain, particularly in estimating the ro-tation axis under severe viewpoint variations. 
+
+## 4.5. Comparison with the State-of-the-art Method 
+
+Quantitative results. We compare our approach with the state-of-the-art method by evaluating it within a heat-map 22115 Ground-truth EquiSym Ours Ground-truth EquiSym Ours   
+
+> Figure 8. Qualitative results of rotation center detection on the DENDI dataset. Each set of three columns shows ground truth, EquiSym [27], and our method. Our detection-based model allows for analysis of individual symmetries.
+
+based framework, as presented in Tab. 4. Our model outper-forms EquiSym [27] with a maximum F1-score of 33.2. To produce the foreground score map, predicted points for all classes that exceed the score threshold are rendered. Con-sistent with [27], 100 thresholds between 0 and 1 are ap-plied. Remarkably, despite employing a detection-based ap-proach, our model surpasses EquiSym’s segmentation met-ric, highlighting the robustness of the proposed method even when evaluated with segmentation-based metrics. 
+
+Qualitative results. Detected rotation centers are shown in Fig. 8, using a confidence threshold that maximizes the F1-score in Tab. 4. Unlike EquiSym, which outputs heatmaps requiring post-processing, our detection-based approach directly identifies individual symmetries. This not only aligns with traditional methods but also enables var-ious downstream applications. The results also show the model’s ability to detect dense symmetries across groups. 
+
+# 5. Conclusion 
+
+We have presented a rotation symmetry detection model that leverages 3D geometric priors for robust symmetry analysis. It directly predicts rotation centers and vertices in 3D space and projects the results back to 2D while pre-serving structural integrity. Experiments demonstrate the effectiveness of 3D geometric priors in the detection of ro-tation vertices. Future work will address challenging cases with viewpoint variations by predicting camera intrinsics to improve projection accuracy. 
+
+Acknowledgements. This work was supported by the Samsung Electronics AI Center and also by the IITP grants (RS-2022-II220290: Visual Intelligence for Space-Time Understanding and Generation (50%), RS-2021-II212068: AI Innovation Hub (45%), RS-2019-II191906: Artificial Intelligence Graduate School Program at POSTECH (5%)) funded by the Korea government (MSIT). 22116 References 
+
+[1] Habib Akbar, Muhammad Munwar Iqbal, Abid Ali, Amna Parveen, Nagwan Abdel Samee, Manal Abdullah Alohali, and Mohammed Saleh Ali Muthanna. Detecting rotational symmetry in polar domain based on sift. IEEE Access , 11: 68643–68652, 2023. 2 [2] Nicolas Carion, Francisco Massa, Gabriel Synnaeve, Nicolas Usunier, Alexander Kirillov, and Sergey Zagoruyko. End-to-end object detection with transformers. In ECCV , pages 213–229. Springer, 2020. 2, 5 [3] Xiyang Dai, Yinpeng Chen, Jianwei Yang, Pengchuan Zhang, Lu Yuan, and Lei Zhang. Dynamic detr: End-to-end object detection with dynamic attention. In Proceedings of the IEEE/CVF international conference on computer vision ,pages 2988–2997, 2021. 2 [4] Zhigang Dai, Bolun Cai, Yugeng Lin, and Junying Chen. Up-detr: Unsupervised pre-training for object detection with transformers. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pages 1601– 1610, 2021. 2 [5] Jia Deng, Wei Dong, Richard Socher, Li-Jia Li, Kai Li, and Li Fei-Fei. Imagenet: A large-scale hierarchical image database. In cvpr , pages 248–255. Ieee, 2009. 5 [6] Bin Dong, Fangao Zeng, Tiancai Wang, Xiangyu Zhang, and Yichen Wei. Solq: Segmenting objects by learning queries. 
+
+Advances in Neural Information Processing Systems , 34: 21898–21909, 2021. 2 [7] Christopher Funk and Yanxi Liu. Beyond planar symmetry: Modeling human perception of reflection and rotation sym-metries in the wild. In ICCV , pages 793–803, 2017. 1, 2 [8] Luk´ aˇ s Hruda, Ivana Kolingerov´ a, Miroslav L´ aviˇ cka, and Martin Maˇ n´ ak. Rotational symmetry detection in 3d using reflectional symmetry candidates and quaternion-based rota-tion parameterization. Computer Aided Geometric Design ,98:102138, 2022. 2 [9] Junjie Huang, Guan Huang, Zheng Zhu, Yun Ye, and Da-long Du. Bevdet: High-performance multi-camera 3d object detection in bird-eye-view. arxiv preprint , 2021. 2 [10] Yosi Keller and Yoel Shkolnisky. A signal processing ap-proach to symmetry detection. IEEE TIP , 15(8):2198–2207, 2006. 2 [11] Seungkyu Lee and Yanxi Liu. Skewed rotation symmetry group detection. IEEE TPAMI , 32(9):1659–1672, 2009. 1 [12] Seungkyu Lee, Robert T Collins, and Yanxi Liu. Rotation symmetry group detection via frequency analysis of frieze-expansions. In CVPR , pages 1–8. IEEE, 2008. 1, 2 [13] Feng Li, Hao Zhang, Shilong Liu, Jian Guo, Lionel M Ni, and Lei Zhang. Dn-detr: Accelerate detr training by intro-ducing query denoising. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition ,pages 13619–13627, 2022. 2 [14] Yinhao Li, Zheng Ge, Guanyi Yu, Jinrong Yang, Zengran Wang, Yukang Shi, Jianjian Sun, and Zeming Li. Bevdepth: Acquisition of reliable depth for multi-view 3d object detec-tion. In AAAI , 2023. 2 [15] Zhiqi Li, Wenhai Wang, Hongyang Li, Enze Xie, Chong-hao Sima, Tong Lu, Yu Qiao, and Jifeng Dai. Bevformer: Learning bird’s-eye-view representation from multi-camera images via spatiotemporal transformers. In ECCV , 2022. 2, 3[16] Hsin-Chih Lin, Ling-Ling Wang, and Shi-Nine Yang. Ex-tracting periodicity of a regular texture based on autocorre-lation functions. Pattern recognition letters , 18(5):433–443, 1997. 2 [17] Jingchen Liu, George Slota, Gang Zheng, Zhaohui Wu, Min-woo Park, Seungkyu Lee, Ingmar Rauschert, and Yanxi Liu. Symmetry detection from realworld images competi-tion 2013: Summary and results. In CVPRW , pages 200–205, 2013. 5 [18] Yanxi Liu, Robert T Collins, and Yanghai Tsin. A computa-tional model for periodic pattern perception based on frieze and wallpaper groups. IEEE TPAMI , 26(3):354–371, 2004. 2[19] Yingfei Liu, Tiancai Wang, Xiangyu Zhang, and Jian Sun. Petr: Position embedding transformation for multi-view 3d object detection. In ECCV , 2022. 2 [20] Ze Liu, Yutong Lin, Yue Cao, Han Hu, Yixuan Wei, Zheng Zhang, Stephen Lin, and Baining Guo. Swin transformer: Hierarchical vision transformer using shifted windows. In 
+
+ICCV , pages 10012–10022, 2021. 5 [21] Ilya Loshchilov and Frank Hutter. Decoupled weight decay regularization. In ICLR , 2019. 5 [22] Gareth Loy and Jan-Olof Eklundh. Detecting symmetry and symmetric constellations of features. In ECCV , pages 508– 521. Springer, 2006. 2 [23] Depu Meng, Xiaokang Chen, Zejia Fan, Gang Zeng, Houqiang Li, Yuhui Yuan, Lei Sun, and Jingdong Wang. Conditional detr for fast training convergence. In Proceed-ings of the IEEE/CVF international conference on computer vision , pages 3651–3660, 2021. 2 [24] Jonah Philion and Sanja Fidler. Lift, splat, shoot: Encoding images from arbitrary camera rigs by implicitly unprojecting to 3d. In ECCV . Springer, 2020. 2 [25] V Shiv Naga Prasad and Larry S Davis. Detecting rotational symmetries. In ICCV , pages 954–961. IEEE, 2005. 2 [26] T Sawada and M Farshchi. Visual detection of 3d mirror-symmetry and 3d rotational-symmetry. Visual Cognition , 30 (8):546–563, 2022. 2 [27] Ahyun Seo, Byungjin Kim, Suha Kwak, and Minsu Cho. Reflection and rotation symmetry detection via equivariant learning. In The IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2022. 1, 2, 5, 7, 8 [28] Yifei Shi, Xin Xu, Junhua Xi, Xiaochang Hu, Dewen Hu, and Kai Xu. Learning to detect 3d symmetry from single-view rgb-d images with weak supervision. IEEE Transac-tions on Pattern Analysis and Machine Intelligence , 45(4): 4882–4896, 2022. 2 [29] A Vaswani. Attention is all you need. Advances in Neural Information Processing Systems , 2017. 2 [30] Yue Wang, Vitor Campagnolo Guizilini, Tianyuan Zhang, Yilun Wang, Hang Zhao, and Justin Solomon. Detr3d: 3d object detection from multi-view images via 3d-to-2d queries. In CoRL , 2022. 2 22117 [31] Zhaozhong Wang, Zesheng Tang, and Xiao Zhang. Reflec-tion symmetry detection using locally affine invariant edge correspondence. IEEE TIP , 24(4):1297–1301, 2015. 2 [32] Enze Xie, Zhiding Yu, Daquan Zhou, Jonah Philion, Anima Anandkumar, Sanja Fidler, Ping Luo, and Jose M Alvarez. M2BEV: Multi-camera joint 3d detection and segmentation with unified birds-eye view representation. arxiv preprint ,2022. 2 [33] Jiayu Yang, Enze Xie, Miaomiao Liu, and Jose M Alvarez. Parametric depth based feature representation learning for object detection and segmentation in bird’s-eye view. In 
+
+ICCV , 2023. 2 [34] Xizhou Zhu, Weijie Su, Lewei Lu, Bin Li, Xiaogang Wang, and Jifeng Dai. Deformable detr: Deformable transformers for end-to-end object detection. In ICLR , 2021. 2, 3 22118

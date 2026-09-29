@@ -1,0 +1,429 @@
+Title: 07710.pdf
+
+URL Source: https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/07710.pdf
+
+Published Time: Tue, 01 Oct 2024 09:21:30 GMT
+
+Number of Pages: 18
+
+Markdown Content:
+# Consistent 3D Line Mapping 
+
+Xulong Bai 1,2,3 , Hainan Cui 1,2,3* , and Shuhan Shen 1,2,3* 
+
+> 1
+
+Institute of Automation, Chinese Academy of Sciences  
+
+> 2
+
+School of Artificial Intelligence, University of Chinese Academy of Sciences  
+
+> 3
+
+CASIA-SenseTime Research Group 
+
+baixulong2022@ia.ac.cn, {hncui,shshen}@nlpr.ia.ac.cn 
+
+Abstract. We address the problem of reconstructing 3D line segments along with line tracks from multiple views with known camera poses. The basic pipeline is first generating 3D line segment proposals for each 2D line segment, then selecting the best proposals, merging them to pro-duce 3D line segments and line tracks, and finally performing non-linear optimization. Our key contributions are focused on exploring and alle-viating the inconsistency problems in classical approaches. In the best proposal selection, we analyze the inherent inconsistency problem of sup-port relationships from 2D to 3D determined during proposal evaluation using multiple views and propose an iterative algorithm to handle it. In line track building, we impose 2D collinearity constraints to enhance the consistency of the elements in each line track. In optimization, we intro-duce coplanarity constraints and jointly optimize points, lines, planes, and vanishing points, enhancing the consistency of the structure of the line map. Experimental results demonstrate that our emphasis on con-sistency enables our line maps to achieve state-of-the-art completeness and accuracy, while also generating longer and more robust line tracks. Code is available at https://github.com/3dv-casia/clmap .
+
+Keywords: 3D Line Mapping · Consistent Reconstruction · 3D Line Optimization 
+
+## 1 Introduction 
+
+Compared to 3D points, 3D line segments have lower redundancy and are better suited for representing weak textures and slender structures. They are also com-monly found in man-made environments. The produced 3D line segments map has been applied to many other tasks, including visual localization [24, 30, 47], surface reconstruction [18, 29, 46], pose refinement [24] and mesh refinement [5]. According to the difference of line matching manner, the classical 3D line mapping approaches can be classified into one-to-one matching, and without one-to-one matching methods. For one-to-one matching methods, such as [2, 3, 7,16,19,31,44,54], only one-to-one 2D line segment correspondences are permit-ted. These methods predominantly concentrate on line matching and subsequent 
+
+> *
+
+Corresponding author 2 X. Bai et al. 
+
+triangulation. For without one-to-one matching methods [9–12,15,24], the strin-gent requirement for one-to-one 2D line segment correspondences is relaxed. Typically, these methods operate by identifying the top K line matches in a neighboring image for each 2D line segment. Subsequently, they use each match to triangulate one or more 3D line segment proposals (referred to as pro-posals in this paper) corresponding to the reference 2D line segment. The best proposal is then selected, and clustering is performed to generate 3D line segments and line tracks. Finally, non-linear optimization is employed for lines. Compared to one-to-one matching, the top K matching manner reduces the demand for 2D line matching accuracy and more possible 3D lines can be pro-duced. Hence, our method falls into the second category. However, more outlier matches present a significant challenge for reconstruction. In classical meth-ods of line reconstruction without one-to-one matching, e.g ., L3D++ [11] and LIMAP [24], we find three inconsistency issues. 1) In the best proposal selection module, classical methods independently select the best proposal for each 2D line segment. This undermines the consistency of the support relationships. Initially, we assume a matched 2D line segment supports a proposal based on a repro-jection test. However, after selecting its own best proposal, this best proposal and the supported proposal may not be collinear, leading to the inconsistency of the support relationship. 2) In the line track building module, classical methods often neglect 2D collinearity constraints, potentially resulting in the assignment of two non-collinear 2D line segments within the same image to the same line track. Such an assignment would be inconsistent with the definition of a line track. Note that a line track is a set of 2D line segments on several images observing certain parts of a 3D line segment entity. 3) In the optimization mod-ule, classical methods miss the coplanarity constraints among lines, leading to inconsistencies between the structure represented by the line map and the real-ity. While the method in SLAM [20] jointly optimizes points, lines, and planes, the current line-to-plane distance is affected by the position of the coordinates system, causing discrepancies in distances for identical line-plane configurations across different locations in 3D. Furthermore, classical methods often manually set weights for energy terms with different units, which seems highly ad hoc. In this paper, we establish a systematic approach for consistent 3D line map-ping, presenting the following primary contributions: 
+
+– We first improve the proposal generation module by leveraging unshared 3D points and then propose an iterative algorithm to update the best proposals by leveraging the previous best proposals of the matched 2D line segments for scoring, thereby enhancing the consistency of the support relationships. 
+
+– We propose a strategy for generating line tracks based on the 2D collinearity constraint of the track elements. This prevents two non-collinear 2D line segments within the same image from being assigned to the same line track, thereby enhancing the consistency of the elements in each line track. 
+
+– We introduce coplanarity constraints to 3D line mapping, and jointly opti-mize points, lines, planes, and vanishing points (VPs), improving the con-sistency of the structure of the line map. We also present a coordinate-Consistent 3D Line Mapping 3        
+
+> (a) L3D++ [11] (b) LIMAP [24] (c) Ours (d) Associations
+> Fig. 1: Results of 3D line mapping. In comparison, our method reconstructs a more complete 3D line map and also produces point-plane and line-plane associations.
+
+independent method for measuring line-to-plane distance and introduce a method for adaptively computing the weight of each energy term. The effectiveness of our method is demonstrated on both synthetic and real image datasets. As shown in Fig. 1, our approach showcases superior complete-ness and competitive accuracy when compared to the method in [11,24]. Besides generating point-line and line-VP associations as proposed by LIMAP [24], we can also produce point-plane and line-plane associations. 
+
+## 2 Related Work 
+
+Line Reconstruction with One-to-one Matching. Based on the 2D line segment detectors [14, 32, 33, 42, 49] and descriptors [41, 52, 53], various meth-ods of line reconstruction with one-to-one matching are proposed. Hartley and Zisserman [7] summarized Plücker matrices and Plücker coordinates of line and multi-view line triangulation methods. Bartoli and Sturm [3] proposed the or-thonormal representation of line. Josephson and Kahl [16] proposed a statisti-cally optimal multi-view line triangulation method. Wei et al . [44] proposed a line-matching method based on planes and points and selected the representa-tive 3D line segments to produce final 3D line segments. Zhang and Koch [54] proposed the Cayley representation of line and built a line-based Structure-from-Motion (SfM) system. There are also other efforts dedicated to line-based SfM [31, 34, 36, 40, 45]. Recently, the line features have also been integrated with points [6,8,43,48,50], planes [20,39,51,55] or vanishing points [13,21] in SLAM to improve the localization performance. However, these methods, relying on pre-cise one-to-one matching, face serious challenges with too many outlier matches. 
+
+Line Reconstruction without One-to-one Matching. To handle the prob-lem of limited line description, some methods of line reconstruction do not strictly require one-to-one matching. Jain et al . [15] proposed a line reconstruc-tion method based on a sweeping approach [4] and connectivity constraints, which eliminates the need for explicit matches. However, this method is time-consuming and cannot accurately reconstruct line segments outside the sweeping range. Subsequently, Hofer et al . [12] mitigated these drawbacks by employing weak epipolar constraints to identify multiple candidate matches for generating 3D line segment proposals. This approach has undergone further development in their subsequent works [9,10], culminating in the Line3D++ [11] package (re-ferred to as L3D++ in this paper). Liu et al . [24] utilized points and vanishing 4 X. Bai et al. Inputs    
+
+> Best Proposal Selection Line Track Building
+> Line / VP Detection &
+> 2D Point -line / Line -VP Association
+> 3D Line Segment
+> Proposal Generation
+> Posed images
+> new best proposal
+> initialize
+> best proposal map
+> initial best proposal
+> update map
+> SfM points
+> +
+> Reprojection: point, line
+> Joint Optimization
+> 3D Associations:
+> point -line, point -plane,
+> line -plane, line -VP
+> VP
+> Top K Line Matching +
+
+Fig. 2: Pipeline overview. Given posed images and SfM points, we first perform feature detection, matching, and association. Then, we sequentially run the process of 3D line segment proposal generation (only demonstrating the Line+Line method here), best proposal selection, line track building, and end with joint optimization. 
+
+points to generate 3D line segment proposals, addressing the degeneration issue of line triangulation. They also designed robust similarity functions to measure two lines, and jointly optimized points, lines, and vanishing points. In addition, they introduced the library LIMAP [24]. However, these methods often overlook the importance of maintaining consistency among support relationships, line tracks, and the structure of the line map. In this paper, we focus on mitigating inconsistency issues by introducing a consistent 3D line mapping system. Additionally, some methods [22, 23, 26] directly fit lines from point clouds, but they struggle to handle sparse point clouds and noise. Some learning-based methods have been proposed to reconstruct wireframes from point clouds [25], line clouds [27] or a single image [28, 56]. 
+
+## 3 Consistent 3D Line Mapping 
+
+Starting with the posed images, our process begins by detecting 2D line seg-ments and retrieving the top K line matches from each of the nv neighboring images. Then, we create 3D line segment proposals and determine the best pro-posal for each 2D line segment. These best proposals are merged to build line tracks. Lastly, we perform joint optimization involving points, lines, planes, and vanishing points. An overview of the pipeline is depicted in Fig. 2. 
+
+3.1 3D Line Segment Proposal Generation 
+
+Let lr denote the reference 2D line segment, and lm denote one of its matched 2D line segments. Given a line match ( lr , lm), we initially generate multiple 3D line Consistent 3D Line Mapping 5𝑙 𝑟  𝑙 𝑚  
+
+> Fig. 3: We use both shared (red) and unshared (green) 3D points to establish the association between 2D lines and 3D points.
+
+segment proposals of lr , based on the four methods proposed in LIMAP [24]: 1) Line+Line: intersecting the planes defined by back-projecting lr and lm to get a 3D line; 2) Multiple Points: fitting a 3D line using 3D points; 3) Line+Point: triangulating a 3D line based on the positional constraint from a 3D point; 4) Line+VP: triangulating a 3D line based on the directional constraint from a vanishing point. These four methods only yield 3D infinite lines. Each 3D infinite line is projected onto back-projected rays formed by the endpoints of lr to yield the two 3D endpoints of a 3D line segment proposal. For each 2D line segment, we utilize all its matches to generate its 3D line segment proposals. In both the Multiple Points and Line+Point methods, a crucial step involves establishing the association between 2D lines and 3D points. This is typically achieved through the point tracks obtained from SfM and the association be-tween 2D points and 2D lines. Specifically, LIMAP [24] employs shared 3D points to establish associations, where the point track elements ( i.e ., observations) must simultaneously lie on lr and lm. However, due to the limited capability of tra-ditional keypoint detectors and descriptors, and SfM point track builders, some observations of 3D points that indeed lie on the true 3D line may not simulta-neously exist on lr and lm. We refer to 3D points that are observed on either lr
+
+or lm, but not both, as unshared 3D points. Unlike LIMAP [24], our method, illustrated in Fig. 3, goes beyond utilizing shared 3D points. We also incorpo-rate unshared 3D points to establish associations, ensuring that these unshared 3D points pass the reprojection error test. This contributes significantly to the overall completeness of the line map. 
+
+3.2 Best Proposal Selection 
+
+Our goal is to select the best proposal for each 2D line segment. We will first revisit classical methods L3D++ [11] and LIMAP [24], analyze their inherent inconsistency issues, and finally present our proposed solution. 
+
+Classical Methods. Let lij denote the 2D line segment j on the image i, Lkij 
+
+the kth proposal of lij . L3D++ [11] and LIMAP [24] evaluate the score s1(Lkij )
+
+for each proposal Lkij , and ultimately select the one with the highest score as the best proposal. As depicted in Fig. 4, to compute s1(Lkij ), classical methods first retrieve all matched lines on a neighboring image p along with a set of proposals Lp generated by lij and these matched lines. To better describe the selection process, we simply assume each match generates only one proposal using the Line+Line method. Suppose Lkij and the proposal Lrij generated by lij 6 X. Bai et al. 𝑙 𝑖𝑗  𝑙 𝑝𝑞   
+
+> 𝐶 𝑖 𝐶 𝑝
+> 𝐿 𝑖𝑗
+> 𝑟
+> 𝐿 𝑖𝑗
+> 𝑘 ෠𝐿 𝑝𝑞
+
+Fig. 4: Inconsistency in classical methods [11, 24]. Suppose lpq (blue) is a supporting 2D line segment for Lkij (red), after selecting lpq ’s best proposal ˆLpq (green) through Eq. (1), the Lkij and ˆLpq may not be collinear. In this case, the assumed support relationship from lpq to Lkij and the correctness of the best proposal ˆLpq cannot be established simultaneously, leading to an inconsistency issue. 
+
+and lpq are sufficiently similar and Lrij is the proposal in Lp that is most similar to Lkij , the classical methods consider that Lrij provides geometric support to 
+
+Lkij , and they accumulate the similarity score between Lkij and Lrij into s1(Lkij ).At this point, we refer to lpq as the supporting 2D line segment of Lkij since it contributes to s1(Lkij ). The final s1(Lkij ) is the sum of scores contributed by all neighboring images, with each neighboring image contributing at most one score. The selection process can be summarized as follows: 
+
+ˆk = arg max 
+
+> k∈K ij
+
+s1(Lkij ) = arg max 
+
+> k∈K ij
+
+X
+
+> p∈N i
+
+max 
+
+> q∈Q pij
+
+max 
+
+> r∈R pq ij
+
+s(Lkij , L rij ), (1) 
+
+s(Lkij , L rij ) = min 
+
+> sn∈S
+
+(sn · 1sn≥0.5) ∈ { 0} ∪ [0 .5, 1] , (2) where ˆk denotes the index of the best proposal of lij , Kij are indices of all proposals of lij , s1(·) is the score function used in classical methods [11, 24], 
+
+Ni is a set of the neighboring images of image i, Qpij is a set of matched 2D line segments of lij with image p, Rpq ij are indices of proposals generated from a line match ( lij , lpq ). For L3D++ [11], Rpq ij has only one element from the Line+Line method. For LIMAP [24], Rpq ij may have multiple elements from the four methods in Sec. 3.1. s(·, ·) computes the similarity of two 3D line segments. 
+
+sn = e−(r/τ r )2
+
+∈ (0 , 1] is the normalized score for a certain distance metric r
+
+between two 3D line segments, along with a scaling factor τr . The set S contains all normalized scores. For L3D++ [11], angular and positional distance are used. For LIMAP [24], additional reprojection distance is used. Our method uses the same s(·, ·) as LIMAP [24]. The supporting 2D line segments are those matched lines that achieve the maximum value in Eq. (1) and contribute a non-zero score. 
+
+Inconsistency in Classical Methods. There is a notable inconsistency issue between the support relationship as defined by Eq. (1) and the best proposal determined through Eq. (1) for the supporting 2D line segment. As depicted in Fig. 4, suppose lpq is a supporting 2D line segment of Lkij , since the selection process of the best proposal by classical methods is independent of each other, after lpq selects its own best proposal ˆLpq through Eq. (1), ˆLpq and Lkij may not be collinear. Note that a necessary condition for the support relationship to be Consistent 3D Line Mapping 7
+
+factually correct is that the Lkij is on a certain part of the true 3D line segment observed by lpq without considering noise. The best proposal ˆLpq is correct if and only if it is on a certain part of the true 3D line segment observed by lpq without considering noise. Because the position of the true 3D line segment is fixed and unique, if Lkij and ˆLpq are not collinear, the assumed support relationship from 
+
+lpq to Lkij and the correctness of the best proposal ˆLpq cannot be established simultaneously, leading to an inconsistency issue. This inherent inconsistency greatly affects the scoring system’s reliability, hindering reconstruction. 
+
+The Proposed Iterative Algorithm for Consistency Enhancing. To ad-dress the inconsistency issue between the support relationship and the best pro-posal of the supporting 2D line segment, an intuitive approach is to utilize the best proposal of the matched lines to score the proposal as follows: 
+
+ˆk = arg max 
+
+> k∈K ij
+
+s2(Lkij ) = arg max 
+
+> k∈K ij
+
+X
+
+> p∈N i
+
+max 
+
+> q∈Q pij
+
+s(Lkij , ˆLpq ), (3) where s2(·) is the score function for this ideal method, ˆLpq is the best proposal of 
+
+lpq . Same as the Eq. (1), the supporting 2D line segments defined by Eq. (3) are matched lines that achieve the maximum value in Eq. (3) and contribute a non-zero score. Since s(·, ·) ≥ 0.5 implies two 3D lines are approximately collinear, the support relationships defined by Eq. (3) should be approximately consistent. Unfortunately, ˆLpq is unknown before selection. Inspired by Eq. (3), we pro-pose an iterative algorithm. Specifically, we use the previous best proposal of the matched lines to score the proposal, then dynamically update the best proposal, which can be written as follows: 
+
+ˆk(m) = arg max 
+
+> k∈K ij
+
+s3(Lkij ) = arg max 
+
+> k∈K ij
+
+X
+
+> p∈N i
+
+max 
+
+> q∈Q pij
+
+s(Lkij , ˆL(m−1)  
+
+> pq
+
+), (4) where s3(·) is the score function for our iterative method, ˆk(m) denotes the index of the best proposal of lij after the mth iteration, ˆL(m−1)  
+
+> pq
+
+is the best proposal of 
+
+lpq after the (m−1) th iteration. Same as before, the supporting 2D line segments defined by Eq. (4) are matched lines that achieve the maximum value in Eq. (4) and contribute a non-zero score. If the best proposal for the supporting 2D line segment is unchanged after the mth and (m − 1) th iterations, then after the mth 
+
+iteration, the involved support relationships should be approximately consistent. Hence, by reducing the percentage of 2D lines whose best proposal has changed compared to the previous iteration, we can mitigate the inconsistency problem. In practice, we initiate Eq. (4) with the initial best proposal obtained using Eq. (1). To enhance robustness, we specify that only the best proposal with a score greater than a threshold ts can be visible to other proposals. The algorithm stops when the percentage of 2D lines whose best proposal has changed compared to the previous iteration is below a threshold tc. We set ts = 1 .5 and tc = 30% in this paper. Lastly, we define the best proposal that has at least one supporting 2D line segment as the valid best proposal. Conversely, the best proposal without any supporting 2D line segment is defined as the invalid best proposal. For robustness, we only use valid best proposals in subsequent modules. 8 X. Bai et al. 
+
+3.3 Line Track Building 
+
+We cluster 2D line segments to build line tracks. A graph is first constructed where nodes denote 2D line segments with valid best proposals, and edges are initialized as the top K line matches and weighted by the similarity score of the best proposals of two nodes. Edges with a zero weight will be removed. We then create an edge list sorted in descending order of weights, iterating through it from the beginning to merge two nodes of each edge using the Union-Find algorithm [38]. To enhance the consistency of the line track, we try to avoid two non-collinear 2D line segments within the same image from being assigned to the same line track. To this end, when merging two groups G1 and G2, we avoid merging them if there exist two 2D line segments l1 ∈ G 1 and l2 ∈ G 2
+
+simultaneously satisfying the following conditions: 
+
+– l1 and l2 are on the same image, 
+
+– da(l1, l 2) > t a ∨ dp(l1, l 2) > t p ∨ do(l1, l 2) > t o,where da(·, ·) computes angle of two 2D line segments, dp(·, ·) computes maxi-mum perpendicular distance from all 2D endpoints to the 2D infinite lines formed by two 2D line segments, do(·, ·) computes the ratio of bi-overlap by mutually projecting two line segments onto each other to compute the maximum ratio of intersection. We set the thresholds ta = 2 degrees, tp = 2 pixels, to = 0 in this paper. Finally, the 2D line segments within the same Union-Find group form a line track. For each line track, we apply the Principal Component Analysis (PCA) method for all directions of best proposals and use the principal eigen-vector and mean 3D endpoints of best proposals to fit a 3D infinite line. All 3D endpoints are projected to this 3D infinite line to get new robust 3D endpoints. 
+
+3.4 Joint Optimization 
+
+In reality, most 3D lines exhibit coplanar relationships. However, classical 3D line mapping methods [11, 15, 24] have overlooked coplanarity, which we have demonstrated to be a crucial constraint for line reconstruction. To address this issue, we introduce coplanarity constraints and jointly optimize points, lines, planes, and vanishing points by minimizing the following energy function: 
+
+E = wP EP + wLEL + wP L EP L + wP Π EP Π + wLΠ ELΠ + wLV P ELV P , (5) where EP [37] and EL [24] denote the sum of point and line squared reprojection errors respectively. All other terms encode 3D soft associations. EP L [24] denotes 3D point-to-line distance error, EP Π denotes 3D point-to-plane distance error, 
+
+ELΠ denotes 3D line-to-plane distance and angle error, ELV P [24] denotes 3D line-VP angle error and the orthogonality error of VP pairs. Each energy term 
+
+Ei is weighted by its respective weight wi. We construct initial 3D point-line and line-VP associations using 2D associations and 3D entity tracks, similar to LIMAP [24]. The initial 3D point-plane and line-plane associations stem from inlier points by detecting 3D planes from point cloud [1], which consists of SfM Consistent 3D Line Mapping 9𝐿 𝑖𝑛𝑓     
+
+> 𝐿
+> 𝑑 𝑋
+> 𝑌
+> 𝑍
+> 𝑝
+> (a) Closest-point method [20] 𝐿 𝑖𝑛𝑓
+> 𝐿
+> 𝑑
+> 𝑝 (b) Our method
+
+Fig. 5: Methods of determining a point p on the 3D infinite line Linf of the initial 3D line segment L to measure the line-to-plane distance d during optimization. 
+
+points and sampled points extracted from the initial line map. Next, we present the specific formulations of EP Π and ELΠ .
+
+Soft Association between Points and Planes. In EP Π , we minimize the perpendicular distance from a 3D point to its associated plane. 
+
+Soft Association between Lines and Planes. During optimization, we opti-mize the 3D infinite line Linf formed by the initial 3D line segment L. In ELΠ ,to impose the topological constraint of line-on-plane, we simultaneously mini-mize the perpendicular distance d from a point p on the Linf to the associated plane of L and minimize the absolute value of the cosine of the angle between the direction of Linf and the normal vector of the associated plane. To determine the point p during optimization, the classical approach [20] (referred to as the closest-point method) selects p as the closest point from the world coordinates system origin to the Linf , as depicted in Fig. 5a. However, the selected p depends on the position of the coordinate system origin, which leads to discrepancies in distances calculated for identical line-plane configurations across different locations in 3D space. To address this issue, we select the midpoint of 
+
+L as a fixed point and obtain p by projecting this fixed point onto Linf , as depicted in Fig. 5b. Our approach is coordinate-independent, thereby avoiding the aforementioned deviations. Moreover, when sampled points along a line are inliers for multiple planes, we establish associations between the line and each plane, reflecting the reality that a single line can intersect with multiple planes. 
+
+Adaptively Weighting Each Energy Term. To eliminate the influence of different units and balance the contributions of each term, we define the adaptive weight of each term Ei as wi = E(0)  
+
+> L
+
+/E (0)  
+
+> i
+
+, where E(0)  
+
+> i
+
+denotes the initial error of Ei. The motivation is to assume that each term carries the same amount of information and has an equal impact on the problem. For ELΠ including angle and Euclidean distance error, we first compute an inner adaptive weight 
+
+w′ = e(0)  
+
+> d
+
+/e (0)  
+
+> a
+
+based on the initial angle error e(0)  
+
+> a
+
+and distance error e(0)  
+
+> d
+
+, and compute E(j) 
+
+> LΠ
+
+= e(j) 
+
+> d
+
++ w′e(j) 
+
+> a
+
+in the jth optimization. 
+
+## 4 Experiments 
+
+We compare our system with two state-of-the-art methods: L3D++ [11] and LIMAP [24], using the traditional LSD line detector [42] and the learning-based DeepLSD line detector [32]. We consider the synthetic Hypersim [35] and the real 
+
+Tanks and Temples [17] dataset for quantitative and qualitative experiments. 10 X. Bai et al. 
+
+4.1 Evaluation on Line Mapping 
+
+As there are no ground truth (GT) 3D lines, we evaluate a 3D line map with a GT point cloud. We use the LIMAP evaluation framework [24] with the metrics: 
+
+– Length recall (in meters) at τ (Rτ ): sum of the lengths of the line portions within τ mm from the GT model. 
+
+– Inlier percentage at τ (P τ ): the percentage of tracks that are within τ mm from the GT model. 
+
+– Average supports : average number of image supports and 2D line supports across all line tracks. The average metrics on the first eight scenes of the Hypersim dataset [35] are reported in Tab. 1. Each scene has 100 images. When using the DeepLSD [32] detector, the length recall of our method is significantly higher than other methods, almost double theirs, albeit with a slightly lower precision compared to L3D++ [11]. Additionally, our method can produce longer line tracks. For the 
+
+train split of Tanks and Temples [17], the average metrics are shown in Tab. 2. We follow LIMAP’s suggestion to remove the scene Ignatius because it has almost no line structures. Our method significantly outperforms all competitors in terms of both scene completeness and accuracy, while also having longer line tracks. The qualitative comparison is displayed in Fig. 6. Our method excels not only in capturing fine structures but also in reconstructing a more comprehensive line map overall. Besides, our system can also output useful point-plane and line-plane associations, as shown in Fig. 1d. 
+
+Table 1: Line reconstruction on Hypersim [35]. The length recall at τ (Rτ ), inlier percentage at τ (P τ ), and average supports are reported. Line type Method R1 R5 R10 P1 P5 P10 # supports LSD L3D++ [11] 31.2 167.8 220.1 65.1 85.4 90.1 17.2 / 20.1 [42] LIMAP [24] 36.2 209.1 278.2 62.1 82.3 87.4 16.8 / 19.7 Ours 58.2 303.1 388.0 62.7 83.5 88.5 19.9 / 21.8                          
+
+> DeepLSD L3D++ [11] 37.5 183.5 244.5 67.8 85.0 89.3 16.2 / 19.2 [32] LIMAP [24] 32.8 180.6 237.6 64.9 81.5 86.0 18.7 / 26.2
+> Ours 79.7 375.5 464.6 64.8 83.3 88.1 20.5 / 21.6
+
+Table 2: Line reconstruction on train split of Tanks and Temples [17]. The length recall at τ (Rτ ), inlier percentage at τ (P τ ), and average supports are reported. Line type Method R5 R10 R50 P5 P10 P50 # supports LSD L3D++ [11] 419.8 956.9 3213.6 43.8 57.6 87.3 8.9 / 9.4 [42] LIMAP [24] 593.2 1400.3 4990.1 44.1 57.0 86.5 8.9 / 10.0 Ours 935.0 2162.4 7147.2 45.4 58.3 85.9 13.1 / 13.6                                        
+
+> DeepLSD L3D++ [11] 389.1 899.8 3038.5 44.6 57.8 86.6 8.8 / 9.3 [32] LIMAP [24] 542.7 1259.9 4617.8 44.0 54.9 81.3 11.1 / 13.9 Ours 986.9 2255.7 7379.0 47.3 58.5 83.7 15.1 /15.7 Consistent 3D Line Mapping 11
+> ai_001_001 ai_001_003 ai_001_006 Barn Caterpillar
+> Fig. 6: Line maps on Hypersim [35] and Tanks and Temples [17] with DeepLSD [32] lines (green). Top row: L3D++ [11]. Middle row: LIMAP [24]. Bottom row: Ours.
+
+4.2 Consistency Enhancing and More Insights in Best Proposal Selection. 
+
+To evaluate the consistency between the support relationships and the best pro-posals of the supporting 2D line segments, we introduce a new metric: 
+
+– Consistency percentage at τa/τd (CP τ a/τ d): the percentage of supporting 2D line segments for a supported proposal, where the angle between the supported proposal and the best proposal of the supporting 2D line segment is within τa degrees, and the maximum perpendicular distance from each endpoint of one line to the other line is within τd millimeters. This metric uses collinearity to evaluate consistency. Each supported proposal can compute a consistency percentage at τa/τd. A smaller consistency percentage indicates more severe inconsistency issues. In our algorithm, each iteration generates new best proposals along with the corresponding new support relationships. To demonstrate that our iterative algorithm gradually mitigates inconsistency and improves performance, we dis-played some results evolving with iterations in Fig. 7. In these experiments, we evaluate the average consistency percentage, length recall, and inlier percentage on all valid best proposals. In Fig. 7, the results corresponding to the 0th itera-tion are obtained using Eq. (1). With each iteration, the percentage of 2D lines whose best proposal has changed compared to the previous iteration is gradually decreasing. Simultaneously, the consistency percentage on valid best proposals is gradually increasing. Moreover, our length recall and inlier percentage surpass that of the classical methods, confirming our method can select more accurate best proposals. The length recall slightly decreases in later iterations due to fewer 12 X. Bai et al. 0 5 10 15                    
+
+> (a) Percentage of 2D lines whose BP has changed.
+> 025 50 75 0510 15
+> (b) Average consistency percentage on valid BPs.
+> 25 50 75 100
+> CP1 /5mm
+> CP5 /10mm
+> CP10 /50mm
+> 0510 15
+> (c) Length recall on valid BPs.
+> 1000 2000 3000 4000
+> R1 R5 R10
+> 0510 15
+> (d) Inlier percentage on valid BPs.
+> 60 80 P1 P5 P10
+> 0510 15
+> (e) Number of valid BPs.
+> 16000 18000 20000 0510 15
+> (f) Number of all supporting 2D lines.
+> 125000 130000 135000
+
+Fig. 7: Results evolving with iterations on scene ai_001_001 [35]. The x-axis of all subfigures represents the number of iterations. BP is short for the best proposal. 
+
+Table 3: Ablation study of the proposed methods in proposal generation (G), best proposal selection (S), and line track building (B) modules on Hypersim [35]. The length recall at τ (Rτ ), inlier percentage at τ (P τ ), and average supports are reported. G S B R1 R5 R10 P1 P5 P10 # supports 35.7 185.7 246.0 63.4 79.7 84.2 18.5 / 25.9 
+
+✓ 36.6 194.4 249.6 64.1 80.6 84.8 18.7 / 26.2 
+
+✓ 36.8 185.8 240.7 68.1 83.1 86.6 22.2 / 32.9 
+
+✓ 51.7 288.8 400.9 61.0 79.0 85.1 16.9 / 17.8 
+
+✓ ✓ 36.5 188.4 242.2 68.3 83.3 86.9 22.3 / 33.2 
+
+✓ ✓ 54.4 303.3 414.7 61.9 80.1 85.9 16.9 / 17.7 
+
+✓ ✓ 61.8 330.8 443.2 65.7 82.7 87.3 20.4 / 21.5 
+
+✓ ✓ ✓ 63.3 340.3 452.7 65.8 82.9 87.7 20.5 / 21.6 
+
+valid best proposals. However, despite the reduction in the number of valid best proposals, the number of all their supporting 2D line segments has increased. This demonstrates our method not only enhances consistency by filtering out poor best proposals but also builds more consistent support relationships. 
+
+4.3 Ablation Study on Consistency Enhancing 
+
+The ablation study conducted on the Hypersim dataset [35] without joint opti-mization is detailed in Tab. 3. The choosing checkmark denotes the use of our module, while its absence indicates the use of the baseline method of LIMAP [24]. From this comparison, our proposal generation and line track building methods significantly improve length recall. Moreover, our best proposal selection method notably enhances inlier percentage and track length. The combination of these approaches effectively inherits their respective advantages. It is worth noting that the method proposed in our line track building mod-ule significantly reduces the number of 2D line supports (track elements) in the tracks. However, this does not imply that our method is inadequate. On the con-trary, our method greatly improves the consistency of tracks. The decrease in the number of 2D line supports is simply because we partition non-collinear 2D line segments, which may have been erroneously grouped into the same track, into different tracks. In Fig. 8a and Fig. 8c, we show two inconsistent false ex-amples which are produced by LIMAP [24]. In these examples, the two detected Consistent 3D Line Mapping 13                   
+
+> (a) w/o CC [24] (b) w/ CC (c) w/o CC [24] (d) w/ CC
+> Fig. 8: Consistency enhancing for line tracks on scene ai_001_001 and ai_001_003
+> [35]. CC is short for the 2D collinearity constraint. Blue: Two detected non-collinear 2D line segments. Red: Reprojection of the 3D line segment of their common line track.
+> Green: Reprojection of the 3D line segment of their respective line tracks.
+
+2D line segments are non-collinear. However, the method in LIMAP [24] clus-ters them into the same line track, and the corresponding projected 2D line segment is depicted in red. In Fig. 8b and Fig. 8d, we show our results where the aforementioned two detected 2D line segments successfully fall into different line tracks. By imposing the proposed 2D collinearity constraints, our method enhances the consistency of the elements in the line track and improves length recall significantly. The three combined methods achieve the best trade-off. 
+
+4.4 Evaluation on Joint Optimization Evaluation on Line-to-plane Distance. We compare the proposed coordinate-independent method for measuring line-to-plane distances and the classical ap-proach [20] (referred to as the closest-point method). To focus on the coplanar constraints they provide for the lines, we minimize wLEL + wLΠ ELΠ . The re-sults are reported in Tab. 4 and we achieve better performances, indicating that our proposed distance function is more reasonable. 
+
+Adaptively Weighting Terms vs Manually Weighting Terms. We com-pare our adaptive weighting method to the manual weighting method in LIMAP [24] by using LIMAP’s default weight parameters. As LIMAP [24] lacks the coplanar constraint, it lacks default weights for EP Π and ELΠ . Thus, we only compare the results when minimizing wP EP + wLEL + wP L EP L + wLV P ELV P .In Tab. 5, our method achieves better performance, confirming its effectiveness. 
+
+Ablation Study on Coplanarity Constraint and Joint Optimization. 
+
+In Tab. 6, the ablation study of joint optimization is reported. Since the joint optimization does not affect the number of supporting images/lines, we do not show them in this table. The energy term with a checkmark denotes it is used in joint optimization. Note that minimizing EL alone does not produce satisfac-tory results. However, incorporating the association term improves the outcomes. Compared to optimizing lines using point-line ( i.e ., use EP , EL and EP L ) or line-VP ( i.e ., use EL and ELV P ), utilizing line-plane association ( i.e ., use EL
+
+and ELΠ ) alone achieves the highest length recall and outperform the configu-rations of LIMAP [24] ( i.e ., use EP , EL, EP L and ELV P ). The results are fur-ther improved after adding the point-plane association ( i.e ., use EP , EL, EP Π 
+
+and ELΠ ), confirming the effectiveness of our proposed coplanarity constraints. Jointly optimizing all geometric entities achieves the highest length recall and highest inlier percentage at 10mm, demonstrating our method’s effectiveness. 14 X. Bai et al. 
+
+Table 4: Line-to-plane distance evaluation on Hypersim [35]. The length recall at τ
+
+(Rτ ), inlier percentage at τ (P τ ), and average supports are reported. Method R1 R5 R10 P1 P5 P10 # supports Closest-point [20] 68.6 358.9 459.1 63.8 82.9 88.1 20.5 / 21.6 Ours 74.3 370.9 462.6 65.8 83.4 87.9 20.5 / 21.6 
+
+Table 5: Weighting methods evaluation on Hypersim [35]. The length recall at τ (Rτ ), inlier percentage at τ (P τ ), and average supports are reported. Method R1 R5 R10 P1 P5 P10 # supports Manual [24] 59.8 326.7 434.5 61.4 80.4 85.9 20.5 / 21.6 Adaptive (Ours) 63.2 335.6 441.6 61.7 81.5 87.2 20.5 / 21.6 
+
+Table 6: Ablation study of different energy terms for joint optimization on Hypersim [35]. The length recall at τ (Rτ ) and inlier percentage at τ (P τ ) are reported. The best results are shown in bold and the second-best results are underlined.                                                                          
+
+> EPELEP L EP Π ELΠ ELV P R1 R5 R10 P1 P5 P10 63.3 340.3 452.7 65.8 82.9 87.7
+> ✓58.2 316.1 422.6 65.7 82.0 86.9
+> ✓✓✓60.7 325.8 429.6 67.4 83.8 88.1
+> ✓✓74.3 370.9 462.6 65.8 83.4 87.9
+> ✓✓60.1 323.6 431.1 59.4 78.7 85.0
+> ✓✓✓✓63.2 335.6 441.6 61.7 81.5 87.2
+> ✓✓✓✓74.4 372.4 462.3 66.0 83.5 88.0
+> ✓✓✓✓✓✓79.7 375.5 464.6 64.8 83.3 88.1
+
+## 5 Conclusion 
+
+In this paper, we propose a consistent 3D line mapping system that enhances the consistency of support relationships from 2D to 3D, the consistency of the elements in each line track, and the consistency of the structure of the line map. Experimental evaluations showcase the superior performance of our system when compared to state-of-the-art alternatives. However, due to the use of the iterative algorithm and joint optimization with planes, our method is a bit slower than LIMAP [24]. The average running time of our method on each Hypersim scene (100 images per) [35] is 60 seconds on a machine with a 3.4GHz processor, compared to 51 seconds for LIMAP [24]. Since our contributions focus on 3D line mapping given line correspondences and VPs, the time for feature detection and matching is not included. In the future, we will dedicate ourselves to building a more consistent and efficient 3D line mapping system. Consistent 3D Line Mapping 15 
+
+## Acknowledgements 
+
+This work was supported by the National Key R&D Program of China (Grant Number: 2023YFB3906600), the National Natural Science Foundation of China (Grant Numbers: U22B2055, 62073320, 62273345, and U23A20386), and the Beijing Natural Science Foundation (Grant Number: L223003). 
+
+## References 
+
+1. Araújo, A.M., Oliveira, M.M.: A robust statistics approach for plane detection in unorganized point clouds. Pattern Recognition 100 , 107115 (2020) 2. Bartoli, A., Coquerelle, M., Sturm, P.: A framework for pencil-of-points structure-from-motion. In: European Conference on Computer Vision (ECCV). pp. 28–40. Springer (2004) 3. Bartoli, A., Sturm, P.: Structure-from-motion using lines: Representation, triangu-lation, and bundle adjustment. Computer Vision and Image Understanding (CVIU) 
+
+100 (3), 416–441 (2005) 4. Collins, R.T.: A space-sweep approach to true multi-image matching. In: IEEE Conference on Computer Vision and Pattern Recognition (CVPR). pp. 358–363 (1996) 5. Fang, T., Chen, M., Hu, H., Li, W., Ge, X., Zhu, Q., Xu, B.: 3-d line segment reconstruction with depth maps for photogrammetric mesh refinement in man-made environments. IEEE Transactions on Geoscience and Remote Sensing 61 ,1–21 (2023) 6. Gomez-Ojeda, R., Moreno, F.A., Zuniga-Noël, D., Scaramuzza, D., Gonzalez-Jimenez, J.: Pl-slam: A stereo slam system through the combination of points and line segments. IEEE Transactions on Robotics 35 (3), 734–746 (2019) 7. Hartley, R., Zisserman, A.: Multiple View Geometry in Computer Vision. Cam-bridge University Press (2003) 8. He, Y., Zhao, J., Guo, Y., He, W., Yuan, K.: Pl-vio: Tightly-coupled monocular visual–inertial odometry using point and line features. Sensors 18 (4), 1159 (2018) 9. Hofer, M., Maurer, M., Bischof, H.: Improving sparse 3d models for man-made en-vironments using line-based 3d reconstruction. In: IEEE International Conference on 3D Vision (3DV). vol. 1, pp. 535–542 (2014) 10. Hofer, M., Maurer, M., Bischof, H.: Line3d: Efficient 3d scene abstraction for the built environment. In: German Conference on Pattern Recognition (GCPR). pp. 237–248. Springer (2015) 11. Hofer, M., Maurer, M., Bischof, H.: Efficient 3d scene abstraction using line seg-ments. Computer Vision and Image Understanding (CVIU) 157 , 167–178 (2017) 12. Hofer, M., Wendel, A., Bischof, H.: Line-based 3d reconstruction of wiry objects. In: 18th Computer Vision Winter Workshop. pp. 78–85 (2013) 13. Hua, T., Li, T., Pang, L., Liu, G., Xuanyuan, W., Shu, C., Pei, L.: Plv-iekf: Con-sistent visual-inertial odometry using points, lines, and vanishing points. In: IEEE International Conference on Robotics and Biomimetics (ROBIO). pp. 1–7 (2023) 14. Huang, S., Qin, F., Xiong, P., Ding, N., He, Y., Liu, X.: Tp-lsd: Tri-points based line segment detector. In: European Conference on Computer Vision (ECCV). pp. 770–785. Springer (2020) 15. Jain, A., Kurz, C., Thormählen, T., Seidel, H.P.: Exploiting global connectivity constraints for reconstruction of 3d line segments from images. In: IEEE Conference on Computer Vision and Pattern Recognition (CVPR). pp. 1586–1593 (2010) 16 X. Bai et al. 16. Josephson, K., Kahl, F.: Triangulation of points, lines and conics. Journal of Math-ematical Imaging and Vision 32 , 215–225 (2008) 17. Knapitsch, A., Park, J., Zhou, Q.Y., Koltun, V.: Tanks and temples: Benchmarking large-scale scene reconstruction. ACM Transactions on Graphics (ToG) 36 (4), 1–13 (2017) 18. Langlois, P.A., Boulch, A., Marlet, R.: Surface reconstruction from 3d line seg-ments. In: IEEE International Conference on 3D Vision (3DV). pp. 553–563 (2019) 19. Li, K., Yao, J.: Line segment matching and reconstruction via exploiting coplanar cues. ISPRS Journal of Photogrammetry and Remote Sensing 125 , 33–49 (2017) 20. Li, X., He, Y., Lin, J., Liu, X.: Leveraging planar regularities for point line visual-inertial odometry. In: IEEE International Conference on Intelligent Robots and Systems (IROS). pp. 5120–5127 (2020) 21. Lim, H., Jeon, J., Myung, H.: Uv-slam: Unconstrained line-based slam using vanish-ing points for structural mapping. IEEE Robotics and Automation Letters (RAL) 
+
+7(2), 1518–1525 (2022) 22. Lin, Y., Wang, C., Chen, B., Zai, D., Li, J.: Facet segmentation-based line segment extraction for large-scale point clouds. IEEE Transactions on Geoscience and Re-mote Sensing (TGRS) 55 (9), 4839–4854 (2017) 23. Lin, Y., Wang, C., Cheng, J., Chen, B., Jia, F., Chen, Z., Li, J.: Line segment extraction for large scale unorganized point clouds. ISPRS Journal of Photogram-metry and Remote Sensing 102 , 172–183 (2015) 24. Liu, S., Yu, Y., Pautrat, R., Pollefeys, M., Larsson, V.: 3d line mapping revisited. In: IEEE Conference on Computer Vision and Pattern Recognition (CVPR). pp. 21445–21455 (2023) 25. Liu, Y., D’Aronco, S., Schindler, K., Wegner, J.D.: Pc2wf: 3d wireframe recon-struction from raw point clouds. arXiv preprint arXiv:2103.02766 (2021) 26. Lu, X., Liu, Y., Li, K.: Fast 3d line segment detection from unorganized point cloud. arXiv preprint arXiv:1901.02532 (2019) 27. Luo, Y., Ren, J., Zhe, X., Kang, D., Xu, Y., Wonka, P., Bao, L.: Lc2wf:learning to construct 3d building wireframes from 3d line clouds. In: Proceedings of the British Machine Vision Conference (BMVC) (2022) 28. Ma, W., Tan, B., Xue, N., Wu, T., Zheng, X., Xia, G.S.: How-3d: Holistic 3d wireframe perception from a single image. In: IEEE International Conference on 3D Vision (3DV). pp. 596–605 (2022) 29. Mentges, G., Grigat, R.R.: Surface reconstruction from image space adjacency of lines using breadth-first plane search. In: IEEE International Conference on Robotics and Automation (ICRA). pp. 995–1002 (2016) 30. Micusik, B., Wildenauer, H.: Descriptor free visual indoor localization with line seg-ments. In: IEEE Conference on Computer Vision and Pattern Recognition (ICRA). pp. 3165–3173 (2015) 31. Micusik, B., Wildenauer, H.: Structure from motion with line segments under re-laxed endpoint constraints. International Journal of Computer Vision (IJCV) 124 ,65–79 (2017) 32. Pautrat, R., Barath, D., Larsson, V., Oswald, M.R., Pollefeys, M.: Deeplsd: Line segment detection and refinement with deep image gradients. In: IEEE Conference on Computer Vision and Pattern Recognition (CVPR). pp. 17327–17336 (2023) 33. Pautrat, R., Lin, J.T., Larsson, V., Oswald, M.R., Pollefeys, M.: Sold2: Self-supervised occlusion-aware line description and detection. In: IEEE Conference on Computer Vision and Pattern Recognition (CVPR). pp. 11368–11378 (2021) Consistent 3D Line Mapping 17 34. Quan, L., Kanade, T.: Affine structure from line correspondences with uncalibrated affine cameras. IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI) 19 (8), 834–845 (1997) 35. Roberts, M., Ramapuram, J., Ranjan, A., Kumar, A., Bautista, M.A., Paczan, N., Webb, R., Susskind, J.M.: Hypersim: A photorealistic synthetic dataset for holis-tic indoor scene understanding. In: IEEE International Conference on Computer Vision (ICCV). pp. 10912–10922 (2021) 36. Salaün, Y., Marlet, R., Monasse, P.: Line-based robust SfM with little image over-lap. In: IEEE International Conference on 3D Vision (3DV). pp. 195–204 (2017) 37. Schonberger, J.L., Frahm, J.M.: Structure-from-motion revisited. In: IEEE Confer-ence on Computer Vision and Pattern Recognition (CVPR). pp. 4104–4113 (2016) 38. Sedgewick, R., Wayne, K.: Algorithms. Addison-wesley professional (2011) 39. Shu, F., Wang, J., Pagani, A., Stricker, D.: Structure plp-slam: Efficient sparse mapping and localization using point, line and plane for monocular, rgb-d and stereo cameras. In: IEEE International Conference on Robotics and Automation (ICRA). pp. 2105–2112 (2023) 40. Taylor, C.J., Kriegman, D.J.: Structure and motion from line segments in multiple images. IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI) 
+
+17 (11), 1021–1032 (1995) 41. Vakhitov, A., Lempitsky, V.: Learnable line segment descriptor for visual slam. IEEE Access 7, 39923–39934 (2019) 42. Von Gioi, R.G., Jakubowicz, J., Morel, J.M., Randall, G.: Lsd: A fast line segment detector with a false detection control. IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI) 32 (4), 722–732 (2008) 43. Wang, R., Di, K., Wan, W., Wang, Y.: Improved point-line feature based visual slam method for indoor scenes. Sensors 18 (10), 3559 (2018) 44. Wei, D., Wan, Y., Zhang, Y., Liu, X., Zhang, B., Wang, X.: Elsr: Efficient line segment reconstruction with planes and points guidance. In: IEEE Conference on Computer Vision and Pattern Recognition (CVPR). pp. 15807–15815 (2022) 45. Weng, J., Huang, T.S., Ahuja, N.: Motion and structure from line correspondences; closed-form solution, uniqueness, and optimization. IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI) 14 (03), 318–336 (1992) 46. Witt, J., Mentges, G.: Maximally informative surface reconstruction from lines. In: IEEE International Conference on Robotics and Automation (ICRA). pp. 2029– 2036 (2014) 47. Xu, C., Zhang, L., Cheng, L., Koch, R.: Pose estimation from line correspondences: A complete analysis and a series of solutions. IEEE Transactions on Pattern Anal-ysis and Machine Intelligence (TPAMI) 39 (6), 1209–1222 (2016) 48. Xu, K., Hao, Y., Yuan, S., Wang, C., Xie, L.: Airvo: An illumination-robust point-line visual odometry. In: IEEE International Conference on Intelligent Robots and Systems (IROS). pp. 3429–3436 (2023) 49. Xu, Y., Xu, W., Cheung, D., Tu, Z.: Line segment detection using transformers without edges. In: IEEE Conference on Computer Vision and Pattern Recognition (CVPR). pp. 4257–4266 (2021) 50. Xu, Z., Wei, H., Tang, F., Zhang, Y., Wu, Y., Ma, G., Wu, S., Jin, X.: Plpl-vio: a novel probabilistic line measurement model for point-line-based visual-inertial odometry. In: IEEE International Conference on Intelligent Robots and Systems (IROS). pp. 5211–5218 (2023) 51. Yang, H., Yuan, J., Gao, Y., Sun, X., Zhang, X.: Uplp-slam: Unified point-line-plane feature fusion for rgb-d visual slam. Information Fusion 96 , 51–65 (2023) 18 X. Bai et al. 52. Yoon, S., Kim, A.: Line as a visual sentence: context-aware line descriptor for visual localization. IEEE Robotics and Automation Letters (RAL) 6(4), 8726–8733 (2021) 53. Zhang, L., Koch, R.: An efficient and robust line segment matching approach based on lbd descriptor and pairwise geometric consistency. Journal of Visual Commu-nication and Image Representation 24 (7), 794–805 (2013) 54. Zhang, L., Koch, R.: Structure and motion from line correspondences: Represen-tation, projection, initialization and sparse bundle adjustment. Journal of Visual Communication and Image Representation 25 (5), 904–915 (2014) 55. Zhou, L., Liu, J., Zhai, F., Ai, P., Ren, K., Mao, Y., Huang, G., Meng, Z., Kaess, M.: Efficient bundle adjustment for coplanar points and lines. In: IEEE International Conference on Robotics and Automation (ICRA). pp. 8356–8363 (2023) 56. Zhou, Y., Qi, H., Zhai, Y., Sun, Q., Chen, Z., Wei, L.Y., Ma, Y.: Learning to reconstruct 3d manhattan wireframes from a single image. In: IEEE International Conference on Computer Vision (ICCV). pp. 7698–7707 (2019)

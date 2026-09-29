@@ -1,0 +1,132 @@
+{
+  "version": 2,
+  "extractor": "papercropper",
+  "figures": [
+    {
+      "url": "assets/figures/cvpr-2025-accepted/cvpr-2025-yang-edgemovingnet-edge-preserving-point-cloud-reconstruction-via-joint-geometry-features-cvpr-2025-paper/fig-001.webp",
+      "caption": "",
+      "page": 0,
+      "index": 1,
+      "width": 856,
+      "height": 251,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/cvpr-2025-accepted/cvpr-2025-yang-edgemovingnet-edge-preserving-point-cloud-reconstruction-via-joint-geometry-features-cvpr-2025-paper/fig-002.webp",
+      "caption": "",
+      "page": 0,
+      "index": 2,
+      "width": 1778,
+      "height": 809,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/cvpr-2025-accepted/cvpr-2025-yang-edgemovingnet-edge-preserving-point-cloud-reconstruction-via-joint-geometry-features-cvpr-2025-paper/fig-003.webp",
+      "caption": "",
+      "page": 0,
+      "index": 3,
+      "width": 861,
+      "height": 263,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/cvpr-2025-accepted/cvpr-2025-yang-edgemovingnet-edge-preserving-point-cloud-reconstruction-via-joint-geometry-features-cvpr-2025-paper/fig-004.webp",
+      "caption": "",
+      "page": 0,
+      "index": 4,
+      "width": 867,
+      "height": 293,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/cvpr-2025-accepted/cvpr-2025-yang-edgemovingnet-edge-preserving-point-cloud-reconstruction-via-joint-geometry-features-cvpr-2025-paper/fig-005.webp",
+      "caption": "",
+      "page": 0,
+      "index": 5,
+      "width": 849,
+      "height": 182,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/cvpr-2025-accepted/cvpr-2025-yang-edgemovingnet-edge-preserving-point-cloud-reconstruction-via-joint-geometry-features-cvpr-2025-paper/fig-006.webp",
+      "caption": "",
+      "page": 0,
+      "index": 6,
+      "width": 855,
+      "height": 430,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/cvpr-2025-accepted/cvpr-2025-yang-edgemovingnet-edge-preserving-point-cloud-reconstruction-via-joint-geometry-features-cvpr-2025-paper/fig-007.webp",
+      "caption": "",
+      "page": 0,
+      "index": 7,
+      "width": 866,
+      "height": 391,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/cvpr-2025-accepted/cvpr-2025-yang-edgemovingnet-edge-preserving-point-cloud-reconstruction-via-joint-geometry-features-cvpr-2025-paper/fig-008.webp",
+      "caption": "",
+      "page": 0,
+      "index": 8,
+      "width": 1591,
+      "height": 2326,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/cvpr-2025-accepted/cvpr-2025-yang-edgemovingnet-edge-preserving-point-cloud-reconstruction-via-joint-geometry-features-cvpr-2025-paper/fig-009.webp",
+      "caption": "",
+      "page": 0,
+      "index": 9,
+      "width": 837,
+      "height": 661,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/cvpr-2025-accepted/cvpr-2025-yang-edgemovingnet-edge-preserving-point-cloud-reconstruction-via-joint-geometry-features-cvpr-2025-paper/fig-010.webp",
+      "caption": "",
+      "page": 0,
+      "index": 10,
+      "width": 826,
+      "height": 340,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/cvpr-2025-accepted/cvpr-2025-yang-edgemovingnet-edge-preserving-point-cloud-reconstruction-via-joint-geometry-features-cvpr-2025-paper/fig-011.webp",
+      "caption": "",
+      "page": 0,
+      "index": 11,
+      "width": 860,
+      "height": 281,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/cvpr-2025-accepted/cvpr-2025-yang-edgemovingnet-edge-preserving-point-cloud-reconstruction-via-joint-geometry-features-cvpr-2025-paper/fig-012.webp",
+      "caption": "",
+      "page": 0,
+      "index": 12,
+      "width": 851,
+      "height": 365,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/cvpr-2025-accepted/cvpr-2025-yang-edgemovingnet-edge-preserving-point-cloud-reconstruction-via-joint-geometry-features-cvpr-2025-paper/fig-013.webp",
+      "caption": "",
+      "page": 0,
+      "index": 13,
+      "width": 854,
+      "height": 552,
+      "label": "Figure"
+    },
+    {
+      "url": "assets/figures/cvpr-2025-accepted/cvpr-2025-yang-edgemovingnet-edge-preserving-point-cloud-reconstruction-via-joint-geometry-features-cvpr-2025-paper/fig-014.webp",
+      "caption": "",
+      "page": 0,
+      "index": 14,
+      "width": 843,
+      "height": 169,
+      "label": "Figure"
+    }
+  ]
+}

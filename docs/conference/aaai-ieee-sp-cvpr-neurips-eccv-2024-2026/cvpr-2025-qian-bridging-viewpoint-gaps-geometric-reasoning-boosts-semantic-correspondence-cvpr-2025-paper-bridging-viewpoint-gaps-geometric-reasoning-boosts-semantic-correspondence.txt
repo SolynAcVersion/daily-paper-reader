@@ -1,0 +1,413 @@
+Title: Bridging Viewpoint Gaps: Geometric Reasoning Boosts Semantic Correspondence
+
+URL Source: https://openaccess.thecvf.com/content/CVPR2025/papers/Qian_Bridging_Viewpoint_Gaps_Geometric_Reasoning_Boosts_Semantic_Correspondence_CVPR_2025_paper.pdf
+
+Published Time: Mon, 19 May 2025 12:00:37 GMT
+
+Number of Pages: 11
+
+Markdown Content:
+# Bridging Viewpoint Gaps: Geometric Reasoning Boosts Semantic Correspondence 
+
+## Qiyang Qian 1 Hansheng Chen 2 Masayoshi Tomizuka 1 Kurt Keutzer 1
+
+## Qianqian Wang 1* Chenfeng Xu 1*
+
+> 1
+
+## University of California, Berkeley 2Stanford University 
+
+## Abstract 
+
+Finding semantic correspondences between images is a challenging problem in computer vision, particularly un-der significant viewpoint changes. Previous methods rely on semantic features from pre-trained 2D models like Sta-ble Diffusion and DINOv2, which often struggle to extract viewpoint-invariant features. To overcome this, we propose a novel approach that integrates geometric and semantic reasoning. Unlike prior methods relying on heuristic ge-ometric enhancements, our framework fine-tunes DUSt3R on synthetic cross-instance data to reconstruct distinct ob-jects in an aligned 3D space. By learning to deform these objects into similar shapes using semantic supervision, we enable efficient KNN-based geometric matching, followed by sparse semantic matching within local KNN candidates. While trained on synthetic data, our method generalizes ef-fectively to real-world images, achieving up to 7.4-point im-provements in zero-shot settings on the rigid-body subset of Spair-71K and up to 19.6-point gains under extreme view-point variations. Additionally, it accelerates runtime by up to 40 times, demonstrating both its robustness to view-point changes and its efficiency for practical applications. Code is available at https://github.com/Qiyang-Q/Bridge-Viewpoint-Gap .
+
+## 1. Introduction 
+
+Finding semantic correspondences aims at the identifica-tion of semantically similar points across different images. Establishing these correspondences enables various appli-cations, such as content editing, visual retrieval, and style transfer, etc. The challenge of this task arises from both the variations in appearance and the changes in viewpoint. Recent vision representation models [5, 16, 42, 50] have made significant strides in learning invariant representations that are robust to changes in appearance. Yet, these mod-els are primarily trained on 2D images and lack an under-
+
+> *Equally advising this project
+
+standing of 3D geometry. This limitation makes it difficult for these models to find accurate semantic correspondences when there are substantial viewpoint changes. To tackle this issue, previous work has attempted to in-corporate geometric awareness into semantic features to make representations more robust to viewpoint variations and improve 3D understanding. For example, Telling Left from Right [61] tries to incorporate perspective informa-tion by finetuning on some 2D direction basis like left and right, but this is not sufficient to handle drastic 3D per-spective changes. Spherical map [34] back-projects the 2D features into a spherical space to guide the semantic cor-respondences. However, it requires supervised finetuning on specific target domains. To achieve generalizability, Xu 
+
+et al . [58] try to directly inject the 3D awareness into Sta-ble Diffusion by training a ControlNet on large-scale posed videos. However, it can only accommodate minor view-point alterations. Moreover, finding the best correspon-dences on dense feature maps is computationally intensive, thereby impeding their practical application. To address these challenges, we are inspired by a fun-damental principle: semantic correspondences exhibit ge-ometric consistency in 3D space, regardless of viewpoint variations in 2D images. Therefore, we propose a new approach: instead of injecting geometric awareness when learning the semantic features, we bridge the viewpoint gap by first establishing coarse correspondences purely through geometric reasoning then refining the correspondences us-ing semantic alignment. Specifically, we make a novel use of the advanced model, DUSt3R [54], a robust model orig-inally designed for 3D reconstruction from two views. Unlike conventional reconstruction tasks that rely on two views of the same object, we fine-tune DUSt3R with cross-instance data to reconstruct two distinct 3D objects within a unified 3D space. To accomplish this, we leverage the ex-tensive synthetic data from ShapeNet [6], collecting cross-instance image pairs with significant viewpoint variations. After finetuning on the synthetic data, DUSt3R is capable of reconstructing two instances simultaneously with aligned poses. Afterwards, we introduce a strategy for learning 3D This CVPR paper is the Open Access version, provided by the Computer Vision Foundation. Except for this watermark, it is identical to the accepted version; the final published version of the proceedings is available on IEEE Xplore. 11579 Viewpoint and Shape Changes  
+
+> Ours(Geo only) Ours (Geo+DINOv2) Ours (Geo+DINOv2+SD)
+> Deformation Deformation
+> Shape Changes
+
+~40x faster Figure 1. Our method bridges the viewpoint gaps through geometric reasoning for finding semantic correspondences. Left image: We deform the different instances into similar shape. Middle image: After deformation, we can find the correspondences even under drastic viewpoint change. Right image: We achieve state-of-the-art performance in semantic correspondences with high efficiency. 
+
+deformations between the pair, so that the two different ob-jects can be mapped into similar morphologies (as shown in the left part of Fig. 1). Following deformation, we can directly apply simple K-nearest neighbour matching to the 3D objects. Note that this was previously impossible be-cause these two objects are originally presented in different shapes and viewpoints. Following this, we apply seman-tic matching to refine the coarse correspondences. Differ-ent from previous methods that conduct densely feature-by-feature matching, we rely on geometric reasoning to iden-tify semantically similar local regions and only sparsely match their semantics, which significantly enhances com-putational efficiency. Our method is a new pipeline that combines geometric and semantic matching. Extensive experiments conducted on the Spair-71K dataset demonstrate both the efficacy and efficiency of our proposed approach. Our approach is evaluated under three scenarios: (1) using geometric reasoning without seman-tic matching, (2) incorporating semantic reasoning to refine semantic correspondences using DINO V2 features, and (3) employing both DINO V2 and Stable Diffusion features for semantic reasoning. Note that even though DUSt3R is fine-tuned with synthetic datasets, experimental data indicates that our method is capable of generalizing to real-world images, with all settings achieving significant gains over state-of-the-art methods, as shown in Fig. 1. Notably, re-lying solely on geometric reasoning, our method exceeds the prior art [61] by a margin of 4.7 points on the rigid-body subsets of Spair-71K dataset, while achieving approx-imately 40 times faster inference speed. When using DI-NOV2 combined with Stable Diffusion for semantic refine-ment, we surpass the state-of-the-art by 7.4 points. Notably, our approach demonstrates remarkable resilience to drastic viewpoint changes. It enhances the zero-shot method [61] by up to 19.6 points in scenarios with significant viewpoint variations and the in-domain fine-tuning method [33] by up to 8.7 points. These results endorse our novel pipeline that synergizes geometric and semantic reasoning. Our contri-butions are summarized below: • We introduce an innovative approach for identifying se-mantic correspondences: unlike prior methods that en-hance semantic features through geometric bootstrap-ping, our pipeline is grounded in geometric reasoning and leveraging semantic reasoning for refinement. • Our method improves the state-of-the-art method by a large margin while speeding up the runtime by up to 40 times. More importantly, our method in a zero-shot manner is robust to significant changes in viewpoint even outperforming in-domain finetuned method, which high-lights its vast potential for practical use. 
+
+## 2. Related Work 
+
+Image Correspondence. Establishing correspondences between images is a fundamental task in computer vision, with applications in Structure-from-Motion/3D reconstruc-tion [1, 39, 45, 46], object tracking [12, 59], image recog-nition [4, 40, 49] and segmentation [15, 25, 28, 43]. Visual correspondence and semantic correspondence, while differ-ing in whether they focus on the same instance or differ-ent instances within the same category, share the common goal of learning features invariant to illumination, occlu-sion, articulation, viewpoint, and even semantic changes. Traditional methods rely on hand-crafted features such as SIFT [30] and SURF [3] to find correspondences. With the advent of deep learning, convolutional neural networks (CNNs) have been employed to learn feature representa-tions for correspondence tasks. Supervised methods have shown promising results by learning representations from ground-truth correspondence annotations [9, 18, 22, 23]. To address the scarcity of labeled data, weakly supervised [52] and self-supervised methods [20, 56] have been developed, 11580 allowing models to learn correspondences without explicit annotations. Recently, transformers have been introduced to correspondence problems. Methods using transformers leverage attention mechanisms to learn robust representa-tions that capture both spatial relationships and visual ap-pearance [22, 27, 44, 53]. 
+
+Pre-trained Representations from Generative and Foun-dation Models. Recent works have utilized representa-tions learned from generative models, such as Genera-tive Adversarial Networks (GANs) [13], diffusion mod-els [17, 21, 47, 48], and visual foundation models such as DINO [5, 38] and OpenCLIP [19], to improve semantic cor-respondence. These pretrained representations exhibit an emergent ability to capture rich semantic information orig-inating from tasks like image generation and generalize ef-fectively across various datasets and tasks. Such methods have changed the paradigm of finding semantic correspon-dences by providing features that can be used directly for matching [50, 60]. Subsequent methods have investigated how to use these features as frozen backbones and add ad-ditional modules for better correspondence [31, 60, 61]. However, these representations are not without limitations. Recent works [60, 61] point out that these representations struggle when handling large viewpoint changes, indicating that they lack 3D awareness. 
+
+Learning 3D-Aware Representations. To address the limitations of 2D representations under significant view-point changes, some previous work has investigated how to incorporate 3D information into representations learned from 2D image planes. Techniques like Neural Radi-ance Fields (NeRF) [35] learn implicit representations through volumetric rendering, and NeRF-based object de-tection [57] demonstrates that such representations perform well on 3D detection tasks. Other methods use camera pose or object pose information to learn invariant features with respect to changes in camera view [2, 7, 56, 58]. In ad-dition, some approaches extend this idea to semantic cor-respondence. For example, [61] introduces a pose-variant augmentation in test time through flipping to align images, while [34] injects geometric priors into learned representa-tions using viewpoint information. 
+
+Explicit 3D Reasoning. Some previous work [26, 51] at-tempted to directly map image pixels into a 3D space by predicting a canonical 3D coordinate for each pixel. How-ever, these methods force the network to learn a fixed co-ordinate space. Recently DUSt3R [54] proposes to jointly map two images in a shared 3D coordinate space, al-lowing robust cross-view alignment. Based on DUSt3R, MASt3R [24] refines this idea for image correspondence, highlighting the ability of such joint 3D representations to produce accurate matches across views. 
+
+3D Deformation for dense correspondence. While map-ping images from the same category into a shared 3D co-ordinate space can effectively capture global spatial rela-tionships, such approaches struggle with intra-category ge-ometric variations. Alongside direct 3D mapping, some approaches use point cloud deformation to establish dense correspondences between category-level objects. For in-stance, [55] learns per-vertex offsets to warp a source model, [8] maps point clouds to a canonical primitive and deforms them for correspondence, and [10] represents 3D shapes as deformed templates implicit field using dedicated deformation and correction fields. These works show that existing 3D deformation methods can capture geometric variations, enabling robust semantic correspondence. Building upon these insights, we propose a method that combines the advantages of pre-trained representations from visual foundation models with explicit 3D geomet-ric reasoning. By integrating semantic features extracted from models like DINO with joint 3D coordinate map-ping and deformation-based refinement, our approach effec-tively handles semantic correspondence under large view-point changes. 
+
+## 3. Proposed Approach 
+
+3.1. Problem Setup 
+
+We aim to establish pixel-level correspondences between two images that contain the same instance or similar in-stances within one category. Let  I1 be the source image and 
+
+I2 be the target image, with a set of keypoint pixel locations 
+
+p1 in  I1. Our goal is to find the corresponding pixel loca-tions  p2 in  I2 such that they not only share similar semantic meanings but also preserve the geometric consistency of the instances in  I1 and  I2.A common paradigm in previous work for obtaining se-mantic correspondences is to first extract dense image fea-tures from both images, denoted as F1 and F2, and then match keypoints by minimizing the distance between fea-ture descriptors: 
+
+p2 = arg min  
+
+> p
+
+d  F1(p1), F1(p) (1) where  d is typically the cosine distance used as the sim-ilarity metric. Although such approach can learn shape or seman-tic invariant representations, it struggles to capture view-invariant representations solely from the image plane. This limitation makes semantic correspondence under large viewpoint changes a challenging problem. 11581 Geometric Matching Semantic Matching 
+
+> ViT Encoder + Decoder ViT Encoder + Decoder 3D Regression Head 1
+> 3D Regression Head 2
+
++?
+
+> Deformation Head
+> Found Correspondence
+> Deform KNN
+
+Figure 2. The framework of our method. 
+
+To address this issue, we propose to explicitly lift both images into a unified 3D space and perform matching in the 3D space rather than in feature space, as depicted in Fig. 2. Specifically, we reconstruct the shapes of objects in both 
+
+I1 and  I2 as 3D point maps within an aligned coordinate system. We then deform the shape of the object in  I2 to align with the shape of the object in  I1, while maintaining the camera pose in  I2. This process results in X 1 and X 2,which represent the pixelwise 3D coordinates for  I1 and  I2,respectively. Thus, we obtain semantic correspondence as follows: 
+
+p2 = arg min  
+
+> p
+
+d  X 1(p1), X 2(p) , (2) where  d is the euclidean distance. 
+
+3.2. Image to 3D Framework 
+
+Our model is built upon DUSt3R [54], which employs a transformer-based network to perform scale-free 3D recon-struction from two input RGB images, resulting in two dense 3D point clouds, or pointmaps, designated as  X1,1
+
+and  X2,1.A pointmap  Xa,b ∈ RH×W ×3 represents a dense map-ping of each pixel  i = ( u, v ) in the image  Ia to its corre-sponding 3D point  Xa,b u,v ∈ R3, expressed in the coordinate system of camera  Cb. DUSt3R jointly predicts pointmaps 
+
+X1,1 and  X2,1 in the same coordinate system of camera  C1.
+
+Network Architecture. Both input images  I1 and  I2 are encoded using a shared-weight Vision Transformer (ViT) encoder [11], producing token representations  F 1 and  F 2:
+
+F 1 = Encoder (I1), F 2 = Encoder (I2). (3) These representations are jointly processed by a trans-former decoder that exchanges the information through cross-attention for 3D reasoning across the viewpoints of 
+
+I1 and I2, resulting in G1 and G2:
+
+G1, G 2 = Decoder (F 1, F 2). (4) Finally, 3D regression heads regress the pointmaps and confidence maps from decoder outputs: 
+
+X1,1, Conf 1 = Head 1([ F 1, G 1]) , (5) 
+
+X2,1, Conf 2 = Head 2([ F 2, G 2]) . (6) By jointly processing both images and exchanging infor-mation via cross-attention, the network learns spatial re-lationships necessary for accurate 3D reconstruction and alignment, enabling reliable semantic correspondence un-der large viewpoint changes. 
+
+3.3. Learning Category-Level 3D Geometry 
+
+We extend the DUSt3R framework [54] to operate at the 
+
+category level , enabling our model to understand spatial relationships between different objects within the same cat-egory from various points of view. To achieve this, we use renderings from the ShapeNet dataset [6], which provides pose-aligned categorical 3D models. Therefore, it ensures that renderings from the same camera pose across all ob-jects in a category result in orientation-consistent images. We denote the object in I1 and I2 by O1 and O2. Our model predicts pointmaps  X1,1 
+
+> O1
+
+and  X2,1 
+
+> O2
+
+corresponding to input images  I1 and  I2, respectively, expressed in the co-ordinate system of camera  C1. Importantly, the pointmaps produced by our model from the 3D regression head do not enforce the shape consistency between the objects in  I1 and 
+
+I2. In other words, the two 3D regression heads produce shapes that are aligned in orientation but allow variations in object structure, capturing the unique characteristics of individual instances within the same category. 11582 3.4. Deformation Head for Shape Morphing 
+
+Establishing accurate correspondences between the pre-dicted point maps  X1,1 
+
+> O1
+
+and  X2,1 
+
+> O2
+
+can be framed as learning a deformation field that morphs the shape of O2 and O1.To this end, we introduce a deformation head to capture the semantic and geometric mapping between  O1 and  O2.The deformation head combines the encoder outputs 
+
+F 1, F 2 and the decoder outputs  G1, G 2 from both input im-ages as the input. This combined representation is then used to predict the 3D offsets for each pixel in I2 and the associ-ated confidence map: 
+
+∆X, Conf def = Head def  [F 1, G 1, F 2, G 2] , (7) where ∆X represents the per-pixel 3D offset from the shape of O2 to the shape of O1. The resulting pointmap after de-formation is formulated as: 
+
+X2,1 
+
+> O1
+
+= X2,1 
+
+> O2
+
++ ∆ X,  (8) where  X2,1 
+
+> O1
+
+is the deformed 3D pointmap that matches the shape of  O1 in the coordinate system of camera  C1,while maintaining the 2D pixel correspondence to image 
+
+I2. With the correct deformation, correspondences can be established in the overlapping regions between X2,1 
+
+> O1
+
+and 
+
+X1,1. Therefore, we can substitute X1, X 2 in Eq. (2) with 
+
+X1,1, X 2,1 
+
+> O1
+
+to find pixel correspondences in 2D images. 
+
+3.5. Deformation Loss with Semantic Supervision. 
+
+The deformation from  X2,1 
+
+> O2
+
+to  X2,1 
+
+> O1
+
+is essential for estab-lishing accurate semantic correspondences. Beyond align-ing surface geometry, it must ensure semantic consistency between the parts of two objects. To this end, we pro-pose training the deformation head using a novel semantic correspondence supervision approach, which eliminates the need for manual labeling by distilling knowledge from DI-NOv2 [38] in a manner that is robust to viewpoint changes. The core idea of our label-free semantic supervision ap-proach is to leverage RGB renderings of different objects from the same view to automatically generate pseudo-labels for semantic correspondences. Let C2 be the camera of in-terest, we denote the RGB images of the two objects as I2
+
+> O1
+
+and I2 
+
+> O2
+
+= I2. In the absence of viewpoint variations, ex-isting feature extractors can accurately identify these cor-respondences. By combining these pseudo-labels with 3D geometric correspondences derived from different views of the same object, we can obtain robust supervision signals between two images of different views and different objects. We employ the DINOv2 feature extractor to obtain dense feature maps of  I2 and  I2 
+
+> O1
+
+, denoted as  f 2 and  f 2 
+
+> O1
+
+, respec-tively. During training, given the ground truth pointmaps 
+
+Xgt  
+
+> 2
+
+and  Xgt  
+
+> 2O1
+
+for  I2 and  I2 
+
+> O1
+
+, we proceed as follows: For each feature corresponding to a pixel in  f 2, we find its  K
+
+nearest neighbors in  Xgt  
+
+> 2O1
+
+within the 3D space. This en-sures that cosine similarity computations are confined to a local 3D region, enhancing the relevance conditioned on spatial proximity. We compute the cosine similarity be-tween  f 2 and  f 2 
+
+> O1
+
+within these local neighborhoods. Then, we select correspondences in which the cosine similarity exceeds a certain threshold  τ to serve as sparse pseudo la-bels for semantic correspondence supervision. Formally, the set of labeled correspondences  S is defined as: 
+
+S = (i, j ) d  f 2 
+
+> i
+
+, f 2
+
+> O1,j
+
+ > τ, j ∈ NN K
+
+ X2, X gt  
+
+> O1
+
+, i 
+
+(9) where  i indexes pixels in  f 2, j indexes pixels in  f 2 
+
+> O1
+
+,
+
+NN K (·) denotes the set of  K nearest neighbors in 3D space and the distance metric d is the cosine distance. With the semantic supervision established, we define the semantic-aware deformation regression loss as: 
+
+Lsemantic = X
+
+> i∈S
+
+
+
+Conf def  
+
+> i
+
+Xi − ¯Xi 
+
+> 22
+
+− α log Conf def 
+
+> i
+
+
+
+(10) where: • Xi is the predicted deformed 3D point for the pixel  i,
+
+Xi = X2,1 
+
+> O2i
+
++ ∆ Xi.• ¯Xi is the ground truth 3D point corresponding to the DINO-found correspondence for the pixel  i.• Conf def  
+
+> i
+
+is the confidence score for the pixel i predicted together with ∆X.• α is a hyperparameter that controls regularization term. We apply a regression loss with confidence weighting, fol-lowing [54], to encourage the network to prioritize well-defined correspondences. Ambiguous correspondences are assigned lower weights, partially allowing the network bias to interpolate them from more confident correspondences. In addition to this sparse semantic supervision, we apply dense supervision on the deformed shape using the Cham-fer distance loss  LChamfer , which measures the discrepancy between the predicted deformed pointmap  X2,1 
+
+> O1
+
+and the ground truth pointmap  X2,1gt  
+
+> O1
+
+, the chamfer distance loss is formulated as: 
+
+LChamfer = X
+
+> p∈X2,1
+> O1
+
+min 
+
+> q∈X2,1gt
+> O1
+
+∥p − q∥2 + X
+
+> q∈X2,1gt
+> O1
+
+min 
+
+> p∈X2,1
+> O1
+
+∥q − p∥2.
+
+(11) Dense supervision from chamfer distance loss encourages the overall shape after deformation to closely match the ground truth, ensuring geometric accuracy alongside se-mantic alignment. Therefore, combining geometric and se-mantic supervision, our final deformation loss is Ldeform =
+
+Lsemantic + Lchamfer .11583 3.6. Geometric and Semantic matching 
+
+With the deformation head, two images in different in-stances are now not only aligned in orientation but also matched in shape and semantics in the unified coordinate space. During inference time, we can establish correspon-dences by geometric matching using 3D nearest neighbor. In addition to geometric matching, we further propose a test-time semantic matching approach, formulating a hybrid matching strategy for finer-level semantic correspondence. For coarse geometric matching, we use the predicted point maps of the source and target images,  X1 and  X2,to construct k-d trees for efficient nearest neighbor searches in 3D space. Given a set of keypoints  P in the source im-age, we identify the  K nearest neighbors in 3D space from the target image’s pointmap  X2. These neighbors serve as candidate matching points in the target image. For fine-grained semantic matching, we extract dense se-mantic feature maps  f 1 and  f 2 for both images using a pre-trained feature extractor. For each keypoint in  P , we calculate the cosine similarity between its semantic feature in  f 1 and the semantic features in  f 2 corresponding to the 
+
+K nearest neighbors identified during geometric matching. The final correspondence is determined by points with high-est similarity from the candidates. 
+
+## 4. Experiments 
+
+4.1. Implementation details 
+
+Training Dataset. We generate a comprehensive and pho-torealistic dataset using ShapeNetCore[6] 3D models that provide consistently categorized pose-aligned 3D objects. For each object within the same category, we first normal-ize its size to ensure uniformity across all instances by scal-ing it using the factor  s = 1max( x,y,z ) , where  x, y, z  are the lengths of the object’s bounding box in 3 dimensions. We then rendered both RGB and depth images for each nor-malized object using 100 predefined camera rotations with uniform increments in azimuth and elevation angles, ensur-ing comprehensive coverage of views and consistency of the same camera pose in different objects across the entire cate-gory. To mitigate the simulation-to-reality gap and enhance the realism of our dataset, we utilize Blender’s ray tracing engine with High Dynamic Range Imaging (HDRI) envi-ronments for real-world illumination conditions. As a re-sult, we generate an extensive dataset, covering 55 common object categories, comprising 5,130,000 RGB and depth im-ages at a resolution of  512 × 512  pixels, using 51,300 mod-els from ShapeNetCore, resulting in a total dataset size of approximately 1.3 terabytes. 
+
+Inference in real world image. We first generate a mask of the object in the image following [61] using the SAM2 model [41]. In the geometric matching stage, we predict 3D pointmaps for both the source and target images at a reso-lution of  224 × 224  pixels. We then construct two KD trees [32] for efficient K nearest neighbor search. For each key-point in the source image, we search for its corresponding 
+
+K nearest neighbors on the target point map using the KD trees. In the semantic matching stage, we employ semantic feature maps of size  840 × 840  pixels. We upsample the 
+
+K pixels identified during the geometric matching from the 
+
+224 × 224  resolution to the  840 × 840  resolution to obtain maximum cosine similarity between the semantic feature of the source keypoint and the features within the localized re-gion of the target image for final correspondence. 
+
+Evaluation Datasets. We conduct experiments on widely used benchmarks SPair-71k [36], a challenging semantic correspondence dataset that contains a diverse set of 53,340 training pairs, 5,384 validation pairs, and 12,234 testing pairs spanning 18 object categories. This dataset presents significant variations in the viewpoint, scale, and object in-stances. We focus our evaluation on the rigid body cate-gories , specifically, 11 categories in SPair-71k. 
+
+Evaluation Metric. We adopt the widely used percentage of correct keypoints (PCK) metric. The PCK measures the proportion of predicted keypoints that are correctly matched to the ground truth within a specified threshold. A predicted keypoint is considered correct if it lies within a threshold of  α × max( h, w ) pixels from the ground truth keypoint, where  α ∈ [0 , 1]  (e.g.  α = 0 .10 ), and  h and 
+
+w represent height and width, respectively. Specifically, for the SPair-71k dataset,  h and  w are the dimensions of the 
+
+bounding box of an instance ( αbbox ) and we report all re-sults using PCK per point for consistency in metric. 
+
+Model Variants and Baselines. we evaluate our baseline model and its variants, comparing them with state-of-the-art methods. Our baseline, Ours (Geo Only) only uses geometric matching for 1 nearest neighbor search. This baseline is enhanced with two variants on top of geomet-ric matching for K = 300 nearest neighbors: Ours (Geo + Semantic (DINOv2 ViT-S)) uses semantic matching from descriptors extracted by DINOv2 ViT-S and Ours (Geo + Semantic (DINOv2 + SD) uses semantic matching from descriptors extracted from DINOv2 ViT-B and Stable Dif-fusion (SD); these two descriptors are fused following [60]. We compare our methods with existing approaches: [50], [60], which only uses unsupervised semantic repre-sentation learned from the 2D image plane and [61] and [34], which incorporate geometric or spatial information into semantic representations. The methods we compare can therefore be grouped into 2 categories: • Group (a) : Methods that rely on 2D representation • Group (b) : Methods that inject geometric information. [34, 61]. To clarify training and evaluation settings, for [60] and [61], we perform evaluations in its zero-shot setting. Except for Spherical Map [34] which uses the SPair-71k training split for training purposes without explicitly using 11584 Table 1. Evaluation on SPair-71k per category: The Per-Category and average Percentage of Correct Keypoints (PCK) at a threshold of 0.10 (PCK@0.1) on Spair-71k’s test dataset are presented. Following [14, 37], we provide the PCK per point results on rigid-body categories in SPair-71k. The results with the highest PCK values are emphasized in bold font, whereas the second-highest values are underlined. ∗: Finetuned on SPair-71k training dataset.                                                                                                                            
+
+> Methods Aero Bike Boat Bottle Bus Car Chair Motor Plant Train TV All
+> DINOv2+NN [38, 60] 72.7 62.0 41.3 40.4 52.3 51.5 36.2 61.0 30.7 54.3 24.2 47.1 DIFT [50] 63.5 54.5 34.5 46.2 52.7 48.3 39.0 53.3 57.8 71.1 63.4 55.6 SD+DINO [60] 73.0 64.1 40.7 52.9 55.0 53.8 45.5 63.3 58.4 66.2 53.5 58.0 Spherical Maps ∗[34] 76.9 61.2 42.1 48.4 73.3 67.2 46.3 66.0 36.2 67.8 42.2 57.2 Spherical Maps + SD ∗[34] 74.8 64.5 45.6 52.7 77.8 71.4 47.7 67.6 49.9 78.5 59.1 63.9 Telling Left from Right [61] 78.0 66.4 44.5 60.1 66.6 60.8 53.2 66.1 58.9 83.8 55.5 64.9
+> Ours (Geo only) 84.3 54.0 43.9 59.8 49.1 83.5 84.4 72.5 65.3 79.1 75.0 69.6 (+4.7)
+> Ours (Geo + Semantic (DINOv2 ViT-S)) 84.6 59.6 47.6 62.2 50.1 84.4 83.4 75.1 69.5 81.2 76.1 71.5 (+6.6)
+> Ours (Geo + Semantic (DINOv2 + SD)) 85.5 62.2 48.0 62.6 50.3 84.3 84.0 76.0 71.6 81.7 76.6 72.3 (+7.4)
+
+Table 2. Evaluation on SPair-71k at Different PCK Levels: 
+
+We present the performance on SPair-71k test split (rigid-body categories only) using PCK per point criteria at different thresh-olds. The highest PCK values are highlighted in bold font, and the second-highest values are underlined. ∗: Finetuned on SPair-71k training dataset. SPair-71k 
+
+Methods 0.01 0.05 0.10 DINOv2+NN [38, 60] 5.0 32.1 47.1 DIFT [50] 9.5 45.2 55.6 SD+DINO [60] 7.2 43.0 58.2 Spherical Maps ∗ [34] 5.8 39.4 57.8 Spherical Maps + SD ∗ [34] 7.9 48.2 63.9 Telling Left from Right [61] 9.0 48.4 64.7 
+
+Ours (Geo only) 11.4 53.1 69.6 
+
+Ours (Geo + Semantic (DINOv2 ViT-S)) 15.1 56.4 71.5 
+
+Ours (Geo + Semantic (DINOv2 + SD)) 19.1 59.1 72.3 
+
+semantic correspondence labels, all other methods, includ-ing ours, do not use any data from the evaluation dataset. 
+
+4.2. Quantitative Results 
+
+Overall Semantic correspondence result. In Table 1, we present the result per category on PCK@0.1 on rigid body categories in SPair-71k. Our method achieves a gain of 14.3 and 7.4 compared to the best of the methods in group (a) 
+
+and (b) respectively. Table 1 shows that without any addi-tional semantic information, simply using 1 nearest neigh-bor matching, our baseline model outperforms the methods in group (b) by 4.7 and the methods in group (a) by 11.6. In addition to Table 1, we also present the average PCK 
+
+per point at thresholds of [0 .01 , 0.05 , 0.1] in Table 2. Un-der stricter metrics such as PCK@0.01 and PCK@0.05, our baseline method, without using any additional semantic in-formation, outperforms the methods in group (a) by 1.9 and 7.9 percentage points, and in group (b) by 2.4 and 4.7 re-spectively. This improvement suggests that our deformation process not only accurately deforms to the correct shape, but also preserves semantic understanding. With an addi-tional semantic feature, our method outperforms existing methods in PCK@0.01 and 0.05 by 9.6 and 10.7, which highlights the efficacy of our semantic matching module. 
+
+Semantic correspondence result in large viewpoint sub-set. We further evaluate the performance on a subset of SPair-71k of our choice, which contains image pairs with large or extreme viewpoint changes. This subset has 7 cate-gories with 550 image pairs, and the result in Table 3 shows that our method is robust to extreme viewpoint changes and learns viewpoint-invariant correspondence by not ex-hibiting significant performance loss across all three of our model variants. In contrast, except for Spherical Maps and it’s variant [34] which are trained on SPair-71k’s training split, all other methods experience performance loss. Con-sequently, our method achieves a substantial improvement of 19.6 percentage points over other methods that have not used any data from SPair-71k. 
+
+Ablation study In Table 4, we report the performance dif-ferences in PCK at thresholds of [0 .01 , 0.05 , 0.1] , as well as the improvements achieved using different semantic feature extractors. At the least strict threshold, PCK@0.1, we ob-serve only minor improvement when changing the feature extractor from DINOv2 ViT-S to DINOv2 ViT-B + SD, at the cost of a 13x increase in runtime. However, the ben-efit of incorporating stronger semantic features becomes evident at stricter thresholds, PCK@0.05 and PCK@0.01, where using a more powerful semantic feature extractor yields approximately a 3 percent gain in performance. This shows that geometric matching already provides a solid prior in terms of promising performance in PCK@0.1 for stronger semantic features to capture finer-level semantic correspondences under stricter metrics. 
+
+4.3. Qualitative Results 
+
+We qualitatively compare our method with methods that rely on 2D pre-trained representation in Fig. 3, DIFT [50] and SD+DINO [61]. Showing that under extreme viewpoint variation, our method accurately finds the correspondence between image pairs. 11585 Table 3. Evaluation on SPair-71k large viewpoint change subset per category: We provide the per point PCK results on rigid-body categories with large viewpoint variation pairs in SPair-71k using PCK@0.1. The results with the highest PCK values are highlighted in 
+
+bold font, and the second-highest values are underlined. ∗: Finetuned on SPair-71k training dataset. 
+
+Methods Aero Bike Boat Bus Car Chair Motor All 
+
+DINOv2+NN [38, 60] 67.2 62.9 39.4 20.4 22.2 21.9 60.6 51.1 DIFT [50] 53.4 48.3 5.6 4.8 1.8 8.7 35.0 31.9 SD+DINO [60] 66.5 61.9 20.3 21.0 17.6 13.8 59.9 47.1 Spherical Maps ∗ [34] 77.2 4.5 38.6 72.0 53.7 40.8 71.0 63.2 Spherical Maps + SD ∗ [34] 73.1 66.5 39.2 62.9 48.1 28.1 69.6 60.4 Telling Left from Right [61] 74.5 64.3 33.6 21.0 19.9 14.8 63.5 52.3 
+
+Ours (Geo only) 92.5 58.0 43.6 38.2 76.8 61.7 79.9 68.8 
+
+Ours (Geo + Semantic (DINOv2 ViT-S)) 92.6 64.3 48.1 38.7 78.2 62.8 83.3 71.6 
+
+Ours (Geo + Semantic (DINOv2 + SD)) 93.6 66.8 44.7 38.2 77.7 62.2 83.3 71.9 
+
+Table 4. Ablation study on SPair-71k: We report the PCK results for our baseline model and its variants as well as improvements in PCK at different threshold levels. Inference speed in fps on a single NVIDIA RTX 4090 GPU are also presented. SPair-71k ↑ SPair-71k Latency Model Variants 0.01 0.05 0.10 0.01 0.05 0.10 fps Ours (Geo only) 11.4 53.1 69.6 - - - 19.9 Ours (Geo + Semantic (DINOv2 ViT-S)) 15.1 56.4 71.5 3.7 3.3 1.9 5.4 Ours (Geo + Semantic (DINOv2 + SD)) 19.1 59.1 72.3 4.0 2.7 0.8 0.4 
+
+Figure 3. Qualitative analysis between our method using geometry only and SD+DINO and DIFT 
+
+4.4. Limitations 
+
+Synthetic Data Quality and Ambiguity Despite promis-ing results, our method has certain limitations. First, per-formance is heavily dependent on the quality of the 3D model. For instance, our lower performance on buses arises from overly simplistic ShapeNet meshes, leading to greater simulation-to-real gaps and ambiguity, particularly because the front and back appear similar. This ambiguity causes the network, under the l2 loss, to regress positions toward the midpoint of ambiguous ground-truth points. 
+
+Limitation in deformable categories Our current pipeline is limited to rigid-body objects for several reasons. First, most publicly available animal datasets provide only in-the-wild RGB images without accompanying depth maps or consistent camera poses in a unified coordinate system. Also, we assume orientation-aligned objects in 3D datasets. For nonrigid classes such as animals, where defor-mation introduces an effectively infinite number of degrees of freedom, defining a canonical ’orientation’ is inherently difficult. One direction to address the non-rigid issue involves leveraging parametric models like SMAL[62] or SMPL[29]. These models can align real-world images to a common template, potentially offering a structured way to extend our method beyond rigid categories. 
+
+## 5. Conclusion 
+
+Semantic correspondence faces two main challenges: ap-pearance variations and viewpoint changes. We address this challenge by extending DUSt3R for cross-instance view-point alignment. To address the lack of annotations and adapt DUSt3R for shape differences, we propose an effi-cient synthetic data annotation strategy using coordinate-aligned 3D models yet under various viewpoints. Our method introduces a novel hybrid pipeline that combines geometric alignment and feature-based local refinement. Despite training on synthetic data, it achieves superior zero-shot generalization to real-world scenarios, delivering sig-nificant performance improvements under drastic viewpoint changes while achieving high efficiency. 11586 References 
+
+[1] Sameer Agarwal, Yasutaka Furukawa, Noah Snavely, Ian Si-mon, Brian Curless, Steven M Seitz, and Richard Szeliski. Building rome in a day. Communications of the ACM , 54 (10):105–112, 2011. [2] Axel Barroso-Laguna, Sowmya Munukutla, Victor Adrian Prisacariu, and Eric Brachmann. Matching 2d images in 3d: Metric relative pose from metric correspondences. In Pro-ceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 4852–4863, 2024. [3] Herbert Bay, Tinne Tuytelaars, and Luc Van Gool. Surf: Speeded up robust features. Lecture notes in computer sci-ence , 3951:404–417, 2006. [4] Kaidi Cao, Maria Brbic, and Jure Leskovec. Concept learn-ers for few-shot learning. arXiv preprint arXiv:2007.07375 ,2020. [5] Mathilde Caron, Hugo Touvron, Ishan Misra, Herv´ e J´ egou, Julien Mairal, Piotr Bojanowski, and Armand Joulin. Emerg-ing properties in self-supervised vision transformers. In 
+
+ICCV , pages 9650–9660, 2021. [6] Angel X Chang, Thomas Funkhouser, Leonidas Guibas, Pat Hanrahan, Qixing Huang, Zimo Li, Silvio Savarese, Manolis Savva, Shuran Song, Hao Su, et al. Shapenet: An information-rich 3d model repository. arXiv preprint arXiv:1512.03012 , 2015. [7] Hansheng Chen, Pichao Wang, Fan Wang, Wei Tian, Lu Xiong, and Hao Li. Epro-pnp: Generalized end-to-end prob-abilistic perspective-n-points for monocular object pose es-timation. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pages 2781–2790, 2022. [8] An-Chieh Cheng, Xueting Li, Min Sun, Ming-Hsuan Yang, and Sifei Liu. Learning 3d dense correspondence via canon-ical point autoencoder. Advances in Neural Information Pro-cessing Systems , 34:6608–6620, 2021. [9] Seokju Cho, Sunghwan Hong, Sangryul Jeon, Yunsung Lee, Kwanghoon Sohn, and Seungryong Kim. Cats: Cost aggre-gation transformers for visual correspondence. In NeurIPS ,pages 9011–9023, 2021. [10] Yu Deng, Jiaolong Yang, and Xin Tong. Deformed implicit field: Modeling 3d shapes with learned dense correspon-dence. In Proceedings of the IEEE/CVF Conference on Com-puter Vision and Pattern Recognition , pages 10286–10296, 2021. [11] Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg Heigold, Syl-vain Gelly, et al. An image is worth 16x16 words: Trans-formers for image recognition at scale. arXiv preprint arXiv:2010.11929 , 2020. [12] Shenyuan Gao, Chunluan Zhou, Chao Ma, Xinggang Wang, and Junsong Yuan. Aiatrack: Attention in attention for trans-former visual tracking. In ECCV , pages 146–164. Springer, 2022. [13] Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio. Generative adversarial networks. Commu-nications of the ACM , 63(11):139–144, 2020. [14] Kamal Gupta, Varun Jampani, Carlos Esteves, Abhinav Shri-vastava, Ameesh Makadia, Noah Snavely, and Abhishek Kar. Asic: Aligning sparse in-the-wild image collections. In 
+
+ICCV , 2023. [15] Mark Hamilton, Zhoutong Zhang, Bharath Hariharan, Noah Snavely, and William T. Freeman. Unsupervised semantic segmentation by distilling feature correspondences. In ICLR ,2022. [16] Kaiming He, Xinlei Chen, Saining Xie, Yanghao Li, Piotr Doll´ ar, and Ross Girshick. Masked autoencoders are scalable vision learners. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pages 16000– 16009, 2022. [17] Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising diffu-sion probabilistic models. NeurIPS , 33:6840–6851, 2020. [18] Shuaiyi Huang, Luyu Yang, Bo He, Songyang Zhang, Xum-ing He, and Abhinav Shrivastava. Learning semantic corre-spondence with sparse annotations. In ECCV , pages 267– 284. Springer, 2022. [19] Gabriel Ilharco, Mitchell Wortsman, Ross Wightman, Cade Gordon, Nicholas Carlini, Rohan Taori, Achal Dave, Vaishaal Shankar, Hongseok Namkoong, John Miller, Han-naneh Hajishirzi, Ali Farhadi, and Ludwig Schmidt. Open-clip, 2021. [20] Allan Jabri, Andrew Owens, and Alexei A Efros. Space-time correspondence as a contrastive random walk. NeurIPS ,2020. [21] Tero Karras, Miika Aittala, Timo Aila, and Samuli Laine. Elucidating the design space of diffusion-based generative models. arXiv preprint arXiv:2206.00364 , 2022. [22] Seungwook Kim, Juhong Min, and Minsu Cho. Transfor-matcher: Match-to-match attention for semantic correspon-dence. In CVPR , pages 8697–8707, 2022. [23] Jae Yong Lee, Joseph DeGol, Victor Fragoso, and Sudipta N. Sinha. Patchmatch-based neighborhood consensus for se-mantic correspondence. In CVPR , pages 13153–13163, 2021. [24] Vincent Leroy, Yohann Cabon, and J´ erˆ ome Revaud. Ground-ing image matching in 3d with mast3r. In European Confer-ence on Computer Vision , pages 71–91. Springer, 2025. [25] Weihao Li, Omid Hosseini Jafari, and Carsten Rother. Deep object co-segmentation. In ACCV , pages 638–653. Springer, 2019. [26] Zhigang Li, Gu Wang, and Xiangyang Ji. Cdpn: Coordinates-based disentangled pose network for real-time rgb-based 6-dof object pose estimation. In Proceedings of the IEEE/CVF international conference on computer vision ,pages 7678–7687, 2019. [27] Philipp Lindenberger, Paul-Edouard Sarlin, and Marc Polle-feys. Lightglue: Local feature matching at light speed. In 
+
+Proceedings of the IEEE/CVF International Conference on Computer Vision , pages 17627–17638, 2023. [28] Shilong Liu, Lei Zhang, Xiao Yang, Hang Su, and Jun Zhu. Unsupervised part segmentation through disentangling ap-pearance and shape. In CVPR , pages 8355–8364, 2021. 11587 [29] Matthew Loper, Naureen Mahmood, Javier Romero, Ger-ard Pons-Moll, and Michael J. Black. SMPL: A skinned multi-person linear model. ACM Trans. Graphics (Proc. SIGGRAPH Asia) , 34(6):248:1–248:16, 2015. [30] David G Lowe. Distinctive image features from scale-invariant keypoints. IJCV , 60:91–110, 2004. [31] Grace Luo, Lisa Dunlap, Dong Huk Park, Aleksander Holyn-ski, and Trevor Darrell. Diffusion hyperfeatures: Searching through time and space for semantic correspondence. Ad-vances in Neural Information Processing Systems , 36, 2024. [32] Songrit Maneewongvatana and David M Mount. Analysis of approximate nearest neighbor searching with clustered point sets. arXiv preprint cs/9901013 , 1999. [33] Octave Mariotti, Oisin Mac Aodha, and Hakan Bilen. Im-proving semantic correspondence with viewpoint-guided spherical maps. arXiv preprint arXiv:2312.13216 , 2023. [34] Octave Mariotti, Oisin Mac Aodha, and Hakan Bilen. Im-proving semantic correspondence with viewpoint-guided spherical maps. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 19521– 19530, 2024. [35] Ben Mildenhall, Pratul P Srinivasan, Matthew Tancik, Jonathan T Barron, Ravi Ramamoorthi, and Ren Ng. Nerf: Representing scenes as neural radiance fields for view syn-thesis. Communications of the ACM , 65(1):99–106, 2021. [36] Juhong Min, Jongmin Lee, Jean Ponce, and Minsu Cho. Spair-71k: A large-scale benchmark for semantic correspon-dence. arXiv prepreint arXiv:1908.10543 , 2019. [37] Dolev Ofri-Amar, Michal Geyer, Yoni Kasten, and Tali Dekel. Neural congealing: Aligning images to a joint se-mantic atlas. In CVPR , pages 19403–19412, 2023. [38] Maxime Oquab, Timoth´ ee Darcet, Th´ eo Moutakanni, Huy Vo, Marc Szafraniec, Vasil Khalidov, Pierre Fernandez, Daniel Haziza, Francisco Massa, Alaaeldin El-Nouby, et al. Dinov2: Learning robust visual features without supervision. 
+
+arXiv preprint arXiv:2304.07193 , 2023. [39] Onur ¨ Ozyes ¸il, Vladislav Voroninski, Ronen Basri, and Amit Singer. A survey of structure from motion. Acta Numerica ,26:305–364, 2017. [40] Yuxin Peng, Xiangteng He, and Junjie Zhao. Object-part attention model for fine-grained image classification. IEEE TIP , 27(3):1487–1500, 2017. [41] Nikhila Ravi, Valentin Gabeur, Yuan-Ting Hu, Ronghang Hu, Chaitanya Ryali, Tengyu Ma, Haitham Khedr, Roman R¨ adle, Chloe Rolland, Laura Gustafson, et al. Sam 2: Segment anything in images and videos. arXiv preprint arXiv:2408.00714 , 2024. [42] Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Bj¨ orn Ommer. High-resolution image syn-thesis with latent diffusion models. In CVPR , pages 10684– 10695, 2022. [43] Jose C Rubio, Joan Serrat, Antonio L´ opez, and Nikos Para-gios. Unsupervised co-segmentation through region match-ing. In CVPR , pages 749–756. IEEE, 2012. [44] Paul-Edouard Sarlin, Daniel DeTone, Tomasz Malisiewicz, and Andrew Rabinovich. Superglue: Learning feature matching with graph neural networks. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pages 4938–4947, 2020. [45] Johannes Lutz Sch¨ onberger and Jan-Michael Frahm. Structure-from-motion revisited. In CVPR , 2016. [46] Johannes Lutz Sch¨ onberger, Enliang Zheng, Marc Pollefeys, and Jan-Michael Frahm. Pixelwise view selection for un-structured multi-view stereo. In ECCV , 2016. [47] Yang Song and Stefano Ermon. Generative modeling by esti-mating gradients of the data distribution. NeurIPS , 32, 2019. [48] Yang Song, Jascha Sohl-Dickstein, Diederik P Kingma, Ab-hishek Kumar, Stefano Ermon, and Ben Poole. Score-based generative modeling through stochastic differential equa-tions. arXiv preprint arXiv:2011.13456 , 2020. [49] Luming Tang, Davis Wertheimer, and Bharath Hariha-ran. Revisiting pose-normalization for fine-grained few-shot recognition. In CVPR , pages 14352–14361, 2020. [50] Luming Tang, Menglin Jia, Qianqian Wang, Cheng Perng Phoo, and Bharath Hariharan. Emergent correspondence from image diffusion. In NeurIPS , 2023. [51] He Wang, Srinath Sridhar, Jingwei Huang, Julien Valentin, Shuran Song, and Leonidas J Guibas. Normalized object coordinate space for category-level 6d object pose and size estimation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 2642– 2651, 2019. [52] Qianqian Wang, Xiaowei Zhou, Bharath Hariharan, and Noah Snavely. Learning feature descriptors using camera pose supervision. In ECCV , pages 757–774. Springer, 2020. [53] Qing Wang, Jiaming Zhang, Kailun Yang, Kunyu Peng, and Rainer Stiefelhagen. Matchformer: Interleaving attention in transformers for feature matching. In Proceedings of the Asian Conference on Computer Vision , pages 2746–2762, 2022. [54] Shuzhe Wang, Vincent Leroy, Yohann Cabon, Boris Chidlovskii, and Jerome Revaud. Dust3r: Geometric 3d vi-sion made easy. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 20697– 20709, 2024. [55] Weiyue Wang, Duygu Ceylan, Radomir Mech, and Ulrich Neumann. 3dn: 3d deformation network. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 1038–1046, 2019. [56] Xiaolong Wang, Allan Jabri, and Alexei A Efros. Learn-ing correspondence from the cycle-consistency of time. In 
+
+CVPR , pages 2566–2576, 2019. [57] Chenfeng Xu, Bichen Wu, Ji Hou, Sam Tsai, Ruilong Li, Jialiang Wang, Wei Zhan, Zijian He, Peter Vajda, Kurt Keutzer, et al. Nerf-det: Learning geometry-aware volu-metric representation for multi-view 3d object detection. In 
+
+Proceedings of the IEEE/CVF International Conference on Computer Vision , pages 23320–23330, 2023. [58] Chenfeng Xu, Huan Ling, Sanja Fidler, and Or Litany. 3diff-tection: 3d object detection with geometry-aware diffusion features. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 10617– 10627, 2024. 11588 [59] Bin Yan, Yi Jiang, Peize Sun, Dong Wang, Zehuan Yuan, Ping Luo, and Huchuan Lu. Towards grand unification of object tracking. In ECCV , pages 733–751. Springer, 2022. [60] Junyi Zhang, Charles Herrmann, Junhwa Hur, Luisa Pola-nia Cabrera, Varun Jampani, Deqing Sun, and Ming-Hsuan Yang. A tale of two features: Stable diffusion complements dino for zero-shot semantic correspondence. In NeurIPS ,2023. [61] Junyi Zhang, Charles Herrmann, Junhwa Hur, Eric Chen, Varun Jampani, Deqing Sun, and Ming-Hsuan Yang. Telling left from right: Identifying geometry-aware semantic corre-spondence. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 3076– 3085, 2024. [62] Silvia Zuffi, Angjoo Kanazawa, David Jacobs, and Michael J. Black. 3D menagerie: Modeling the 3D shape and pose of animals. In IEEE Conf. on Computer Vision and Pattern Recognition (CVPR) , 2017. 11589

@@ -1,0 +1,314 @@
+Title: EdgeMovingNet: Edge-preserving Point Cloud Reconstruction via Joint Geometry Features
+
+URL Source: https://openaccess.thecvf.com/content/CVPR2025/papers/Yang_EdgeMovingNet_Edge-preserving_Point_Cloud_Reconstruction_via_Joint_Geometry_Features_CVPR_2025_paper.pdf
+
+Published Time: Mon, 02 Jun 2025 12:09:39 GMT
+
+Number of Pages: 11
+
+Markdown Content:
+# EdgeMovingNet: Edge-preserving Point Cloud Reconstruction via Joint Geometry Features 
+
+# Xinran Yang 1, Donghao Ji 1, Yuanqi Li 1∗, Junyuan Xie 1, Jie Guo 1, Yanwen Guo 1,2∗
+
+> 1
+
+# Nanjing University, Nanjing, China, 2School of Software, North University of China 
+
+> {xryang,donghaoji }@smail.nju.edu.cn
+> {yuanqili,jyxie,guojie,ywguo }@nju.edu.cn
+
+# Abstract 
+
+Point cloud reconstruction is a critical process in 3D repre-sentation and reverse engineering. When it comes to CAD models, edges are significant features that play a crucial role in characterizing the geometry of 3D shapes. How-ever, few points are exactly sampled on edges during acqui-sition, resulting in apparent artifacts for the reconstruction task. Upsampling point cloud is a direct technical route, but there is a main challenge that the upsampled points may not align with the model edge accurately. To over-come this, we develop an integrated framework to estimate edges by joint regression of three geometry features—point-to-edge direction, point-to-edge distance and point normal. Benefiting these features, we implement a novel refinement process to move and produce more points which lie ac-curately on edges of the model, allowing for high-quality edge-preserving reconstruction. Experiments and compar-isons against previous methods demonstrate our method’s effectiveness and superiority. 
+
+# 1. Introduction 
+
+Reconstructing mesh from raw point clouds is a fundamen-tal task in reverse engineering and computer-aided design. Over the years, a wide range of techniques have been de-veloped to tackle this problem. As for high quality recon-struction, edge features serve as critical geometric cues in characterizing the structure of objects, especially for CAD models. Traditional reconstruction methods such as Poisson [15] and Voronoi-based [5] method fail to preserve sharp edges well (See Fig. 1). In this paper, we take point clouds without normal as input and adopt a two-stage method to achieve edge-preserving surface reconstruction results. The challenges come from two aspects. On the one hand, the general input point cloud may be sparse and contain very few points accurately located on the edges of the base geometry. While certain point consolidation [12, 13, 25, 26]   
+
+> ∗Corresponding author.
+> Figure 1. Point cloud reconstruction for edges. The zoomed-in views show three edges intersected at a corner, compared among Poisson [15], Voronoi-based [5] method and our method.
+
+or upsampling methods [10, 22, 37, 38, 48, 51] attempt to increase point density in edge region, inaccuracies in po-sitioning or insufficient density prevent these added points from defining surface edges faithfully. Additionally, some approaches [21, 24, 31, 41] involve partitioning the given points into patches and fitting a smooth surface to each patch. However, identifying the optimal decomposition that reveals the structure of the underlying model remains chal-lenging. On the other hand, CAD models exhibit a wide va-riety of geometric shapes. Algorithms [4, 19, 33, 47] relying on analytic models of geometric features (such as curvature and its derivatives) often necessitate manual parameter tun-ing per object, rendering them less suitable for large collec-tions of data. In contrast, data-driven, learning based meth-ods [6, 14, 36, 43] offer a natural alternative. They leverage global information from training datasets and autonomously adapt to specific input shapes without user intervention. Our paper introduces EdgeMovingNet and a refinement process to address the aforementioned challenges. In the first stage, our focus is on developing a robust fea-ture extraction algorithm for the sampled point cloud. Some characteristics of the point cloud include: (1) sparse distri-bution, with points rarely aligning directly with (edge) fea-tures; (2) noisy distribution; (3) absence of normals. We in-troduce EdgeMovingNet—a deep-learning-based approach that estimates edges by joint prediction of sharp geomet-ric features (point-to-edge direction and point-to-edge dis-tance) as well as normal information, in order to handle this type of data. Our approach defines features implicitly This CVPR paper is the Open Access version, provided by the Computer Vision Foundation. Except for this watermark, it is identical to the accepted version; the final published version of the proceedings is available on IEEE Xplore. 22150 by designing direction-to-edge and distance-to-edge func-tions. The advantage of employing continuous feature func-tions—compared to binary classification (feature vs. non-feature points)—is its robustness for samples that are mis-aligned with features or noisy. Given the sparsity of sam-ples, we adopt a global prediction strategy for the entire shape rather than handling points in a patch-based manner. In the second stage, we introduce a refinement process to achieve high-quality surface reconstruction using the fea-tures obtained from EdgeMovingNet. We initiate the pro-cess by generating and filtering additional points located on potential geometry edges. Subsequently, we leverage the predicted basic normal information to optimize the posi-tions of these edge points. After that, we apply a basic re-construction solver (like Poisson reconstruction [15]) on the initial point cloud, resulting in a base surface. In the final step, we adjust the surface connections based on the opti-mized edge point locations, achieving an edge-preserving reconstruction. We demonstrate that our method performs favorably to the classical and learning-based state-of-the-art methods. In summary, our contributions include: • We propose a new learning-based framework called EdgeMovingNet, specifically designed to extract edges from point clouds by jointly estimation of point-to-edge direction, point-to-edge distance, and point normal. • We design a refinement process to produce additional points that align precisely with edges of geometry and utilize a relocation strategy to reconstruct an edge-preserving mesh by these edge points. • We show our good qualitative and quantitative results on point cloud reconstruction benchmarks, demonstrating the effectiveness of the proposed method. 
+
+# 2. Related work 
+
+Point cloud consolidation. Resampling, downsampling, and upsampling are commonly employed techniques to gen-erate feature consolidated point clouds for various down-stream applications. In the past few decades, a large amount of approaches concerning point cloud consolida-tion [2, 3, 12, 13, 25, 26] has been developed. Although the point density near sharp features is increased, the con-solidated points are not located on edges precisely. In recent years, the advancement of deep learning has revealed the potential of neural networks in handling unordered point cloud data. PointNet [35], PointNet++ [36], PointCNN [23], DGCNN [43], Point Transformer [11, 52], and PointMLP [30] are popular backbones for point cloud learning. Numerous learning-based methods for point cloud upsampling [10, 22, 37, 38, 48, 49, 51] and downsampling [9, 20] have been proposed. Yu et al . [50] presented EC-Net, the first learnable edge-aware method to upsample points consolidated near edges by using a point-to-edge loss to train the network. Metzer et al. [32] introduced a self-sampling network for neural point cloud consolidation which learns only from the input point cloud. However, their ability to capture edges with high precision is limited. Wang et al. [42] proposed the learning-based PIE-Net to classify edge points, corner points and non-edge points from point clouds, then rep-resent edges as a collection of parametric curves (lines, circles and B-spline curves). Liu et al. [27] introduced an end-to-end trainable deep network that detects corners and connections, enabling direct conversion of a point cloud into a linear wireframe model. Matveev et al. [31] presented DEF, a method that predicts the distance to edges of each point for effective edge reconstruction. However, the performance of these methods is limited when the sampled point cloud is not dense enough. 
+
+Feature preserving surface reconstruction. Reconstruct-ing surface from point clouds to ultimately form a mesh has been a longstanding problem in computer graphics. Tra-ditional methods (such as Poisson reconstruction [15, 16]) rely on point normals as additional input and have difficulty in preserving sharp features effectively, which is of great significance in the field of CAD. Salman et al. [40] pro-posed a feature detection process based on the covariance matrices of Voronoi cells to extract a set of sharp features, facilitating feature-preserving mesh generation. Dey et al. [8] suggested identifying and reconstructing feature curves by combining the Gaussian-weighted graph Laplacian and the Reeb graphs. Xiong et al. [46] presented a framework that optimizes mesh geometry and connectivity simultane-ously from the unoriented point cloud based on dictionary learning. Boulch and Marlet [6] proposed POCO, an im-plicit neural network through point cloud convolutions to answer occupancy queries. Ma et al. [29] introduced pre-dictive context priors by learning predictive queries for each specific point cloud, getting a global signed distance func-tions and using marching cubes [28] to reconstruct surfaces. Ren et al. [39] purposes GeoUDF which is a geometry-guided learning method for UDF and its gradient estimation for surface reconstruction. Huang et al. [14] presents Neu-ral Kernel Surface Reconstruction (NKSR) upon the Neu-ral Kernel Fields (NKF) [44] representation. Xu et al. [47] presented RFEPS, a multistage optimization algorithm to generate polygonal surfaces interpolated by the augmented point, but it requires normal as input. Empirical evidence indicates that achieving feature-preserving reconstruction is challenging when dealing with sparse input points or lack-ing reliable normals. 
+
+# 3. Method 
+
+In this section, we provide a detailed description of our method. The whole pipeline is summarized in Fig. 2. 22151 Figure 2. Given a raw point cloud, our EdgeMovingNet predicts three geometry features from it: point normal, point-to-edge direction and point-to-edge distance. Combining these features, our method produces additional edge points lying precisely on sharp features and finally reconstructs an edge-preserving mesh. 
+
+In Sec. 3.1, we introduce our feature extraction approach by training EdgeMovingNet to predict point-wise normal, point-to-edge direction and point-to-edge distance jointly. In Sec. 3.2, we elaborate on the specially designed losses for EdgeMovingNet. Sec. 3.3 and Sec. 3.4 detail our re-finement process for reconstruction, which produces accu-rate edge points reflecting sharp features of the model and guides edge-preserving surface reconstruction. 
+
+## 3.1. Feature extraction 
+
+For a point cloud sampled without normal, we initially nor-malize its center to origin and scale it within a unit sphere. Next we define three crucial point-wise geometric features on it: point normal n, point-to-edge direction ne and point-to-edge distance de. As illustrated in Fig. 3a, point-to-edge direction ne is defined by the direction (unit vector) to the closest point on the nearest sharp edge, and point-to-edge distance de is defined by the distance between them. With these features in place, we can project a point c onto its near-est sharp edge using the formula: ce = c + ne ∗ de. Here ce
+
+represents the projected edge point. All features are extracted in a learning-based way. We present EdgeMovingNet on the core idea of jointly learn-ing and predicting these three features. Since the point cloud may be sparse and consistent normal orientation re-quires entire sharp prior, EdgeMovingNet takes whole sam-pled point cloud as input instead of dividing it into smaller patches. Fig. 4 presents the brief architecture of EdgeMov-ingNet. The input of point cloud coordinates N ×3 is sent to a feature encoder to produce feature vectors of size N ×256      
+
+> (a) Illustration for point normal, point-to-edge direction and point-to-edge distance. Blue point is pro-jected result of the red one.
+> (b) Illustration for tangent direction. Tangent direction is perpendicular to both point normal and point-to-edge direction.
+> Figure 3. Illustration for geometry features of point cloud.
+
+as point-wise features, these feature vectors are fed into three decoders to output different geometry features, each of which is supervised by distinctive loss functions. We opt for a straightforward encoder-decoder backbone, focusing on optimization strategies that promote feature interaction, which is essential for preserving edges. In the following sections, we will primarily discuss them, and additional net-work details can be found in the supplementary materials. 
+
+> Figure 4. The architecture of EdgeMovingNet.
+
+22152 3.2. Loss functions 
+
+We employ a highly effective combined loss function to su-pervise the training of our network, specifically tailored for our EdgeMovingNet, in order to achieve accurate feature extraction and edge estimation. Loss is defined as follow: 
+
+L = Ln + Lde + edgemask ∗ (Lne + Ls + Lt) (1) Our final loss L is the sum of L1-loss functions ( normal loss Ln, direction loss Lne and distance loss Lde ) and ge-ometric loss functions ( surface loss Ls and tangent loss Lt). 
+
+Normal loss , direction loss and distance loss serve to limit the disparity between ground-truth and predicted fea-tures. Each of these is characterized by employing an L1-loss function: 
+
+Ln = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+∥ ˆni − ni∥ (2) 
+
+Lne = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+∥ ˆnei − nei ∥, Lde = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+∥ ˆdei − dei ∥ (3) where ni, nei , dei denote ground truth features and ˆni, ˆnei ,
+
+ˆdei denote predicted features respectively. ∥·∥ represents 
+
+l1-norm .
+
+Surface loss ensures that the projected edge point ˆce
+
+which calculated by ˆce = c + ˆ ne ∗ ˆde is located on the same surface of the origin point c. It can be formulated as: 
+
+Ls = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+Dis ( ˆ ce, P lane c) (4) where P lane c denotes the plane parameterized by the ground-truth triangular mesh that sampled c and Dis 
+
+denotes the point-to-plane distance in 3D space. 
+
+Tangent loss ensures the tangent direction at edge point 
+
+ˆce is perpendicular to both the point normal n and the point-to-edge direction ne (an example of this can be seen in Fig. 3b). To determine the approximate tangent direction, we utilize other projected edge points that are close to ˆce.This loss can be formulated as: 
+
+Lt = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+1
+
+|Cei |
+
+X 
+
+> ˆcej∈Cei
+
+( ˆ cej − ˆcei ) · ni +1
+
+N
+
+> N
+
+X
+
+> i=1
+
+1
+
+|Cei |
+
+X 
+
+> ˆcej∈Cei
+
+( ˆ cej − ˆcei ) · nei
+
+(5) where Cei is a subset of whole edge point set Ce which consists of k = 5 nearest points to ˆcei .
+
+Figure 5. Examples of edgemask. Green points are near-edge points that concern direction losses. (On the last object, all points are considered as near-edge points.) 
+
+To avoid the ambiguity of determining point-to-edge di-rections for points distant from sharp edges, we establish a threshold value δ as edgemask. This enables us to only consider near-edge points ( de ≤ δ, as depicted in Figure 5) when calculating loss terms related to point-to-edge direc-tion: 
+
+edgemask i =
+
+(
+
+1, dei ≤ δ
+
+0, dei > δ (6) We δ = 0 .05 in the actual experiment. 
+
+## 3.3. Refinement process   
+
+> (a) Raw prediction (b) Interpolation (c) After optimization
+
+Figure 6. Refinement process of predicted edge points. Back-ground in zoomed-in view is ground-truth mesh. (a) Raw predic-tions from EdgeMovingNet. (b) Midpoint interpolation by neigh-bours. (c) Position optimization by predicted normals. 
+
+After extracting features from EdgeMovingNet, we can obtain a set of raw edge points (Fig. 6a), denoted as Ce,by projecting near-edge points onto their sharp edges (all original points are kept). Here we similarly define near-edge point as one whose predicted point-to-edge distance is less than a chosen threshold δ′ (i.e. ˆde ≤ δ′). The raw edge point set may contain drawbacks, such as noise, outliers or uneven distribution. Thus we design a refinement process to refine the positions of these edge points. First, we find edge neighbours for each edge point ˆcei in 
+
+Ce. We define edge neighbours of ˆcei as follows: 
+
+N eigh ( ˆ cei ) = { ˆcej | ˆcej ∈ Ce, ∥ ˆcej − ˆcei ∥ ≤ r, Angle ( ˆ ni, ˆnj ) ≤ θ, Angle ( ˆ nei , ˆnej ) ≤ θ} (7) where r is a radius to restrict neighbours within a local sphere and θ is a angle threshold to filter out points on the same edge. In our experiment, r is set to 0.1 and θ is set to 22153 10 ◦. Points with neighbour number |N eigh ( ˆ cei )| < 3 are considered outliers and removed. We take midpoints be-tween ˆcei and N eighbour ( ˆ cei ) as additional edge points to condense edge representation (Fig. 6b) and adopt farthest point sampling (FPS) on all edge points to obtain desired number of points with relatively even distribution. Finally, inspired by [47], we refine the positions of edge points by introducing the following optimization based on our own predicted normals: 
+
+min  
+
+> ˆcei′
+
+X  
+
+> ˆcej∈N eigh ( ˆ cei)
+
+(( ˆ cei 
+
+> ′
+
+− ˆcej ) · ˆnj )2 + μ∥ ˆcei 
+
+> ′
+
+− ˆcei ∥2 (8) where ˆnj refers to the predicted normal of point moved to ˆcej and μ helps keep the refined position ˆcei 
+
+> ′
+
+not to be far from the original prediction ˆcei . By default, μ is set to 0.01 in our experiments. This optimize function also helps pull points towards corners. See Fig. 6c for position-refined edge points. 
+
+## 3.4. Edge-preserving reconstruction 
+
+The last step in the process involves surface reconstruction. Based on the final edge points denoted as Ce′, we leverage a relocation strategy to achieve edge-preserving reconstruc-tion. We first apply Poisson [15] reconstruction solver to the original input point cloud with our predicted normals to generate a base surface (see Fig. 7a) (This step can be substituted with other reconstruction solvers, such as [5]). Then, we move the vertices in reconstructed mesh to their nearest edge points in Ce′ within the threshold δ′ mentioned in Sec. 3.3. This relocation does not affect vertex connec-tion but rather adjusts their positions to cover edges. By implementing this strategy, an edge-preserving reconstruc-tion result can be achieved (see Fig. 7b).  
+
+> (a) Basic Poisson reconstruction (b) Edge-aware reconstruction
+
+Figure 7. Surface reconstruction of point cloud. (a) Poisson re-construction on original point cloud using our predicted normals. (b) Edge-perserving reconstruction by relocating vertices to their nearest predicted edge points. 
+
+# 4. Experiments 
+
+## 4.1. Implementation details 
+
+We build our dataset on a portion of ABC dataset [18], a large source of 3D CAD models with labeled edges. We select 13,369 objects with sharp edges from ABC and divide them into three parts: 10,000 models for training, 2,000 for validation and 1,369 for testing. We sample 10k points from each model and compute their ground-truth point-to-edge directions and distances before training. We implement our model in PyTorch [34]. We use Adam [17] optimizer with β = (0.9, 0.999) and weight decay 0.002 for a learning rate 1e-4. Our EdgeMovingNet is trained with batch size 8 for 200 epochs which takes 3 days on two NVIDIA-2080Ti GPUs. We use the LBFGS [53] func-tion for solving constrained optimization problems defined in Sec. 3.3. 
+
+## 4.2. Comparisons 
+
+To demonstrate the effectiveness of our method, we com-pare it against classical and state-of-the-art methods on point cloud reconstruction or edge consolidation, including Poisson [15], Voronoi [5], POCO [6], PCP [29], RFEPS [47], GeoUDF [39] and NKSR [14]. We use 8,192 points sampled from ABC [18] dataset as input for all methods ex-cept POCO [6], which requires 10,000 points according to its pre-trained models. Poisson [15] and RFEPS [47] re-quire point normal as additional input, so we offer ground-truth normals for them. For other methods including ours, the input is only 3D coordinates. 
+
+Quantitative comparison. To evaluate the accuracy of the reconstructed mesh, we use three metrics: Chamfer dis-tance (CD), Hausdorff dance (HD), and normal consistency (NC) to measure the approximation error between the re-sults and the ground truth model. Meanwhile, we assess precision, recall, and F-score by sampling points from the reconstructed mesh. Points are considered matched if there is at least one ground truth point with an L2 distance smaller than 0.01. Statistics of those measurements for different methods are presented in Tab. 1. Our method, without any additional input, achieves the best results in metrics of Chamfer distance, Hausdorff distance, precision, recall and F-score, and achieves competitive result in evaluation of normal consistency. 
+
+Table 1. Quantitative comparisons on ABC [18] Dataset. CD and HD are multiplied by 10 2                                                        
+
+> Methods CD ↓HD ↓NC ↑Precision ↑Recall ↑F-score ↑
+> Poisson[15] 1.271 1.778 0.990 0.949 0.926 0.937 Voronoi[5] 0.776 1.695 0.993 0.989 0.986 0.988 POCO[6] 4.388 2.190 0.950 0.766 0.968 0.841 PCP[29] 1.573 1.679 0.996 0.897 0.931 0.913 RFEPS[47] 0.755 1.401 0.984 0.970 0.966 0.969 GeoUDF[39] 0.709 1.444 0.960 0.977 0.946 0.962 NKSR[14] 0.843 2.331 0.990 0.991 0.963 0.977 Ours 0.703 1.368 0.991 0.993 0.992 0.993
+
+Qualitative comparison. Fig. 8 displays the qualitative comparison results of these reconstruction methods. It can 22154 Figure 8. Qualitative comparison among reconstruction methods, including Poisson [15], Voronoi [5], POCO [6], PCP [29], RFEPS [47], GeoUDF [39], NKSR [14] and ours. GT refers to the ground truth mesh. Zooming in reveals more details. 22155 Table 2. Quantitative comparisons under 1% and 2% noise condi-tion. CD and HD are multiplied by 10 2.                               
+
+> 1% Noise 2% Noise Method CD ↓HD ↓NC ↑CD ↓HD ↓NC ↑
+> Voronoi[5] 2.621 3.456 0.981 3.342 4.983 0.962 PCP[29] 2.822 3.311 0.977 4.669 4.912 0.898 POCO[6] 1.303 2.314 0.980 2.246 4.294 0.963 Ours 1.314 1.858 0.986 1.509 1.902 0.984
+
+be observed that the competing methods may fail to main-tain sharp features for meshes. Traditional methods like Poisson [15] and Voronoi [5] are unable to recover high-quality edges for CAD models. POCO [6], PCP [29] and NKSR [14] focus on recovering the entire shape, but the edge features for meshes are not sharp enough. RFEPS [47] and GeoUDF [39] would fail on sparse input data, especially when geometric structure becomes complex or thin (see bottom row). In contrast, our method estimates edge points accurately and achieves high-quality and edge-preserving reconstruction. 
+
+Noise Robustness. In order to further assess our method’s robustness, we test our method on noisy point cloud. We also sample 8,192 points without normal as input and our default model is not specially trained with noisy data. Here we provide quantitative and qualitative comparisons with three reconstruction methods–Voronoi [5], PCP [29] and POCO [6], which share the same input setting under noise condition. Other methods either need normals as input or perform poorly when dealing with noisy point clouds. We add Gaussian noise with σ = 1% and 2% to all input point clouds and test each method’s reconstruction robustness for noise. The quantitative and qualitative comparisons are shown in Tab. 2 and Fig. 9 respectively. Our method per-forms competitively in robustness against noise both quan-titatively and qualitatively. 
+
+Sparsity robustness. We also train our network in other input size and evaluate our method at different sparsity lev-els. The visual comparisons against POCO [6] are shown in Fig. 10. Our method continues to perform well when handling 2k and 4k input points, which is attributed to our generation and refinement of additional edge points. 
+
+## 4.3. Generalization 
+
+Our dataset comprises a wide range of models with vari-ous parametric curves and sharp feature annotations, includ-ing edge types such as lines, circles, ellipses and B-splines. Our method bypasses the curve fitting procedure and di-rectly reconstructs meshes, allowing for no restrictions on edge types, as long as models contain sharp features. This ensures better generalization of our method, regardless of the model’s geometry. In Fig. 11, we show an example of    
+
+> Figure 9. Qualitative comparisons under 1% and 2% noise.
+> Figure 10. Evaluation on point numbers. CD: Chamfer Distance.
+> (a) Input (b) Ours-Edge (c) Ours-Mesh (d) GT
+> Figure 11. Reconstruction of model with B-spline edges.
+
+reconstructing object with B-splines edges, which can be challenging for curve fitting methods. We also test our method on more common objects from ModelNet [45] and ShapeNet [7]. The input setting is the same as ABC [18] dataset and we directly apply our pre-trained models without any modification or retraining. The visual results of our reconstruction on different object cate-gories are shown in Fig. 12. And the quantitative compar-isons against other methods are shown in Tab. 3 and Tab. 4. More results can be found in the supplementary material. Our method performs well and demonstrates the ability to handle objects that are unseen or different. We further test our pipeline on real-scanned point clouds from AIM@SHAPE-VISIONAIR Shape Repository [1]. Results are presented in Figs. 13a to 13c. Though not as excellent as synthetic models, our reconstruction still signif-22156 (a) Desk (b) Table (c) Chair (d) Sofa (e) Lamp     
+
+> (f) Tent (g) Monitor (h) Bathtub (i) Mug (j) Vase
+
+Figure 12. Visual results of our method on different categories in Modelnet [45] and ShapeNet [7] dataset. Table 3. Quantitative comparisons on ModelNet [45] Dataset.                                                        
+
+> Methods CD ↓HD ↓NC ↑Precision ↑Recall ↑F-score ↑
+> Poisson[15] 1.244 2.688 0.986 0.945 0.957 0.951 Voronoi[5] 1.077 1.724 0.988 0.975 0.970 0.973 POCO[6] 1.916 3.887 0.978 0.540 0.553 0.547 PCP[29] 1.410 7.909 0.956 0.855 0.918 0.885 RFEPS[47] 1.245 2.904 0.981 0.967 0.958 0.962 GeoUDF[39] 0.965 2.099 0.964 0.962 0.956 0.959 NKSR [14] 1.388 3.393 0.965 0.808 0.807 0.808 Ours 0.919 1.656 0.991 0.983 0.981 0.982
+
+Table 4. Quantitative comparison on ShapeNet [7] Dataset.                                                          
+
+> Methods CD ↓HD ↓NC ↑Precision ↑Recall ↑F-score ↑
+> Poisson [15] 1.595 5.476 0.951 0.812 0.804 0.807 Voronoi [5] 2.164 3.689 0.964 0.582 0.577 0.580 POCO [6] 1.441 5.463 0.943 0.933 0.877 0.904 PCP [29] 1.498 5.676 0.902 0.906 0.859 0.902 RFEPS [47] 3.390 6.601 0.890 0.356 0.386 0.370 GeoUDF [50] 1.268 1.596 0.966 0.952 0.910 0.931 NKSR [14] 1.219 2.131 0.965 0.953 0.905 0.928 Ours 1.186 1.577 0.970 0.974 0.908 0.939
+> (a) Input (b) Poisson (c) Ours
+
+Figure 13. Reconstruction of real-scanned point cloud which comes from AIM@SHAPE-VISIONAIR Shape Repository. 
+
+icantly improves edge quality for real-scanned point cloud, indicating our great potential for generalization. 
+
+Figure 14. Visual ablation on refinement process. Table 5. Ablation study of our method. 
+
+Pipeline (without) CD (×10 −2) ↓ HD (×10 −2) ↓
+
+direction & distance +0.152 +1.384 
+
+surface loss +0.017 +0.047 
+
+tangent loss +0.016 +0.100 
+
+refinement process +0.122 +0.368 
+
+## 4.4. Ablation study 
+
+We conduct ablation studies to evaluate the effectiveness of the core designs within our pipeline, including geome-try features of point-to-edge direction and distance, surface loss, tangent loss and refinement process. Tab. 5 lists evaluation results. Without direction & dis-tance stands for regressing a single vector to represent edge points displacement instead of predicting point-to-edge di-rection and distance explicitly. Without refinement process 
+
+refers to directly apply Poisson [15] reconstruction with raw predicted edge points from EdgeMovingNet. Fig. 14 shows that mesh reconstruction without refinement process exhibits small defects in edges. Statistics in Tab. 5 reveal that both joint estimation of proposed geometry features and refinement process are crucial, and removing any compo-nent from our pipeline results in performance degradation. 
+
+## 4.5. Limitations 
+
+In cases where the model has too thin structures or intricate details, such as keyboard, our method may not accurately estimate edge points due to EdgeMovingNet’s non-patch-based nature. And the performance of our method will drop if the input point cloud contains too much noise or outliers, necessitating a pre-denoising step. 
+
+# 5. Conclusion 
+
+In this paper, we present a novel framework to reconstruct high-quality meshes from sparse point cloud data. The main concept involves estimating additional edge points to guide edge-preserving reconstruction. We present Edge-MovingNet, a feature extraction network that jointly esti-mates point-to-edge direction, point-to-edge distance and point normal. A refinement process and a relocating strat-egy is adopted for the final edge-preserving reconstruction. Extensive experimental results show that our method out-performs previous methods both quantitatively and qualita-tively, demonstrating its effectiveness and usefulness. 22157 Acknowledgments 
+
+This work was supported by the National Natural Science Foundation of China under Grant 62032011. 
+
+# References 
+
+[1] Aim@shape, visionair: Visionair shape repository. URL http : / / visionair . ge . imati . cnr . it / ontologies/shapes/ . Accessed September 2023. 7 [2] Marc Alexa, Johannes Behr, Daniel Cohen-Or, Shachar Fleishman, David Levin, and Claudio T Silva. Point set sur-faces. In Proceedings Visualization, 2001. VIS’01. , pages 21–29. IEEE, 2001. 2 [3] Haim Avron, Andrei Sharf, Chen Greif, and Daniel Cohen-Or. l1-sparse reconstruction of sharp point set surfaces. ACM Transactions on Graphics (TOG) , 29(5):1–12, 2010. 2 [4] Matthew Berger, Andrea Tagliasacchi, Lee M Seversky, Pierre Alliez, Joshua A Levine, Andrei Sharf, and Claudio T Silva. State of the art in surface reconstruction from point clouds. In 35th Annual Conference of the European Associa-tion for Computer Graphics, Eurographics 2014-State of the Art Reports . The Eurographics Association, 2014. 1 [5] Dobrina Boltcheva and Bruno L´ evy. Surface reconstruction by computing restricted voronoi cells in parallel. Computer-Aided Design , 90:123–134, 2017. 1, 5, 6, 7, 8 [6] Alexandre Boulch and Renaud Marlet. Poco: Point con-volution for surface reconstruction. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 6302–6314, 2022. 1, 2, 5, 6, 7, 8 [7] Angel X Chang, Thomas Funkhouser, Leonidas Guibas, Pat Hanrahan, Qixing Huang, Zimo Li, Silvio Savarese, Manolis Savva, Shuran Song, Hao Su, et al. Shapenet: An information-rich 3d model repository. arXiv preprint arXiv:1512.03012 , 2015. 7, 8 [8] Tamal Krishna Dey, Xiaoyin Ge, Qichao Que, Issam Safa, Lei Wang, and Yusu Wang. Feature-preserving reconstruc-tion of singular surfaces. In Computer Graphics Forum ,pages 1787–1796. Wiley Online Library, 2012. 2 [9] Oren Dovrat, Itai Lang, and Shai Avidan. Learning to sam-ple. In Proceedings of the IEEE/CVF Conference on Com-puter Vision and Pattern Recognition , pages 2760–2769, 2019. 2 [10] Wanquan Feng, Jin Li, Hongrui Cai, Xiaonan Luo, and Juy-ong Zhang. Neural points: Point cloud representation with neural fields for arbitrary upsampling. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 18633–18642, 2022. 1, 2 [11] Meng-Hao Guo, Jun-Xiong Cai, Zheng-Ning Liu, Tai-Jiang Mu, Ralph R Martin, and Shi-Min Hu. Pct: Point cloud transformer. Computational Visual Media , 7:187–199, 2021. 2[12] Hui Huang, Dan Li, Hao Zhang, Uri Ascher, and Daniel Cohen-Or. Consolidation of unorganized point clouds for surface reconstruction. ACM transactions on graphics (TOG) , 28(5):1–7, 2009. 1, 2 [13] Hui Huang, Shihao Wu, Minglun Gong, Daniel Cohen-Or, Uri Ascher, and Hao Zhang. Edge-aware point set resam-pling. ACM transactions on graphics (TOG) , 32(1):1–12, 2013. 1, 2 [14] Jiahui Huang, Zan Gojcic, Matan Atzmon, Or Litany, Sanja Fidler, and Francis Williams. Neural kernel surface re-construction. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 4369– 4379, 2023. 1, 2, 5, 6, 7, 8 [15] Michael Kazhdan and Hugues Hoppe. Screened poisson sur-face reconstruction. ACM Transactions on Graphics (ToG) ,32(3):1–13, 2013. 1, 2, 5, 6, 7, 8 [16] Michael Kazhdan, Matthew Bolitho, and Hugues Hoppe. Poisson surface reconstruction. In Proceedings of the fourth Eurographics symposium on Geometry processing , page 0, 2006. 2 [17] Diederik P Kingma and Jimmy Ba. Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980 ,2014. 5 [18] Sebastian Koch, Albert Matveev, Zhongshi Jiang, Francis Williams, Alexey Artemov, Evgeny Burnaev, Marc Alexa, Denis Zorin, and Daniele Panozzo. Abc: A big cad model dataset for geometric deep learning. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pages 9601–9611, 2019. 5, 7 [19] Patrick Labatut, J-P Pons, and Renaud Keriven. Robust and efficient surface reconstruction from range data. In Com-puter graphics forum , pages 2275–2290. Wiley Online Li-brary, 2009. 1 [20] Itai Lang, Asaf Manor, and Shai Avidan. Samplenet: Dif-ferentiable point cloud sampling. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 7578–7588, 2020. 2 [21] Lingxiao Li, Minhyuk Sung, Anastasia Dubrovina, Li Yi, and Leonidas J Guibas. Supervised fitting of geometric prim-itives to 3d point clouds. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,pages 2652–2660, 2019. 1 [22] Ruihui Li, Xianzhi Li, Chi-Wing Fu, Daniel Cohen-Or, and Pheng-Ann Heng. Pu-gan: a point cloud upsampling ad-versarial network. In Proceedings of the IEEE/CVF inter-national conference on computer vision , pages 7203–7212, 2019. 1, 2 [23] Yangyan Li, Rui Bu, Mingchao Sun, Wei Wu, Xinhan Di, and Baoquan Chen. Pointcnn: Convolution on x-transformed points. Advances in neural information processing systems ,31, 2018. 2 [24] Yuanqi Li, Shun Liu, Xinran Yang, Jianwei Guo, Jie Guo, and Yanwen Guo. Surface and edge detection for primitive fitting of point clouds. In ACM SIGGRAPH 2023 conference proceedings , pages 1–10, 2023. 1 [25] Bin Liao, Chunxia Xiao, Liqiang Jin, and Hongbo Fu. Effi-cient feature-preserving local projection operator for geome-try reconstruction. Computer-Aided Design , 45(5):861–874, 2013. 1, 2 [26] Yaron Lipman, Daniel Cohen-Or, David Levin, and Hillel Tal-Ezer. Parameterization-free projection for geometry re-construction. ACM Transactions on Graphics (TOG) , 26(3): 22–es, 2007. 1, 2 22158 [27] Yujia Liu, Stefano D’Aronco, Konrad Schindler, and Jan Dirk Wegner. Pc2wf: 3d wireframe reconstruction from raw point clouds. arXiv preprint arXiv:2103.02766 , 2021. 2 [28] William E Lorensen and Harvey E Cline. Marching cubes: A high resolution 3d surface construction algorithm. In Sem-inal graphics: pioneering efforts that shaped the field , pages 347–353. 1998. 2 [29] Baorui Ma, Yu-Shen Liu, Matthias Zwicker, and Zhizhong Han. Surface reconstruction from point clouds by learning predictive context priors. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,pages 6326–6337, 2022. 2, 5, 6, 7, 8 [30] Xu Ma, Can Qin, Haoxuan You, Haoxi Ran, and Yun Fu. Rethinking network design and local geometry in point cloud: A simple residual mlp framework. arXiv preprint arXiv:2202.07123 , 2022. 2 [31] Albert Matveev, Ruslan Rakhimov, Alexey Artemov, Gleb Bobrovskikh, Vage Egiazarian, Emil Bogomolov, Daniele Panozzo, Denis Zorin, and Evgeny Burnaev. Def: Deep estimation of sharp geometric features in 3d shapes. ACM Transactions on Graphics , 41(4), 2022. 1, 2 [32] Gal Metzer, Rana Hanocka, Raja Giryes, and Daniel Cohen-Or. Self-sampling for neural point cloud consolidation. ACM Transactions on Graphics (TOG) , 40(5):1–14, 2021. 2 [33] Patrick Mullen, Fernando De Goes, Mathieu Desbrun, David Cohen-Steiner, and Pierre Alliez. Signing the unsigned: Ro-bust surface reconstruction from raw pointsets. In Computer Graphics Forum , pages 1733–1741. Wiley Online Library, 2010. 1 [34] Adam Paszke, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory Chanan, Trevor Killeen, Zeming Lin, Natalia Gimelshein, Luca Antiga, et al. Pytorch: An im-perative style, high-performance deep learning library. Ad-vances in neural information processing systems , 32, 2019. 5[35] Charles R Qi, Hao Su, Kaichun Mo, and Leonidas J Guibas. Pointnet: Deep learning on point sets for 3d classification and segmentation. In Proceedings of the IEEE conference on computer vision and pattern recognition , pages 652–660, 2017. 2 [36] Charles Ruizhongtai Qi, Li Yi, Hao Su, and Leonidas J Guibas. Pointnet++: Deep hierarchical feature learning on point sets in a metric space. Advances in neural information processing systems , 30, 2017. 1, 2 [37] Guocheng Qian, Abdulellah Abualshour, Guohao Li, Ali Thabet, and Bernard Ghanem. Pu-gcn: Point cloud upsam-pling using graph convolutional networks. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 11683–11692, 2021. 1, 2 [38] Yue Qian, Junhui Hou, Sam Kwong, and Ying He. Pugeo-net: A geometry-centric network for 3d point cloud upsam-pling. In European conference on computer vision , pages 752–769. Springer, 2020. 1, 2 [39] Siyu Ren, Junhui Hou, Xiaodong Chen, Ying He, and Wen-ping Wang. Geoudf: Surface reconstruction from 3d point clouds via geometry-guided distance representation. In 
+
+Proceedings of the IEEE/CVF International Conference on Computer Vision , pages 14214–14224, 2023. 2, 5, 6, 7, 8 [40] Nader Salman, Mariette Yvinec, and Quentin M´ erigot. Fea-ture preserving mesh generation from 3d point clouds. In 
+
+Computer graphics forum , pages 1623–1632. Wiley Online Library, 2010. 2 [41] Gopal Sharma, Difan Liu, Subhransu Maji, Evangelos Kalogerakis, Siddhartha Chaudhuri, and Radom´ ır Mˇ ech. Parsenet: A parametric surface fitting network for 3d point clouds. In Computer Vision–ECCV 2020: 16th European Conference, Glasgow, UK, August 23–28, 2020, Proceed-ings, Part VII 16 , pages 261–276. Springer, 2020. 1 [42] Xiaogang Wang, Yuelang Xu, Kai Xu, Andrea Tagliasac-chi, Bin Zhou, Ali Mahdavi-Amiri, and Hao Zhang. Pie-net: Parametric inference of point cloud edges. Advances in neu-ral information processing systems , 33:20167–20178, 2020. 2[43] Yue Wang, Yongbin Sun, Ziwei Liu, Sanjay E Sarma, Michael M Bronstein, and Justin M Solomon. Dynamic graph cnn for learning on point clouds. ACM Transactions on Graphics (tog) , 38(5):1–12, 2019. 1, 2 [44] Francis Williams, Zan Gojcic, Sameh Khamis, Denis Zorin, Joan Bruna, Sanja Fidler, and Or Litany. Neural fields as learnable kernels for 3d reconstruction. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 18500–18510, 2022. 2 [45] Zhirong Wu, Shuran Song, Aditya Khosla, Fisher Yu, Lin-guang Zhang, Xiaoou Tang, and Jianxiong Xiao. 3d shapenets: A deep representation for volumetric shapes. In 
+
+Proceedings of the IEEE conference on computer vision and pattern recognition , pages 1912–1920, 2015. 7, 8 [46] Shiyao Xiong, Juyong Zhang, Jianmin Zheng, Jianfei Cai, and Ligang Liu. Robust surface reconstruction via dictionary learning. ACM Transactions on Graphics (TOG) , 33(6):1– 12, 2014. 2 [47] Rui Xu, Zixiong Wang, Zhiyang Dou, Chen Zong, Shiqing Xin, Mingyan Jiang, Tao Ju, and Changhe Tu. Rfeps: Re-constructing feature-line equipped polygonal surface. ACM Transactions on Graphics (TOG) , 41(6):1–15, 2022. 1, 2, 5, 6, 7, 8 [48] Shuquan Ye, Dongdong Chen, Songfang Han, Ziyu Wan, and Jing Liao. Meta-pu: An arbitrary-scale upsampling network for point cloud. IEEE transactions on visualization and com-puter graphics , 28(9):3206–3218, 2021. 1, 2 [49] Wang Yifan, Shihao Wu, Hui Huang, Daniel Cohen-Or, and Olga Sorkine-Hornung. Patch-based progressive 3d point set upsampling. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 5958– 5967, 2019. 2 [50] Lequan Yu, Xianzhi Li, Chi-Wing Fu, Daniel Cohen-Or, and Pheng-Ann Heng. Ec-net: an edge-aware point set consoli-dation network. In Proceedings of the European conference on computer vision (ECCV) , pages 386–402, 2018. 2, 8 [51] Lequan Yu, Xianzhi Li, Chi-Wing Fu, Daniel Cohen-Or, and Pheng-Ann Heng. Pu-net: Point cloud upsampling network. In Proceedings of the IEEE conference on computer vision and pattern recognition , pages 2790–2799, 2018. 1, 2 [52] Hengshuang Zhao, Li Jiang, Jiaya Jia, Philip HS Torr, and Vladlen Koltun. Point transformer. In Proceedings of 22159 the IEEE/CVF international conference on computer vision ,pages 16259–16268, 2021. 2 [53] Ciyou Zhu, Richard H Byrd, Peihuang Lu, and Jorge No-cedal. Algorithm 778: L-bfgs-b: Fortran subroutines for large-scale bound-constrained optimization. ACM Trans-actions on mathematical software (TOMS) , 23(4):550–560, 1997. 5 22160

@@ -1,0 +1,51 @@
+{
+  "version": 2,
+  "extractor": "papercropper",
+  "tables": [
+    {
+      "url": "assets/tables/eccv-2024-accepted/eccv-2024-7937-eccv-2024-paper-php/table-001.webp",
+      "caption": "",
+      "page": 0,
+      "index": 1,
+      "width": 1251,
+      "height": 281,
+      "label": "Table"
+    },
+    {
+      "url": "assets/tables/eccv-2024-accepted/eccv-2024-7937-eccv-2024-paper-php/table-002.webp",
+      "caption": "",
+      "page": 0,
+      "index": 2,
+      "width": 1273,
+      "height": 262,
+      "label": "Table"
+    },
+    {
+      "url": "assets/tables/eccv-2024-accepted/eccv-2024-7937-eccv-2024-paper-php/table-003.webp",
+      "caption": "",
+      "page": 0,
+      "index": 3,
+      "width": 824,
+      "height": 283,
+      "label": "Table"
+    },
+    {
+      "url": "assets/tables/eccv-2024-accepted/eccv-2024-7937-eccv-2024-paper-php/table-004.webp",
+      "caption": "",
+      "page": 0,
+      "index": 4,
+      "width": 1081,
+      "height": 344,
+      "label": "Table"
+    },
+    {
+      "url": "assets/tables/eccv-2024-accepted/eccv-2024-7937-eccv-2024-paper-php/table-005.webp",
+      "caption": "",
+      "page": 0,
+      "index": 5,
+      "width": 1245,
+      "height": 278,
+      "label": "Table"
+    }
+  ]
+}

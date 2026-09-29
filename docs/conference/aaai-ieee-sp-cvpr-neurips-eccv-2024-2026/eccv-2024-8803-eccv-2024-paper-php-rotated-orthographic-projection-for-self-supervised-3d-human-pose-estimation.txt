@@ -1,0 +1,273 @@
+Title: 08803.pdf
+
+URL Source: https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/08803.pdf
+
+Published Time: Tue, 01 Oct 2024 09:45:56 GMT
+
+Number of Pages: 17
+
+Markdown Content:
+# Rotated Orthographic Projection for Self-Supervised 3D Human Pose Estimation 
+
+Yao Yao 1,2, Yixuan Pan 3, Wenjun Shi 1, Dongchen Zhu 1,2, Lei Wang 1,2, and Jiamao Li 1,2⋆ 
+
+> 1
+
+Bionic Vision System Laboratory, Shanghai Institute of Microsystem and Information Technology, Chinese Academy of Sciences, Shanghai 200050, China  
+
+> 2
+
+University of Chinese Academy of Sciences, Beijing 100049, China  
+
+> 3
+
+Southeast University, Nanjing 210096, China 
+
+{yaoyao,wjs,dchzhu,wangl,jmli}@mail.sim.ac.cn yixuanpan@seu.edu.cn 
+
+Abstract. Reprojection consistency is widely used for self-supervised 3D human pose estimation. However, few efforts have been made to ad-dress the inherent limitations of reprojection consistency. Lacking camera parameters and absolute position, self-supervised methods map 3D poses to 2D using orthographic projection, whereas 2D inputs are derived from perspective projection. This discrepancy among the projection models creates an offset between the supervision and prediction spaces, limiting the performance potential. To address this problem, we propose rotated orthographic projection, which achieves a geometric approximation of the perspective projection by adding a rotation operation before the or-thographic projection. Further, we optimize the reference point selection according to the human body structure and propose group rotated ortho-graphic projection, which significantly narrows the gap between the two projection models. Meanwhile, the reprojection consistency loss fails to constrain the Z-axis reverse wrong pose in 3D space. Therefore, we intro-duce the joint reverse constraint to limit the range of angles between the local reference plane and the end joints, penalizing unrealistic 3D poses and clarifying the Z-axis orientation of the model. The proposed method achieves state-of-the-art (SOTA) performance on both Human3.6M and MPII-INF-3DHP datasets. Particularly, it reduces the mean error from 65.9mm to 42.9mm (34.9% improvement) over the SOTA self-supervised method on Human3.6M. 
+
+Keywords: self-supervised · 3D human pose estimation · reprojection loss · human joint reverse constraint 
+
+# 1 Introduction 
+
+Recovering 3D human poses from a single image is an important foundation for machine perception and human activities understanding, with numerous applica-tions in action recognition, action prediction, and human-computer interaction.  
+
+> ⋆
+
+Corresponding Author 2 Yao et al.  
+
+> Fig. 1: Left: Unavailable GT 3D can only provide perspective projection, while the centralized Pred 3D cannot obtain perspective projection. In the previous method, orthographic projections were used to approximate the perspective projection, which is not reasonable in most situations. Right: When the Z-axis of the pose is reversed overall, the result projected in 2D is still consistent.
+
+In recent years, methods that use 3D annotation information to train deep neural networks have achieved excellent results, but the generalization of such meth-ods is limited by the costly 3D annotations. Thus many self-supervised meth-ods [3, 23, 35, 39] have been proposed to accomplish 3D human pose estimation using only easily available 2D annotations or images. Ensuring the 2D projection of the predicted 3D pose consistent with the original 2D input, i.e., reprojection consistency, is the theoretical basis of self-supervised human pose estimation. However, due to the depth ambiguity prob-lem of single view images, 3D human pose estimation cannot be accurately per-formed by reprojection consistency loss of single view images alone. Therefore, much effort has been made to solve this problem by introducing additional su-pervision information, such as using bone lengths [6, 13, 43], discriminators to verify the reasonableness of 2D/3D poses [3,32,41], or camera calibration [8,20]. Further, CanonPose [34] eliminates the reliance on additional information by introducing multi-view information in the training phase, extending the single-view reprojection consistency to multi-view cross-reprojection consistency. It achieves good accuracy when using only 2D supervision by decoupling pose and viewpoint. Therefore, many subsequent self-supervision methods [10, 16, 25, 31] are implemented based on this framework. The above methods based on the reprojection consistency loss have achieved promising results. However, there is very little work to pay attention to solving the inherent limitations of reprojection consistency: (1) Mismatched super-vision problem : Due to the lack of camera parameters and absolute position of the pose, self-supervised methods typically project the predicted 3D pose to the 2D plane via the orthographic projection model and compute the loss of consistency with the input 2D pose. In contrast, the input 2D pose, which acts Rotated Orthographic Projection for Self-Supervised 3D HPE 3
+
+as a supervision, is processed by the perspective projection model. Inconsistent projection models lead to an offset between the supervision space and the pre-diction space, as shown in Fig.1(a), which limits the potential upper bound of model performance. (2) Z-axis overall reverse problem : The reprojection consistency loss lacks the constraint for pose absolute orientation in 3D space. Specifically when the Z-axis of the 3D pose is predicted to be reversed, the model can still make the 2D projection of the reversed pose consistent with the input pose by fitting out the wrong rotations, which severely harms the model stability, as shown in Fig.1(b). To tackle the mismatched supervision problem, we propose a rotated or-thographic projection(ROP) model, which achieves a geometric approximation of the perspective projection by adding a rotation operation calculated by the position of the reference point. Building upon this, we refine the selection of the reference point by considering human body structure, leading to the group rotated orthographic projection (G-ROP). By grouping the human body into distinct parts based on the relative distances of the joints, we calculate indi-vidual reference points and their corresponding rotations, further narrowing the gap with perspective projection. For the Z-axis overall reverse problem, we pro-pose joint reverse constraint, i.e., restrict the range of angles between the local reference plane and the end joints of the human body to penalize unrealistic poses in 3D space so that the model no longer confuses the Z-axis orientation. In this way, the skeletal kinematics prior can be used to effectively enhance the supervision of human poses in 3D space and supplement the shortcomings of 2D supervision. In summary, our main contributions are as follows: 
+
+– We propose rotated orthographic projection and its enhancement, group rotated orthographic projection, making the first attempt to approximate perspective projection in a geometric way, which effectively solves the mis-matched supervision problem of reprojection consistency loss under the self-supervision paradigm. 
+
+– We design a simple joint reverse loss based on the human structure prior, which effectively solves the Z-axis overall reverse problem and enhances the robustness of the model. 
+
+– Extensive experiments demonstrate that our method, as a self-supervised framework for 3D human pose estimation, significantly outperforms state-of-the-art models on both Human3.6M and MPII-INF-3DHP datasets. 
+
+# 2 Related Work 
+
+2.1 3D Human Pose Estimation without 3D Ground Truth 
+
+In the absence of 3D ground truth, many methods use multi-view images or generate 2D poses in new views to accomplish self-supervised 3D human pose estimation. Chen et al. [3] propose a cyclic consistency loss, generating new-view 2D poses by randomly projecting the predicted 3D poses and feeding them into 4 Yao et al. 
+
+a lifting network. Wandt et al. [32] generate a more reasonable 2D pose by esti-mating the distribution of elevation angles. Although the above methods require only single view data for training, they have a dependency on the discriminator. Kocabas et al. [20] generate pseudo 3D ground truth by triangulation from multi-view data. Bouazizi et al. [2] add geometric consistency loss in 3D space and 2D reprojection loss to [20]. These methods of generating pseudo-labels require cam-era calibration. Iqbal et al. [13] use a multi-view consistency loss which forces the 3D poses predicted from different views to be consistent after rigid transforma-tion. However, bone length information is required to achieve this, otherwise a degenerate solution will result. Wandt et al. [34] propose a method called Canon-Pose that uses multi-view cross-reprojection loss by projecting the predicted 3D pose under a canonical coordinate system back to all camera views without any other information. They argued that multi-view reprojection is more effective compared to multi-view geometric consistency in 3D space. Our approach also follows this framework. 
+
+2.2 3D-2D Projection 
+
+One important part of reprojection loss is the 3D-2D projection. Since the ab-solute position of the 3D pose cannot be predicted from a single view, some methods [8, 15–17, 27, 34] use orthographic projection model to approximate the perspective projection model. However, the approximation produces significant errors when the person is close to the camera or the person is far from the optical axis. Some fully supervised methods that use reprojection as additional supervision try to use perspective projection by learning camera parameters. For instance, CLIFF [24] predicts the translation parameters of the camera from the images, while SPEC [19] additionally predicts the rotation parameters. However, these methods rely on geometric information in the image, resulting in poorly ro-bust in low texture contexts. Moreover, camera parameters cannot be estimated when relying only on 2D skeleton information. Among the self-supervised meth-ods, some of them [3, 41] use perspective projection after assuming the distance between the human and camera to be a fixed value, and such an assumption can equally result in severe mismatched supervision. Compared to these meth-ods, our approach increases the perspective effect by rotation while still using a simplified projection model. 
+
+2.3 Human Prior Knowledge Constraints 
+
+The structure of the human body contains a lot of prior information that can be utilized, e.g. range of motion [4,7,11] , skeletal symmetry [6,37]. Akhter et al. [1] propose joint angle constraints for moving bones in a Cartesian coordinate sys-tem by statistic of data, and some methods encode the feasibility of body poses using adversarial frameworks [14, 38] or normalizing flow [36, 42]. The methods mentioned above utilize statistical or learning approaches to implicitly learn the angular constraints of each joint, making the rationality of the constraints de-pendent on the quantity and diversity of the data. In model-based methods [43], Rotated Orthographic Projection for Self-Supervised 3D HPE 5 
+
+> Fig. 2: Left: Error analysis of orthographic and perspective projection. Right: Normal-ized projection results for different models of the same object.
+
+the predicted rotation angle of each joint with respect to the parent node can be used directly to constrain the reasonability of the pose by knowledge of skele-tal anatomy. However, skeleton based methods can only represent the position of the bones, there is no way to represent the spin of the bones, so the situa-tion becomes more complex. Our method prevents illegal poses in prediction by restricting the knees and elbows from joint reverse motion in the loss. 
+
+# 3 Method 
+
+In this section, we first briefly analyze the discrepancies between orthographic and perspective projection models, then introduce the framework of our method, followed by presenting our Rotated Orthographic Projection(ROP), Group Ro-tated Orthographic Projection(G-ROP) and joint reverse loss. 
+
+3.1 Preliminaries 
+
+In the self-supervised setting, perspective projection models cannot be applied because the absolute depth and the camera parameters are absent. The ortho-graphic projection model is one of the most commonly used approximation mod-els, which projects the 3D object vertically onto a reference plane and scales it to the image plane. As shown in Fig. 2(a), given an object point Pi = ( xi, y i, z i) and the reference plane z = z0, the approximation error ∆x o between perspective and orthographic projections can be represented as: 
+
+tan φ = xi
+
+zi
+
+= εo
+
+zi − z0
+
+, (1) 
+
+∆x o = |εo| = xi
+
+zi − z0
+
+zi
+
+, (2) where εo denotes the distance between orthographic and perspective projection, and (zi − z0) denotes the relative depth of the object to the reference plane. 6 Yao et al.  
+
+> Fig. 3: The framework of our method. Compared to the baseline method [34], the following are added: (1) Rotation Compensation branch for achieving Rotation Ortho-graphic Projection. (2) Joint Reverse loss as supervision in 3D space.
+
+Hence, the approximation error ∆x o depends both on the distance from the object to the camera and on the distance from the object to the optical axis. The above discussion is for the x-axis from the bird’s eye view and the same conclusion can be obtained for the y-axis. Existing methods employ orthographic projection as an approximation, ig-noring the error ∆x o based on the strong assumption that there is a large dis-tance between the object and the camera. However, this approximation is no longer valid when the object is close to the camera or far away from the optical axis. As shown in the right of Fig. 2(b), when the object center is on the op-tical axis, i.e., xi in eq. 2 is close to zero, the error of the different projection results is quite small after scale and position normalization. When the object is translated, the orthographic projection is translation invariant while the perspec-tive projection shows a rotation-like perspective effect. Previous self-supervised methods have ignored the mismatched supervision problem due to the different projection methods, thus the network incorporates this bias into the predicted pose, specifically reflected as a slight rotation. This is the main reason why the accuracy of most methods improves dramatically after Procrustes alignment of the predicted pose to the ground truth. 
+
+3.2 Framework 
+
+Following CanonPose, Our network structure mainly includes PoseNet and Cam-eraNet as shown in Fig. 3. To avoid scale and depth ambiguity in monocular reconstruction, the inputs of both networks are scale and position normalized 2D pose x ∈ R2×J , where J denotes the number of joints. PoseNet predicts the 3D pose Xic ∈ R3×J under a learned canonical coordinate system c from the 
+
+i-th input view, while the output of CameraNet is the rotation Rc→i ∈ R3×3
+
+that transforms the canonical coordinate system c to the i-th corresponding in-Rotated Orthographic Projection for Self-Supervised 3D HPE 7 
+
+> Fig. 4: The angle of rotation compensation.
+
+put camera coordinate system, where i = 1 , 2, ..., K, and K denotes the number of views used for training. Then, the pose and different rotations are combined to generate the 3D pose Rc→j Xic in the j-th camera coordinate system, where 
+
+j = 1 , 2, ..., K . The multi-view cross-reprojection loss is calculated with the cor-responding input 2D pose xj :
+
+Lrep =
+
+> K
+
+X
+
+> j=1
+> K
+
+X
+
+> i=1
+
+xj − Π(Rc→j Xic)
+
+∥Π(Rc→j Xic)∥ 1
+
+, (3) where Π denotes the projection and ∥ · ∥ 1 denotes the L1 norm. 
+
+3.3 Rotated Orthographic Projection 
+
+As mentioned in the subsection 3.1, object position offset does not affect the orthographic projection result, so the position of the input 2D pose is directly discarded in previous self-supervised methods. In contrast, we propose the Rota-tional Orthographic Projection(ROP), which calculates a rotation compensation matrix based on the object position offset and further rotates the object to ensure that the object-camera link is aligned with the optical axis before performing orthographic projection. As shown in Fig. 3, the rotation compensation branch takes the reference point offset from the image center as input and outputs the rotation compen-sation matrix to compensate the missing perspective effect in orthographic pro-jections. As shown in Fig. 4, rotation compensation matrix Ro→p is determined by the reference point p = ( xp, y p) and calculated as: 
+
+μ = arctan( yp
+
+pxp2 + f 2 ), θ = arctan( xp
+
+f ), (4) 
+
+Ro→p =
+
+ cos θ 0 sin θ
+
+sin μ sin θ cos μ − sin μ cos θ
+
+− cos μ sin θ sin μ cos μ cos θ
+
+ , (5) 8 Yao et al.     
+
+> Fig. 5: Comparison of errors between different projections and perspective projec-tion( black ). From left to right: original orthographic projection( green ), rotated ortho-graphic projection( red ), group rotated orthographic projection( blue ). Different refer-ence points in images: the whole body ( red ) and the right lower limb ( orange ).
+
+where f denotes the focal length, θ and μ denote the rotation angle around the y-axis and the x-axis, respectively. Eq. 5 is calculated from the conversion formula between Euler angles and rotation matrices. When the focal length information is not available, following the previous work [18], we approximate the focal length with f = √w2 + h2, where w and h are the width and height of the image respectively. The effect of the assumptions about the focal length f on the results is specifically analyzed in the experiment section. Thus the reprojection loss defined in 3.2 can be specified as: 
+
+Lrep =
+
+> K
+
+X
+
+> j=1
+> K
+
+X
+
+> i=1
+
+xj − Πo(Ro→pRc→j Xic)
+
+∥Πo(Ro→pRc→j Xic)∥ 1
+
+, (6) where Πo denotes the orthographic projection. Previous methods [22, 40] utilize rotation to mitigate the perspective distor-tion of the input, which requires not only the true focal length to restore the input from 2D to 3D but also the corresponding post-processing. In contrast, we employ rotation to achieve a geometric approximation of the perspective projec-tion, narrowing the gap between the orthographic projection and the perspective projection. Notably, in our method, rotation compensation is only introduced in the training phase without computation in inference. 
+
+3.4 Group Rotated Orthographic Projection 
+
+According to Section 3.3, the rotation compensation matrix is related to the reference point, and a reasonable reference point setup yields a better geometric approximation of the perspective projection. A natural way is to set the average point of the 2D pose as the reference point. However, in some cases, the end joints are far from the center of the body, which can result in excessive or insufficient rotational compensation. As shown in Fig. 5, The red and orange points in the image indicate the reference points set according to the whole body and the right lower limb, respectively. According to the example on the left, the rotation compensation matrix calculated based on the red reference point has a larger angle around the x-axis, but the rotation compensation required for the right lower limb is smaller than this angle, which results in an error in the leg. Rotated Orthographic Projection for Self-Supervised 3D HPE 9 
+
+> Fig. 6: The schematic of joint reverse constraint.
+
+Therefore, we optimize the reference point selection according to the human body structure and propose group rotated orthographic projection(G-ROP), which divides the human body into 7 groups and calculates different rotation an-gles with the independent reference point. Contrary to the methods that group the body based on dynamic chain structure, we consider the relative distance between joints: g0 ={hip,right_hip, left_hip }, g1 ={right_knee, right_foot }, 
+
+g2 ={left_knee, left_foot }, g3 ={spine, thorax }, g4 ={neck, head, left_shoulder, right_shoulder }, g5 ={right_elbow, right_wrist }, g6 ={left_elbow, left_wrist }. The comparison of ROP and G-ROP is shown in Fig. 5, G-ROP further narrows the gap with the perspective projection. 
+
+3.5 Joint Reverse Constraint 
+
+The reprojection consistency loss lacks the constraint for absolute orientation in 3D space. When PoseNet outputs an illegal pose with an overall Z-axis reverse, CameraNet can still output a corresponding rotation to make the 2D projection of the wrong pose consistent with the input pose. To solve this problem, we propose joint reverse loss. In detail, we restrict the range of angles between the local reference plane and the end joints of the human body to penalize unreasonable poses in 3D space so that the model no longer confuses the Z-axis orientation. The main motion freedom of the elbow/knee joint is in extension and flexion, thus we can form a reference plane with elbow-shoulders/knee-hips, limiting the motion range of the end joints (wrist/ankle). For example, the right leg can only perform backward motion relative to the local plane consisting of the two hips and the right knee. The detailed imple-mentation is shown in Fig. 6, the red vector indicates the illegal joint structure, which has an angle in the range of [ 0◦,90 ◦] with the local reference plane normal vector. We calculate the angle between the normal vector of the plane formed by the three points and the lower leg bones: 
+
+cos γ = |(−−→
+
+BA × −−→
+
+BC ) · −−→
+
+CD |∥−−→
+
+BA × −−→
+
+BC ∥∥ −−→
+
+CD ∥ , (7) 10 Yao et al. 
+
+where −−→
+
+BA , −−→
+
+BC , −−→
+
+CD and γ refer to Fig. 6. The angle is then used to determine if the pose is correct, and we calculate the joint reverse loss function: 
+
+Lreverse = Σcos γ, where γ ∈ [0 , 90 − d], (8) where d denotes a small angle for tolerating reasonable hyperextension of the knee, which was set to 5° in the experiments. 
+
+# 4 Experiment 
+
+Datasets. Human3.6M [12] is the largest benchmark dataset. This dataset pro-vides information under four views, including image, 2D annotation, 3D annota-tion, and camera annotation. We follow the standard protocol using S1, S5, S6, S7, S8 for training and testing on S9 and S10. To achieve complete inference from images to 3D poses, we also use the 2D poses obtained from CPN [5] provided by [28]. MPI-INF-3DHP [26] is another commonly used large-scale dataset that offers more difficult poses and perspectives than Human3.6M. Following [30], we chose eight of the fourteen views provided, excluding large-angle overlooks. We also follow the officially provided training and test set settings, where three scenes are included in the test set: green screen, non-green screen and outdoor. 
+
+Metrics. For the evaluation of Human3.6M and MPI-INF-3DHP, we calcu-late the mean-per-joint-position-error (MPJPE), which quantifies the mean Eu-clidean distance between predicted and actual joint coordinates. Due to the ab-sence of metric data in a self-supervised setting, we scale-normalize the predicted 3D poses to match the ground truth, i.e., N-MPJPE [29]. Another common pro-tocol first performs the Procrustes alignment (including scaling and rotating) between the predicted pose and ground truth before calculating MPJPE, also known as P-MPJPE. For MPI-INF-3DHP, we also used the Percentage of Correct Keypoints (PCK) for validation. It is the percentage of predicted joints that are within a distance of 150mm or lower to their corresponding ground truth joint. 
+
+Implementation details. Our network framework follows CanonPose, using two branches to predict pose and coordinate system rotation respectively, but with changes made for each network structure: (1) Replacing PoseNet from MLP to SemGCN [44], and CameraNet retains the MLP structure, which is because we consider Graph Convolutional Network to be more suitable for skeleton in-put (2) For the output of CameraNet, replacing axis-angle representations with 6D continuous rotation representations [45]. This modification addresses the dis-continuity inherent in axis-angle representations, which renders the network less robust, particularly when output angles approach 0◦or 180 ◦. In our experiments, we use the changed model as the baseline. Rotated Orthographic Projection for Self-Supervised 3D HPE 11                                                                      
+
+> Table 1: Results on the Human3.6M dataset. The star * indicates learning a scale from the dataset instead of applying normalization via N-MPJPE at the inference stage.
+> Supervision Methods GT PRE
+> N-MPJPE↓ P-MPJPE↓ N-MPJPE↓ P-MPJPE↓ full SemGCN(19’) [44] 42.14* 33.53 --EpipolarPose(19’) [20] --51.58 41.04 Iqbal(21’) [13] 49.9 36.9 --PCLs(21’) [40] 40.1 -67.0* -weak RepNet(19’) [33] 50.9 38.2 89.9 65.1 Kundu(20’) [21] 62.4 -85.8 -self Chen(19’) [3] -58.0 -68.0 EpipolarPose(19’) [20] 54.9 47.9 75.2 67.4 Iqbal(21’) [13] 64.5 54.5 66.3 55.9 Yu(21’) [41] 85.3* 42.0 92.4* 52.3 CanonPose(21’) [34] 65.9 51.4 74.3 53.0 ElePose(22’) [32] 64.0 36.7 74.4 50.2 PoseTRiplet(22’) [9] 68.2* 45.1 78.0* 51.8 Ma(23’) [25] --75.1 47.5 MHCanonNet(24’) [16] 58.7 -69.0 50.3 Ours 42.9 33.2 55.2 44.9
+
+4.1 Comparison with State-of-the-Art methods Results on Human3.6M To achieve a fair comparison as well as a complete inference process, we utilize 2D ground truth poses and predicted 2D poses derived from Cascaded Pyramid Networks [5] as input respectively. As shown in Table 1, our method obtains promising results both on N-MPJPE and P-MPJPE with different inputs, outperforming all weakly supervised and self-supervised methods. Moreover, our method exhibits competitive performance even when compared with certain fully supervised approaches. Even compared to state-of-the-art method [16] that uses temporal information, our result is 26.9 % better than theirs (MPJPE reduced from 58.7 mm to 42.9 mm). Among most previous self-supervised and weakly-supervised methods, there is a large gap between N-MPJPE and P-MPJPE, which indicates that these methods perform well on pose learning but produce errors on global rotation. We argue that the critical reason is mismatched supervision caused by different projection models. When we improved on this issue, the direct gap between the two evaluation metrics was greatly reduced to less than 10mm, which proved our analysis for the cause of the error. In addition to the mean error, we also compare the error distribution of our method and baseline method, the visualization results are shown in Fig.7 left. The error peak of our method is around 35mm, which is greatly reduced compared to the peak value of the baseline. At the same time, our method performs better in both excellent and terrible cases where the error is less than 20mm and more than 80mm. Especially, compared to the baseline, the number 12 Yao et al. 
+
+Table 2: Results for the MPI-INF-3DHP dataset. The ** indicates using the model only trained on Human3.6M to test.                       
+
+> Method N-MPJPE P-MPJPE PCK(↑) Kundu(20’) [21] 93.7 -84.6 Iqbal(21’) [13] 110.1 -76.5 CanonPose(21’) [34] 104.0 70.3 77.0 ElePose(22’) [32] -54.0 86.0 MHCanonNet(24’) [16] 102.1 68.9 -Ours** 94.7 69.4 83.1 Ours 75.0 44.8 89.9
+
+Table 3: Ablation study on Hu-man3.6M. The † indicates the result of our replication.           
+
+> N-MPJPE P-MPJPE CanonPose †62.62 36.70 Baseline 61.77 36.98 +ROP 44.98 34.07 +G-ROP 43.81 33.86 +G-ROP+ Lreverse 42.96 33.23
+
+Fig. 7: Left: Comparison of error distribution. Right: Comparison of error statistics for different pose position offsets. 
+
+of samples with an error greater than 80mm has decreased by 10.9%, showing that our method is effective in alleviating the severe negative impact of the mismatched supervision problem on the baseline method. 
+
+The robustness against pose position offsets. As shown in the right of Fig.7, the average N-MPJPE of the baseline increases as the distance from the pose position to the center of the image, which is consistent with the fact that the error between orthographic and perspective projections increases with dis-tance, implies the negative effect of approximating perspective projections with orthographic projections. Our proposed method alleviates the mismatched prob-lem of supervision caused by different projection models, making the network robust when the pose is at different positions. 
+
+Results on MPI-INF-3DHP. Table 2 shows the comparison between the re-sults of our method and state-of-the-art methods on the MPI-INF-3DHP dataset. The reported results clearly show that our approach outperforms existing self-and weakly-supervised methods. At the same time, to evaluate the generalization ability of our model, we directly use the model trained only on the Human3.6M dataset to the test set of MPI-INF-3DHP, the results are also comparable to the best results of existing methods trained on MPI-INF-3DHP. Rotated Orthographic Projection for Self-Supervised 3D HPE 13   
+
+> Fig. 8: Qualitative comparisons between our method ( green ) and CanonPose ( red ) on Human3.6M and MPI-INF-3DHP datasets. The dashed box indicates the side view.
+
+Qualitative Evaluation. Figure 8 shows a qualitative comparison of results with a baseline on Human3.6M and MPI-INF-3DHP datasets, where the red pose is the baseline result, the green is our improved result and the blue is the ground truth. We show the comparison results from the front and side view, where the dashed box indicates the side view. As shown in the side view of the baseline method, there is a slight rotational offset between the predicted results and the ground truth, which is compensated by our method, especially when the pose is far from the center of the image. 
+
+4.2 Ablation Study 
+
+To validate the design of our approach, we conduct ablation experiments on the Human3.6M dataset, using 2D ground truth poses as input. 
+
+Effectiveness of Components. The results of the ablation experiments are shown in Table 3. First, we replicated CanonPose and then replaced the net-work structure and rotation representation, using the replaced framework as the baseline for our comparison. Then three ablative settings are applied: Base-line+ROP(replaced the orthographic projection model in the loss of the baseline with our rotated orthographic projection model), Baseline+G-ROP(replaced the orthographic projection model in the loss of the baseline with our group rotated orthographic projection model), Baseline+G-ROP+ Lreverse (added joint prior loss to Baseline+G-ROP). Baseline+ROP has a large improvement compared to the Baseline, which confirms that the proposed rotated orthographic projec-tion indeed solves the problem of large errors between orthographic projection and perspective projection. Moreover, the Baseline+G-ROP reduces N-MPJPE 14 Yao et al.                                   
+
+> Table 4: Performance under different assumed focal lengths.
+> f /f gt 0.55 0.7 0.85 11.15 1.3 1.45 1.6 2.0 4.0 6.0 N-MPJPE 54.57 46.31 44.55 42.95 43.23 43.43 43.54 43.71 44.10 48.07 49.70 P-MPJPE 36.26 34.23 33.65 33.30 33.32 33.33 33.44 33.10 33.02 33.11 33.71
+
+by 1.17mm compared to Baseline+ROP, indicating that setting reference points based on multiple groups is slightly more reasonable than treating the human body as a whole. Baseline+G-ROP+ Lreverse further reduces N-MPJPE from 43.81mm to 42.96mm, once again verifying the positive role of joint prior con-straints in this self-supervised framework. Our proposed method is mainly de-signed for the rotation error, so the improvement on N-MPJPE is remarkable, which at the same time helps the learning of pose branching. 
+
+The effects of the assumed focal length f . In the experimental setup, we simply assumed f = √w2 + h2. We then evaluated the effect of focal length assumptions on result using the Human3.6M dataset. As shown in Table 4, the best result is obtained when using fgt . The error increases slightly as the ratio of the assumed focal length to the real one increases. Nevertheless, the error remains tolerable, even when this ratio is increased to f /f gt = 6 . This occurs because when increasing the assumed focal length, the calculated compensation rotation angle is smaller than the actual situation, but it is still possible to perform a projection correction, and the most extreme case is the same as the original orthographic projection, i.e., the baseline result. In contrast, the error increases rapidly when assuming a decrease in the focal length. Without knowing the focal length, we are encouraged to set f on the larger side. This experiment proves that our method is insensitive to the focal length over a wide range. 
+
+# 5 Conclusion 
+
+In this work, we propose rotated orthographic projection, which achieves a ge-ometric approximation of the perspective projection by adding a rotation op-eration before the orthographic projection. It effectively solves the mismatched supervision problem of reprojection consistency loss under the self-supervision paradigm. Additionally, we optimize the reference point selection according to the human body structure and propose group rotated orthographic projection, which further narrows the gap with the perspective projection model. Mean-while, we design a simple joint reverse loss based on the human structure prior, which effectively solves the Z-axis overall reverse problem and enhances the ro-bustness of the model. Our improvement greatly enhances the performance of the framework for self-supervised 3D human pose estimation using multi-view cross-reprojection. Extensive experiments demonstrate that our method significantly outperforms state-of-the-art models on both Human3.6M and MPII-INF-3DHP datasets. Rotated Orthographic Projection for Self-Supervised 3D HPE 15 
+
+# Acknowledgements 
+
+This work was supported by the National Science and Technology Major Project from Minister of Science and Technology, China (2018AAA0103100), National Natural Science Foundation of China (62103399), Natural Science Foundation of Shanghai (23ZR1474200), Youth Innovation Promotion Association, Chinese Academy of Sciences (2021233, 2023242), Shanghai Academic Research Leader (22XD1424500). 
+
+# References 
+
+1. Akhter, I., Black, M.J.: Pose-conditioned joint angle limits for 3d human pose reconstruction. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 1446–1455 (2015) 2. Bouazizi, A., Wiederer, J., Kressel, U., Belagiannis, V.: Self-supervised 3d human pose estimation with multiple-view geometry. In: 2021 16th IEEE International Conference on Automatic Face and Gesture Recognition (FG 2021). pp. 1–8. IEEE (2021) 3. Chen, C.H., Tyagi, A., Agrawal, A., Drover, D., Mv, R., Stojanov, S., Rehg, J.M.: Unsupervised 3d pose estimation with geometric self-supervision. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 5714–5724 (2019) 4. Chen, J., Nie, S., Ji, Q.: Data-free prior model for upper body pose estimation and tracking. IEEE Transactions on Image Processing 22 (12), 4627–4639 (2013) 5. Chen, Y., Wang, Z., Peng, Y., Zhang, Z., Yu, G., Sun, J.: Cascaded pyramid network for multi-person pose estimation. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 7103–7112 (2018) 6. Dabral, R., Mundhada, A., Kusupati, U., Afaque, S., Sharma, A., Jain, A.: Learn-ing 3d human pose from structure and motion. In: Eur. Conf. Comput. Vis. pp. 668–683 (2018) 7. Georgakis, G., Li, R., Karanam, S., Chen, T., Košecká, J., Wu, Z.: Hierarchical kinematic human mesh recovery. In: Eur. Conf. Comput. Vis. pp. 768–784. Springer (2020) 8. Gholami, M., Rezaei, A., Rhodin, H., Ward, R., Wang, Z.J.: Tripose: A weakly-supervised 3d human pose estimation via triangulation from video. arXiv preprint arXiv:2105.06599 (2021) 9. Gong, K., Li, B., Zhang, J., Wang, T., Huang, J., Mi, M.B., Feng, J., Wang, X.: Posetriplet: Co-evolving 3d human pose estimation, imitation, and hallucination under self-supervision. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 11017– 11027 (2022) 10. Gong, X., Zheng, M., Planche, B., Karanam, S., Chen, T., Doermann, D., Wu, Z.: Self-supervised human mesh recovery with cross-representation alignment. In: Eur. Conf. Comput. Vis. pp. 212–230. Springer (2022) 11. Habermann, M., Xu, W., Zollhofer, M., Pons-Moll, G., Theobalt, C.: Deepcap: Monocular human performance capture using weak supervision. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 5052–5063 (2020) 12. Ionescu, C., Papava, D., Olaru, V., Sminchisescu, C.: Human3. 6m: Large scale datasets and predictive methods for 3d human sensing in natural environments. IEEE transactions on pattern analysis and machine intelligence 36 (7), 1325–1339 (2013) 16 Yao et al. 13. Iqbal, U., Molchanov, P., Kautz, J.: Weakly-supervised 3d human pose learning via multi-view images in the wild. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 5243–5252 (2020) 14. Jack, D., Maire, F., Eriksson, A., Shirazi, S.: Adversarially parameterized opti-mization for 3d human pose estimation. In: 2017 International Conference on 3D Vision (3DV). pp. 145–154. IEEE (2017) 15. Kanazawa, A., Black, M.J., Jacobs, D.W., Malik, J.: End-to-end recovery of human shape and pose. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 7122–7131 (2018) 16. Kim, H.W., Lee, G.H., Nam, W.J., Jin, K.M., Kang, T.K., Yang, G.J., Lee, S.W.: Mhcanonnet: Multi-hypothesis canonical lifting network for self-supervised 3d hu-man pose estimation in the wild video. Pattern Recognition 145 , 109908 (2024) 17. Kim, H.W., Lee, G.H., Oh, M.S., Lee, S.W.: Cross-view self-fusion for self-supervised 3d human pose estimation in the wild. In: Proceedings of the Asian Conference on Computer Vision. pp. 1385–1402 (2022) 18. Kissos, I., Fritz, L., Goldman, M., Meir, O., Oks, E., Kliger, M.: Beyond weak perspective for monocular 3d human pose estimation. In: Eur. Conf. Comput. Vis. pp. 541–554. Springer (2020) 19. Kocabas, M., Huang, C.H.P., Tesch, J., Müller, L., Hilliges, O., Black, M.J.: Spec: Seeing people in the wild with an estimated camera. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 11035–11045 (2021) 20. Kocabas, M., Karagoz, S., Akbas, E.: Self-supervised learning of 3d human pose using multi-view geometry. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 1077– 1086 (2019) 21. Kundu, J.N., Seth, S., Jampani, V., Rakesh, M., Babu, R.V., Chakraborty, A.: Self-supervised 3d human pose estimation via part guided novel image synthesis. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 6152–6162 (2020) 22. Li, X., Zhang, D., Li, M., Lee, D.J.: Accurate head pose estimation using image rectification and a lightweight convolutional neural network. IEEE Transactions on Multimedia (2022) 23. Li, Y., Li, K., Jiang, S., Zhang, Z., Huang, C., Da Xu, R.Y.: Geometry-driven self-supervised method for 3d human pose estimation. In: AAAI. vol. 34, pp. 11442– 11449 (2020) 24. Li, Z., Liu, J., Zhang, Z., Xu, S., Yan, Y.: Cliff: Carrying location information in full frames into human pose and shape estimation. In: Eur. Conf. Comput. Vis. pp. 590–606. Springer (2022) 25. Ma, Z., Li, K., Li, Y.: Self-supervised method for 3d human pose estimation with consistent shape and viewpoint factorization. Applied Intelligence 53 (4), 3864– 3876 (2023) 26. Mehta, D., Rhodin, H., Casas, D., Fua, P., Sotnychenko, O., Xu, W., Theobalt, C.: Monocular 3d human pose estimation in the wild using improved cnn supervision. In: 2017 international conference on 3D vision (3DV). pp. 506–516. IEEE (2017) 27. Pavlakos, G., Kolotouros, N., Daniilidis, K.: Texturepose: Supervising human mesh estimation with texture consistency. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 803–812 (2019) 28. Pavllo, D., Feichtenhofer, C., Grangier, D., Auli, M.: 3d human pose estimation in video with temporal convolutions and semi-supervised training. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 7753–7762 (2019) 29. Rhodin, H., Spörri, J., Katircioglu, I., Constantin, V., Meyer, F., Müller, E., Salz-mann, M., Fua, P.: Learning monocular 3d human pose estimation from multi-view images. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 8437–8446 (2018) Rotated Orthographic Projection for Self-Supervised 3D HPE 17 30. Shan, W., Liu, Z., Zhang, X., Wang, S., Ma, S., Gao, W.: P-stmo: Pre-trained spatial temporal many-to-one model for 3d human pose estimation. In: European Conference on Computer Vision. pp. 461–478. Springer (2022) 31. Usman, B., Tagliasacchi, A., Saenko, K., Sud, A.: Metapose: Fast 3d pose from mul-tiple views without 3d supervision. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 6759–6770 (2022) 32. Wandt, B., Little, J.J., Rhodin, H.: Elepose: Unsupervised 3d human pose estima-tion by predicting camera elevation and learning normalizing flows on 2d poses. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 6635–6645 (2022) 33. Wandt, B., Rosenhahn, B.: Repnet: Weakly supervised training of an adversarial reprojection network for 3d human pose estimation. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 7782–7791 (2019) 34. Wandt, B., Rudolph, M., Zell, P., Rhodin, H., Rosenhahn, B.: Canonpose: Self-supervised monocular 3d human pose estimation in the wild. In: IEEE Conf. Com-put. Vis. Pattern Recog. pp. 13294–13304 (2021) 35. Wang, K., Lin, L., Jiang, C., Qian, C., Wei, P.: 3d human pose machines with self-supervised learning. IEEE Trans. Pattern Anal. Mach. Intell. 42 (5), 1069–1082 (2019) 36. Wehrbein, T., Rudolph, M., Rosenhahn, B., Wandt, B.: Probabilistic monocular 3d human pose estimation with normalizing flows. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 11199–11208 (2021) 37. Wei, X.K., Chai, J.: Modeling 3d human poses from uncalibrated monocular im-ages. In: 2009 IEEE 12th International Conference on Computer Vision. pp. 1873– 1880. IEEE (2009) 38. Yang, W., Ouyang, W., Wang, X., Ren, J., Li, H., Wang, X.: 3d human pose estimation in the wild by adversarial learning. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 5255–5264 (2018) 39. Yoo, N., Russakovsky, O.: Efficient, self-supervised human pose estimation with inductive prior tuning. In: Int. Conf. Comput. Vis. pp. 3271–3280 (2023) 40. Yu, F., Salzmann, M., Fua, P., Rhodin, H.: Pcls: Geometry-aware neural recon-struction of 3d pose with perspective crop layers. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 9064–9073 (2021) 41. Yu, Z., Ni, B., Xu, J., Wang, J., Zhao, C., Zhang, W.: Towards alleviating the modeling ambiguity of unsupervised monocular 3d human pose estimation. In: Proceedings of the IEEE/CVF International Conference on Computer Vision. pp. 8651–8660 (2021) 42. Zanfir, A., Bazavan, E.G., Xu, H., Freeman, W.T., Sukthankar, R., Sminchisescu, C.: Weakly supervised 3d human pose and shape reconstruction with normalizing flows. In: Eur. Conf. Comput. Vis. pp. 465–481. Springer (2020) 43. Zhang, Y., Wang, H., Kephart, J.O., Ji, Q.: Body knowledge and uncertainty modeling for monocular 3d human body reconstruction. In: Proceedings of the IEEE/CVF International Conference on Computer Vision. pp. 9020–9032 (2023) 44. Zhao, L., Peng, X., Tian, Y., Kapadia, M., Metaxas, D.N.: Semantic graph con-volutional networks for 3d human pose regression. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 3425–3435 (2019) 45. Zhou, Y., Barnes, C., Lu, J., Yang, J., Li, H.: On the continuity of rotation rep-resentations in neural networks. In: IEEE Conf. Comput. Vis. Pattern Recog. pp. 5745–5753 (2019)

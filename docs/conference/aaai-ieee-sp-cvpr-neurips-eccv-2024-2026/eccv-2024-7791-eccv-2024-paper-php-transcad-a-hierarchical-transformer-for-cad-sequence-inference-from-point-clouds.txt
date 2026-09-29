@@ -1,0 +1,323 @@
+Title: 07791.pdf
+
+URL Source: https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/07791.pdf
+
+Published Time: Tue, 01 Oct 2024 09:23:18 GMT
+
+Number of Pages: 17
+
+Markdown Content:
+# TransCAD: A Hierarchical Transformer for CAD Sequence Inference from Point Clouds 
+
+Elona Dupont 1, Kseniya Cherenkova 1,2, Dimitrios Mallis 1, Gleb Gusev 2, Anis Kacem 1, and Djamila Aouada 1 
+
+> 1
+
+SnT, University of Luxembourg, Luxembourg  
+
+> 2
+
+Artec 3D, Luxembourg 
+
+Abstract. 3D reverse engineering, in which a CAD model is inferred given a 3D scan of a physical object, is a research direction that offers many promising practical applications. This paper proposes TransCAD ,an end-to-end transformer-based architecture that predicts the CAD se-quence from a point cloud. TransCAD leverages the structure of CAD sequences by using a hierarchical learning strategy. A loop refiner is also introduced to regress sketch primitive parameters. Rigorous experi-mentation on the DeepCAD [42] and Fusion360 [40] datasets show that 
+
+TransCAD achieves state-of-the-art results. The result analysis is sup-ported with a proposed metric for CAD sequence, the mean Average Precision of CAD Sequence , that addresses the limitations of existing metrics. 
+
+Keywords: Computer-Aided Design · CAD Reverse Engineering · Feature-based modelling 
+
+# 1 Introduction 
+
+Practically every object encountered in daily life originates from a Computer-Aided Design (CAD), highlighting the fundamental role of CAD in industrial manufacturing processes. Currently, the dominant paradigm for CAD design is feature-based modelling [47]. It allows the creation and manipulation of 3D models through a series of features , individual elements or operations (holes, slots, fillets, etc .), that modify the geometry of a CAD model. The process is typically initiated with the design of planar sketches , i.e . collection of loops 
+
+composed of 2D curves, followed by a CAD operation (extrusion, revolution, etc.) that expands sketches into a 3D solid model. The final model is represented by the sequence of these CAD sketches and operations. Feature-based modelling has been widely adopted, as it enables intuitive design alterations and seamless CAD software integration, making it essential for an iterative development of complex designs. The recent availability of large CAD model datasets, such as ABC [18] and Fusion360 [40], has sparked significant interest in developing learning-based approaches for feature-based modelling. Recent efforts have been focused on deep generative modelling [33, 42, 44, 46], where large transformer-based networks are trained to create new CAD models or to automatically complete partial designs 2 E. Dupont et al. 
+
+via autoregressive inference. While this research direction offers a lot of potential practical applications for CAD software integration, far less attention has been put to reverse engineering . Feature-based reverse engineering emerges as a real-world application addressing the need to automatically replicate physical objects as CAD models. Recovery of CAD design is facilitated by the acquisition of a point cloud or triangular mesh of a physical object scanned using commercial 3D sensors. Some existing reverse engineering approaches investigate the recovery of al-ternative CAD model representations like Constructive Solid Geometry [15] (CSG) or Boundary-Representation (B-Rep) [8, 14, 19]. Other methods tackle feature-based reverse engineering and predict implicit representations of sketches and CAD operations from point clouds [23, 36]. Nevertheless, such approaches do not allow for seamless integration into CAD software and often require post-processing ( e.g . parametric curve fitting). To address these limitations, models capable of learning explicit CAD sequence of parametric sketches and operations from point clouds are needed. This can be enabled within a generative learning framework as in [42]. In that work, an auto-encoder reconstructing CAD para-metric sequences is proposed and the latent representation is used for generating novel CAD sequences. An extension for reverse engineering was proposed by re-placing the CAD sequence encoder with a point cloud encoder trained to map point clouds to the latent representations. The main limitation of the above is the predefined latent space that cannot adapt to the variations present in real-world point clouds. This disconnection can cause the model to generalize poorly to unseen inputs, especially those with noise or irregularities that are present in 3D scans and that are not well-represented in the training data. To that end, we propose TransCAD , a novel end-to-end trainable and single-stage hierarchical network for feature-based explicit CAD sequence reverse en-gineering from point clouds. Our network is hierarchical in the sense that it employs a two-tiered decoding process. Initially, a primary CAD sequence em-bedding is decoded, encapsulating high-level features of the design, that are then processed by secondary decoders, one dedicated to loop parameters and another to CAD operations. Each decoder specializes in a certain input, enabling a nu-anced and precise recovery of CAD parameters. The decomposition of learned representations matches the decomposition inherent in the actual feature-based design process of conceptualizing a 3D model through distinct loop and operation steps. Moreover, TransCAD does not predict sketch primitive types explicitly as in [42]; instead, we employ a unified primitive representation where types are determined solely by coordinates. Our formulation narrows the learning space by eliminating syntactically incorrect predictions and facilitates a seamless tran-sition between different primitive types. Additionally, it allows for a cascaded parameter refining that further enhances model performance. Another focus of this work is the evaluation of parametric CAD sequence. We identify several limitations of the existing evaluation framework used by [27, 42] and suggest a suitable metric for CAD sequence similarity based on mean average precision, computed in the unquantized parametric space. TransCAD : A Hierarchical Transformer for CAD Sequence 3
+
+Contributions: In summary our contributions are the following: 1. We propose TransCAD , a novel hierarchical architecture for feature-based reverse engineering. Our model is single-stage and end-to-end trainable. 
+
+TransCAD allows for a compact CAD sequence representation that does not include categorical types and enables cascaded coordinate refinement. 2. We identify several limitations of the existing evaluation framework for feature-based reverse engineering and propose a new evaluation metric frame-work to ensure fair comparison among diverse network architectures. 3. Our model surpasses the performance of recent generative-based approaches while also bridging the gap to real-world applications by exhibiting robust-ness to perturbed point clouds. 
+
+Paper Organization: The rest of the paper is organized as follows. Section 2 reviews related works. Section 3 formulates the problem of feature-based CAD reverse-engineering. The proposed TransCAD is described in Section 4. Discus-sion on the current evaluation framework and suggested extension is introduced in Section 5. An experimental validation of the proposed network is provided in Section 6. Finally, conclusions are given in Section 7. 
+
+# 2 Related Works 
+
+Generative Models for CAD: The advent of large-scale 3D shape datasets [4, 18, 24, 40], combined with the significant progress for generative models in vision [5, 10, 12, 16], has sparked interest in the generation of 3D shapes. Ex-isting methods have been proposed for various 3D representations, including point clouds [1,2,48], 3D meshes [29,38], voxel grids [21,41], and signed distance functions [6, 43]. This work focuses on CAD model generation, which compared to the above is parametric and directly editable in CAD software. A line of work explores the generation of the Boundary-Representation (B-Rep), a collec-tion of parametric surfaces connected via a structured topological graph. Solid-Gen [13] considers B-Rep synthesis based on transformers and two-level pointer networks. BrepGen [45] represents a B-Rep via a fixed tree of latent geometry representations that can be generated by a diffusion model. Feature-based CAD generation has also been recently explored. Most relevant to our work is Deep-CAD [42], a non-autoregressive generative model capable of synthesizing novel CAD sequences based on a transformer auto-encoder architecture. In [44, 46] the authors also follow autoregressive strategies. HNC [44] uses a hierarchical model based on high-level concepts and a code tree for CAD model generation and auto-completion. Similarly, in SkexGen [46] a transformer architecture is used to generate CAD models in the sketch-extrude format by encoding the topology and geometry using different codebooks. All the aforementioned works are oriented around 3D shape generation and either do not address the reverse-engineering task or address it via adaptation of generative modelling leading to suboptimal performance. 4 E. Dupont et al. 
+
+CAD Reverse Engineering: Reverse engineering is a well-studied problem with a substantial research effort directed towards predicting geometric features of CAD models, by analyzing the corresponding point clouds. Parametric fit-ting techniques infer the parametarization of edges [7, 25, 34, 39, 50, 51] and sur-faces [11, 22]. Various attributes of the B-Rep and CAD operations are recov-ered from 3D scans in [28]. CADOps-Net [8] recovers 2D sketches from faces segmented into their CAD operation steps. Reasoning about a CAD model via properties discovered by parametric fitting offers insights solely into its end-state, without considering the sequential CAD design process intrinsic to feature-based modeling. A step closer to CAD reverse engineering, a line of work explores the recon-struction of a point cloud into Constructive Solid Geometry (CSG) [9, 15, 49], a modelling technique that uses boolean operations to combine primitives into 3D models. Point2Cyl [36], on the other hand, predicts extrusion cylinders given a point cloud, but requires user input to combine cylinders. SECAD-Net [23] and ExtrudeNet [33] use a self-supervised learning strategy to recover CAD se-quences in the form of implicit representations given voxels and point clouds, re-spectively. In contrast to feature-based modelling, 3D representations produced by these methods (CSG, extrusion cylinders, etc .) have limited compatibility with modern CAD software workflows. The authors in [20] learn sketch-extrude sequences conditioned on a voxel input, however, the model relies on strong data priors and is limited to predefined extrusion combinations. Closer to our work is DeepCAD [42] and subsequent MultiCAD [27]. Even though DeepCAD [42] proposes a non-autoregressive generative framework for feature-based CAD, authors explore further conditioning on input point clouds. Taking a similar direction, MultiCAD [27] proposes a two-stage multimodal con-trastive learning strategy of both point clouds and CAD sequences. The two aforementioned methods opt for separate stage learning for point clouds and CAD sequences. Concurrent to our work, the autoregressive strategy in [17] and the multimodal diffusion based approach in [26] attempt to solve the point cloud to CAD sequence problem. To our knowledge TransCAD is the first non-autoregressive single-stage architecture for feature-based reverse engineering. 
+
+# 3 Problem Statement 
+
+A CAD model C ∈ C is constructed in a sequence of construction steps. Each step can be seen as a 2D parametric sketch s ∈ S (e.g . set of lines, arcs, etc .) followed by a CAD operation o ∈ O (e.g . extrusion, revolution, etc .) [42, 46]. Here, C is the set of all possible CAD models, S and O represent the sets of possible CAD sketches and operations, respectively. CAD models constructed exclusively from the extrusion operation type are considered in this work. Extrusion e ∈ E , where 
+
+E denotes the set of possible extrusions, is the most common operation and en-ables the description of a wide range of CAD models [42,44,46]. TransCAD aims at learning how to predict the sequence of CAD construction steps from an input point cloud. Formally, given a point cloud P = [p1, . . . , pn] ∈ Rn×3, where TransCAD : A Hierarchical Transformer for CAD Sequence 5Loop          
+
+> Start
+> Mid
+> End
+> Start Mid End
+> Start Mid End
+> Sketch
+> Loop Loop Extrusion Extrusion Loop
+> Sketch-Extrusion Sketch-Extrusion Sketch-Extrusion
+> CAD model
+> Sketch Sketch
+> Line
+> Arc
+> Circle
+> Primitive
+> Representation
+> CAD sequence
+> CAD Sequence Representation
+> Extrusion
+
+Fig. 1: The sequential process of CAD modeling. A CAD sequence C can be decom-posed into a hierarchical structure. The highest conceptual level is a sequence of sketch 
+
+s and extrusion e. A sketch can be made of one or more loops ρ. Each loop can be further decomposed into loop primitives, circle, arc and line. Each loop primitive can be described by a fixed number of parameters as shown on the right panel. 
+
+pi = [xi, y i, z i] denotes the 3D coordinates of the point i and n the number of points, the objective of TransCAD is to learn the mapping 
+
+Φ : Rn×3 → C ,
+
+Φ(P) = {sl, el}Ll=1 , (1) where L denotes the length of the CAD sequence. In what follows, the proposed formulations of sketches and extrusions are described. 
+
+CAD Sketch and Extrusion Formulation: The proposed formulations for sketch and extrusion steps are inspired by [42, 46]. A sketch s is composed of one or more loops (see left panel of Fig. 1). Each loop {ρj }Lρ
+
+> j=1
+
+, where Lρ, de-noting the number of loops, consists of one primitive ( i.e . circle) or a combi-nation of primitives ( i.e . lines and arcs). In contrast to [42] which specifies the type of primitives in their representation, the proposed primitive representa-tion is type-agnostic (see right panel of Fig. 1). In particular, each primitive 
+
+δ is represented by three 2D coordinates of start, mid, and end points, i.e .
+
+δ = [( xstart , y start ), (xmid , y mid ), (xend , y end )] ∈ R6. This representation has the advantage that the type of primitive can be deduced from the configurations of the points, hence reducing the search space and facilitating the transition between different types during training. In practice, the mid point of a line is replaced by a dummy value. As in [42], we ensure that the loops are always closed by using the end point of a primitive as the start point of the next one. Further, a similar to [42] quantization is considered to reduce the parameters search space. As a result, a loop of np primitives ρj ∈ R6×np is considered as a quantized representa-tion ρ⋆j ∈ J0..d q K6×np , where dq denotes the quantization interval. As for extru-sion, similarly to [42], a quantized representation e⋆j ∈ J0..d q K11 is consid-ered to represent the sketch plane/scale and extrusion type/distances. Note that 6 E. Dupont et al. Extrusion decoder       
+
+> Point cloud encoder Loop-Extrusion decoder
+> Input
+> Loop decoder Loop Refiner
+> MLP
+> Loop-Extrusion
+> type prediction
+> LELLE
+> Output
+
+...  ...  ... 
+
+> ...
+
+Fig. 2: TransCAD model architecture. TransCAD is a hierarchical network composed of the following components: a point cloud encoder, a loop-extrusion decoder that predicts a high-level sequence which is then decoded by a loop decoder and an extrusion decoder. The predicted quantized loop parameters are then corrected by a loop refiner. 
+
+e⋆ ∈ J0..d q K11 ×Le and ρ⋆ ∈ J0..d q K6×np×Lρ will be used in the following to denote sequences of quantized extrusions and loops, respectively. Here, Lρ and 
+
+Le denote the length of loop and extrusion sequences, respectively. 
+
+# 4 Hierarchical CAD Sequence Learning from Point Clouds 
+
+TransCAD non-autoregessively learns to predict a CAD sequence from an in-put point cloud in the format described in Section 3. First, the point cloud is encoded into point features using a standard point cloud encoder. In order to facilitate the learning of CAD sequences, a hierarchical CAD sequence decoding is proposed. In particular, a high-level sequence of embedding corresponding to the loop and extrusion steps is learned. Those embedding are then fed to ei-ther a loop or extrusion decoder based on predicted type to learn the loop and extrusion parameters. Finally, the predicted loop parameters are further refined using the actual unquantized loop parameters (ground truth). The overall model architecture is depicted in Fig. 2 and the different components are described be-low. 
+
+4.1 Point Cloud Encoder 
+
+The point cloud encoder Φp consists of 4 layers of PointNet++ [32] and operates on an input point cloud P. It outputs per-point features encoding local neighbor-hood information, Fp = [f 1 
+
+> p
+
+. . . f np ] ∈ Rn×dp , that encode local neighborhood information, dp denotes the dimension of the features. Note that point normals of P are estimated using [35] and are provided as input to Φp along with its 3D coordinates. 
+
+4.2 Loop-Extrusion Decoder 
+
+The main objective of the loop-extrusion decoder Φρ,e is to learn a high-level sequence of embedding Fρ,e = [f 1
+
+> ρ,e
+
+, . . . , f Lρ,e  
+
+> ρ,e
+
+] ∈ Rdz ×Lρ,e corresponding TransCAD : A Hierarchical Transformer for CAD Sequence 7
+
+to loops and extrusions from the point cloud features Fp. Here, dz and Lρ,e 
+
+denote the embedding dimension and the length of the sequence, respectively. The decoder Φρ,e is composed of multi-head transformer-based blocks [37]. In the first block, learned constant embedding Fc ∈ Rdz ×Lρ,e undergo a self-attention operation [37] and the resulting representation cross-attends to the point cloud features Fp to produce loop extrusion embedding for the first block 
+
+F1 
+
+> ρ,e
+
+∈ Rdz ×Lρ,e as follows, 
+
+F1 
+
+> ρ,e
+
+= CA (SA (Fc), Fp) , (2) where SA(.) and CA (., . ) denote the self and cross attention operators [37], re-spectively. The same self and cross attention operations are conducted in the subsequent blocks by feeding the output of each block as input to the next one, 
+
+Fbρ,e = CA (SA (Fb−1), Fp) , (3) yielding the final sequence of embedding Fρ,e after the last block. In order to ensure that each element f iρ,e in the sequence embedding Fρ,e corresponds to the right type ( i.e . loop, extrusion, or end of sequence), a 3 layer MLP followed by 
+
+softmax that operates on each f iρ,e and predicts its type is introduced. A cross-entropy loss, Lρ,e , is computed between the predicted and ground truth types to supervise the learning of Fρ,e . Note that the loop-extrusion decoder is solely used to obtain a high-level sequence of loop and extrusion embedding. These embedding can then be decoded through either a loop decoder or an extrusion decoder to obtain their parameters. At training time, the ground truth type labels are used to identify which decoder should be used for each embedding, while at inference time the predicted types are used. The identification of loop and extrusion types results into separate loop embedding Fρ ∈ Rdz ×Lρ and extrusion embedding Fe ∈ Rdz ×Le by splitting Fρ,e according to loop and extrusion types. 
+
+4.3 Loop and Extrusion Parametrization 
+
+After obtaining the representation and the type of loop and extrusion steps, the parameters of both loops and extrusions are decoded from these representations using separate decoders. 
+
+Extrusion Decoder: As mentioned in Section 3, the extrusion sequence is described by a sequence of 11 quantized parameters e⋆ ∈ J0..d q K11 ×Le . In order to obtain these parameters from the extrusion sequence embedding Fe, an extrusion decoder Φe consisting of 3 MLP layers followed by softmax is used. The predicted probabilities of the extrusion sequence parameters ˜e⋆ ∈ [0, 1]11 ×dq ×Le
+
+are compared to the ground truth one-hot-encoded parameters in e⋆ using a cross-entropy loss, Le.
+
+Loop Decoder: Similarly to the extrusion decoder, the loop decoder Φρ pre-dicts the quantized parameters of the loop sequence ρ⋆ ∈ J0..d q K6×np×Lρ as explained in Section 3. Nevertheless, 4 layers of multi-head transformer blocks 8 E. Dupont et al. 
+
+are employed instead of simple MLP layers. This is due to the sequential na-ture of loop decoding in contrast to extrusions. Note that a similar strategy as loop-extrusion decoder is opted for the transformer block of loop decoder. The first block performs self-attention on learned constant embedding of loops 
+
+Fρc ∈ Rdz ×npLρ and the result cross-attends to loop embedding Fρ as in Eq.(2). The same self and cross attention operations in Eq.(3) are conducted in subse-quent blocks to yield a final representation at the last block Fbρ ∈ Rdz ×npLρ . A linear layer followed by softmax is used to obtain predicted probabilities for the loop sequence parameters ˜ρ⋆ ∈ [0, 1]6×dq ×npLρ which are compared to ground truth one-hot-encoded loop parameters of ρ⋆ using a cross-entropy loss, Lρ.
+
+Loop Refiner: As in many transformer-based architectures [3, 37, 42, 46], the quantization of loop parameters helps to reduce the search space and facilitates the learning. However, it has been observed in our case that it can lead to accu-mulation of quantization approximation errors. To overcome this issue, unquan-tized ground truth loop parameters are leveraged. In particular, a loop refiner 
+
+Φr composed of a 4 layer MLP is introduced. This refiner takes as input a con-catenation of loop embedding Fρ and their corresponding predicted parameter probabilities ˜ρ⋆. It attempts to predict the offset ˆOf f ∈ R6×npLρ between the predicted quantized loop parameters ˆρ⋆ ∈ J0..d q K6×npLρ and the unquantized ground truth loop parameters ρ⋆ ∈ R6×npLρ . An MSE loss, Lr , is computed between the predicted offset ˆOf f and the one given by Of f = ρ⋆ −ρ, to supervise the refiner and the rest of the network. Once the offset is predicted, it is added to the predicted quantized loop parameters yielding unquantized predicted loop parameters as follows ˆρ = ˆρ⋆ + ˆOf f .
+
+Total Loss: TransCAD is an end-to-end network with a training objective guided by the sum of the individual losses, Ltotal = Lρ,e + Lρ + Le + Lr .
+
+# 5 Proposed Evaluation 
+
+In this section, we first outline the limitations of existing evaluation methods in CAD sequence. Then, our new proposed evaluation metric framework for assess-ing the performance of CAD sequence inference from point clouds is described. 
+
+DeepCAD [42] Evaluation for Feature-based Reverse Engineering: An evaluation framework for CAD sequence was originally introduced in [42] and later used in [27]. This framework includes both accuracy for assessing the fidelity of the predicted sequence and Chamfer Distance ( CD ) to measure the quality of the recovered 3D geometry. Accuracy is assessed using two metrics, specifically 
+
+Command Type Accuracy (ACC cmd ) and Parameter Accuracy (ACC param ) de-fined by 
+
+ACC cmd = 1
+
+NcNcX
+
+> i=1
+
+I[ti = ˆ ti] , (4) 
+
+ACC param = 1
+
+K
+
+> Nc
+
+X
+
+> i=1
+> |ˆpi|
+
+X
+
+> j=1
+
+I |pi,j − ˆpi,j | < η  I[ti = ˆ ti] , (5) TransCAD : A Hierarchical Transformer for CAD Sequence 9
+
+where ti and ˆti are the ground truth and predicted command types (for com-mands representing primitives and extrusions), pi,j and ˆpi,j are ground truth and predicted command parameters, Nc denotes the total number of CAD com-mands and I[.] is the indicator function. K = PNc 
+
+> i=1
+
+I[ti = ˆ ti]|pi| is the total number of parameters of the correctly recovered commands and η is a tolerance threshold. The 3D geometry is evaluated with Chamfer Distance ( CD ) computed by sampling 2000 points on the ground truth and predicted shapes. 
+
+Limitations: We identify the following limitations of the aforementioned evalu-ation. (1) The proposed ACC cmd overlooks the possibility of over-prediction in the CAD sequence. As indicated in Eq.(4), the computation of this metric sums across the set of ground truth CAD commands Nc. A predicted sequence could erroneously include extra loop-extrusion operations and still achieve a full score, as exemplified on the left panel of Fig. 3. (2) The evaluation of ACC param is conducted solely on the subset of K accurately identified commands, thus in-troducing a trade-off between ACC param and ACC cmd . This interdependence complicates the interpretation of results. (3) Assessment of parameter quality via ACC param solely in terms of accuracy is failing to distinguish between the magnitudes of errors. A parameter inaccurately placed in an adjacent quan-tization bucket incurs the same penalty as one with a larger deviation, despite potentially minor implications on the CAD model’s final geometry. These limita-tions cannot be entirely mitigated by complementing CAD command accuracies with the chamfer distance ( CD ) metric. While CD is a valuable assessment of shape similarity, it does not address the core objective of reverse engineering: to accurately recover the designer’s original CAD sequence. Two CAD models might be close in terms of CD yet possess vastly different CAD construction steps (see right panel of Fig. 3). 
+
+Proposed Evaluation Framework: To overcome the identified challenges, we introduce the mean Average Precision of CAD Sequence (APCS), a novel eval-uation metric tailored for feature-based reverse engineering. APCS adopts the concept of Average Precision (AP) commonly used in other tasks, to quantify the similarity between predicted and ground truth CAD sequences. We intro-duce the CAD Sequence Similarity Score (CSSS) that can be computed between predicted and ground truth CAD sequences as follows                 
+
+> CSSS ( ˆC,C) = 12Nδ
+> PNρ
+> j=1
+> PNρj
+> i=1
+> h
+> S(ˆδj,i , δ j,i )·I[typ (ˆδj,i ) = typ (δj,i )]
+> i
+> +12Ne
+> PNe
+> j=1 S(ˆ ej,ej),
+
+(6) where typ (.) is a function that determines the type of each primitive δ (arc, line, etc .), and S(ˆ p, p) = e−k|| ˆp−p|| is a scoring function with S(ˆ p, p) ∈ [0 , 1] 
+
+with 1 assigned when predicted parameterization is identical to the ground truth. We define N ρj = max ( |ρj |, |ˆρj |) where |.| denotes set cardinality, N ρ =max ( Lρ, ˆLρ) where Lρ is the number of predicted primitives and ˆLρ is the num-ber of ground truth primitives for loop ρj and Nδ = PN ρ 
+
+> j=1
+
+max ( |ρj |, |ˆρj |). Fi-nally, N e = max ( Le, ˆLe) where Le is the number of predicted extrusions and 
+
+ˆLe is the number of ground truth extrusions. The proposed CSSS metric evalu-ates both the operation type and parameter prediction. It assigns a score of 0 to 10 E. Dupont et al. 
+
+loops with incorrectly predicted types, which gradually increases to 1 as parame-ter prediction improves. Assessment is conducted on the unquantized parameter space and calculates the score based on the maximum count of either predicted or ground truth primitives. This approach ensures that both over and under pre-dicted sequences are penalized equally. We aggregate CSSS scores across various thresholds to derive the mean Average Precision of CAD Sequences (APCS). Furthermore, the median CD is used to measure shape similarity as in [42] with             
+
+> Fig. 3: Two examples outlining the limitations of existing evaluation metrics. Left panel: the ground truth sequence (one sketch-extrusion) is a correct subset of the predicted sequence (three sketch-extrusions). The DeepCAD [42] metrics result in an accuracy of 1for both commands and parameters. On the other hand, our proposed metric takes into account the over predicted sequence elements and the APCS is 0.031. The right panel showcases the limitations of the CD as a similarity measure. While the ground truth and predicted shapes are both composed of three extruded circle sketches, they are different in shape. However, the CD between the two shapes falls within the uncertainty range of ±0.3. Note that the uncertainty in the CD measurement is estimated by taking the average CD between all the test samples and themselves.
+
+the difference that it is evaluated on 4096 points instead of 2000 in order to decrease the uncertainty in the CD measurement. All the reported CD mea-surements in this work are multiplied by 10 3. Moreover, the ratio of predictions that cannot be reconstructed using [30] is reported as the invalidity ratio, IR. 
+
+# 6 Experiments 
+
+In this section, the experimental setup is first presented. Then, qualitative and quantitative results are analyzed. Afterwards, the components of TransCAD are ablated. Finally, the limitations of our model are outlined. 
+
+6.1 Experimental Setup Dataset : For training and evaluation, the DeepCAD dataset [42] is used. The sketch extrusion sequences of the CAD models are processed in quantized ( 8 bits) and unquantized space. The size of the train, validation and test sets are 140 294 ,TransCAD : A Hierarchical Transformer for CAD Sequence 11 
+
+7 773 , and 7 036 CAD models, respectively. Moreover, cross-dataset evaluation is conducted on the Fusion360 dataset [40] that contains 6 794 samples. 
+
+Training Details : The network is trained for 100 epochs with a batch size of 72 and an Adam optimizer is employed with a learning rate of 0.001 and a linear warm-up period of 2 000 steps as in [42]. The training is conducted on an NVIDIA RTX A6000 GPU. The input point clouds are extracted using [30] and are made of n = 4096 points. The dimension of the point features dp is set to 16 
+
+and of loop-extrusion features dz to 256 .
+
+Baselines : In order to evaluate the performance of TransCAD , two state-of-the-art methods, MultiCAD [27] and DeepCAD [42], and a retrieval baseline are used. As the code for MultiCAD [27] is not available, we report the results from the original paper. DeepCAD [42] is retrained with the same parameters and procedure as outlined in the original paper. One of the known limitations of the DeepCAD dataset is that it contains duplicate models [46]. While the works in [46] proposed a method to remove duplicate models that contain exactly the same CAD sequence, we find that this method does not remove all the duplicates as some models can have the same geometry but are constructed through a slightly different sequence of sketch extrusion operations (see supplementary material for more details). In order to address this issue, we propose a retrieval baseline. The retrieval baseline uses the point cloud encoder from a trained DeepCAD [42] to identify the closest latent vector from the train set for each test sample. As a result, the solution is always a train set CAD sequence. 
+
+6.2 Experimental Results Qualitative Results: Fig. 4 shows some qualitative results for the retrieval baseline, DeepCAD [42] and TransCAD (Ours) on both the DeepCAD [42] and Fusion360 [40] datasets. As mentioned in Section 6.1, the DeepCAD dataset contains many duplicates, not just in terms of CAD sequence but also in terms of geometrical shape. As a result, the retrieval baseline is able to identify accurately duplicates (most right column of the DeepCAD dataset panel) and in other cases the baseline manages to retrieve shapes with similar geometry as the ground truth CAD model. On the other hand, it can be noticed that DeepCAD [42] can even fail at retrieving duplicates. TransCAD is able to predict models that are similar in shape and also in terms of loop-extrusion sequence, even though it sometimes fails to predict the parameters accurately (second and fifth columns of DeepCAD dataset and fourth column of Fusion360 dataset). 
+
+Quantitative Results: The trends observed from the qualitative results are further supported by the quantitative results presented in Table 1. The APCS, on both DeepCAD [42] and Fusion360 [40] datasets, show that TransCAD is the most capable model at predicting correct CAD sequences. However, it can be noted that the retrieval baseline obtains the lowest CD by a small margin on the DeepCAD dataset and by a more significant margin on the Fusion360. One of the reasons is that this baseline always outputs a CAD model that is of roughly similar shape as the input even if the retrieved CAD sequence can vary from the ground truth. To further analyse the results, the variations of the APCS and 12 E. Dupont et al. Baseline                                          
+
+> GT
+> DeepCAD
+> Ours
+> DeepCAD dataset Fusion360 dataset
+> Input
+> Fig. 4: Qualitative results on the DeepCAD [42] dataset (left) and the cross-dataset Fusion360 [40] experiment (right). Model APCS ↑CD ↓IR ↓
+> DeepCAD  Retrieval 0.629 2.8 0
+> MultiCAD [27] -8.1 0.115
+> DeepCAD [42] 0.604 19.2 0.038
+> Ours 0.732 4.5 0.011 Model APCS ↑CD ↓IR ↓
+> Fusion360  Retrieval 0.304 60.0 0
+> MultiCAD [27] -42.2 0.165
+> DeepCAD [42] 0.360 104.2 0.017
+> Ours 0.365 33.3 0.024
+> Table 1: Quantitative results on the DeepCAD [42] dataset and cross-dataset exper-iment on Fusion360 [40]. The APCS results show that TransCAD (Ours ) is able to recover CAD sequence most accurately.
+
+CD w.r.t. model complexity on the DeepCAD dataset are displayed in Fig. 5. We define the model complexity as the lowest possible CD of a test point cloud sample with respect to the train samples. In other words, the model complexity quantifies the amount by which a test sample is out of distribution from the train set in terms of shape. While TransCAD consistently outperforms on average all other baselines in terms of APCS for all model complexities, DeepCAD [42] can only perform better than the retrieval baseline for the more complex models. This shows that DeepCAD [42] often fails at retrieving the CAD sequence for simple models. In terms of CD , it can be observed that TransCAD and the retrieval baseline have similar performance. TransCAD can predict a CAD sequence that is closer to the ground truth one but the predicted overall shape can vary from the ground truth for more difficult samples. 
+
+Ablation Study: In this section, the different components of the proposed net-work architecture are ablated. Table 2 shows the results for Ours w/o hier. ,in which the learning is done without both the loop-extrusion decoder and the refining network, Ours w/o refining where the refining component is ablated and Ours . It can be noted that each component leads to an improvement in all the metrics. It is worth noting that the F 1 score on the loop-extrusion type TransCAD : A Hierarchical Transformer for CAD Sequence 13                  
+
+> Fig. 5: Left: Plot of the variation of the mean APCS w.r.t. model complexity. Right: Plot of the variation of the median CD w.r.t. model complexity. For both graphs the number of models in each bin, represented by the horizontal bounded lines, correspond to approximately the same number of test samples from the DeepCAD dataset [42]. Model APCS ↑CD ↓IR ↓
+> Ours w/o hier. 0.687 7.0 0.016
+> Ours w/o refining 0.708 4.8 0.018
+> Ours 0.732 4.5 0.011
+> Table 2: Ablation results demonstrating the relevance of the hierarchical learning strategy and the loop refiner.
+
+prediction introduced for the hierarchical learning of TransCAD is 0.79 . This implies that on most cases both loop and extrusion decoders receive embedding of the correct type. Moreover, while the refining network is only applied on the loop parameters, we observe that the component of the APCS for the extrusion parameters are also higher when the network is trained with the refining com-ponent. This suggests that the refining network is able to provide a useful signal for guiding the learning process. More details are in the supplementary material. 
+
+Input point cloud perturbation : Reverse engineering is a real-world practical problem. The results in the previous section are obtained from sampling points from the B-Rep representations of the CAD models. While modern 3D sensors can reconstruct the mesh of models with high resolution, they still suffer from some artifacts such as noise and small missing parts. In order to evaluate the per-formance of our network in such realistic conditions, we run experiments in two scenarios, one in which noise is added and one in which small holes are created on the point cloud. In order to simulate realistic noise, Perlin noise [31] is added to the mesh from which the point coordinates and normals are extracted. More details about the noise and hole generations can be found in the supplementary materials. Table 3 shows that TransCAD is more robust to such perturbations than other methods. As the noise also adds a disturbance to the direction of the input point normals, it leads to a larger drop in performance. 
+
+Failure Cases and Limitations : In this section, we describe the reasons that lead TransCAD to predict invalid CAD models as measured by IR. Among 14 E. Dupont et al. Model APCS ↑ CD ↓ IR ↓                         
+
+> Noise  Retrieval 0.561 5.9 0
+> DeepCAD [42] 0.550 31.1 0.047
+> Ours 0.604 18.1 0.010 Model APCS ↑CD ↓IR ↓
+> Holes  Retrieval 0.607 4.1 0
+> DeepCAD [42] 0.574 26.7 0.039
+> Ours 0.732 4.4 0.012
+> Table 3: Results on the DeepCAD [42] dataset when the input point cloud is pertur-bated either with Perlin noise (left) or by creating holes (right).
+
+the predictions of TransCAD on DeepCAD test set, only one contains a loop parametrization that results in an invalid CAD sequence. This shows that the proposed representation of the loop sequence leads to syntactically correct loops on practically all cases. However, in some cases the representation of the CAD sequence can be syntactically valid, yet it is not possible to reconstruct a B-Rep from it. For 75 test samples, the loop-extrusion decoder fails to predict an extrusion token, this implies that the predicted model is therefore an infinitely thin sketch and not a 3D model as expected. The rest of the invalid models are mostly due to a loop being made of a single line within a model, which cannot be extruded into a valid 3D shape within our context. Finally, Fig. 6 shows ex-amples for which the predicted sequences do not lead to a shape that is close to the ground truth one. In these examples, the input CAD models contain a large number of small features that TransCAD is unable to capture. GT  Ours Input  GT  Ours Input  GT  Ours Input    
+
+> Fig. 6: Examples for which TransCAD fails at recovering a shape close to the ground truth one.
+
+# 7 Conclusion 
+
+In conclusion, we propose TransCAD an end-to-end transformer-based neural network that learns to recover the CAD sequence from a given point cloud. Two of the main features of TransCAD are a hierarchical structure that enables the learning of a high-level loop-extrusion sequence and a loop refiner that aims at correcting errors in loop parameter predictions. We also propose a primitive representation in which each primitive is described by the same number of pa-rameters. We identify the limitations of current metrics in the emerging domain of 3D reverse engineering and propose a new metric, the APCS that leads to a fair comparison of parametric CAD sequences. Thorough experiments show that 
+
+TransCAD achieves state-of-the-art results in different realistic scenarios. TransCAD : A Hierarchical Transformer for CAD Sequence 15 
+
+Acknowledgement: The present project is supported by the National Research Fund, Luxembourg under the BRIDGES2021/IS/16849599/FREE-3D and IF/17052459/CASCADES projects, and by Artec 3D. 
+
+# References 
+
+1. Achlioptas, P., Diamanti, O., Mitliagkas, I., Guibas, L.: Learning representations and generative models for 3d point clouds. In: ICML. pp. 40–49. PMLR (2018) 2. Cai, R., Yang, G., Averbuch-Elor, H., Hao, Z., Belongie, S., Snavely, N., Hariharan, B.: Learning gradient fields for shape generation. In: ECCV (2020) 3. Carlier, A., Danelljan, M., Alahi, A., Timofte, R.: Deepsvg: A hierarchical gener-ative network for vector graphics animation. NeurIPS 33 , 16351–16361 (2020) 4. Chang, A.X., Funkhouser, T., Guibas, L., Hanrahan, P., Huang, Q., Li, Z., Savarese, S., Savva, M., Song, S., Su, H., et al.: Shapenet: An information-rich 3d model repository. arXiv preprint arXiv:1512.03012 (2015) 5. Chang, H., Zhang, H., Jiang, L., Liu, C., Freeman, W.T.: Maskgit: Masked gener-ative image transformer. In: CVPR. pp. 11315–11325 (June 2022) 6. Chen, Z., Zhang, H.: Learning implicit fields for generative shape modeling. In: CVPR. pp. 5939–5948 (2019) 7. Cherenkova, K., Dupont, E., Kacem, A., Arzhannikov, I., Gusev, G., Aouada, D.: Sepicnet: Sharp edges recovery by parametric inference of curves in 3d shapes. In: CVPRW. pp. 2726–2734 (2023) 8. Dupont, E., Cherenkova, K., Kacem, A., Ali, S.A., Aryhannikov, I., Gusev, G., Aouada, D.: Cadops-net: Jointly learning cad operation types and steps from boundary-representations. 3DV (2022) 9. Friedrich, M., Fayolle, P.A., Gabor, T., Linnhoff-Popien, C.: Optimizing evolution-ary csg tree extraction. In: Proceedings of the Genetic and Evolutionary Compu-tation Conference. pp. 1183–1191 (2019) 10. Goodfellow, I.J., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair, S., Courville, A.C., Bengio, Y.: Generative adversarial networks. NeurIPS (2014) 11. Guo, H., Liu, S., Pan, H., Liu, Y., Tong, X., Guo, B.: Complexgen: Cad recon-struction by b-rep chain complex generation. ACM TOG 41 (4), 1–18 (2022) 12. Ho, J., Jain, A., Abbeel, P.: Denoising diffusion probabilistic models. NeurIPS (2020) 13. Jayaraman, P.K., Lambourne, J.G., Desai, N., Willis, K.D., Sanghi, A., Morris, N.J.: Solidgen: An autoregressive model for direct b-rep synthesis. Transaction in Machine Learning Research (2023) 14. Jayaraman, P.K., Sanghi, A., Lambourne, J.G., Willis, K.D., Davies, T., Shayani, H., Morris, N.: Uv-net: Learning from boundary representations. In: CVPR. pp. 11703–11712 (2021) 15. Kania, K., Zieba, M., Kajdanowicz, T.: Ucsg-net-unsupervised discovering of con-structive solid geometry tree. NeurIPS (2020) 16. Karras, T., Laine, S., Aittala, M., Hellsten, J., Lehtinen, J., Aila, T.: Analyzing and improving the image quality of stylegan. In: CVPR (June 2020) 17. Khan, M.S., Dupont, E., Ali, S.A., Cherenkova, K., Kacem, A., Aouada, D.: Cad-signet: Cad language inference from point clouds using layer-wise sketch instance guided attention. In: CVPR. pp. 4713–4722 (2024) 18. Koch, S., Matveev, A., Jiang, Z., Williams, F., Artemov, A., Burnaev, E., Alexa, M., Zorin, D., Panozzo, D.: Abc: A big cad model dataset for geometric deep learning. In: CVPR. pp. 9601–9611 (2019) 16 E. Dupont et al. 19. Lambourne, J.G., Willis, K.D., Jayaraman, P.K., Sanghi, A., Meltzer, P., Shayani, H.: Brepnet: A topological message passing system for solid models. In: CVPR. pp. 12773–12782 (2021) 20. Lambourne, J.G., Willis, K., Jayaraman, P.K., Zhang, L., Sanghi, A., Malekshan, K.R.: Reconstructing editable prismatic cad from rounded voxel models. In: SIG-GRAPH Asia. pp. 1–9 (2022) 21. Li, J., Xu, K., Chaudhuri, S., Yumer, E., Zhang, H., Guibas, L.: Grass: Generative recursive autoencoders for shape structures. ACM TOG (2017) 22. Li, L., Sung, M., Dubrovina, A., Yi, L., Guibas, L.J.: Supervised fitting of geometric primitives to 3d point clouds. In: CVPR. pp. 2652–2660 (2019) 23. Li, P., Guo, J., Zhang, X., Yan, D.M.: Secad-net: Self-supervised cad reconstruction by learning sketch-extrude operations. In: CVPR. pp. 16816–16826 (2023) 24. Lim, J.J., Pirsiavash, H., Torralba, A.: Parsing ikea objects: Fine pose estimation. In: CVPR. pp. 2992–2999 (2013) 25. Liu, Y., D’Aronco, S., Schindler, K., Wegner, J.D.: Pc2wf: 3d wireframe recon-struction from raw point clouds. ICLR (2021) 26. Ma, W., Chen, S., Lou, Y., Li, X., Zhou, X.: Draw step by step: Reconstructing cad construction sequences from point clouds via multimodal diffusion. In: CVPR. pp. 27154–27163 (2024) 27. Ma, W., Xu, M., Li, X., Zhou, X.: Multicad: Contrastive representation learning for multi-modal 3d computer-aided design models. In: Proceedings of the 32nd ACM International Conference on Information and Knowledge Management. p. 1766–1776. CIKM ’23, Association for Computing Machinery, New York, NY, USA (2023) 28. Mallis, D., Aziz, A.S., Dupont, E., Cherenkova, K., Karadeniz, A.S., Khan, M.S., Kacem, A., Gusev, G., Aouada, D.: Sharp challenge 2023: Solving cad history and parameters recovery from point clouds and 3d scans. overview, datasets, metrics, and baselines. In: CVPRW (2023) 29. Nash, C., Ganin, Y., Eslami, S.A., Battaglia, P.: Polygen: An autoregressive gen-erative model of 3d meshes. In: ICML. pp. 7220–7229. PMLR (2020) 30. Paviot, T.: Pythonocc (2017), https : / / dev . opencascade . org / project / pythonocc , accessed: March 7, 2024 31. Perlin, K.: An image synthesizer. In: SIGGRAPH. p. 287–296. SIGGRAPH ’85, Association for Computing Machinery, New York, NY, USA (1985) 32. Qi, C.R., Yi, L., Su, H., Guibas, L.J.: Pointnet++: Deep hierarchical feature learn-ing on point sets in a metric space. NeurIPS 30 (2017) 33. Ren, D., Zheng, J., Cai, J., Li, J., Zhang, J.: Extrudenet: Unsupervised inverse sketch-and-extrude for shape parsing. In: ECCV. pp. 482–498. Springer (2022) 34. Sharma, G., Liu, D., Maji, S., Kalogerakis, E., Chaudhuri, S., Měch, R.: Parsenet: A parametric surface fitting network for 3d point clouds. In: ECCV. pp. 261–276. Springer (2020) 35. Team, O.D.: Open3d documentation: open3d.geometry.estimate_normals (2022), 
+
+https : / / www . open3d . org / docs / 0 . 7 . 0 / python _ api / open3d . geometry . estimate_normals.html , accessed: March 6, 2024 36. Uy, M.A., Chang, Y.Y., Sung, M., Goel, P., Lambourne, J.G., Birdal, T., Guibas, L.J.: Point2cyl: Reverse engineering 3d objects from point clouds to extrusion cylinders. In: CVPR. pp. 11850–11860 (2022) 37. Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A.N., Kaiser, Ł., Polosukhin, I.: Attention is all you need. NeurIPS 30 (2017) 38. Wang, N., Zhang, Y., Li, Z., Fu, Y., Liu, W., Jiang, Y.G.: Pixel2mesh: Generating 3d mesh models from single rgb images. In: ECCV. pp. 52–67 (2018) TransCAD : A Hierarchical Transformer for CAD Sequence 17 39. Wang, X., Xu, Y., Xu, K., Tagliasacchi, A., Zhou, B., Mahdavi-Amiri, A., Zhang, H.: Pie-net: Parametric inference of point cloud edges. NeurIPS 33 , 20167–20178 (2020) 40. Willis, K.D., Pu, Y., Luo, J., Chu, H., Du, T., Lambourne, J.G., Solar-Lezama, A., Matusik, W.: Fusion 360 gallery: A dataset and environment for programmatic cad construction from human design sequences. ACM TOG 40 (4), 1–24 (2021) 41. Wu, J., Zhang, C., Xue, T., Freeman, B., Tenenbaum, J.: Learning a probabilistic latent space of object shapes via 3d generative-adversarial modeling. NeurIPS 29 
+
+(2016) 42. Wu, R., Xiao, C., Zheng, C.: Deepcad: A deep generative network for computer-aided design models. In: CVPR. pp. 6772–6782 (2021) 43. Wu, R., Zhuang, Y., Xu, K., Zhang, H., Chen, B.: Pq-net: A generative part seq2seq network for 3d shapes. In: CVPR (June 2020) 44. Xu, X., Jayaraman, P.K., Lambourne, J.G., Willis, K.D., Furukawa, Y.: Hierarchi-cal neural coding for controllable cad model generation. ICML (2023) 45. Xu, X., Lambourne, J.G., Jayaraman, P.K., Wang, Z., Willis, K.D., Furukawa, Y.: Brepgen: A b-rep generative diffusion model with structured latent geometry. ACM SIGGRAPH (2024) 46. Xu, X., Willis, K.D., Lambourne, J.G., Cheng, C.Y., Jayaraman, P.K., Furukawa, Y.: Skexgen: Autoregressive generation of cad construction sequences with disen-tangled codebooks. In: ICML. pp. 24698–24724. PMLR (2022) 47. Xu, X., Peng, W., Cheng, C.Y., Willis, K.D., Ritchie, D.: Inferring cad modeling sequences using zone graphs. In: CVPR. pp. 6062–6070 (2021) 48. Yang, G., Huang, X., Hao, Z., Liu, M.Y., Belongie, S., Hariharan, B.: Pointflow: 3d point cloud generation with continuous normalizing flows. In: CVPR. pp. 4541– 4550 (2019) 49. Yu, F., Chen, Q., Tanveer, M., Mahdavi Amiri, A., Zhang, H.: D2csg: Unsupervised learning of compact csg trees with dual complements and dropouts. Advances in Neural Information Processing Systems 36 (2024) 50. Yu, L., Li, X., Fu, C.W., Cohen-Or, D., Heng, P.A.: Ec-net: an edge-aware point set consolidation network. In: ECCV. pp. 386–402 (2018) 51. Zhu, X., Du, D., Chen, W., Zhao, Z., Nie, Y., Han, X.: Nerve: Neural volumetric edges for parametric curve extraction from point cloud. In: CVPR. pp. 13601–13610 (2023)
