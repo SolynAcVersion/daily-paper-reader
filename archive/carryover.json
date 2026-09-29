@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-29T00:25:43.881959+00:00",
+  "generated_at": "2026-09-29T22:59:14.958364+00:00",
   "updated_date": "20260929",
   "carryover_days": 9,
   "tag_states": {
@@ -24,6 +24,11 @@
       "items": []
     },
     "video-gen-rl": {
+      "updated_date": "20260929",
+      "carryover_days": 9,
+      "items": []
+    },
+    "cad-spatial": {
       "updated_date": "20260929",
       "carryover_days": 9,
       "items": []

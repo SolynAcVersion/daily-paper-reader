@@ -1,218 +1,296 @@
 {
   "mode": "standard",
-  "generated_at": "2026-09-29T00:25:43.880812+00:00",
+  "generated_at": "2026-09-29T22:59:14.956937+00:00",
   "stats": {
     "mode": "standard",
-    "tag_count": 4,
+    "tag_count": 1,
     "deep_divecandidates": 1,
-    "deep_cap": 9,
+    "deep_cap": 6,
     "deep_selected": 1,
-    "quick_candidates": 3,
-    "quick_skim_target": 14,
-    "quick_selected": 3
+    "quick_candidates": 6,
+    "quick_skim_target": 11,
+    "quick_selected": 6
   },
   "deep_dive": [
     {
-      "id": "2609.30946v1",
+      "id": "2609.34494v1",
       "source": "arxiv",
-      "title": "OneWorld: Learning Consistent Physics Across Actions in World Models",
-      "abstract": "Action-conditioned video world models aim to predict scene evolution under different actions, a capability that is essential for reliable planning, decision-making, and interaction in dynamic environments. However, futures generated independently from the same initial scene may each appear plausible while implying incompatible physical properties, such as friction or mass. This inconsistency can lead to contradictory predictions across interventions, making it difficult for the model to maintain a coherent understanding of the underlying world and limiting its reliability for planning and decision-making. To address these issues, we propose OneWorld, a shared-mechanism counterfactual generation framework that jointly models multiple action-conditioned futures under a common latent physical mechanism. A physical mechanism interpreter first infers a distribution over latent mechanisms from each action-outcome branch. These distributions are then aggregated into shared-world evidence, which captures whether the branches admit a common physical explanation while accounting for uncertainty in less informative branches. This evidence constrains flow training and guides sampling, encouraging consistency in the underlying physical mechanism while preserving the distinct outcomes induced by different actions. We further introduce a multi-intervention evaluation protocol in controlled environments, following the interaction settings of ACWM-Phys, to assess whether generated futures can be jointly explained by the same physical parameters, alongside standard measures of single-rollout prediction quality. Experiments in these environments show that OneWorld improves cross-intervention physical consistency while maintaining competitive single-rollout prediction quality.",
+      "title": "ConCAD: Constraint-Aware Image-to-CAD Generation with Dual-Granularity Rewards",
+      "abstract": "Image-to-CAD generation seeks executable parametric programs that recover both the geometry and design intent of a reference object. Existing systems are commonly evaluated by validity and shape overlap, although two solids with similar volume can encode different CAD relations. We introduce ConCAD, a constraint-aware image-to-CAD framework optimized via Group Relative Policy Optimization (GRPO) with rewards at two complementary granularities: a code-level constraint reward and an execution-level geometric reward. This complementary design disambiguates structurally distinct yet volumetrically similar shapes while ensuring valid 3D geometry. To verify that these rewards recover geometry and design intent, we introduce a B-rep geometric constraint satisfaction rate (G-CSR), which analytically extracts and evaluates geometric constraints from boundary representations. Experiments on the DeepCAD and Zero2CAD demonstrate that ConCAD achieves the best IoU and Chamfer Distance over competitive baselines, while also outperforming them on G-CSR, validating its superior recovery of both geometric fidelity and parametric design intent.",
       "authors": [
-        "Ke He",
-        "Yichen Ding",
-        "Bin Yang"
-      ],
-      "primary_category": "cs.CV",
-      "categories": [
-        "cs.CV",
-        "cs.AI"
-      ],
-      "published": "2026-09-25T07:59:11+00:00",
-      "link": "https://arxiv.org/pdf/2609.30946v1",
-      "tags": [
-        "keyword:phys-video",
-        "keyword:psd",
-        "keyword:video-gen-rl",
-        "query:phys-video",
-        "query:psd",
-        "query:video-gen-rl"
-      ],
-      "llm_score": 9.0,
-      "llm_evidence_en": "consistent physics across generated futures in world models",
-      "llm_evidence_cn": "世界模型生成未来中的一致物理规律",
-      "llm_evidence": "世界模型生成未来中的一致物理规律",
-      "canonical_evidence": "世界模型生成未来中的一致物理规律",
-      "llm_tldr_en": "OneWorld addresses inconsistent physical properties such as friction and mass across independently generated futures in action-conditioned world models, proposing a shared-mechanism counterfactual generation framework that jointly models multiple action-conditioned futures for more coherent physics.",
-      "llm_tldr_cn": "动作条件视频世界模型在预测场景演化时，同一初始场景下独立生成的未来可能各自看似合理，却隐含摩擦、质量等不相容的物理属性，导致跨干预预测自相矛盾。为此作者提出OneWorld，一种共享机制的反事实生成框架，联合建模多个动作条件下的未来，使不同干预共享一致的物理机制。实验表明该方法能缓解物理不一致，提升世界模型在规划与决策中的可靠性，为一致物理规律建模提供了新框架。",
-      "llm_tldr": "动作条件视频世界模型在预测场景演化时，同一初始场景下独立生成的未来可能各自看似合理，却隐含摩擦、质量等不相容的物理属性，导致跨干预预测自相矛盾。为此作者提出OneWorld，一种共享机制的反事实生成框架，联合建模多个动作条件下的未来，使不同干预共享一致的物理机制。实验表明该方法能缓解物理不一致，提升世界模型在规划与决策中的可靠性，为一致物理规律建模提供了新框架。",
-      "llm_tags": [
-        "query:phys-video"
-      ],
-      "matched_query_tag": "query:phys-video",
-      "matched_query_text": "how to ensure physical consistency in generated videos",
-      "matched_requirement_id": "req-7",
-      "selection_source": "fresh_fetch"
-    }
-  ],
-  "quick_skim": [
-    {
-      "id": "2609.27656v1",
-      "source": "arxiv",
-      "title": "InternW0: A Foundational Physical World Model for Efficient Real-World Interactions",
-      "abstract": "Physical intelligence requires more than predicting how the world may evolve: predictions must remain actionable as the world continues to change. We introduce InternW0, the first instantiation of the InternW physical world model series from Shanghai AI Laboratory, built around omnimodal interfaces, asynchronous multi-frequency processing, and local physical modeling under partial observations and external influences. InternW0 jointly learns future visual dynamics and continuous robot control through an asymmetric video--action architecture with flow matching. A high-capacity video expert provides longer-horizon predictive context, while a lightweight action expert operates at a faster timescale. Instead of regenerating the future for every action update, InternW0 reuses layerwise K/V and adapts it to newly observed states through observation-conditioned context routing. Domain-specific interfaces and soft prompts support heterogeneous embodiments, while contact-aware post-training incorporates force and tactile signals for contact-rich manipulation. We train InternW0 on approximately 7,200 hours of heterogeneous robot and egocentric data, including EgoLab, a 275-hour real-laboratory egocentric dataset. Evaluation spans simulation benchmarks and real-world scientific tasks, including a 15-stage metal--organic framework synthesis workflow and 5-stage contact- and force-aware dexterous manipulation for general-purpose quantitative pipetting. These results advance scalable, asynchronous, and science-native physical world models for universal and efficient real-world interactions.",
-      "authors": [
-        "Jisong Cai",
-        "Yao Mu",
-        "Ganlin Yang",
-        "Zhe Cao",
-        "Zhangzheng Tu",
-        "Xing Gao",
-        "Kailin Li",
-        "Xinyu Zhan",
-        "Lixin Yang",
-        "Yangkun Zhu",
-        "Haoxiang Ma",
-        "Ming Zhou",
-        "Qiaojun Yu",
-        "Yufei Xue",
-        "Liqun He",
-        "Yifei Yao",
-        "Yifan Zhu",
-        "Long Ling",
-        "Bingqi Jiang",
-        "Haoyu Guo",
-        "Xueyue Zhu",
-        "Bowen Zhou",
-        "Bin Zhao",
-        "Tianfan Xue",
-        "Chunhua Shen",
-        "Weinan Zhang"
-      ],
-      "primary_category": "cs.RO",
-      "categories": [
-        "cs.RO",
-        "cs.AI"
-      ],
-      "published": "2026-09-23T10:20:56+00:00",
-      "link": "https://arxiv.org/pdf/2609.27656v1",
-      "tags": [
-        "keyword:phys-video",
-        "keyword:psd",
-        "keyword:video-gen-rl",
-        "query:phys-video",
-        "query:psd",
-        "query:video-gen-rl"
-      ],
-      "llm_score": 6.0,
-      "llm_evidence_en": "physical world model predicting future visual dynamics",
-      "llm_evidence_cn": "预测未来视觉动态的物理世界模型",
-      "llm_evidence": "预测未来视觉动态的物理世界模型",
-      "canonical_evidence": "预测未来视觉动态的物理世界模型",
-      "llm_tldr_en": "InternW0 is a foundational physical world model using omnimodal interfaces and an asymmetric video-action architecture with flow matching, jointly learning future visual dynamics and robot control under partial observations for real-world interaction.",
-      "llm_tldr_cn": "物理智能要求预测在世界持续变化时仍保持可执行性。本文提出InternW0，作为InternW物理世界模型系列的首个实例，采用全模态接口、异步多频处理与部分观测下的局部物理建模，通过非对称视频-动作架构与流匹配联合学习未来视觉动态与连续机器人控制。高容量视频专家提供长时程预测上下文，轻量动作专家以更快时间尺度运行，为真实世界交互提供了基础物理世界模型与统一建模范式。",
-      "llm_tldr": "物理智能要求预测在世界持续变化时仍保持可执行性。本文提出InternW0，作为InternW物理世界模型系列的首个实例，采用全模态接口、异步多频处理与部分观测下的局部物理建模，通过非对称视频-动作架构与流匹配联合学习未来视觉动态与连续机器人控制。高容量视频专家提供长时程预测上下文，轻量动作专家以更快时间尺度运行，为真实世界交互提供了基础物理世界模型与统一建模范式。",
-      "llm_tags": [
-        "query:video-gen-rl"
-      ],
-      "matched_query_tag": "query:video-gen-rl",
-      "matched_query_text": "predicting future frames in video sequences",
-      "matched_requirement_id": "req-23",
-      "selection_source": "fresh_fetch",
-      "quick_tier": "6"
-    },
-    {
-      "id": "2609.30609v1",
-      "source": "arxiv",
-      "title": "MVAgent: Multi-Agent Video Generation via Consistent Condition Construction and Shot-Level Policy Optimization",
-      "abstract": "Multi-shot agentic video generation requires consistent character appearance, stable spatial layout across camera angles, and continuous character state between shots. When every shot is a separate request to a frozen generator, repeated text does not determine appearance, layout or state. We therefore recast the problem as condition construction and present MVAgent, a multi-agent pipeline whose agents collaborate through typed conditioning inputs. Because an environment image shows one viewpoint, a Spatial Grounding agent samples views from generated camera-traversal clips and anchors each shot to the view matching its framing. As generated shots drift from the plan, an Observer records how each shot ends in a continuity memory, from which a Transition agent builds character action and spatial references for the next shot. An Orchestrator composes these inputs into each request. Since a request reveals its effect only after rendering, we train it by agentic reinforcement learning with Trunk-GDPO, which compares rendered candidates at every shot rather than once per video and continues the best as the trunk. With generator and judges frozen, MVAgent attains the highest cross-shot consistency and narrative-planning quality among the compared methods on ViMax-Bench and is preferred over the strongest agentic baseline in human evaluation.",
-      "authors": [
-        "Xiangyu Kong",
-        "Wenjie Zhou",
-        "Fengping Tian",
-        "Lihua Fang",
-        "Haoqin Sun",
-        "Chenyang Lyu",
-        "Longyue Wang",
-        "Weihua Luo"
+        "Chenxi Zhai",
+        "Xi Cheng",
+        "Hang Cheng",
+        "Zhicheng Guan",
+        "Mingyu Fan",
+        "Yanzhe Tang",
+        "Pingfa Feng",
+        "Long Zeng"
       ],
       "primary_category": "cs.CV",
       "categories": [
         "cs.CV"
       ],
-      "published": "2026-09-24T22:47:40+00:00",
-      "link": "https://arxiv.org/pdf/2609.30609v1",
+      "published": "2026-09-28T07:44:16+00:00",
+      "link": "https://arxiv.org/pdf/2609.34494v1",
       "tags": [
-        "keyword:frame-dist",
-        "keyword:phys-video",
-        "keyword:psd",
-        "keyword:video-gen-rl",
-        "query:frame-dist",
-        "query:phys-video",
-        "query:psd",
-        "query:video-gen-rl"
+        "keyword:cad-spatial",
+        "query:cad-spatial"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "image-to-CAD generation recovering geometry and design intent from a reference object",
+      "llm_evidence_cn": "从参考对象图像生成CAD，恢复几何与设计意图",
+      "llm_evidence": "从参考对象图像生成CAD，恢复几何与设计意图",
+      "canonical_evidence": "从参考对象图像生成CAD，恢复几何与设计意图",
+      "llm_tldr_en": "ConCAD generates executable parametric CAD programs from images, using GRPO with code-level constraint and execution-level geometric rewards to recover geometry and design intent, disambiguating volumetrically similar but structurally distinct shapes.",
+      "llm_tldr_cn": "图像到CAD生成需要同时恢复几何与设计意图，但现有系统多以有效性和形状重叠度评估，难以区分体积相近却结构不同的实体。ConCAD提出约束感知框架，采用组相对策略优化，并设计代码级约束奖励与执行级几何奖励两种互补信号。该双粒度奖励能区分结构不同但体积相近的形状，同时保证生成几何的有效性，为图像到CAD的意图恢复提供了新思路。",
+      "llm_tldr": "图像到CAD生成需要同时恢复几何与设计意图，但现有系统多以有效性和形状重叠度评估，难以区分体积相近却结构不同的实体。ConCAD提出约束感知框架，采用组相对策略优化，并设计代码级约束奖励与执行级几何奖励两种互补信号。该双粒度奖励能区分结构不同但体积相近的形状，同时保证生成几何的有效性，为图像到CAD的意图恢复提供了新思路。",
+      "llm_tags": [
+        "query:cad-spatial"
+      ],
+      "matched_query_tag": "query:cad-spatial",
+      "matched_query_text": "reconstructing 3D CAD models from 2D drawings",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.29073v1",
+      "source": "arxiv",
+      "title": "Seeing Is Not Measuring: Tool-Augmented Metric Spatial Reasoning for Vision-Language Models",
+      "abstract": "Vision-Language Models (VLMs) describe scenes well but reason poorly about metric 3D structure such as absolute distances, physical sizes, or egocentric directions. We present a modular, predictor agnostic, tool-augmented framework that equips a small VLM (Qwen3.5-4B) with geometric tools: 3D object detection, metric depth estimation, and deterministic solvers for distance, size and bearing. Each object is detected in the camera frame of its own best view, and the tools use that frame's pose to lift every detection into one shared world frame. Moving metric computation out of the model's weights and into explicit solvers yields large gains on three of four ReVSI-Bench tasks: with a strong monocular detector (WildDet3D), absolute distance rises from 0.46 to 0.74 Mean Relative Accuracy (MRA), relative distance from 39.1% to 67.4%, and relative direction from a below-chance 25.9% to 73.4%. Because any detector can be swapped in behind the tool interface, comparing real detectors against ground-truth boxes separates perception error from reasoning error: orchestration costs only 0.03 MRA. Object size is bounded by the detector: the tools are near-exact on groundtruth boxes (0.97) yet the best real detector barely beats the no-tool baseline (0.61 vs. 0.58), because size reads straight off a box extent monocular detectors get wrong. Without a predefined recipe, the model already sequences the tools correctly on its own, matching a scripted pipeline on three of four tasks.",
+      "authors": [
+        "Kai Glantz",
+        "Clemens Grange"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-24T06:03:30+00:00",
+      "link": "https://arxiv.org/pdf/2609.29073v1",
+      "tags": [
+        "keyword:cad-spatial",
+        "query:cad-spatial"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "tool-augmented metric spatial reasoning and size estimation",
+      "llm_evidence_cn": "工具增强的度量空间推理与尺寸估计",
+      "llm_evidence": "工具增强的度量空间推理与尺寸估计",
+      "canonical_evidence": "工具增强的度量空间推理与尺寸估计",
+      "llm_tldr_en": "The paper presents a modular tool-augmented framework equipping a small VLM with 3D detection, metric depth estimation and deterministic solvers for distance, size and bearing, yielding large gains on ReVSI-Bench metric spatial reasoning tasks.",
+      "llm_tldr_cn": "视觉语言模型善于描述场景，却在绝对距离、物体物理尺寸和方向等度量三维结构上推理薄弱。作者提出模块化、与预测器无关的工具增强框架，为小型VLM配备三维目标检测、度量深度估计以及距离、尺寸、方位的确定性求解器，每个物体在其最佳视角相机系中检测，再借位姿提升到统一世界坐标系。将度量计算从模型权重移到显式求解器后，在ReVSI-Bench四项任务中的三项取得大幅提升，表明显式几何工具能显著增强VLM的度量空间推理能力。",
+      "llm_tldr": "视觉语言模型善于描述场景，却在绝对距离、物体物理尺寸和方向等度量三维结构上推理薄弱。作者提出模块化、与预测器无关的工具增强框架，为小型VLM配备三维目标检测、度量深度估计以及距离、尺寸、方位的确定性求解器，每个物体在其最佳视角相机系中检测，再借位姿提升到统一世界坐标系。将度量计算从模型权重移到显式求解器后，在ReVSI-Bench四项任务中的三项取得大幅提升，表明显式几何工具能显著增强VLM的度量空间推理能力。",
+      "llm_tags": [
+        "query:cad-spatial"
+      ],
+      "matched_query_tag": "query:cad-spatial",
+      "matched_query_text": "Can machines quantitatively read out part dimensions, volume, and surface area from orthographic views?",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.25741v1",
+      "source": "arxiv",
+      "title": "Fysiverse-3D-Vision Technical Report: Generating Executable 3D Worlds from Images through Unified Spatial Reasoning",
+      "abstract": "Generative models have advanced image-conditioned 3D content creation, yet generating controllable and executable 3D scenes from a single image remains challenging. Existing 3D generative approaches can synthesize visually plausible objects and scenes, but their spatial layout estimation is coupled with specific asset generators. They struggle to jointly model object semantics, metric geometry, and scene-level spatial relationships, which are essential for interactive editing, physical simulation, and embodied applications. We propose Fysiverse-3D-Vision, a unified vision-language-geometry framework for generative 3D scene reconstruction and executable asset construction from a single image. We establish a shared representation where spatial reasoning and geometric reconstruction mutually enhance each other, allowing object layouts to be inferred beyond the constraints of individual asset generators. Our model integrates textual supervision, semantic visual cues, and geometric representations within a unified Transformer to capture scene context, metric geometry, and object-level interactions. An object-conditioned layout module performs cross-attention between target object representations and global geometric features to predict object translation, rotation, and scale. Training progressively learns geometry-language alignment, introduces layout reasoning while preserving reconstruction capability, and refines physical consistency through collision-aware optimization. By separating spatial layout reasoning from asset synthesis, Fysiverse-3D-Vision provides an adaptable interface for interactive scene editing, object-level manipulations, and executable 3D content generation. Experiments demonstrate that our framework achieves superior geometric consistency, layout estimation, rendering quality, and physical property understanding compared with existing approaches.",
+      "authors": [
+        "Dingkang Yang",
+        "Yizhou Liu",
+        "Wendong Cheng",
+        "Zizhi Chen",
+        "Shunli Wang",
+        "Yang Liu",
+        "Hongsheng Li",
+        "Lihua Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-22T06:22:31+00:00",
+      "link": "https://arxiv.org/pdf/2609.25741v1",
+      "tags": [
+        "keyword:cad-spatial",
+        "query:cad-spatial"
       ],
       "llm_score": 6.0,
-      "llm_evidence_en": "multi-shot video generation with consistent state and layout across shots",
-      "llm_evidence_cn": "多镜头视频生成，跨镜头状态与布局一致",
-      "llm_evidence": "多镜头视频生成，跨镜头状态与布局一致",
-      "canonical_evidence": "多镜头视频生成，跨镜头状态与布局一致",
-      "llm_tldr_en": "MVAgent recasts multi-shot video generation as condition construction, using a multi-agent pipeline with typed conditioning and shot-level policy optimization to keep character appearance, layout and state coherent across shots.",
-      "llm_tldr_cn": "多镜头视频生成要求角色外观、空间布局与状态在镜头间保持一致，但把每个镜头作为独立请求时重复文本难以约束这些属性。论文将问题重构为条件构建，提出MVAgent多智能体流水线，通过类型化条件输入协作，并用空间锚定与观察智能体对齐各镜头视角与结尾状态。该方法提升了跨镜头的一致性与连贯性，为智能体式视频生成提供了可复用的条件构建与镜头级优化框架。",
-      "llm_tldr": "多镜头视频生成要求角色外观、空间布局与状态在镜头间保持一致，但把每个镜头作为独立请求时重复文本难以约束这些属性。论文将问题重构为条件构建，提出MVAgent多智能体流水线，通过类型化条件输入协作，并用空间锚定与观察智能体对齐各镜头视角与结尾状态。该方法提升了跨镜头的一致性与连贯性，为智能体式视频生成提供了可复用的条件构建与镜头级优化框架。",
+      "llm_evidence_en": "unified spatial reasoning recovering metric geometry and scene layout from a single image",
+      "llm_evidence_cn": "统一空间推理，从单张图像恢复度量几何与场景布局",
+      "llm_evidence": "统一空间推理，从单张图像恢复度量几何与场景布局",
+      "canonical_evidence": "统一空间推理，从单张图像恢复度量几何与场景布局",
+      "llm_tldr_en": "Fysiverse-3D-Vision is a unified vision-language-geometry framework that reconstructs generative 3D scenes and executable assets from a single image, jointly modeling object semantics, metric geometry and scene-level spatial relations for simulation and embodied use.",
+      "llm_tldr_cn": "从单张图像生成可控且可执行的三维场景仍很困难，现有方法常将空间布局估计与特定资产生成器耦合，难以联合建模语义、度量几何与场景空间关系。为此提出Fysiverse-3D-Vision，一个统一的视觉-语言-几何框架，用于生成式三维场景重建与可执行资产生成。该框架同时刻画物体语义、度量几何和场景级空间关系，服务交互编辑、物理仿真与具身应用。",
+      "llm_tldr": "从单张图像生成可控且可执行的三维场景仍很困难，现有方法常将空间布局估计与特定资产生成器耦合，难以联合建模语义、度量几何与场景空间关系。为此提出Fysiverse-3D-Vision，一个统一的视觉-语言-几何框架，用于生成式三维场景重建与可执行资产生成。该框架同时刻画物体语义、度量几何和场景级空间关系，服务交互编辑、物理仿真与具身应用。",
       "llm_tags": [
-        "query:video-gen-rl"
+        "query:cad-spatial"
       ],
-      "matched_query_tag": "query:video-gen-rl",
-      "matched_query_text": "maintaining inter-frame coherence in video generation",
-      "matched_requirement_id": "req-22",
+      "matched_query_tag": "query:cad-spatial",
+      "matched_query_text": "spatial reasoning from 2D views to 3D",
+      "matched_requirement_id": "req-6",
       "selection_source": "fresh_fetch",
       "quick_tier": "6"
     },
     {
-      "id": "2609.31349v1",
+      "id": "2609.31103v1",
       "source": "arxiv",
-      "title": "DyMD: Preserving Interaction Dynamics through Distribution Matching Distillation in Few-Step Video World Models",
-      "abstract": "Large video diffusion models offer expressive priors for embodied prediction and learning, yet their many-step sampling remains costly for interactive downstream use. Distribution Matching Distillation (DMD) enables few-step video generation, but can suppress robot--object motion while preserving visual quality. Examining DMD's teacher and fake-score signals, we find that weak re-noising keeps the teacher posterior concentrated near motion-deficient rollouts, limiting motion-restoring guidance. Meanwhile, stronger-motion rollouts tend to incur larger fake-score fitting errors, which can hinder the generator's learning of interaction dynamics. We propose DyMD, a DMD framework that adapts both teacher supervision and critic fitting to the evolving student. Temporal affinity--conditioned re-noise sampling adapts the timestep distribution to each rollout's current interaction fidelity by mixing the base schedule with a teacher prior motivated by local posterior variation, thereby balancing motion recovery and appearance refinement. To better track stronger-motion rollouts, dynamics-guided fake-score tracking uses a noise-conditioned predictor to estimate noise-relative fitting difficulty from latent temporal dynamics, then upweights predicted-hard rollouts in the critic loss. Using DyMD, we distill a 14B teacher into a four-step 1.3B student with no auxiliary modules at inference. On embodied-video benchmarks, the student improves R-Bench task adherence by $9.6$ percentage points and PAI-Bench-G Domain score by $5.1$ points over Base DMD while maintaining comparable visual quality. As a backbone for downstream action planning, our student achieves 34% mean success across two WorldArena tasks, compared with 16% for Base DMD.",
+      "title": "DepthEvidence: Unifying Metric Depth Prediction and Geometric Reasoning in Multimodal Language Models",
+      "abstract": "Spatial reasoning with metric constraints requires linking objects to geometric measurements and preserving their numerical content during language reasoning. We present DepthEvidence, a 4B model that uses its own dense metric predictions as object-grounded evidence for language generation. A camera-conditioned decoder predicts full-resolution metric depth using multi-scale visual features and high-resolution RGB refinement. A dense-to-language interface converts predicted depths and decoder features into object-aligned continuous geometry tokens anchored to object identifiers. Geometric supervision encourages metric information to remain recoverable before and after language-context interaction, while instruction tuning supports object measurement and compositional reasoning. We introduce a Depth-VQA benchmark evaluating object-depth queries, relative comparisons, and decisions combining spatial and numerical constraints. Across nine datasets, DepthEvidence achieves the highest average dense $δ_1$ among evaluated methods, competitive with specialized estimators. It also leads the evaluated methods in instance-level metric depth estimation and overall accuracy on both relative and metric reasoning tracks, while broadly preserving general VQA performance and improving spatial understanding relative to the base model.",
       "authors": [
-        "Haojun Xu",
-        "Jie Huang",
-        "Xin Lu",
-        "Mingchen Zhong",
-        "Zihao Fan",
-        "Linjiang Huang",
-        "Si Liu"
+        "Jiangning Wei",
+        "Yuan Yao",
+        "Miaomiao Cui",
+        "Mingsheng Li",
+        "Humen Zhong",
+        "Shuai Bai",
+        "Zhibo Yang"
       ],
       "primary_category": "cs.CV",
       "categories": [
         "cs.CV",
         "cs.AI"
       ],
-      "published": "2026-09-25T14:47:17+00:00",
-      "link": "https://arxiv.org/pdf/2609.31349v1",
+      "published": "2026-09-25T10:42:20+00:00",
+      "link": "https://arxiv.org/pdf/2609.31103v1",
       "tags": [
-        "keyword:frame-dist",
-        "keyword:phys-video",
-        "keyword:psd",
-        "keyword:video-gen-rl",
-        "query:frame-dist",
-        "query:phys-video",
-        "query:psd",
-        "query:video-gen-rl"
+        "keyword:cad-spatial",
+        "query:cad-spatial"
       ],
       "llm_score": 6.0,
-      "llm_evidence_en": "few-step video world models preserving interaction dynamics via distribution matching distillation",
-      "llm_evidence_cn": "通过分布匹配蒸馏保留交互动力学的少步视频世界模型",
-      "llm_evidence": "通过分布匹配蒸馏保留交互动力学的少步视频世界模型",
-      "canonical_evidence": "通过分布匹配蒸馏保留交互动力学的少步视频世界模型",
-      "llm_tldr_en": "Few-step video diffusion via Distribution Matching Distillation can suppress robot-object motion. DyMD adapts teacher and fake-score supervision to preserve interaction dynamics in video world models.",
-      "llm_tldr_cn": "大型视频扩散模型采样成本高，而分布匹配蒸馏虽能实现少步生成，却会抑制机器人与物体的运动。作者分析教师与假分数信号，发现弱重加噪使教师后验集中在运动不足的样本上。为此提出DyMD，自适应调整教师监督以保留交互动力学。该方法在少步视频世界模型中兼顾视觉质量与运动保真，对具身预测有实用价值。",
-      "llm_tldr": "大型视频扩散模型采样成本高，而分布匹配蒸馏虽能实现少步生成，却会抑制机器人与物体的运动。作者分析教师与假分数信号，发现弱重加噪使教师后验集中在运动不足的样本上。为此提出DyMD，自适应调整教师监督以保留交互动力学。该方法在少步视频世界模型中兼顾视觉质量与运动保真，对具身预测有实用价值。",
+      "llm_evidence_en": "metric depth prediction with geometric reasoning in MLLMs",
+      "llm_evidence_cn": "多模态语言模型中的度量深度预测与几何推理",
+      "llm_evidence": "多模态语言模型中的度量深度预测与几何推理",
+      "canonical_evidence": "多模态语言模型中的度量深度预测与几何推理",
+      "llm_tldr_en": "DepthEvidence is a 4B model that uses its own dense metric depth predictions as object-grounded evidence, converting depths into object-aligned geometry tokens to unify metric depth prediction and geometric reasoning in multimodal language models.",
+      "llm_tldr_cn": "带度量约束的空间推理需要把物体与几何测量关联，并在语言推理过程中保持数值内容不丢失。作者提出DepthEvidence，一个4B模型，用自身稠密度量预测作为物体锚定的证据来支持语言生成；相机条件解码器利用多尺度视觉特征与高分辨率RGB精化预测全分辨率度量深度，稠密到语言接口把深度与解码器特征转换为锚定物体标识的连续几何token。几何监督确保度量信息在语言上下文交互前后仍可恢复，指令微调进一步提升推理表现，统一了度量深度预测与几何推理。",
+      "llm_tldr": "带度量约束的空间推理需要把物体与几何测量关联，并在语言推理过程中保持数值内容不丢失。作者提出DepthEvidence，一个4B模型，用自身稠密度量预测作为物体锚定的证据来支持语言生成；相机条件解码器利用多尺度视觉特征与高分辨率RGB精化预测全分辨率度量深度，稠密到语言接口把深度与解码器特征转换为锚定物体标识的连续几何token。几何监督确保度量信息在语言上下文交互前后仍可恢复，指令微调进一步提升推理表现，统一了度量深度预测与几何推理。",
       "llm_tags": [
-        "query:video-gen-rl"
+        "query:cad-spatial"
       ],
-      "matched_query_tag": "query:video-gen-rl",
-      "matched_query_text": "video generation models and generative video synthesis",
-      "matched_requirement_id": "req-20",
+      "matched_query_tag": "query:cad-spatial",
+      "matched_query_text": "spatial reasoning from 2D views to 3D",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.33616v1",
+      "source": "arxiv",
+      "title": "SpatialSpeak: QA-Native Reconstruction with Local and Global Context for Spatial Chain-of-Thought Reasoning",
+      "abstract": "Vision-language models (VLMs) can benefit from geometric priors for multi-view spatial reasoning, yet answer-only training does not directly supervise the intermediate geometric estimates and their use in deriving quantitative spatial answers. We hypothesize that spatial chain-of-thought (CoT) supervision becomes more effective when the VLM first jointly learns complementary local geometry and global scene context through multi-view reconstruction. We introduce SpatialSpeak, a two-stage framework that connects QA-native reconstruction pretraining with spatial CoT learning. In Stage I, QA-Native Reconstruction Pretraining (QA-RP) combines marked-point 3D queries for fine-grained local geometry with object-center queries for global scene context across views. Both tasks are formulated as text-based question answering, allowing geometric estimation and subsequent reasoning to share the same autoregressive output interface. In Stage II, spatial CoT with Visual Compensation (CoT-VC) trains the model to express question-relevant geometric estimates and use them to derive answers, with reliability assessment and visual compensation supporting answer refinement when needed. On ReVSI, QA-RP increases the gain from CoT-VC from 2.6 to 6.9 points, and ablations show that both local and global reconstruction supervision are beneficial. SpatialSpeak achieves state-of-the-art results on ReVSI, VSI-Bench, and SPAR-Bench, with a ReVSI score of 62.8 that exceeds the strongest compared baseline by 8.7 points.",
+      "authors": [
+        "Yang Cao",
+        "Jiaxin Zhang",
+        "Dave Zhenyu Chen",
+        "Yingji Zhong",
+        "Ruiyuan Gao",
+        "Lanqing Hong",
+        "Dan Xu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-27T14:31:57+00:00",
+      "link": "https://arxiv.org/pdf/2609.33616v1",
+      "tags": [
+        "keyword:cad-spatial",
+        "query:cad-spatial"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-view spatial reasoning, quantitative spatial answers, reconstruction pretraining",
+      "llm_evidence_cn": "多视图空间推理与定量空间回答",
+      "llm_evidence": "多视图空间推理与定量空间回答",
+      "canonical_evidence": "多视图空间推理与定量空间回答",
+      "llm_tldr_en": "SpatialSpeak links QA-native multi-view reconstruction pretraining with spatial chain-of-thought supervision, so a VLM first learns local geometry and global context before deriving quantitative spatial answers.",
+      "llm_tldr_cn": "视觉语言模型在多视图空间推理中依赖几何先验，但仅用答案监督无法直接约束中间几何估计。作者提出SpatialSpeak两阶段框架，先用标记点三维查询与物体中心查询进行问答原生的多视图重建预训练，再开展空间链式思维学习。实验表明该监督方式能把几何估计与定量空间回答结合起来，提升多视图空间推理的定量准确性。其贡献在于将重建预训练与空间CoT监督融合，为从二维视图推断三维空间量提供了可复用的训练范式。",
+      "llm_tldr": "视觉语言模型在多视图空间推理中依赖几何先验，但仅用答案监督无法直接约束中间几何估计。作者提出SpatialSpeak两阶段框架，先用标记点三维查询与物体中心查询进行问答原生的多视图重建预训练，再开展空间链式思维学习。实验表明该监督方式能把几何估计与定量空间回答结合起来，提升多视图空间推理的定量准确性。其贡献在于将重建预训练与空间CoT监督融合，为从二维视图推断三维空间量提供了可复用的训练范式。",
+      "llm_tags": [
+        "query:cad-spatial"
+      ],
+      "matched_query_tag": "query:cad-spatial",
+      "matched_query_text": "spatial reasoning from 2D views to 3D",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.34148v1",
+      "source": "arxiv",
+      "title": "Geometric Encoding for Spatial Reasoning in Vision-Language Models",
+      "abstract": "Vision-Language Models (VLMs) are far more reliable at recognizing what appears in a video than at reasoning about its spatial and temporal properties, such as metric distances, object dimensions, and consistent object identities across frames. We present Geometric Code, a perception-to-geometry pipeline that computes explicit spatial structure from video and supplies it to VLMs as context to augment reasoning. A perception layer segments and classifies objects and recovers depth, camera pose, and intrinsics from monocular RGB video. A deterministic geometric engine then back-projects, merges, and cleans these outputs into a spatial code, including per-object positions, dimensions, counts, inter-object distances, appearance order, and room geometry. The code is serialized into VLMs' prompts, either alongside the video or replacing it entirely. Specifically, there is no component trained or fine-tuned in our approach. On VSI-Bench, augmenting 2B and 4B open models with the spatial code improves average accuracy by +4.1 points over the frames-only baseline, with the largest gains on numeric estimation tasks such as absolute distance (+24.1 points). The results suggest that explicitly computed geometry, delivered through the language channel, recovers spatial competence that small VLMs cannot extract from pixels alone.",
+      "authors": [
+        "Antonio Jun",
+        "Haoshui Yu",
+        "Zhengyi Lu",
+        "Huirong Fu",
+        "Yao Qiang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-28T02:29:01+00:00",
+      "link": "https://arxiv.org/pdf/2609.34148v1",
+      "tags": [
+        "keyword:cad-spatial",
+        "query:cad-spatial"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "explicit per-object dimensions and inter-object distances computed from video",
+      "llm_evidence_cn": "从视频中显式计算物体尺寸与物体间距",
+      "llm_evidence": "从视频中显式计算物体尺寸与物体间距",
+      "canonical_evidence": "从视频中显式计算物体尺寸与物体间距",
+      "llm_tldr_en": "Geometric Code builds explicit spatial structure from monocular video—object positions, dimensions, distances and room geometry—and feeds it to VLMs as context to improve quantitative spatial and temporal reasoning.",
+      "llm_tldr_cn": "视觉语言模型在识别视频内容方面表现可靠，但在推理度量距离、物体尺寸以及跨帧一致身份等空间与时间属性时明显不足。本文提出Geometric Code，一种从感知到几何的流水线：感知层对单目RGB视频分割并分类物体、恢复深度与相机位姿，随后由确定性几何引擎反投影、融合并清洗结果，生成包含物体位置、尺寸、数量、间距与房间几何的显式空间编码。将该编码作为上下文提供给视觉语言模型，可显著增强其定量空间与时间推理能力。该工作说明显式几何结构能有效弥补VLM在空间推理上的短板。",
+      "llm_tldr": "视觉语言模型在识别视频内容方面表现可靠，但在推理度量距离、物体尺寸以及跨帧一致身份等空间与时间属性时明显不足。本文提出Geometric Code，一种从感知到几何的流水线：感知层对单目RGB视频分割并分类物体、恢复深度与相机位姿，随后由确定性几何引擎反投影、融合并清洗结果，生成包含物体位置、尺寸、数量、间距与房间几何的显式空间编码。将该编码作为上下文提供给视觉语言模型，可显著增强其定量空间与时间推理能力。该工作说明显式几何结构能有效弥补VLM在空间推理上的短板。",
+      "llm_tags": [
+        "query:cad-spatial"
+      ],
+      "matched_query_tag": "query:cad-spatial",
+      "matched_query_text": "estimating length, width, and height from technical drawings",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.35242v1",
+      "source": "arxiv",
+      "title": "DrawingsDreamer: A Unified Multi-View Engineering Drawings Generation Model",
+      "abstract": "Scalable Vector Graphics (SVG) are essential for modern industrial Computer-Aided Design (CAD). However, existing autoregressive SVG generation models are predominantly tailored for artistic creation and struggle to maintain the rigorous geometric fidelity and cross-view spatial alignment required for engineering drawings. To bridge this gap, we introduce \\textbf{DrawingsDreamer}, a unified Large Language Model (LLM)-driven framework for multi-view vector-based engineering drawings generation. By formulating the generation of multi-view engineering drawings purely as a sequence modeling task, we eliminate the need of raster image encoders. We propose a Streamlined Representation utilizing hierarchical postfix tokenization, which guides the model to establish local geometric coordinates before assigning semantic boundaries. Optimized via a progressive task-aware curriculum schedule, \\textbf{DrawingsDreamer} effectively transitions from localized structural repair to macroscopic generation in a unified model. Extensive experiments demonstrate that our unified model achieves strong performance in both geometric fidelity and syntactic accuracy across diverse conditional and unconditional generation tasks.",
+      "authors": [
+        "Shurui Liu",
+        "Weide Chen",
+        "Changwang Yi",
+        "Ancong Wu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-28T14:15:59+00:00",
+      "link": "https://arxiv.org/pdf/2609.35242v1",
+      "tags": [
+        "keyword:cad-spatial",
+        "query:cad-spatial"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-view engineering drawings with cross-view spatial alignment",
+      "llm_evidence_cn": "多视图工程图与跨视图空间对齐",
+      "llm_evidence": "多视图工程图与跨视图空间对齐",
+      "canonical_evidence": "多视图工程图与跨视图空间对齐",
+      "llm_tldr_en": "DrawingsDreamer is an LLM-driven framework that generates multi-view vector engineering drawings as a pure sequence modeling task, using hierarchical postfix tokenization to preserve geometric fidelity and cross-view alignment.",
+      "llm_tldr_cn": "现有自回归SVG生成模型多面向艺术创作，难以满足工程图所需的严格几何保真与跨视图空间对齐要求。作者提出DrawingsDreamer，一种由大语言模型驱动的统一多视图矢量工程图生成框架，将多视图工程图生成建模为纯序列任务，并设计层次化后缀标记的简化表示以消除栅格图像编码器。该框架在生成中保持几何保真与视图间对齐，为工业CAD中的矢量工程图生成提供了新范式，也推动多视图工程图的自动化生成。",
+      "llm_tldr": "现有自回归SVG生成模型多面向艺术创作，难以满足工程图所需的严格几何保真与跨视图空间对齐要求。作者提出DrawingsDreamer，一种由大语言模型驱动的统一多视图矢量工程图生成框架，将多视图工程图生成建模为纯序列任务，并设计层次化后缀标记的简化表示以消除栅格图像编码器。该框架在生成中保持几何保真与视图间对齐，为工业CAD中的矢量工程图生成提供了新范式，也推动多视图工程图的自动化生成。",
+      "llm_tags": [
+        "query:cad-spatial:composite"
+      ],
+      "matched_query_tag": "query:cad-spatial:composite",
+      "matched_query_text": "Papers central to CAD 空间理解（Spatial Understanding from Orthographic Views）研究背景：工程图三视图（主视/俯视/左视）是人类传递三维几何信息最紧凑的载体，但机器要从二维线框恢复三维空间语义，需要同时完成视图配准、投影关系推理与几何量估计。核心问题：能否从三视图（或三视图+尺寸标注）中自动、定量地读出零件的长/宽/高、包络体积、表面积、关键特征尺寸，并达到工程可用精度？技术路线：1. 构建「三视图 → 三维几何属性」的监督数据集（可用 CAD 模型自动渲染三视图并回填真值）；2. 采用视觉编码器 + 几何推理头（回归尺寸/体积/面积），或引入隐式三维表示（如 triplane / SDF）作为中间监督；3. 探索「显式投影约束」注入，提升尺度一致性与可解释性。Benchmark 设计：- 指标：尺寸 MAE/MAPE（相对误差）、体积/面积相对误差、包络盒 IoU；- 难度分层：单实体 / 多实体、含孔槽特征 / 纯回转体、有无尺寸标注；- 需报告尺度不变性与跨类别泛化结果。预期贡献：首个面向「几何量定量读出」的三视图理解 benchmark，明确当前模型在工程精度（如 ±1%）上的差距。, especially work that connects or combines: machine understanding of orthographic projections for 3D geometry; reconstructing 3D CAD models from 2D drawings; estimating length, width, and height from technical drawings; triplane feature encoding for 3D geometry; explicit projection constraints for scale consistency; spatial reasoning from 2D views to 3D; Can machines quantitatively read out part dimensions, volume, and surface area from orthographic views?; How to build a supervised dataset that maps three view drawings to 3D geometric properties using CAD models?; Methods for injecting explicit projection constraints into neural networks for scale consistent 3D reconstruction from engineering drawings..",
+      "matched_requirement_id": "req-composite-cad-spatial",
       "selection_source": "fresh_fetch",
       "quick_tier": "6"
     }
