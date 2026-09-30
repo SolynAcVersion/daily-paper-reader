@@ -1,0 +1,95 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-30T22:51:33.720616+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2609.35242v1",
+      "source": "arxiv",
+      "title": "DrawingsDreamer: A Unified Multi-View Engineering Drawings Generation Model",
+      "abstract": "Scalable Vector Graphics (SVG) are essential for modern industrial Computer-Aided Design (CAD). However, existing autoregressive SVG generation models are predominantly tailored for artistic creation and struggle to maintain the rigorous geometric fidelity and cross-view spatial alignment required for engineering drawings. To bridge this gap, we introduce \\textbf{DrawingsDreamer}, a unified Large Language Model (LLM)-driven framework for multi-view vector-based engineering drawings generation. By formulating the generation of multi-view engineering drawings purely as a sequence modeling task, we eliminate the need of raster image encoders. We propose a Streamlined Representation utilizing hierarchical postfix tokenization, which guides the model to establish local geometric coordinates before assigning semantic boundaries. Optimized via a progressive task-aware curriculum schedule, \\textbf{DrawingsDreamer} effectively transitions from localized structural repair to macroscopic generation in a unified model. Extensive experiments demonstrate that our unified model achieves strong performance in both geometric fidelity and syntactic accuracy across diverse conditional and unconditional generation tasks.",
+      "authors": [
+        "Shurui Liu",
+        "Weide Chen",
+        "Changwang Yi",
+        "Ancong Wu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-28T14:15:59+00:00",
+      "link": "https://arxiv.org/pdf/2609.35242v1",
+      "tags": [
+        "keyword:cad-spatial",
+        "query:cad-spatial"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multi-view engineering drawings generation with cross-view spatial alignment for CAD",
+      "llm_evidence_cn": "面向CAD的多视图工程图生成与跨视图空间对齐",
+      "llm_evidence": "面向CAD的多视图工程图生成与跨视图空间对齐",
+      "canonical_evidence": "面向CAD的多视图工程图生成与跨视图空间对齐",
+      "llm_tldr_en": "DrawingsDreamer is an LLM-driven framework that generates multi-view vector engineering drawings as sequence modeling with hierarchical postfix tokenization, enforcing cross-view geometric fidelity for CAD.",
+      "llm_tldr_cn": "该文指出既有自回归SVG生成模型多面向艺术创作，难以满足工程图所需的严格几何保真与跨视图空间对齐。为此提出DrawingsDreamer，将多视图矢量工程图生成建模为纯序列任务，无需栅格图像编码器，并用层级后缀分词的精简表示引导模型维持视图间一致性。工作直接面向CAD工程图的空间对齐问题，对三视图理解与投影关系推理具有参考价值，属于该复合需求中工程图空间语义方向的重要相关工作。",
+      "llm_tldr": "该文指出既有自回归SVG生成模型多面向艺术创作，难以满足工程图所需的严格几何保真与跨视图空间对齐。为此提出DrawingsDreamer，将多视图矢量工程图生成建模为纯序列任务，无需栅格图像编码器，并用层级后缀分词的精简表示引导模型维持视图间一致性。工作直接面向CAD工程图的空间对齐问题，对三视图理解与投影关系推理具有参考价值，属于该复合需求中工程图空间语义方向的重要相关工作。",
+      "llm_tags": [
+        "query:cad-spatial:composite"
+      ],
+      "matched_query_tag": "query:cad-spatial:composite",
+      "matched_query_text": "Papers central to CAD 空间理解（Spatial Understanding from Orthographic Views）研究背景：工程图三视图（主视/俯视/左视）是人类传递三维几何信息最紧凑的载体，但机器要从二维线框恢复三维空间语义，需要同时完成视图配准、投影关系推理与几何量估计。核心问题：能否从三视图（或三视图+尺寸标注）中自动、定量地读出零件的长/宽/高、包络体积、表面积、关键特征尺寸，并达到工程可用精度？技术路线：1. 构建「三视图 → 三维几何属性」的监督数据集（可用 CAD 模型自动渲染三视图并回填真值）；2. 采用视觉编码器 + 几何推理头（回归尺寸/体积/面积），或引入隐式三维表示（如 triplane / SDF）作为中间监督；3. 探索「显式投影约束」注入，提升尺度一致性与可解释性。Benchmark 设计：- 指标：尺寸 MAE/MAPE（相对误差）、体积/面积相对误差、包络盒 IoU；- 难度分层：单实体 / 多实体、含孔槽特征 / 纯回转体、有无尺寸标注；- 需报告尺度不变性与跨类别泛化结果。预期贡献：首个面向「几何量定量读出」的三视图理解 benchmark，明确当前模型在工程精度（如 ±1%）上的差距。, especially work that connects or combines: machine understanding of orthographic projections for 3D geometry; reconstructing 3D CAD models from 2D drawings; estimating length, width, and height from technical drawings; triplane feature encoding for 3D geometry; explicit projection constraints for scale consistency; spatial reasoning from 2D views to 3D; Can machines quantitatively read out part dimensions, volume, and surface area from orthographic views?; How to build a supervised dataset that maps three view drawings to 3D geometric properties using CAD models?; Methods for injecting explicit projection constraints into neural networks for scale consistent 3D reconstruction from engineering drawings..",
+      "matched_requirement_id": "req-composite-cad-spatial",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.34082v1",
+      "source": "arxiv",
+      "title": "K-OPSD: Verifiable On-Policy Self-Distillation for Post-Training Vision-Language Models on AEC Drawings",
+      "abstract": "Interpreting architecture, engineering, and construction (AEC) drawings is hard for general Multimodal Large Language Models (MLLMs) and vision-language models (VLMs). We introduce K-OPSD, a VLM post-training methodology for improving AEC drawing understanding. Building on On-Policy Self-Distillation (OPSD) with verifiable supervision, we construct a teacher from the model's own best-of-N generations, certified by a process-level verifier, and rescue failed prompts by resampling under a hint that exposes the verified answer. We then perform an on-policy model update by training on verified completions with a cross-entropy inner-loss, outperforming the bounded token-wise generalized Jensen-Shannon divergence (JSD) used by on-policy distillation. Using K-OPSD, we fine-tune Qwen3-VL models on the AECV-Bench dataset. The resulting models attain the top average judge score (0.819) and combined accuracy (0.738), achieving competitive results against open-source baseline models. The recipe transfers to the out-of-domain ArchCAD dataset, where the 8B model gains most. We present the verifier suite and the continual learning and self-improving pipeline, our results provide preliminary evidence that verifier-guided self-distillation is a promising route toward more reliable machine reading of architecture drawings.",
+      "authors": [
+        "Yunfei Bai",
+        "Enrico Chionna",
+        "Akash Amol",
+        "Kawaljit Singh KC",
+        "Joern Tinnemeyer"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-09-28T01:19:57+00:00",
+      "link": "https://arxiv.org/pdf/2609.34082v1",
+      "tags": [
+        "keyword:cad-spatial",
+        "query:cad-spatial"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "post-training vision-language models to interpret architecture, engineering and construction drawings",
+      "llm_evidence_cn": "通过后训练视觉语言模型来理解建筑与工程图纸",
+      "llm_evidence": "通过后训练视觉语言模型来理解建筑与工程图纸",
+      "canonical_evidence": "通过后训练视觉语言模型来理解建筑与工程图纸",
+      "llm_tldr_en": "K-OPSD is a verifiable on-policy self-distillation post-training method that improves vision-language understanding of architecture, engineering and construction drawings using a verifier-certified teacher.",
+      "llm_tldr_cn": "解读建筑、工程与施工图纸对通用多模态大模型与视觉语言模型而言仍很困难。本文提出K-OPSD后训练方法，基于带可验证监督的在策略自蒸馏，用模型自身最佳N次生成并由过程级验证器认证来构造教师，再通过暴露已验证答案的提示重采样挽救失败样本，最后以交叉熵内损失进行在策略更新。实验表明该方法优于令牌级JSD等基线，提升了图纸理解能力，对工程图纸的机器理解具有参考价值。",
+      "llm_tldr": "解读建筑、工程与施工图纸对通用多模态大模型与视觉语言模型而言仍很困难。本文提出K-OPSD后训练方法，基于带可验证监督的在策略自蒸馏，用模型自身最佳N次生成并由过程级验证器认证来构造教师，再通过暴露已验证答案的提示重采样挽救失败样本，最后以交叉熵内损失进行在策略更新。实验表明该方法优于令牌级JSD等基线，提升了图纸理解能力，对工程图纸的机器理解具有参考价值。",
+      "llm_tags": [
+        "query:cad-spatial"
+      ],
+      "matched_query_tag": "query:cad-spatial",
+      "matched_query_text": "machine understanding of orthographic projections for 3D geometry",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

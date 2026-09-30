@@ -1,0 +1,39 @@
+{
+  "label": "2026-09-30",
+  "date": "2026-09-30",
+  "generated_at": "2026-09-30T22:52:51",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202609/30/2609.35242v1-drawingsdreamer-a-unified-multi-view-engineering-drawings-generation-model",
+      "section": "deep",
+      "title_en": "DrawingsDreamer: A Unified Multi-View Engineering Drawings Generation Model",
+      "authors": "Shurui Liu, Weide Chen, Changwang Yi, Ancong Wu",
+      "date": "2026-09-28",
+      "pdf": "https://arxiv.org/pdf/2609.35242v1",
+      "score": "8.0",
+      "evidence": "面向CAD的多视图工程图生成与跨视图空间对齐",
+      "tldr": "现有自回归SVG生成模型多面向艺术创作，难以满足工程图所需的严格几何保真与跨视图空间对齐。DrawingsDreamer提出LLM驱动的统一多视图矢量工程图生成框架，将生成建模为纯序列任务，免去栅格图像编码器。其采用分层后缀分词的精简表示，先建立局部几何坐标再分配语义边界，并通过渐进式任务感知课程优化。实验表明，该模型在条件与无条件生成中均取得强几何保真度和语法准确率。",
+      "tags": "query:cad-spatial",
+      "abstract_en": "Scalable Vector Graphics (SVG) are essential for modern industrial Computer-Aided Design (CAD). However, existing autoregressive SVG generation models are predominantly tailored for artistic creation and struggle to maintain the rigorous geometric fidelity and cross-view spatial alignment required for engineering drawings. To bridge this gap, we introduce \\textbf{DrawingsDreamer}, a unified Large Language Model (LLM)-driven framework for multi-view vector-based engineering drawings generation. By formulating the generation of multi-view engineering drawings purely as a sequence modeling task, we eliminate the need of raster image encoders. We propose a Streamlined Representation utilizing hierarchical postfix tokenization, which guides the model to establish local geometric coordinates before assigning semantic boundaries. Optimized via a progressive task-aware curriculum schedule, \\textbf{DrawingsDreamer} effectively transitions from localized structural repair to macroscopic generation in a unified model. Extensive experiments demonstrate that our unified model achieves strong performance in both geometric fidelity and syntactic accuracy across diverse conditional and unconditional generation tasks.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/30/2609.34082v1-k-opsd-verifiable-on-policy-self-distillation-for-post-training-vision-language-models-on-aec-drawings",
+      "section": "quick",
+      "title_en": "K-OPSD: Verifiable On-Policy Self-Distillation for Post-Training Vision-Language Models on AEC Drawings",
+      "authors": "Yunfei Bai, Enrico Chionna, Akash Amol, Kawaljit Singh KC, Joern Tinnemeyer",
+      "date": "2026-09-28",
+      "pdf": "https://arxiv.org/pdf/2609.34082v1",
+      "score": "6.0",
+      "evidence": "通过后训练视觉语言模型来理解建筑与工程图纸",
+      "tldr": "通用多模态大模型难以理解建筑、工程与施工（AEC）图纸。K-OPSD 提出可验证的在线策略自蒸馏后训练方法：用过程级验证器从模型自身 best-of-N 生成中挑选教师答案，并对失败样本以提示重采样补救，再以交叉熵内损失做在线更新。在 AECV-Bench 上微调 Qwen3-VL 后，平均评判分达 0.819、综合准确率 0.738，并迁移至域外 ArchCAD 数据集。",
+      "tags": "query:cad-spatial",
+      "abstract_en": "Interpreting architecture, engineering, and construction (AEC) drawings is hard for general Multimodal Large Language Models (MLLMs) and vision-language models (VLMs). We introduce K-OPSD, a VLM post-training methodology for improving AEC drawing understanding. Building on On-Policy Self-Distillation (OPSD) with verifiable supervision, we construct a teacher from the model's own best-of-N generations, certified by a process-level verifier, and rescue failed prompts by resampling under a hint that exposes the verified answer. We then perform an on-policy model update by training on verified completions with a cross-entropy inner-loss, outperforming the bounded token-wise generalized Jensen-Shannon divergence (JSD) used by on-policy distillation. Using K-OPSD, we fine-tune Qwen3-VL models on the AECV-Bench dataset. The resulting models attain the top average judge score (0.819) and combined accuracy (0.738), achieving competitive results against open-source baseline models. The recipe transfers to the out-of-domain ArchCAD dataset, where the 8B model gains most. We present the verifier suite and the continual learning and self-improving pipeline, our results provide preliminary evidence that verifier-guided self-distillation is a promising route toward more reliable machine reading of architecture drawings.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
