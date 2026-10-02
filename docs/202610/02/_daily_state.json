@@ -1,0 +1,25 @@
+{
+  "date": "20261002",
+  "date_label": "",
+  "generated_at": "2026-10-02 23:07:36 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.35242v1",
+      "route": "202610/02/2609.35242v1-drawingsdreamer-a-unified-multi-view-engineering-drawings-generation-model",
+      "title": "DrawingsDreamer: A Unified Multi-View Engineering Drawings Generation Model",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "cad-spatial"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "生成多视图工程图并保持跨视图空间对齐",
+      "first_seen_at": "2026-10-02 23:07:36 UTC",
+      "updated_at": "2026-10-02 23:07:36 UTC"
+    }
+  ]
+}

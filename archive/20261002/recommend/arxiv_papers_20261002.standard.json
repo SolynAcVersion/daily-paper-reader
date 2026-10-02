@@ -1,0 +1,55 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-10-02T23:07:18.359395+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2609.35242v1",
+      "source": "arxiv",
+      "title": "DrawingsDreamer: A Unified Multi-View Engineering Drawings Generation Model",
+      "abstract": "Scalable Vector Graphics (SVG) are essential for modern industrial Computer-Aided Design (CAD). However, existing autoregressive SVG generation models are predominantly tailored for artistic creation and struggle to maintain the rigorous geometric fidelity and cross-view spatial alignment required for engineering drawings. To bridge this gap, we introduce \\textbf{DrawingsDreamer}, a unified Large Language Model (LLM)-driven framework for multi-view vector-based engineering drawings generation. By formulating the generation of multi-view engineering drawings purely as a sequence modeling task, we eliminate the need of raster image encoders. We propose a Streamlined Representation utilizing hierarchical postfix tokenization, which guides the model to establish local geometric coordinates before assigning semantic boundaries. Optimized via a progressive task-aware curriculum schedule, \\textbf{DrawingsDreamer} effectively transitions from localized structural repair to macroscopic generation in a unified model. Extensive experiments demonstrate that our unified model achieves strong performance in both geometric fidelity and syntactic accuracy across diverse conditional and unconditional generation tasks.",
+      "authors": [
+        "Shurui Liu",
+        "Weide Chen",
+        "Changwang Yi",
+        "Ancong Wu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-28T14:15:59+00:00",
+      "link": "https://arxiv.org/pdf/2609.35242v1",
+      "tags": [
+        "keyword:cad-spatial",
+        "query:cad-spatial"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multi-view engineering drawings generation preserving cross-view spatial alignment for CAD",
+      "llm_evidence_cn": "生成多视图工程图并保持跨视图空间对齐",
+      "llm_evidence": "生成多视图工程图并保持跨视图空间对齐",
+      "canonical_evidence": "生成多视图工程图并保持跨视图空间对齐",
+      "llm_tldr_en": "DrawingsDreamer is an LLM-driven unified framework that generates multi-view vector engineering drawings as a pure sequence modeling task, using hierarchical postfix tokenization to preserve geometric fidelity and cross-view spatial alignment for CAD.",
+      "llm_tldr_cn": "论文针对现有自回归SVG生成模型偏重艺术创作、难以满足工程图严格几何保真与跨视图空间对齐要求的问题，提出统一的多视图矢量工程图生成框架DrawingsDreamer。方法将多视图工程图生成纯粹建模为序列建模任务，摆脱对栅格图像编码器的依赖，并采用层次化后缀词元化的精简表示引导模型保持跨视图几何一致性。该工作为工业CAD中工程图的自动生成提供了新范式，与机器理解正交投影及多视图空间对齐的需求高度相关。",
+      "llm_tldr": "论文针对现有自回归SVG生成模型偏重艺术创作、难以满足工程图严格几何保真与跨视图空间对齐要求的问题，提出统一的多视图矢量工程图生成框架DrawingsDreamer。方法将多视图工程图生成纯粹建模为序列建模任务，摆脱对栅格图像编码器的依赖，并采用层次化后缀词元化的精简表示引导模型保持跨视图几何一致性。该工作为工业CAD中工程图的自动生成提供了新范式，与机器理解正交投影及多视图空间对齐的需求高度相关。",
+      "llm_tags": [
+        "query:cad-spatial"
+      ],
+      "matched_query_tag": "query:cad-spatial",
+      "matched_query_text": "machine understanding of orthographic projections for 3D geometry",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

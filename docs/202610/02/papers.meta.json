@@ -1,0 +1,24 @@
+{
+  "label": "2026-10-02",
+  "date": "2026-10-02",
+  "generated_at": "2026-10-02T23:07:37",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202610/02/2609.35242v1-drawingsdreamer-a-unified-multi-view-engineering-drawings-generation-model",
+      "section": "quick",
+      "title_en": "DrawingsDreamer: A Unified Multi-View Engineering Drawings Generation Model",
+      "authors": "Shurui Liu, Weide Chen, Changwang Yi, Ancong Wu",
+      "date": "2026-09-28",
+      "pdf": "https://arxiv.org/pdf/2609.35242v1",
+      "score": "7.0",
+      "evidence": "生成多视图工程图并保持跨视图空间对齐",
+      "tldr": "面向CAD的SVG生成多用于艺术创作，难以满足工程图所需几何保真与跨视图空间对齐。DrawingsDreamer将多视图矢量工程图生成统一建模为序列任务，无需栅格图像编码器，并采用层级后缀分词表示，先确定局部几何坐标再分配语义边界。配合渐进式任务感知课程，模型从局部结构修复过渡到宏观生成。实验表明其在多种条件与无条件生成中兼具几何保真与语法准确度。",
+      "tags": "query:cad-spatial",
+      "abstract_en": "Scalable Vector Graphics (SVG) are essential for modern industrial Computer-Aided Design (CAD). However, existing autoregressive SVG generation models are predominantly tailored for artistic creation and struggle to maintain the rigorous geometric fidelity and cross-view spatial alignment required for engineering drawings. To bridge this gap, we introduce \\textbf{DrawingsDreamer}, a unified Large Language Model (LLM)-driven framework for multi-view vector-based engineering drawings generation. By formulating the generation of multi-view engineering drawings purely as a sequence modeling task, we eliminate the need of raster image encoders. We propose a Streamlined Representation utilizing hierarchical postfix tokenization, which guides the model to establish local geometric coordinates before assigning semantic boundaries. Optimized via a progressive task-aware curriculum schedule, \\textbf{DrawingsDreamer} effectively transitions from localized structural repair to macroscopic generation in a unified model. Extensive experiments demonstrate that our unified model achieves strong performance in both geometric fidelity and syntactic accuracy across diverse conditional and unconditional generation tasks.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
