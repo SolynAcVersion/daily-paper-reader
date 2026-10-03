@@ -1,0 +1,57 @@
+{
+  "date": "20261003",
+  "date_label": "",
+  "generated_at": "2026-10-03 22:15:18 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.38177v1",
+      "route": "202610/03/2609.38177v1-imagine3d-llm-teaching-mllms-to-imagine-3d-scenes-before-answering",
+      "title": "Imagine3D-LLM: Teaching MLLMs to Imagine 3D Scenes Before Answering",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "cad-spatial"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "从多视角图像到三维的空间推理",
+      "first_seen_at": "2026-10-03 22:15:18 UTC",
+      "updated_at": "2026-10-03 22:15:18 UTC"
+    },
+    {
+      "paper_id": "2609.38285v1",
+      "route": "202610/03/2609.38285v1-gaugevlm-structuring-spatial-supervision-with-measured-geometric-interventions",
+      "title": "GaugeVLM: Structuring Spatial Supervision with Measured Geometric Interventions",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "cad-spatial"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "带可度量几何干预的空间监督",
+      "first_seen_at": "2026-10-03 22:15:18 UTC",
+      "updated_at": "2026-10-03 22:15:18 UTC"
+    },
+    {
+      "paper_id": "2610.02091v1",
+      "route": "202610/03/2610.02091v1-geolatent-geometry-guided-latent-structuring-with-routed-optimization-for-3d-reasoning",
+      "title": "GeoLatent: Geometry-Guided Latent Structuring with Routed Optimization for 3D Reasoning",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "cad-spatial"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于几何引导隐变量的二维图像三维空间推理",
+      "first_seen_at": "2026-10-03 22:15:18 UTC",
+      "updated_at": "2026-10-03 22:15:18 UTC"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "label": "2026-10-03",
+  "date": "2026-10-03",
+  "generated_at": "2026-10-03T22:15:19",
+  "count": 3,
+  "papers": [
+    {
+      "paper_id": "202610/03/2609.38177v1-imagine3d-llm-teaching-mllms-to-imagine-3d-scenes-before-answering",
+      "section": "quick",
+      "title_en": "Imagine3D-LLM: Teaching MLLMs to Imagine 3D Scenes Before Answering",
+      "authors": "Jaewoo Jung, Hyeonseo Yu, Honggyu An, Jisang Han, Mungyeom Kim, Minkyeong Jeon, Heeseong Shin, Wonjun Moon, Federico Tombari, Daniel Barath, Marc Pollefeys, Seungryong Kim, Sunghwan Hong",
+      "date": "2026-09-29",
+      "pdf": "https://arxiv.org/pdf/2609.38177v1",
+      "score": "6.0",
+      "evidence": "从多视角图像到三维的空间推理",
+      "tldr": "多视角图像的三维推理仍是多模态大模型的短板，现有注入三维先验的方法与人类推理差距明显。Imagine3D-LLM 受人类空间推理启发，在图像 token 后加入可学习 summary token，解码为紧凑三维高斯表征，并用光度重建损失与下一 token 预测联合训练。尽管仅 summary token 受重建监督，该目标仍增强底层图像特征的跨视角对应。模型在多项空间推理与三维理解基准上持续超越先前方法，表明先想象场景比直接被告知像素级几何更有效。",
+      "tags": "query:cad-spatial",
+      "abstract_en": "Reasoning about the 3D world from multi-view images remains a fundamental challenge for Multimodal Large Language Models (MLLMs). While modern MLLMs handle single-image inputs effectively, they struggle to integrate evidence across viewpoints into a coherent 3D understanding. A growing body of work attempts to close this gap by injecting 3D awareness into MLLMs, either by boosting fine-grained pixel-level cross-view correspondence or by fusing features from 3D geometry foundation models, yet a substantial gap to human reasoning persists. In this work, we revisit human spatial reasoning, which suggests that rather than relying on fine-grained geometry cues, humans roughly identify common objects across views, infer the relative geometry between viewpoints, and assemble a coarse 3D layout of the scene. Inspired by this process, we introduce Imagine3D-LLM, an MLLM that learns to assemble a similar compact 3D representation of the scene and conditions its answer on this representation. Concretely, we append a small set of learnable summary tokens after the image tokens, decode them into a compact 3D Gaussian Splatting representation supervised by a photometric reconstruction loss, and train jointly with the standard next-token prediction objective. Notably, although only the summary tokens receive direct reconstruction supervision, this objective also induces stronger cross-frame correspondence within the LLM's underlying image features, suggesting that learning to reconstruct propagates 3D-aware signals throughout the model. As a result, Imagine3D-LLM consistently outperforms prior approaches across multiple spatial reasoning and 3D understanding benchmarks, suggesting that imagining the scene can be more effective than being told its pixel-wise geometry.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202610/03/2609.38285v1-gaugevlm-structuring-spatial-supervision-with-measured-geometric-interventions",
+      "section": "quick",
+      "title_en": "GaugeVLM: Structuring Spatial Supervision with Measured Geometric Interventions",
+      "authors": "Hongbo Wang, Zihan Lin, Wenkui Yang, Shiran Ge, Yuang Ai, Jie Cao, Huaibo Huang, Ran He",
+      "date": "2026-09-29",
+      "pdf": "https://arxiv.org/pdf/2609.38285v1",
+      "score": "6.0",
+      "evidence": "带可度量几何干预的空间监督",
+      "tldr": "视觉语言模型在同一空间关系的不同视角下会自相矛盾，且关系变化时无法响应，因为现有监督未显式刻画误差幅度与跨视角几何依赖。GaugeVLM 在显式3D场景中通过受控物体与相机干预，生成带测量差异和共享真值的关联观测。其 GaugeDPO 将测量误差转为偏好边际，监督规范排序并连接答案几率对比与关系变化。实验在三个VLM骨干、10项空间指标上超越SFT，7B模型MSMU距离与QSpatial+分别提升15.0和18.9个百分点。",
+      "tags": "query:cad-spatial",
+      "abstract_en": "Vision-language models (VLMs) can contradict themselves across views of the same spatial relation and fail to respond when that relation changes. Addressing these failures requires supervision that captures error magnitude and geometric dependencies across observations, both of which remain implicit in training on individual answers or ordinal preferences. Therefore, we introduce GaugeVLM, which makes this structure explicit through controlled object and camera interventions in explicit 3D scenes, producing linked observations with measured differences between spatial relations and shared truths across views. To translate this structure into learning signals, its core objective, GaugeDPO, converts measured errors into preference margins, directly supervises correct canonical rankings across views, and links intervention-induced answer-odds contrasts to measured relation changes with view-specific scales. Our analysis bounds canonical prediction error and establishes that the cross-view and intervention constraints can be jointly satisfied. Empirically, GaugeVLM improves all 10 established spatial metrics over supervised fine-tuning across three VLM backbones, with the main 7B model gaining 15.0 and 18.9 percentage points on MSMU distance and QSpatial+, respectively. These gains also extend to autonomous driving and embodied reasoning, demonstrating the robust generalization across domains.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202610/03/2610.02091v1-geolatent-geometry-guided-latent-structuring-with-routed-optimization-for-3d-reasoning",
+      "section": "quick",
+      "title_en": "GeoLatent: Geometry-Guided Latent Structuring with Routed Optimization for 3D Reasoning",
+      "authors": "Yakun Zhu, Yi Bin, Yujuan Ding, Zheng Wang, Pengpeng Zeng, Duo Peng, Jingkuan Song, Heng Tao Shen",
+      "date": "2026-10-01",
+      "pdf": "https://arxiv.org/pdf/2610.02091v1",
+      "score": "6.0",
+      "evidence": "基于几何引导隐变量的二维图像三维空间推理",
+      "tldr": "从2D图像进行3D空间推理仍受限于离散文本几何标记的表达能力与连续潜变量未被充分利用。GeoLatent提出共同-残差几何对齐CR-GEO与路由优化，分解并结构化位置、方向和全局几何，同时在答案学习中经由潜变量中介再恢复全注意力。实验将几何有效秩从1.00提升至3.87，阻断潜读取后方向准确率由89.1%降至25.8%，并在SPAR-Bench与SPBench上分别达到73.0%和72.1%，超越已有方法。",
+      "tags": "query:cad-spatial",
+      "abstract_en": "Despite progress in vision-language models, 3D spatial reasoning from 2D images remains challenging. Text-based methods describe intermediate geometry with discrete tokens, limiting fidelity for continuous spatial relations. Continuous latents offer richer representations, but a single latent type does not explicitly separate the cues needed across spatial tasks. Decomposed spatial latents address this by representing position, direction, and global geometry separately under geometric supervision. Yet the geometry representation can still collapse toward one dominant direction, and unrestricted attention can leave the latents underused during answer learning. We introduce GeoLatent, combining Common--Residual Geometry Alignment (CR-GEO) with routed optimization to structure the geometry states while promoting latent-mediated answer learning. CR-GEO separates shared from residual teacher geometry; routed optimization jointly trains geometry and language, temporarily directs visual answer learning through the latents, and restores full attention with geometry supervision. In controlled comparisons, CR-GEO raises geometry effective rank from 1.00 to 3.87, while blocking latent readout at the bottleneck lowers direction accuracy from 89.1% to 25.8% on 128 fixed questions. After recovery, the differentiated geometry representation and latent-mediated visual route remain available alongside direct image access. GeoLatent achieves 73.0% on SPAR-Bench and 72.1% on SPBench, outperforming previously reported methods on both.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

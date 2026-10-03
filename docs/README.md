@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-10-02</span>
+      <span class="dpr-home-dashboard-kicker">2026-10-03</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 1 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 3 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>1</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>3</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-10-02 23:07:36 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-10-03 22:15:18 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,9 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日速读 1 篇：多视图工程图纸生成模型 DrawingsDreamer（7.0/10），精读 0 篇。</p>
-<p>最值得看的是它把多视图工程图纸生成统一到一个模型里，若你关注 CAD/工程图自动化出图，这篇值得翻一翻。</p>
-<p>建议普通读者先读摘要与生成示例图，确认它输出的图纸是否符合制图规范，再决定要不要深入方法部分。</p>
+<p>今日速读 3 篇多模态 3D 推理论文，均分 6.0，聚焦&quot;让模型先想象空间再答题&quot;。最值得看的是 Imagine3D-LLM 的&quot;先想象 3D 场景再回答&quot;思路，以及 GaugeVLM、GeoLatent 用几何测量与引导来强化空间监督。普通读者可先读 Imagine3D-LLM 摘要，感受多模态模型如何补上空间感这一课。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -86,12 +84,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">1 篇</strong>
+    <strong class="dpr-home-dashboard-count">3 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="DrawingsDreamer: A Unified Multi-View Engineering Drawings Generation Model">DrawingsDreamer: A Unified Multi-View Engineering Drawings Generation Model</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Imagine3D-LLM: Teaching MLLMs to Imagine 3D Scenes Before Answering">Imagine3D-LLM: Teaching MLLMs to Imagine 3D Scenes Before Answering</span></li><li><span class="dpr-home-dashboard-paper-title" title="GaugeVLM: Structuring Spatial Supervision with Measured Geometric Interventions">GaugeVLM: Structuring Spatial Supervision with Measured Geometric Interventions</span></li><li><span class="dpr-home-dashboard-paper-title" title="GeoLatent: Geometry-Guided Latent Structuring with Routed Optimization for 3D Reasoning">GeoLatent: Geometry-Guided Latent Structuring with Routed Optimization for 3D Reasoning</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">cad-spatial <strong>1</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">cad-spatial <strong>3</strong></span></div>
 </section>
 </div>
 
