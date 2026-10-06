@@ -1,8 +1,54 @@
 {
   "label": "2026-10-06",
   "date": "2026-10-06",
-  "generated_at": "2026-10-06T01:04:48",
-  "count": 0,
-  "papers": [],
+  "generated_at": "2026-10-06T23:45:42",
+  "count": 3,
+  "papers": [
+    {
+      "paper_id": "202610/06/2610.04262v1-cadforge-agentic-single-view-cad-reconstruction-with-explicit-geometry-reasoning",
+      "section": "deep",
+      "title_en": "CADForge: Agentic Single-View CAD Reconstruction with Explicit Geometry Reasoning",
+      "authors": "Keyang Lu, Zhifei Yang, Tianao Dong, Mingzhe Xing, Zhen Xiao, Yikai Wang",
+      "date": "2026-10-03",
+      "pdf": "https://arxiv.org/pdf/2610.04262v1",
+      "score": "8.0",
+      "evidence": "带显式几何推理的智能体单视图CAD重建",
+      "tldr": "单视图重建可编辑参数化CAD模型对现代制造很有价值，但因几何观测不完整和零件关系复杂而困难。CADForge采用智能体框架，将图像逐步转为CadQuery程序：先分解CAD语义部件，再显式推理约束并生成建模参数。它按部件合成可执行程序，并用审查智能体迭代评估与反馈，还通过失败引导工具构建和紧凑参数记忆提升鲁棒性。在多样单/多部件对象上，该方法在重建保真度和感知质量上持续优于基线，展示了准确单视图CAD重建的有效路径。",
+      "tags": "query:cad-spatial",
+      "abstract_en": "Reconstructing editable parametric CAD models from a single-view image is of great practical value for modern manufacturing, yet remains challenging due to incomplete geometric observations and complex inter-part relationships. To address it, we propose CADForge, an agentic framework that progressively converts a single image into CadQuery programs. CADForge decomposes an object into CAD-meaningful components and performs explicit geometric reasoning for each component, a process that first identifies CAD-relevant constraints and then translates them into precise modeling parameters through mathematical code. The inferred parameters then drive component-wise synthesis of executable CadQuery programs, with a review agent evaluating the resulting geometry and providing targeted feedback for iterative refinement. To further improve robustness and efficiency, CADForge incorporates a failure-guided toolkit construction mechanism to distill accumulated experience into tools, and maintains a compact parametric CAD memory for retrieving modeling context on demand. Experiments on diverse single- and multi-part objects show that CADForge consistently outperforms existing baselines in reconstruction fidelity and perceptual quality, demonstrating an effective approach to accurate single-view CAD reconstruction.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202610/06/2610.04092v1-unibrep-learning-unified-geometry-and-topology-for-image-conditioned-b-rep-generation",
+      "section": "quick",
+      "title_en": "UniBRep: Learning Unified Geometry and Topology for Image-conditioned B-Rep Generation",
+      "authors": "Haiyang Ying, Allen Tu, Jiaye Wu, Tom Goldstein, Matthias Zwicker",
+      "date": "2026-10-02",
+      "pdf": "https://arxiv.org/pdf/2610.04092v1",
+      "score": "7.0",
+      "evidence": "从单张图像生成B-Rep CAD几何与拓扑",
+      "tldr": "单图生成B-Rep需兼顾几何准确、拓扑有效与复杂形状。该框架以几何优先策略适配预训练图生模型，生成特征网格作为统一中间表示：表面提供几何支架，空间特征编码面分离线索；双分支生成几何与面分离特征，再经构造管线拟合曲面、恢复边界连接并组装显式B-Rep。在DeepCAD上有效率达80.49%，面Chamfer距离从0.1096降至0.0345，优于CADDreamer并超过HoLa公开演示。该工作突破预设面数限制可扩展至复杂形状泛化到真实照片。",
+      "tags": "query:cad-spatial",
+      "abstract_en": "Generating a boundary representation (B-rep) conditioned on a single image requires faithful reconstruction of geometry, valid topology, and support for complex shapes. We present UniBRep, a geometry-first framework that adapts a pretrained image-to-3D model to generate a feature mesh as a unified intermediate representation. Its surface provides a geometric scaffold, while spatially aligned learned features encode face-separation cues for topology recovery. Dual decoder branches generate the geometry and face-separation features; a geometry- and feature-guided construction pipeline then fits parametric surfaces, recovers boundary curves and connectivity, and assembles an explicit B-rep using a CAD kernel. Recovering topology from mesh regions avoids predefined architectural face-count limits, allowing face count to scale with shape complexity. On the standard DeepCAD benchmark, UniBRep produces valid B-reps for 80.49\\% of inputs and reduces face Chamfer distance from 0.1096 to 0.0345 relative to CADDreamer. In a matched comparison, UniBRep also outperforms the HoLa public demo across all reported metrics. Further evaluations demonstrate scalability to high-complexity shapes beyond the standard 30-face range, generalization to objects outside the CAD training distribution, and qualitative transfer to real photographs.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202610/06/2610.03799v1-stepcad-mesh-to-cad-code-generation-via-llm-policy-and-geometry-guided-search",
+      "section": "quick",
+      "title_en": "StepCAD: Mesh-to-CAD Code Generation via LLM Policy and Geometry-Guided Search",
+      "authors": "Ghadi Nehme, Faez Ahmed",
+      "date": "2026-10-01",
+      "pdf": "https://arxiv.org/pdf/2610.03799v1",
+      "score": "6.0",
+      "evidence": "通过LLM策略与搜索从网格恢复可执行CAD程序",
+      "tldr": "从3D网格恢复可执行CAD程序因构造组合性与离散/连续耦合而困难；现有方法常单次预测完整程序且偏重草图-拉伸，操作多样性不足且难纠错。StepCAD结合状态条件CAD策略与几何引导搜索：策略依据目标与中间几何预测建模动作，IoU引导树搜索通过局部编辑精修程序。在多个基准上取得最优重建精度与高有效性，相对IoU最高提升87.2%，复杂形状增益显著。",
+      "tags": "query:cad-spatial",
+      "abstract_en": "Recovering executable CAD programs from 3D meshes is challenging due to the compositional nature of CAD construction and the interaction between discrete modeling choices and continuous parameters. Many learning-based methods predict complete programs in a single pass and rely predominantly on sketch-extrude representations, limiting operation diversity and opportunities to correct geometric errors during reconstruction. We introduce StepCAD, a generative optimization approach that combines a state-conditioned CAD policy with geometry-guided search. Given an input mesh, the policy predicts construction actions conditioned on both target and intermediate geometry, and an IoU-guided tree search refines the resulting program through local edits. We also introduce ARCADE-1.5M, a large-scale dataset of 1.5M executable CAD programs spanning diverse operations, sequences with a maximum length of 150+ counted operations, and 12.5M intermediate state-action transitions. Experiments across multiple CAD reconstruction benchmarks show that StepCAD achieves state-of-the-art geometric reconstruction accuracy with consistently high validity, yielding up to 87.2% relative IoU improvement over the strongest evaluated baseline, with particularly large gains on complex shapes. Project page: https://ghadinehme.com/stepcad.github.io/",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
   "errors": []
 }

@@ -1,8 +1,57 @@
 {
   "date": "20261006",
   "date_label": "",
-  "generated_at": "2026-10-06 01:04:48 UTC",
+  "generated_at": "2026-10-06 23:45:40 UTC",
   "recommend_exists": true,
-  "run_count": 1,
-  "papers": []
+  "run_count": 2,
+  "papers": [
+    {
+      "paper_id": "2610.04262v1",
+      "route": "202610/06/2610.04262v1-cadforge-agentic-single-view-cad-reconstruction-with-explicit-geometry-reasoning",
+      "title": "CADForge: Agentic Single-View CAD Reconstruction with Explicit Geometry Reasoning",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "cad-spatial"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "带显式几何推理的智能体单视图CAD重建",
+      "first_seen_at": "2026-10-06 23:45:40 UTC",
+      "updated_at": "2026-10-06 23:45:40 UTC"
+    },
+    {
+      "paper_id": "2610.04092v1",
+      "route": "202610/06/2610.04092v1-unibrep-learning-unified-geometry-and-topology-for-image-conditioned-b-rep-generation",
+      "title": "UniBRep: Learning Unified Geometry and Topology for Image-conditioned B-Rep Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "cad-spatial"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "从单张图像生成B-Rep CAD几何与拓扑",
+      "first_seen_at": "2026-10-06 23:45:40 UTC",
+      "updated_at": "2026-10-06 23:45:40 UTC"
+    },
+    {
+      "paper_id": "2610.03799v1",
+      "route": "202610/06/2610.03799v1-stepcad-mesh-to-cad-code-generation-via-llm-policy-and-geometry-guided-search",
+      "title": "StepCAD: Mesh-to-CAD Code Generation via LLM Policy and Geometry-Guided Search",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "cad-spatial"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "通过LLM策略与搜索从网格恢复可执行CAD程序",
+      "first_seen_at": "2026-10-06 23:45:40 UTC",
+      "updated_at": "2026-10-06 23:45:40 UTC"
+    }
+  ]
 }
