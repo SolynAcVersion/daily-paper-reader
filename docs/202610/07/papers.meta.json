@@ -1,0 +1,39 @@
+{
+  "label": "2026-10-07",
+  "date": "2026-10-07",
+  "generated_at": "2026-10-07T23:26:08",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202610/07/2610.04572v1-only-project-once-projection-adaptive-loss-for-exact-constraint-satisfaction",
+      "section": "quick",
+      "title_en": "Only Project Once: Projection-Adaptive Loss for Exact Constraint Satisfaction",
+      "authors": "Tim Aebersold, Soheyl Massoudi, Mark Fuge",
+      "date": "2026-10-03",
+      "pdf": "https://arxiv.org/pdf/2610.04572v1",
+      "score": "6.0",
+      "evidence": "单步投影在训练中精确满足约束",
+      "tldr": "在部署学习模型时，精确满足约束至关重要，现有方法需在训练中展开多步修复并软惩罚残余违反，计算与内存开销大且修复不收敛时鲁棒性差。本文提出投影自适应损失 PAL：训练时仅用一次分离的投影步骤，并依据该步后的约束残差自适应加权原始预测的约束惩罚。实验表明，PAL 在高度非线性约束下几乎保持完美可行性，在合成与工程基准上持平或超越现有方法，并在 ACOPF 上比 DC3 训练快 2.5 倍，还支持昂贵约束经神经代理训练。",
+      "tags": "query:cad-spatial",
+      "abstract_en": "Precise constraint satisfaction is a prerequisite to deploying learned models in many areas, motivating methods that repair raw neural predictions with a repair procedure. Current methods unroll multiple repair steps in training and softly penalize constraint violations that remain after the unroll. This is compute- and memory-intensive, lacks robustness when the repair fails to converge, and surrenders most of the constraint satisfaction work to the repair. Our central finding is that, contrary to common practice, a single detached projection step suffices in training. We accomplish this with a Projection-Adaptive Loss (PAL), which uses the constraint residual after this single step to adaptively weigh constraint penalties on the raw prediction. In experiments, PAL is the only method that retains virtually perfect feasibility on extremely nonlinear constraints, and matches or outperforms current methods on synthetic and engineering benchmarks. Because it only requires a single detached projection step, PAL trains 2.5x faster than the canonical repair-based method (DC3) on its own ACOPF benchmark. PAL can also be trained when constraints are expensive to evaluate (e.g., via neural surrogates), a setting where current unrolled methods are memory-intractable.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202610/07/2610.08698v1-primitivecad-an-llm-based-point-to-cad-reconstruction-with-primitive-aware-tokenization-and-operation-alignment",
+      "section": "quick",
+      "title_en": "PrimitiveCAD: An LLM-Based Point-to-CAD Reconstruction with Primitive-Aware Tokenization and Operation Alignment",
+      "authors": "Jian Gao, Kailin Bi, Jiamin Xu, Jinlan Xu, Gang Xu",
+      "date": "2026-10-06",
+      "pdf": "https://arxiv.org/pdf/2610.08698v1",
+      "score": "6.0",
+      "evidence": "保留CAD基元与几何特征的点云到CAD重建",
+      "tldr": "现有point-to-CAD方法多将问题视为通用点云编码与token预测，忽视CAD基元相关的token化与监督，难以准确重建复杂基元结构。PrimitiveCAD提出多阶段范式：先用基元感知点云tokenization学习鲁棒几何表示，再对LLM监督微调并引入操作对齐损失，最后用强化学习与特征线对齐奖励降低随机性。在DeepCAD和Fusion360上，方法在代码有效性、几何精度和几何特征保持方面达到SOTA。",
+      "tags": "query:cad-spatial",
+      "abstract_en": "Large-model-based point-to-CAD generation holds immense potential for advancing industrial design and enhancing 3D modeling efficiency. However, most existing methods approach the problem as a general point-cloud encoding and token prediction task, neglecting the tokenization and supervision specifically for CAD-related primitives. As a result, these methods often struggle to accurately reconstruct the intricate primitive structures. To address this limitation, we propose PrimitiveCAD, a novel multi-stage paradigm for point-to-CAD reconstruction that enhances the geometric accuracy of generated CAD models while better preserving critical geometric features. First, we introduce a primitive-aware point cloud tokenization model, enabling the system to learn more robust geometric representations from CAD point clouds. Next, we perform supervised finetuning on a large language model (LLM) and introduce an operation alignment loss to align key CAD operation frequencies, thereby improving the preservation of global shape features. Finally, we incorporate reinforcement learning (RL) and introduce a feature-line alignment reward to further reduce stochasticity and enhance the fine-grained preservation of geometric features. Experiments on the DeepCAD and Fusion360 datasets show that our method achieves state-of-the-art performance in code validity, geometric accuracy, and geometric feature preservation.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

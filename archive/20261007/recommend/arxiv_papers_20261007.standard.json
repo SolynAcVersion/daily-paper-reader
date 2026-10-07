@@ -1,0 +1,94 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-10-07T23:24:23.364287+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2610.04572v1",
+      "source": "arxiv",
+      "title": "Only Project Once: Projection-Adaptive Loss for Exact Constraint Satisfaction",
+      "abstract": "Precise constraint satisfaction is a prerequisite to deploying learned models in many areas, motivating methods that repair raw neural predictions with a repair procedure. Current methods unroll multiple repair steps in training and softly penalize constraint violations that remain after the unroll. This is compute- and memory-intensive, lacks robustness when the repair fails to converge, and surrenders most of the constraint satisfaction work to the repair. Our central finding is that, contrary to common practice, a single detached projection step suffices in training. We accomplish this with a Projection-Adaptive Loss (PAL), which uses the constraint residual after this single step to adaptively weigh constraint penalties on the raw prediction. In experiments, PAL is the only method that retains virtually perfect feasibility on extremely nonlinear constraints, and matches or outperforms current methods on synthetic and engineering benchmarks. Because it only requires a single detached projection step, PAL trains 2.5x faster than the canonical repair-based method (DC3) on its own ACOPF benchmark. PAL can also be trained when constraints are expensive to evaluate (e.g., via neural surrogates), a setting where current unrolled methods are memory-intractable.",
+      "authors": [
+        "Tim Aebersold",
+        "Soheyl Massoudi",
+        "Mark Fuge"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CE"
+      ],
+      "published": "2026-10-03T15:08:15+00:00",
+      "link": "https://arxiv.org/pdf/2610.04572v1",
+      "tags": [
+        "keyword:cad-spatial"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "single projection step enforces exact constraints during training",
+      "llm_evidence_cn": "单步投影在训练中精确满足约束",
+      "llm_evidence": "单步投影在训练中精确满足约束",
+      "canonical_evidence": "单步投影在训练中精确满足约束",
+      "llm_tldr_en": "PAL challenges the practice of unrolling many repair steps for constraint satisfaction, showing a single detached projection step suffices in training. It uses the post-projection residual to adaptively weight penalties, giving exact constraint satisfaction more cheaply and robustly.",
+      "llm_tldr_cn": "部署学习模型常需精确满足约束，但现有方法在训练中展开多步修复并软惩罚残余违反，计算与内存开销大且修复不收敛时鲁棒性差。本文提出投影自适应损失PAL，发现单次分离投影步骤即可在训练中满足约束，并用约束残差自适应加权惩罚。实验表明该方法在精确约束满足上更高效稳健。其显式投影约束注入思想与尺度一致性三维重建需求相关，可迁移至工程图重建。",
+      "llm_tldr": "部署学习模型常需精确满足约束，但现有方法在训练中展开多步修复并软惩罚残余违反，计算与内存开销大且修复不收敛时鲁棒性差。本文提出投影自适应损失PAL，发现单次分离投影步骤即可在训练中满足约束，并用约束残差自适应加权惩罚。实验表明该方法在精确约束满足上更高效稳健。其显式投影约束注入思想与尺度一致性三维重建需求相关，可迁移至工程图重建。",
+      "llm_tags": [
+        "query:cad-spatial"
+      ],
+      "matched_query_tag": "query:cad-spatial",
+      "matched_query_text": "Methods for injecting explicit projection constraints into neural networks for scale consistent 3D reconstruction from engineering drawings.",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.08698v1",
+      "source": "arxiv",
+      "title": "PrimitiveCAD: An LLM-Based Point-to-CAD Reconstruction with Primitive-Aware Tokenization and Operation Alignment",
+      "abstract": "Large-model-based point-to-CAD generation holds immense potential for advancing industrial design and enhancing 3D modeling efficiency. However, most existing methods approach the problem as a general point-cloud encoding and token prediction task, neglecting the tokenization and supervision specifically for CAD-related primitives. As a result, these methods often struggle to accurately reconstruct the intricate primitive structures. To address this limitation, we propose PrimitiveCAD, a novel multi-stage paradigm for point-to-CAD reconstruction that enhances the geometric accuracy of generated CAD models while better preserving critical geometric features. First, we introduce a primitive-aware point cloud tokenization model, enabling the system to learn more robust geometric representations from CAD point clouds. Next, we perform supervised finetuning on a large language model (LLM) and introduce an operation alignment loss to align key CAD operation frequencies, thereby improving the preservation of global shape features. Finally, we incorporate reinforcement learning (RL) and introduce a feature-line alignment reward to further reduce stochasticity and enhance the fine-grained preservation of geometric features. Experiments on the DeepCAD and Fusion360 datasets show that our method achieves state-of-the-art performance in code validity, geometric accuracy, and geometric feature preservation.",
+      "authors": [
+        "Jian Gao",
+        "Kailin Bi",
+        "Jiamin Xu",
+        "Jinlan Xu",
+        "Gang Xu"
+      ],
+      "primary_category": "cs.GR",
+      "categories": [
+        "cs.GR"
+      ],
+      "published": "2026-10-06T17:13:46+00:00",
+      "link": "https://arxiv.org/pdf/2610.08698v1",
+      "tags": [
+        "keyword:cad-spatial",
+        "query:cad-spatial"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "point-to-CAD reconstruction preserving CAD primitives and geometric features",
+      "llm_evidence_cn": "保留CAD基元与几何特征的点云到CAD重建",
+      "llm_evidence": "保留CAD基元与几何特征的点云到CAD重建",
+      "canonical_evidence": "保留CAD基元与几何特征的点云到CAD重建",
+      "llm_tldr_en": "PrimitiveCAD improves point-to-CAD reconstruction with a multi-stage paradigm featuring primitive-aware point-cloud tokenization and operation alignment, boosting geometric accuracy and preserving critical CAD features.",
+      "llm_tldr_cn": "针对现有点云到CAD生成方法忽视CAD基元分词与监督、难以准确重建复杂基元结构的问题，本文提出多阶段范式PrimitiveCAD。方法引入基元感知的点云分词与操作对齐，强化对CAD相关基元的表征与监督。该范式提升了生成CAD模型的几何精度并更好保留关键几何特征，为工业设计中的高效三维逆向建模提供新思路。",
+      "llm_tldr": "针对现有点云到CAD生成方法忽视CAD基元分词与监督、难以准确重建复杂基元结构的问题，本文提出多阶段范式PrimitiveCAD。方法引入基元感知的点云分词与操作对齐，强化对CAD相关基元的表征与监督。该范式提升了生成CAD模型的几何精度并更好保留关键几何特征，为工业设计中的高效三维逆向建模提供新思路。",
+      "llm_tags": [
+        "query:cad-spatial"
+      ],
+      "matched_query_tag": "query:cad-spatial",
+      "matched_query_text": "reconstructing 3D CAD models from 2D drawings",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

@@ -1,0 +1,1568 @@
+Title: Only Project Once: Projection-Adaptive Loss for Exact Constraint Satisfaction
+
+URL Source: https://arxiv.org/pdf/2610.04572v1
+
+Published Time: Tue, 06 Oct 2026 01:06:35 GMT
+
+Number of Pages: 36
+
+Markdown Content:
+Preprint 
+
+# Only Project Once: Projection-Adaptive Loss for Exact Constraint Satisfaction 
+
+## Tim Aebersold 1∗ Soheyl Massoudi 1 Mark Fuge 11ETH Zürich 
+
+§ https://github.com/IDEALLab/projection-adaptive-loss 
+
+Abstract 
+
+Precise constraint satisfaction is a prerequisite to deploying learned models in many areas, motivating methods that repair raw neural predictions with a repair procedure. Current methods unroll multiple repair steps in training and softly penalize constraint violations that remain after the unroll. This is compute- and memory-intensive, lacks robustness when the repair fails to converge, and surrenders most of the constraint satisfaction work to the repair. Our central finding is that, contrary to common practice, a single detached projection step suffices in training. We accomplish this with a Projection-Adaptive Loss (PAL), which uses the constraint residual after this single step to adaptively weigh constraint penalties on the raw prediction. In experiments, PAL is the only method that retains virtually perfect feasibility on extremely nonlinear constraints, and matches or outperforms current methods on synthetic and engineering benchmarks. Because it only requires a single detached projection step, PAL trains 2.5 × faster than the canonical repair-based method (DC3) on its own ACOPF benchmark. PAL can also be trained when constraints are expensive to evaluate (e.g., via neural surrogates), a setting where current unrolled methods are memory-intractable. 
+
+# 1 Introduction 
+
+Precise enforcement of hard constraints remains a key challenge in many applications of machine learning. For example, in atmospheric and fluids modeling, neural surrogates must adhere to conservation laws for stable roll-out over long time horizons (Watt-Meyer et al., 2023; Krishnapriyan et al., 2021). In power systems and robotics, learned policies must reliably conform to operational or safety limits to be deployed (Pan et al., 2023; Brunke et al., 2022), and in mechanical and aerospace design, generated designs must not violate stress or aerodynamic limits (Hoyer et al., 2019; Bouhlel et al., 2020). Current methods that enforce constraint satisfaction can typically be divided into two categories. Penalty methods use fixed or adaptive constraint weights in the training loss and typically do not exactly satisfy constraints. More recent methods apply a repair procedure to raw model predictions to ensure constraints are satisfied. In this latter category, the current predominant approach to train these methods is to unroll multiple repair steps per training iteration. Any residual violation at the end of the unroll is then softly penalized in the loss with a fixed weight, as shown in Fig. 1. In our view, this has three major drawbacks: (i) Unrolled repair is compute- and memory-intensive, which limits applicability to relatively cheap-to-evaluate constraints (e.g., closed-form expressions). (ii) Current methods softly penalize post-repair constraint residuals. When the projection iterates do not converge (e.g., under extremely non-linear constraints), a soft penalty does not provide enough training pressure to satisfy these constraints. (iii) We believe that the repair should only act as a final clean-up, and the neural net should learn the bulk of constraint satisfaction. Methods that train with unrolled repair tend to transfer the majority constraint satisfaction work to the repair step. To address these issues, our contributions are as follows: 1. Single-Step Repair in Training. We show that, contrary to the prevailing wisdom, only a 
+
+single detached projection step suffices in training while matching or outperforming multi-step unrolled-repair baselines (§5.1—§5.3). This avoids backpropagation through the repair, and enables tractability in applications where unrolled-repair training is infeasible (§5.2). 
+
+> ∗
+
+Corresponding author. taebersold@ethz.ch 
+
+1arXiv:2610.04572v1 [cs.LG] 3 Oct 2026 Preprint 2. Loss Formulation. We propose a Projection-Adaptive Loss (PAL) which enables reliable training with single-step repair. It is agnostic to the choice of projection step (LM, SQP, Interior-Point, . . . ). This formulation shifts the feasibility load to the neural net and only treats projection as final clean-up (Fig. 2) and avoids degradation of feasibility when the projector sequence fails to converge (§5.3).                             
+
+> zˆyΦP×N
+> ˜y(N)L ∼ f+wc˜c(N)
+> zˆyΦf, ˆc
+> P˜y(1) Φ˜c(1) ¯wc
+> ×1(detached)
+> L ∼ f+¯wcˆc
+> wc: fixed soft weight
+> SOTA PAL (Ours)
+> Backbone NθPRepair Step ΦEvaluator
+
+Figure 1: PAL vs. State-of-the-Art (SOTA) repair-aware training. From raw model predictions ˆy,SOTA iterates projector P and evaluator Φ for N times per training iteration and then uses a soft penalty on post-repair constraint violation ˜c(N ). We instead use a single and detached projection step to ˜y(1) . PAL then uses the post-projection residual ˜c(1) to adaptively drive ¯wc, which acts as an adaptive penalty on the raw prediction’s constraint residual ˆc.
+
+# 2 Preliminaries 
+
+Problem. We focus on amortized optimization, which targets settings where instances of the same problem family are solved repeatedly under varying conditions where learned models have previously been shown to predict solutions with optimality comparable to classical solvers at many times lower inference cost (Donti et al., 2021; Lastrucci & Schweidtmann, 2025). We consider the constrained optimization problem 
+
+min  
+
+> y∈Rn
+
+f (y, z ) s.t. h(y, z ) = 0 , g(y, z ) ≤ 0,
+
+where y is the design variable, z an input condition or learned embedding, f the objective, and h
+
+and g the equality and inequality constraints. In the following notation, we suppress z for brevity. We write c(y) ≥ 0 for the vector of constraint violations, with entries |hk(y)| for the equalities and 
+
+max( gk(y), 0) for the inequalities, and M := {y : c(y) = 0 } for the feasible set. 
+
+Backbone and Evaluator. A neural network Nθ : z 7 → ˆy produces predictions, and an evaluator 
+
+Φ( y) 7 → (f, h, g ) scores a candidate y by returning the objective and constraint values. We require the evaluator Φ to be differentiable in y.
+
+Projector. A projector P produces iterates ˜y(i+1) = P(˜ y(i), c (˜ y(i))) from ˜y(0) = ˆ y toward M. We write ∆y(i) := ˜ y(i+1) − ˜y(i) for the repair step’s displacement and Ri,k := ck(˜ y(i)) for the constraint residuals at iteration i. The projection is computed independently per batch element. Appendix A provides a full notation overview. 2Preprint 
+
+# 3 Related Work 
+
+We focus on settings where Φ is expensive and lacks any exploitable algebraic form, but is smoothly differentiable. Approaches enforcing constraints by construction via hand-specified output lay-ers (Beucler et al., 2021) or differentiable optimization layers (Amos & Kolter, 2017; Agrawal et al., 2019) usually require known structure (linearity, convexity, . . . ) that Φ does not expose, and are thus out of scope here. 
+
+Penalty Methods. A straightforward approach is to incorporate constraints directly into the training loss: Lc ∼ wc · c(ˆ y), with penalty multipliers wc either fixed or propagated adaptively (Platt & Barr, 1988; Basir & Senocak, 2023). However, these soft methods often fail to satisfy constraints exactly (Donti et al., 2021). A naive solution is to “bolt on” a repair procedure at test-time. However, this can result in poor solution quality after projection because the trained model fails to anticipate the repair operation (Chu et al., 2026; Grontas et al., 2026), a finding we corroborate in our own experiments. Recent approaches therefore use the repair procedure in end-to-end training. We now discuss prominent variants of this idea. 
+
+Repair Methods. Projection-based methods evaluate constraint residuals c and their Jacobian J
+
+to perform a linearized quasi-orthogonal projection from (˜ y(i)) onto the feasible set M. Because the linearization introduces higher-order error, multiple projection steps are typically used at both training and inference time, often with auto-stopping once feasibility is reached. Recent examples are HardNet (Min & Azizan, 2024) (restricted to linear constraints), Πnet (Grontas et al., 2026) (restricted to analytically known convex constraints), ENFORCE (Lastrucci & Schweidtmann, 2025), or SnareNet (Chu et al., 2026), which uses Levenberg–Marquardt (LM) projection, improving projection stability when the constraint Jacobian is near-degenerate. We use a similar projector (see Eq. 8), albeit with adaptive damping according to Yamashita & Fukushima (2001). To solve the issue of slow convergence in early training, some methods use adaptive constraint relaxation in early training (Chu et al., 2026), or warm-up using plain penalty methods (Lastrucci & Schweidtmann, 2025). DC3 (Donti et al., 2021) decomposes optimization variables into independent ( ˆyindep ) and dependent ( ydep ) subsets, predicting the former via the neural backbone and recovering the latter via projection to satisfy equality constraints, with inequalities handled via gradient descent. DC3 requires that equality constraints have known dependence on ydep . Instead of projection, FSNet (Nguyen & Donti, 2025) employs gradient descent to minimize ∥h(y(i))∥2 + ∥g(y(i))∥2 at repair step i.FSNet carries formal convergence guarantees, and unlike projection methods, avoids full Jacobian construction, which scales favorably with constraint count. Its core limitation is iteration count. It requires more repair steps N than iterative projection methods, making backpropagation memory-intensive. L-BFGS (Liu & Nocedal, 1989) with early stopping and truncated unrolled differentiation mitigate but do not resolve this. 
+
+Gap. Existing methods (DC3, SnareNet, ENFORCE, FSNet, . . . ) as shown under SOTA in Fig. 1 share three limitations. First, they unroll multiple repair steps per training iteration and backpropagate through them, which is intractable for very expensive evaluators Φ. Second, they train on post-repair constraint residuals using soft penalties with fixed scalar weights wc, w d:
+
+L = f (˜ y) + wd∥ˆy − ˜y(N )∥2 + wc∥c(˜ y(N ))∥2.
+
+When the unrolled projector drives c(˜ y(N )) ≈ 0 during training, the constraint loss term ( wc) exerts no pressure on the backbone and the repair carries all of the feasibility work as is shown later in Fig. 2. When the unroll does not converge, on the other hand, the residual that remains competes with f (˜ y) through the fixed weight wc, and feasibility degrades as we show in §5.3. 
+
+# 4 Method 
+
+We now specify the adaptive penalty update and loss formulation that form our core contribution in detail. The procedure is shown with a damped LM repair step (which is described in more detail in Appendix F, but can be used analogously with SQP and Interior-Point (IP). 3Preprint 
+
+Algorithm 1 PAL training. 
+
+Require: Backbone Nθ , Evaluator Φ, Epochs T , Hyperparameters τc, τ d, γ, D max , δ, η  
+
+> 1:
+
+Initialize θ; ¯wc,k , ¯wd ← 0. 
+
+> 2:
+
+for t = 1 , . . . , T do  
+
+> 3:
+
+ˆy ← Nθ ▷ Neural backbone prediction  
+
+> 4:
+
+c(ˆ y), f (ˆ y) ← Φ(ˆ y) ▷ Evaluator forward pass  
+
+> 5:
+
+J ← ∂c/∂ ˆy ▷ K reverse-mode VJPs through Φ 
+
+> 6:
+
+˜y(1) ← PROJECT 
+
+ ˆy, J, c (ˆ y); δ ▷ Single-step projection with LM, SQP, IP, ...  
+
+> 7:
+
+L ← LOSS 
+
+ ˆy, ˜y(1) , c (ˆ y), ¯wc,k , ¯wd
+
+ ▷ Eq. 1  
+
+> 8:
+
+θ ← θ − η ∇θ L ▷ Training step with LR η 
+
+> 9:
+
+c(˜ y(1) ) ← Φc(˜ y(1) ) ▷ Detached evaluator forward  
+
+> 10:
+
+¯wc,k , ¯wd ← LOG GAP UPDATE 
+
+  ¯wc,k , ¯wd, c (˜ y(1) ), ˜y(1) − ˆy; τc, τ d, γ, D max 
+
+ ▷ Eq. 2  
+
+> 11:
+
+end for  
+
+> 12:
+
+return θ
+
+## 4.1 PAL Training 
+
+Algorithm 1 summarizes PAL training. We now discuss the three subroutines P ROJECT , L OSS (Eq. 1), and L OG GAP UPDATE (Eq. 2). 
+
+Projection. Our core insight is that, in training, it is sufficient to apply a single repair step instead of a full unroll. Given a prediction ˆy ∼ Nθ, we perform a single forward pass on the evaluator, 
+
+Φ(ˆ y) 7 → c(ˆ y), f (ˆ y), and K backward passes to assemble the Jacobian J. We then perform a single projection iterate. In our experiments, we use Levenberg–Marquardt with damping according to Yamashita & Fukushima (2001) as the default. PAL is also compatible with other projectors (e.g., Sequential Quadratic Programming (SQP) or Interior-Point (IP) as described in Appendix D). Note that at test time , we use up to 10 projection steps with early stopping, just as our baselines do. 
+
+Loss. After this single projection step, we compute the training loss as follows 
+
+L(ˆ y, ˜y(1) ) = f (ˆ y) + 
+
+> K
+
+X
+
+> k=1
+
+¯wc,k ck(ˆ y) + ¯ wd ∥∆y(1) ∥, (1) where we only utilize gradient signal from pre-projection quantities in training: the pre-projection constraint violations c(ˆ y), displacement ∥∆y(1) ∥ := ∥˜y(1) − ˆy∥ with ˜y(1) detached from the gradient graph, and f (ˆ y). We use f (ˆ y) rather than f (˜ y(1) ) because it progresses more reliably in early training (see Appendix E for further details). 
+
+Projection-Adaptive Penalty Weight Update. To compute the penalty weights ¯wc,k and ¯wd, we use two post-projection metrics which directly indicate the quality of the repair step: 1. The nonlinear residual after a single projection step R1,k . It serves as a proxy for how easy constraint k is to repair. A perfectly linear, uncoupled constraint, for example, can be driven to R1,k ≈ 0 in a single step. A coupled, nonlinear constraint might, even for small pre-projection violations c(ˆ y), be difficult to project, leaving non-zero R1,k .2. The displacement ∥∆y(1) ∥. It is the distance in y the first repair step takes. For the repair to act only as final clean-up, we require ∥∆y(1) ∥ to be small. In training, both these quantities should evolve to be within thresholds τd (displacement) and τc
+
+(constraint residual). To achieve ∥∆y(1) ∥ < τ d and R1,k < τ c for all k, we use the following adaptive penalty scheme: 4Preprint 
+
+¯wc,k ←
+
+
+
+¯wc,k + γ min   log 10  
+
+> R1,k
+> τc
+
+, D max 
+
+
+
+> +
+
+¯wd ←
+
+
+
+¯wd + γ min   log 10  
+
+> ∥∆y(1) ∥
+> τd
+
+, D max 
+
+
+
+> +
+
+(2) where γ is the penalty growth rate and Dmax is the per-step growth cap (in decades). The update acts as follows: if any R1,k > τ c, i.e., constraint k is hard to project, ¯wc,k grows. If ∥∆y(1) ∥ > τ d, i.e., if the repair step displacement is too large, ¯wd grows. On the other hand, where ∥∆y(1) ∥ < τ d or 
+
+R1,k < τ c, the respective weights ¯wd and ¯wc,k will gradually decay, freeing learning signal towards the objective. We use log-scaling to make the updates of ¯wc,k and ¯wd meaningful across constraints with heterogeneous native scales and to avoid vanishing weight growth for τc,k < R 1,k ≪ 1. The growth rate γ sets the adaptation timescale, and Dmax promotes stability in early training. We initialize ¯wd = 0 and ¯wc,k = 0 and clip to positive values to prevent rewarding constraint violations. In practice, τc is set to the desired constraint tolerance (which is typically known in advance for any application), i.e., we aim for the first projection step to reach feasibility in training. Note that τc does not affect the precision reachable at test time. Despite single-step repair in training, constraint violation can be driven to machine precision given enough projection steps, as we show in Appendix G. We characterize the influence of the newly introduced hyperparameters in Ablations (§ 5.4), where a wide band of settings yields comparable performance. We observe that the per-constraint terms ¯wc,k ck(ˆ y) and the displacement term ¯wd ∥∆y(1) ∥ are often aligned, i.e., reducing one also reduces the other. We show in our Ablations (§ 5.4) that using only one of the two often suffices, but we nevertheless employ both simultaneously as a two-layered safety net, e.g., for stiff constraints ( ∥∂c k/∂y ∥ ≫ 1) for which a small ∥∆y(1) ∥ can still leave a large residual R1,k due to damping and nonlinearity. The displacement penalty ¯wd∥∆y(1) ∥ also ensures 
+
+f (ˆ y) ≈ f (˜ y(1) ) once the projection step is small, so the backbone’s objective is a reliable proxy for the post-projection objective without backpropagating f through the repair step. 10 0        
+
+> 10 −3
+> 10 −6
+> h(ˆ y)
+> ALM + Bolt-On Unrolled Soft Loss PAL (Ours)
+> 02000 4000 10 0
+> 10 −3
+> 10 −6
+> h(˜ y(1) )
+> 02000 4000
+> Epoch
+> 02000 4000
+> h1
+> h2
+
+Figure 2: Two-constraint toy problem where h1 is stiff but linear and therefore trivial to project, and 
+
+h2 is non-stiff but nonlinear and difficult to project (more details in Appendix H). Top: constraint violations before projection h(ˆ y). Bottom: constraint violations after the first projection step h(˜ y(1) ),equivalent to R1,k . Left: Adaptive Augmented Lagrangian Method (ALM) (adaptive penalty method) trains without projection and penalizes constraints only according to pre-projection magnitude h(ˆ y),i.e., cannot distinguish constraints by repair difficulty. Center: Under soft-loss training (SnareNet, ENFORCE, FSNet, . . . ), the projector drives h(˜ y(N )) ≈ 0 in training so that constraint pressure on the neural backbone is low, resulting in high violations before and after the first projection step. 
+
+Right: PAL exerts the right amount of training pressure onto h(ˆ y) (and thus the neural backbone) to drive post-projection residuals hk(˜ y(1) ) below threshold τc (here 10 −7). 5Preprint In Fig. 2, we show how our loss formulation shifts feasibility work between learning (neural backbone 
+
+Nθ ) and repair ( P). 1
+
+# 5 Experiments 
+
+Baselines. We compare against ENFORCE (Lastrucci & Schweidtmann, 2025), FSNet (Nguyen & Donti, 2025), SnareNet (Chu et al., 2026), and DC3 (Donti et al., 2021)where applicable. We also include ALM (Basir & Senocak, 2023) (an adaptive penalty method) with Bolt-On repair, i.e., the repair step is only used at test time. The ALM+Bolt-On baseline uses the same LM repair step with adaptive damping as PAL. All other methods use their own repair methods (DC3 uses undamped completion, FSNet uses gradient descent, SnareNet uses damped LM with fixed damping, etc.). 
+
+Metrics. All experiments report the Objective as f (˜ y(N )) and Feasibility (%) , the fraction of evaluation samples whose final output ˜y(N ) satisfies all constraints to within the benchmark-specific tolerance (typically 10 −3 or 10 −4). To compare compute, we report Evaluator forward passes N fΦ
+
+and Evaluator backward passes N bΦ, normalized by batch size. 
+
+## 5.1 Comparison on Synthetic Stress-Test Benchmarks 
+
+In Table 1 we compare results on six benchmarks, each adding a specific stressor. S1 is the simplest with a single nonlinear equality constraint and a non-convex objective. S2 adds inequality constraints and a non-convex chained Rosenbrock objective. S3 features an ill-conditioned objective with constraint coupling. S4 has nonlinear coupling between two variable blocks. S5 is an overdetermined nonlinear equality system, whose feasible set reduces to a single point per condition z. S6 is high-dimensional with K = 90 constraints, including redundant inequalities. By construction, projection alone cannot reach the constrained optimum on S1 –S4 and S6 . All synthetic benchmarks have a known constrained optimum f ⋆ = 0 . More details on S1 –S6 can be found in Appendix I. All methods are hyperparameter-tuned with Bayesian optimization, which is described in further detail in Appendix M. All baselines reach high feasibility except DC3 due to its undamped completion step, which fails on ill-conditioned problems. With PAL this failure mode can be replicated when the LM projection is used without damping (see App. B). PAL is competitive with or outperforms repair-aware baselines on optimality across S1 –S6 . EN-FORCE is the best baseline, except on S5 where it is structurally inapplicable. ALM+Bolt-On reaches near-perfect feasibility but very poor optimality. Since the projector is held constant between PAL and ALM+Bolt-On, this isolates ALM’s lack of repair-awareness as the cause for ALM+Bolt-On’s poor performance, which corroborates prior observations that training without repair-awareness can be counterproductive (Chu et al., 2026; Grontas et al., 2026). SnareNet underperforms on objective across the sweep. FSNet performs well, except on S5 .Per training step, PAL requires two forward passes through Φ (at ˆy and ˜y(1) ) and K + 1 backward passes at ˆy, of which K build the Jacobian J. In practice, we cache J and reuse it to backpropagate the training loss (Eq. 1) without a second pass through Φ. PAL uses the fewest evaluator passes of the repair-aware methods for problems with few constraints (moderate K) such as S1 . At, high 
+
+K (e.g., S6 ) FSNet, which sidesteps Jacobian assembly, requires fewer backward passes. Among projection methods, PAL requires fewest. ALM+Bolt-On is cheapest overall but achieves poor results. Appendix O elaborates further on compute scaling. 
+
+## 5.2 Case Studies in Science and Engineering 
+
+Table 2 shows results for three engineering case studies. E1 optimizes aircraft designs using expensive neural Signed Distance Function (SDF) geometry representation with surrogates for structural proper-ties and aerodynamics (Sung et al., 2025). E2 (urban planning) uses a video-diffusion model (Perini       
+
+> 1Side note on representation: We hypothesize that pushing the neural backbone Nθto predict near-feasible
+> ˆycould also encourage the learned embeddings of Nθto approximately encode the constraint manifold M, a property other repair-aware losses do not actively encourage.
+
+6Preprint Table 1: Synthetic stress-test experiments. Means and standard deviations across 10 seeds. “—”: failure on 2 or more seeds. Forward and backward evaluator passes N fϕ and N bϕ per training step are only shown for extreme cases S1 (K = 1 ) and S6 (K = 90 ), with full results in Table 12.                                                                                                                                                                                                                                                                                       
+
+> Bench. ALM+ Bolt-On ENFORCE DC3 FSNet SnareNet PAL
+> [Ours] Feas. (%)
+> S1 100 ±0100 ±0—100 ±0100 ±0100 ±0
+> S2 100 ±0100 ±097 ±7100 ±0100 ±0100 ±0
+> S3 100 ±0100 ±0100 ±0100 ±0100 ±0100 ±0
+> S4 100 ±1100 ±0—100 ±0100 ±0100 ±0
+> S5 100 ±0——51 ±31 100 ±0100 ±0
+> S6 100 ±0100 ±0—100 ±0100 ±0100 ±0
+> Mean 100 ——92 100 100
+> Obj.
+> S1 0.07 ±0.12 0.00 ±0.00 —0.00 ±0.00 0.78 ±0.10 0.03 ±0.04
+> S2 0.27 ±0.17 0.00 ±0.00 0.00 ±0.00 0.00 ±0.00 0.16 ±0.00 0.00 ±0.00
+> S3 0.00 ±0.00 0.00 ±0.00 0.00 ±0.00 0.00 ±0.00 0.01 ±0.00 0.00 ±0.00
+> S4 19 .47 ±5.25 0.01 ±0.01 —0.00 ±0.00 0.09 ±0.01 0.00 ±0.00
+> S5 0.00 ±0.00 ——4.41 ±2.16 0.00 ±0.00 0.00 ±0.00
+> S6 0.14 ±0.03 0.00 ±0.00 —0.00 ±0.00 0.60 ±0.06 0.03 ±0.01
+> Mean 3.32 ——0.73 0.27 0.01
+> N fΦ S1 1.0±0.06.2±0.1—72 ±77 35 .0±5.02.0±0.0
+> S6 1.0±0.07.1±0.1—15 .5±0.081 .1±2.92.0±0.0
+> N bΦ S1 1.0±0.04.1±0.1—11 .0±5.633 .6±5.02.0±0.0
+> S6 1.0±0.0128 ±2—7.2±0.0253 ±12 91 .0±0.0
+
+et al., 2026) to evaluate pedestrian wind comfort in cities. Both of these benchmarks are compute-intensive. E3 is a variant of the AC Optimal Power Flow (ACOPF) benchmark that motivated DC3 Donti et al. (2021), but our variant has more constraints (576 vs. 256). This benchmark is difficult due to the high number of constraints and nonlinear, rank-deficient equalities. Detailed descriptions of E1 —E3 can be found in Appendix K. On both E1 and E2 , the unroll-repair baselines are Out Of Memory (OOM) even at a mini-batch size of 1, except SnareNet on E1 which OOM’s at a mini-batch size of 8. With our 4 ×GH200, PAL can be used with batches of 32 on E1 , and 16 on E2 . On E1 and E2 , the penalty methods are the least memory-hungry, but fall short in optimality and feasibility, respectively. On E3 , DC3’s flagship benchmark, PAL leads in both feasibility and optimality while training 2.5× faster. We reproduce the violation magnitudes of DC3 within their reported precision (Donti et al., 2021). On 
+
+E3 , the penalty-based methods train in minutes because they avoid K backward passes, but fall short catastrophically in constraint satisfaction. Overall, PAL is the only method that combines high feasibility with a competitive objective on all three engineering benchmarks. Regarding the lacking robustness of unroll baselines, we hypothesize on the varying causes of failures (IPOPT on E2 and ENFORCE, FSNet and SnareNet on E3 ) in Appendix L. These results also show that, as one might expect, unrolled-repair methods are not tractable on problems with expensive constraint simulators ( E1 and E2 ). 
+
+## 5.3 Highly Nonlinear Constraints 
+
+Figure 3 shows how PAL and unrolled soft-loss baselines behave under extreme constraint nonlinearity on a synthetic problem with tunable curvature κ. In addition to feasibility and optimality, we report the ratio ∥∇ θ Lc∥/∥∇ θ L∥ in late training. It represents the share of overall training pressure exerted by the constraint loss. Details on the problem setup and full results are shown in Appendix C. PAL reaches optimality on par with the full-unroll methods (Fig. 3b) and retains the highest feasibility of all methods at extreme curvature of κ = 10 6 (Fig. 3a). PAL achieves this because its adaptive weight update applies increasing pressure to reduce pre-projection constraints when the linear first projection step leaves large residuals, as shown in Fig. 3c. The soft-loss baselines do not possess this mechanism: at high curvature, when the unrolled projection steps alone fail to converge to feasible 7Preprint Table 2: Case studies in science and engineering. Mem: peak GPU memory (GB) at batchsize=1 .Time: training wall-clock. 10 seeds each, IPOPT 5 restarts × 64 queries. ∗: Maximum constraint violation. Bold marks the best value among feasible methods. ‡: 49 GB on 3 seeds and >96 GB (OOM) on 7 seeds in the first two training epochs. §: batchsize=8 . †: 0% feasibility. : Non-convergence. : Structurally inapplicable. Baseline failure modes are discussed in Appendix L. c_site=0.013 c_clearance=0.000 c_height=0.000 c_danger=0.000 c_coverage=0.000 
+
+> 0246810 12 14
+> comfort zone wind speed (m/s)
+
+E1 Unmanned Aircraft E2 Urban Planning E3 ACOPF (IEEE-57) 
+
+Method Obj ×10 −2 Feas% Mem Obj ×10 1 Feas% Mem Obj ×10 4 Viol ∗×10 −2 Time PAL −3.8±0.1 100 ±0 4.4 −2.71 ±0.02 98 ±3 25 .7 4.28 ±0.05 0 .15 ±0.08 3 h50 mALM −2.6±1.5 99 ±1 4.1 −2.74 ±0.01 58 ±33 15 .7 3.60 ±2.00 † 1100 ±731 1m18 s†
+
+ALM+Bolt-On −2.6±1.5 100 ±0 4.1 −2.73 ±0.01 69 ±25 15 .7 4.52 ±0.26 † 38 ±56 1m18 s†
+
+DC3 4.34 ±0.06 0.53 ±0.23 9h52 mFSNet OOM OOM > 96 OOM OOM > 96 1.15 ±0.46 † > 10 17 3h29 m†
+
+SnareNet OOM OOM > 96 § OOM OOM > 49 ‡
+
+ENFORCE OOM OOM > 96 OOM OOM > 96 8h54 mIPOPT −3.7±0.1 100 — see Donti et al. (2021) 
+
+solutions, constraints and optimality compete on equal footing due to the fixed-weight summed loss. This can be seen also by the lower ∥∇ θ Lc∥/∥∇ θ L∥ in Fig. 3c. For PAL at τc = 1 , the adaptive weight growth is effectively disabled and we observe similar degradation. These results demonstrate that, despite the single-step training, PAL is not limited to near-linear constraints. In fact, it is more robust in cases where unrolled projection alone is not sufficient for reliable constraint satisfaction due to the use of our projection-adaptive weight loss. 
+
+## 5.4 Ablation Studies 
+
+In Appendix B, we ablate PAL’s loss and weight update mechanisms and their hyperparameters. Slowing the adaptive weight growth via γ or Dmax (recall Eq. 2 for definitions) can improve optimality, while an excessive growth rate γ can collapse optimality unless mitigated by low Dmax .We find that outcomes are insensitive to the threshold τd across several orders of magnitude. If 
+
+τd is set to a sufficiently small numerical value, further tightening has no effect. Using f (˜ y(1) ) in the training loss in place of f (ˆ y) degrades both optimality and feasibility. We hypothesize on a potential cause in detail in Appendix E. Disabling either ¯wc or ¯wd preserves performance, suggesting 
+
+10 0 10 2 10 4 10 6
+
+80 100 
+
+κ
+
+(a) Feas. (%) 
+
+10 0 10 2 10 4 10 6
+
+10 -2
+
+10 0
+
+10 2
+
+κ
+
+(b) Obj. 
+
+10 0 10 2 10 4 10 6
+
+50 100 
+
+κ
+
+(c) ∥∇ Lc∥/∥∇ L∥ (%) PAL τc=10 -4
+
+PAL τc=10 -2
+
+PAL τc=1 
+
+ALM+Bolt-On ENFORCE SnareNet 
+
+Figure 3: Feasibility, objective and constraint training pressure ∥∇ θ Lc∥/∥∇ θ L∥ over curvature κ.PAL retains best-in-class feasibility at high curvature despite a single repair step, because its adaptive loss raises training pressure in response to first-step residuals. 8Preprint redundancy of these loss terms. Disabling both collapses optimality and degrades pre-projection feasibility, yet the projector alone still recovers ∼99% feasibility. This validates our load-share argument: the projector achieves feasibility in isolation, but ideal results require non-trivial constraint pressure on the backbone. 
+
+Alternative Repair Steps. In Appendix D we compare PAL with SQP and Interior-Point repair in place of LM. Both roughly match LM across the synthetic benchmarks, showing that PAL is agnostic to the type of projection step, as long as it is robust on ill-conditioned Jacobians. (Newton projection, for example, which is a special case of LM without damping, is not. We discuss damping hyperparameters of the LM step in Appendix B). 
+
+Repair Steps in Inference. In Appendix G we vary the number of repair steps N at test time and show that single-step training does not limit the precision of constraint satisfaction PAL reaches at inference. 
+
+# 6 Conclusion 
+
+Contributions and Outcome. We introduced PAL, a scheme where single-step projection metrics drive adaptive constraint weights. We show that with this method, fully unrolled repair is not necessary to achieve good feasibility or optimality, and a single step is in fact sufficient. In fact, PAL is the only method that achieves best-in-class results simultaneously on synthetic stress-testing (Tab. 1), engineering applications (Tab. 2), and under extremely high curvature (Fig. 3). In §5.2 we show that using only a single detached repair step enables tractable training when constraints are expensive to evaluate, like with high-fidelity physics surrogates. Current full-unroll methods were not able to train on these problems due to memory. Using only a single detached step also results in fewer constraint evaluator calls (§5.1), and PAL trains 2.5 × faster than DC3 on its flagship benchmark (while still providing better feasibility and optimality). Lastly, PAL’s adaptive weight scheme shifts feasibility towards the neural backbone (Fig. 2) which soft-loss unrolled baselines do not do. Under extremely non-linear constraints, this manifests in PAL retaining near-full feasibility while unrolled soft-loss baselines degrade (§5.3). 
+
+Limitations. Several limitations remain: (1) Like all other projection-based methods, we require the constraint evaluation to be differentiable. (2) In all repair-based methods, feasibility is defined w.r.t. the evaluator Φ. If Φ is inaccurate, constraints will be satisfied according to an incorrect reference. (3) Assembly of the Jacobian requires K backward passes through the evaluator Φ for all projection-based methods. PAL alleviates this issue somewhat as it only requires a single projection step, but problems where the number of constraints K is extremely large are still compute-intensive. And (4), PAL introduces several hyperparameters ( γ, τd, τc, Dmax , δ, λmin ), though in practice τc
+
+follows immediately from problem-specific tolerances, Dmax can be left at a conservative default, and δ and λmin have negligible impact. 
+
+Future Work. A first natural extension is to study how PAL performs on tasks beyond amortized optimization, where the objective f is a data-driven loss (e.g., MSE). Second, efficiency improvements or auto-calibration of the remaining hyperparameters could make single-step repair with PAL even more easily usable in scientific and engineering applications. Examples include estimating ¯wd and 
+
+¯wc from sparse projection only every few steps, or auto-calibrating γ and Dmax from early-trajectory metrics or τd from the relative error between f (ˆ y) and f (˜ y(1) )). Third, since the repair step is never backpropagated through, PAL does not require a differentiable projector. This opens the door to bespoke, non-differentiable repair methods that are specialized to niche applications beyond the projection methods explored here. 
+
+Acknowledgments 
+
+We would like to thank Giacomo Lastrucci, one of the authors of ENFORCE (Lastrucci & Schweidt-mann, 2025), for the inspiration and productive discussion, and Gerhard Bräunlich for support with the differentiable geometry tooling underlying our engineering benchmarks. 9Preprint 
+
+# References 
+
+Akshay Agrawal, Brandon Amos, Shane Barratt, Stephen Boyd, Steven Diamond, and J. Zico Kolter. Differentiable convex optimization layers. In Advances in Neural Information Processing Systems 32 (NeurIPS) , 2019. AI4OPT. ML4OPF: Machine learning for optimal power flow. https://github.com/ AI4OPT/ML4OPF , 2024. Brandon Amos and J. Zico Kolter. OptNet: Differentiable optimization as a layer in neural networks. In Proceedings of the 34th International Conference on Machine Learning (ICML) , pp. 136–145, 2017. Shamsulhaq Basir and Inanc Senocak. An adaptive augmented Lagrangian method for training physics and equality constrained artificial neural networks. arXiv preprint arXiv:2306.04904 ,2023. Tom Beucler, Michael Pritchard, Stephan Rasp, Jordan Ott, Pierre Baldi, and Pierre Gentine. Enforc-ing analytic constraints in neural networks emulating physical systems. Physical Review Letters ,126(9):098302, 2021. doi: 10.1103/PhysRevLett.126.098302. Mohamed Amine Bouhlel, Sicheng He, and Joaquim R. R. A. Martins. Scalable gradient-enhanced artificial neural networks for airfoil shape design in the subsonic and transonic regimes. Structural and Multidisciplinary Optimization , 61(4):1363–1376, 2020. doi: 10.1007/s00158-020-02488-5. Lukas Brunke, Melissa Greeff, Adam W. Hall, Zhaocong Yuan, Siqi Zhou, Jacopo Panerati, and Angela P. Schoellig. Safe learning in robotics: From learning-based control to safe reinforcement learning. Annual Review of Control, Robotics, and Autonomous Systems , 5:411–444, 2022. doi: 10.1146/annurev-control-042920-020211. Ya-Chi Chu, Alkiviades Boukas, and Madeleine Udell. SnareNet: Flexible repair layers for neural networks with hard constraints. arXiv preprint arXiv:2602.09317 , 2026. Priya L. Donti, David Rolnick, and J. Zico Kolter. DC3: A learning method for optimization with hard constraints. In International Conference on Learning Representations (ICLR) , 2021. Philip E. Gill, Walter Murray, and Michael A. Saunders. SNOPT: An SQP algorithm for large-scale constrained optimization. SIAM Review , 47(1):99–131, 2005. doi: 10.1137/S0036144504446096. Panagiotis D. Grontas, Antonio Terpin, Efe C. Balta, Raffaello D’Andrea, and John Lygeros. Πnet: Optimizing hard-constrained neural networks with orthogonal projection layers. In The Fourteenth International Conference on Learning Representations (ICLR) , 2026. Yoav HaCohen, Nisan Chiprut, Benny Brazowski, Daniel Shalem, Dudu Moshe, Eitan Richardson, Eran Levin, Guy Shiran, Nir Zabari, Ori Gordon, Poriya Panet, Sapir Weissbuch, Victor Kulikov, Yaki Bitterman, Zeev Melumian, and Ofir Bibi. LTX-Video: Realtime video latent diffusion. arXiv preprint arXiv:2501.00103 , 2024. Stephan Hoyer, Jascha Sohl-Dickstein, and Sam Greydanus. Neural reparameterization improves structural optimization. arXiv preprint arXiv:1909.04240 , 2019. NeurIPS 2019 Workshop on Solving Inverse Problems with Deep Networks. Diederik P. Kingma and Max Welling. Auto-encoding variational bayes. In International Conference on Learning Representations (ICLR) , 2014. Aditi Krishnapriyan, Amir Gholami, Shandian Zhe, Robert Kirby, and Michael W. Mahoney. Char-acterizing possible failure modes in physics-informed neural networks. In Advances in Neural Information Processing Systems , volume 34, pp. 26548–26560, 2021. Giacomo Lastrucci and Artur M. Schweidtmann. ENFORCE: Nonlinear constrained learning with adaptive-depth neural projection. arXiv preprint arXiv:2502.06774 , 2025. Richard Lincoln. PYPOWER: Port of MATPOWER to Python. https://github.com/rwl/ PYPOWER , 2011. 10 Preprint Dong C. Liu and Jorge Nocedal. On the limited memory BFGS method for large scale optimization. 
+
+Mathematical Programming , 45(1–3):503–528, 1989. doi: 10.1007/BF01589116. Uday Mallappa, Hesham Mostafa, Mikhail Galkin, Mariano Phielipp, and Somdeb Majumdar. FloorSet – a VLSI floorplanning dataset with design constraints of real-world SoCs. In Proceedings of the 43rd IEEE/ACM International Conference on Computer-Aided Design (ICCAD) , pp. 1–9, 2024. doi: 10.1145/3676536.3676814. Robert A. McDonald and J. R. Gloudemans. Open vehicle sketch pad: An open source parametric geometry and analysis tool for conceptual aircraft design. In AIAA SciTech 2022 Forum , 2022. doi: 10.2514/6.2022-0004. Ben Mildenhall, Pratul P. Srinivasan, Matthew Tancik, Jonathan T. Barron, Ravi Ramamoorthi, and Ren Ng. NeRF: Representing scenes as neural radiance fields for view synthesis. In European Conference on Computer Vision (ECCV) , 2020. Youngjae Min and Navid Azizan. HardNet: Hard-constrained neural networks with universal approximation guarantees. arXiv preprint arXiv:2410.10807 , 2024. Hoang T. Nguyen and Priya L. Donti. FSNet: Feasibility-seeking neural network for constrained optimization with guarantees. In Advances in Neural Information Processing Systems (NeurIPS) ,2025. Jorge Nocedal and Stephen J. Wright. Numerical Optimization . Springer Series in Operations Research and Financial Engineering. Springer, New York, NY, 2 edition, 2006. ISBN 978-0-387-30303-1. Xiang Pan, Minghua Chen, Tianyu Zhao, and Steven H. Low. DeepOPF: A feasibility-optimized deep neural network approach for AC optimal power flow problems. IEEE Systems Journal , 17(1): 673–683, 2023. doi: 10.1109/JSYST.2022.3201041. Janne Perini, Rafael Bischof, Moab Arar, Ayça Duran, Michael A. Kraus, Siddhartha Mishra, and Bernd Bickel. Pretrained video models as differentiable physics simulators for urban wind flows. 
+
+arXiv preprint arXiv:2603.21210 , 2026. John C. Platt and Alan H. Barr. Constrained differential optimization. In Advances in Neural Information Processing Systems (NeurIPS) , 1988. C. Bane Sullivan and Alexander A. Kaszynski. PyVista: 3D plotting and mesh analysis through a streamlined interface for the Visualization Toolkit (VTK). Journal of Open Source Software , 4(37): 1450, 2019. doi: 10.21105/joss.01450. Nicholas Sung, Steven Spreizer, Mohamed Elrefaie, Matthew C. Jones, and Faez Ahmed. Blended-Net++: A large-scale blended wing body aerodynamics dataset and benchmark. arXiv preprint arXiv:2512.03280 , 2025. Matthew Tancik, Pratul P. Srinivasan, Ben Mildenhall, Sara Fridovich-Keil, Nithin Raghavan, Utkarsh Singhal, Ravi Ramamoorthi, Jonathan T. Barron, and Ren Ng. Fourier features let networks learn high frequency functions in low dimensional domains. In Advances in Neural Information Processing Systems (NeurIPS) , 2020. L. Thurner, A. Scheidler, F. Schäfer, J. Menke, J. Dollichon, F. Meier, S. Meinecke, and M. Braun. pandapower — an open-source python tool for convenient modeling, analysis, and optimization of electric power systems. IEEE Transactions on Power Systems , 33(6):6510–6521, 2018. doi: 10.1109/TPWRS.2018.2829021. Andreas Wächter and Lorenz T. Biegler. On the implementation of an interior-point filter line-search algorithm for large-scale nonlinear programming. Mathematical Programming , 106(1):25–57, 2006. doi: 10.1007/s10107-004-0559-y. Oliver Watt-Meyer, Gideon Dresdner, Jeremy McGibbon, Spencer K. Clark, Brian Henn, Matthew E. Peters, Christopher S. Bretherton, James Duncan, Noah D. Brenowitz, Karthik Kashinath, Michael S. Pritchard, and Boris Bonev. ACE: A fast, skillful learned global atmospheric model for climate prediction. arXiv preprint arXiv:2310.02074 , 2023. 11 Preprint Nobuo Yamashita and Masao Fukushima. On the rate of convergence of the Levenberg-Marquardt method. In G. Alefeld and X. Chen (eds.), Topics in Numerical Analysis , volume 15 of Computing Supplementa , pp. 239–249. Springer, Vienna, 2001. doi: 10.1007/978-3-7091-6217-0_18. Dominic Yang, Prasanna Balaprakash, and Sven Leyffer. Modeling design and control problems involving neural network surrogates. Computational Optimization and Applications , 83:759–800, 2022. doi: 10.1007/s10589-022-00404-9. Ray Daniel Zimmerman, Carlos Edmundo Murillo-Sánchez, and Robert John Thomas. MATPOWER: Steady-state operations, planning, and analysis tools for power systems research and education. 
+
+IEEE Transactions on Power Systems , 26(1):12–19, 2011. doi: 10.1109/TPWRS.2010.2051168. 
+
+# A Notation Summary 
+
+See Table 3. Table 3: Notation summary.                           
+
+> Symbol Meaning
+> y, ˆy, ˜y(i)design variable, raw neural backbone prediction, i-th projection iterate
+> zinput condition or latent embedding
+> f, h, g objective, equality constraints, inequality constraints
+> ck, c Aper-constraint residual, active residual vector
+> Aactive index set
+> JAactive constraint Jacobian ∂c A/∂y
+> MAlocal feasible manifold {y:cA(y) = 0 }
+> Nnumber of projection steps
+> ∆y(i), R iprojection step displacement, constraint violation residual at iterate iλi, δ LM damping at step i, damping hyperparameter
+> τc, τ dresidual threshold, displacement threshold
+> ¯wc,k ,¯wdadaptive constraint and displacement penalty weights
+> γ, D max log-gap rate, per-step growth ceiling (decades)
+
+# B Ablation Study 
+
+In this appendix, we report full ablations for PAL. These ablations were carried out on the six synthetic benchmarks S1 –S6 , over n = 10 seeds each. We report worst-bench (i.e., maximum) objective across the six synthetic benchmarks and minimum feasibility across the six benchmarks. Additionally, we report the pre-projection residual ∥c(ˆ y)∥∞ averaged across S1 –S6 . This is a measure of how much of the constraint-satisfaction load the backbone Nθ carries. Table 4 shows the full ablation summary. 
+
+Projector Damping ( A–D). Rows A–D show that performance is insensitive to the residual-scaling coefficient δ on these tasks. Rows A, B, C sweep δ over three orders of magnitude and match Base 
+
+on objective and feasibility. Row A (δ = 0 ) retains the numerical floor λproj 
+
+> min
+
+. Row D removes both residual-scaled damping and the floor, but on S2 –S6 the masked BB ⊤ is singular, the Cholesky solve fails, and the eigenvalue fallback of the projector applies its own floor of 10 −4. Only S1 runs undamped, and there two of ten seeds degrade in objective, which accounts for the larger spread of row D. A fully undamped step is exposed on ill-conditioned BB ⊤, which is the failure mode of the undamped completion of DC3 in Table 1. 
+
+Multiplier-Update Timescale ( E–J). The growth rate γ and the per-step cap Dmax jointly control how aggressively the constraint weights ¯wc,k react to residual overshoot. Lowering γ marginally improves optimality ( E), since slower weight growth leaves more early capacity for the objective. Raising γ collapses optimality ( F) as the penalty term overwhelms f . Pairing a high γ with a low Dmax (G) recovers Base performance, confirming that γ and Dmax act together rather than 12 Preprint Table 4: Ablation of PAL hyperparameters on synthetic benchmarks ( n = 10 seeds). Blank cells inherit the Base value. Bold = best per column. The f column lists the argument used inside the objective term of the training loss ( ˆy vs ˜y(1) ). Dec. marks whether the multiplier rule’s decay half is active: ✓ = bidirectional (default), 7 = monotone-only growth. 
+
+ID δ λproj  
+
+> min
+
+γ Dmax τc τd LR f Dec. Obj. (max) ↓ Feas. (%) ↑ ∥c(ˆ y)∥∞ ↓
+
+Base 10 −3 10 −6 10 −2 1 10 −4 10 −4 10 −4 ˆy ✓ 0.08 ± 0.01 100 ± 0% 0.06 ± 0.02 
+
+A 0 0.07 ± 0.01 100 ± 0% 0.06 ± 0.02 
+
+B 10 −4 0.07 ± 0.01 100 ± 0% 0.05 ± 0.01 
+
+C 10 −2 0.10 ± 0.02 100 ± 0% 0.06 ± 0.02 
+
+D 0 0 0.11 ± 0.09 100 ± 0% 0.06 ± 0.02 
+
+E 10 −3 0.06 ± 0.03 100 ± 0% 0.09 ± 0.06 
+
+F 10 −1 0.72 ± 0.04 100 ± 0% 0.06 ± 0.02 
+
+G 10 −1 0.1 0.08 ± 0.01 100 ± 0% 0.06 ± 0.02 
+
+H 0.2 0.04 ± 0.03 100 ± 0% 0.06 ± 0.04 
+
+J 5 0.23 ± 0.02 100 ± 0% 0.06 ± 0.02 
+
+K 10 −2 0.08 ± 0.01 100 ± 0% 0.07 ± 0.02 
+
+L 10 −3 0.13 ± 0.02 100 ± 0% 0.22 ± 0.06 
+
+M 10 −4 ˜y(1) 0.84 ± 0.79 99 ± 1% 0.40 ± 0.01 
+
+N 10 −1 ˜y(1) 0.84 ± 0.79 99 ± 1% 0.61 ± 0.06 
+
+O 10 −1 ˆy 0.03 ± 0.04 100 ± 0% 0.14 ± 0.04 
+
+P 10 10 0.08 ± 0.03 100 ± 0% 0.07 ± 0.02 
+
+Q 10 10 0.06 ± 0.01 100 ± 0% 0.27 ± 0.02 
+
+R 10 10 10 10 0.93 ± 0.52 99 ± 2% 1.19 ± 0.11 
+
+S ✗ 0.09 ± 0.01 100 ± 0% 0.05 ± 0.01 
+
+independently. Tightening Dmax alone ( H) halves Base ’s worst-bench objective, while loosening it (J) is several times worse but not catastrophic. 
+
+Tolerances and Learning Rate ( K–L). The displacement threshold τd can be loosened by two orders of magnitude without effect ( K). It only needs to be “small enough”. The learning-rate sensitivity in L is generic to neural training and not specific to PAL. 
+
+Pre-Projection Objective ( M–O). Replacing f (ˆ y) with f (˜ y(1) ) in the training loss degrades both optimality and feasibility across two values of τd (M, N), while a matched control with the same 
+
+τd and f (ˆ y) (O) recovers near-baseline. We hypothesize this is related to how gradients flow back through the projection step, which we detail in Appendix E. 
+
+Load-Share ( P–R). Disabling either ¯wc or ¯wd alone (by setting its threshold to 10 10 ) preserves objective and feasibility on this benchmark ( P, Q), with the only visible effect being a higher pre-projection ∥c(ˆ y)∥∞ in Q where ¯wd is off. The two terms in Eq. 2 therefore act as redundant safety nets here, although both may be needed for stiffer constraint systems. Disabling both ( R) lifts all constraint pressure from the backbone: optimality collapses and pre-projection ∥c(ˆ y)∥∞ blows up, yet the projector still recovers ∼99% feasibility on its own. This is an empirical demonstration of our load-share argument: the projector is often capable enough to handle feasibility in isolation, but a more preferable outcome is for the neural backbone to carry significant constraint-satisfaction burden, and the projector (or, more generally: the repair step) to be utilized as clean-up only. Together, the ablation isolates the design choices behind PAL’s loss formulation: the log-gap weight update with a growth cap for the multipliers ( E–J), the pre-projection objective f (ˆ y) (M–O), and load-share, where backbone pressure remains necessary for optimality even when the projector alone recovers feasibility ( P–R). 
+
+# C Constraint Curvature Ablation 
+
+Here, we compare how PAL and the baselines perform under extreme constraint curvature. As a benchmark, we construct a problem with a single equality constraint, whose curvature κ ranges 13 Preprint from 0 to 10 6. The problem dimensionality is dim( y) = 8 . Equation 3 shows the constraint c(y)
+
+(variable-frequency sine on the hyperplane a⊤y = 0 ) with a fixed orthonormal pair a ⊥ b, drawn once and shared across all κ and all seeds. 
+
+c(y) = a⊤y − sin  ω b ⊤y, κ = ω2, fx(y) = T −1(y) − T −1(x) 22. (3) The parameter κ is the curvature stemming from the high-frequency sine component of the constraint. The objective is formulated such that it has a unique optimum (non-multimodal) and a closed-form 
+
+f ⋆ at every κ, using the shear 
+
+T (v) = v + a sin  ω b ⊤v, T −1(v) = v − a sin  ω b ⊤v. (4) All methods use bayesian-optimization tuned hyperparameters (see Appendix M). Plain ALM is 0% feasible at all κ, so we omit it. We use 10 seeds and 512 evaluations per seed, and all runs are in double precision. We measure feasibility here as violations below 10 −4.Additionally, we report the ratio ∥∇ θ Lc∥/∥∇ θ L∥, which is the recorded mean over the last five logged epochs of each training seed. This ratio is effectively the overall share of training pressure exerted by the constraint violation. Table 5 shows feasibility, optimality gap, and constraint training pressure for all methods at varying 
+
+κ. At zero curvature (purely linear constraint), all methods reach 100% feasibility with virtually no optimality gap. For PAL at κ = 0 , the constraint pressure ∥∇ θ Lc∥/∥∇ θ L∥ is equal to zero across 
+
+τc ∈ { 10 −4, 10 −2, 1}. This is because the purely linear constraint at κ = 0 is repaired exactly with a single projection step, so there is no single-step remainder. As can be expected, the constraint training pressure in PAL increases with higher curvature κ (due to larger post-step residuals R1) and with lower residual targets τc, reaching up to ∥∇ θ Lc∥/∥∇ θ L∥ =91% at κ = 10 4 and τc = 10 −4. This is in contrast to the full-unroll baselines. Here, training pressure is weaker at high curvature because post-repair residuals are soft-penalized (or, in the case of FSNet, not at all) instead of being driven by adaptive weight growth as in PAL. One exception is ENFORCE (which, through the soft displacement penalty with constant wd, exerts pressure especially at low κ
+
+where displacement ∥˜y − ˆy∥ is large). But also for ENFORCE, constraint pressure, feasibility and optimality degrade at higher curvatures. Overall, this experiment demonstrates that single-step repair in training does not limit PAL to near-linear constraints. This is by design, as the single-step residual under high curvature triggers improved load sharing in PAL. On the contrary, thanks to the use of adaptive weight updates, PAL exhibits 
+
+better performance than existing full-unroll baselines under high-curvature constraints. All runs use double precision, since above κ = 10 4 the constraint Jacobian is large even at small constraint values, and in single precision the rounding error in y alone produces violations above the feasibility threshold. DC3 does not run with its undamped Newton completion, which diverges on ill-conditioned Jacobians. We instead use a damped Newton completion with Yamashita-Fukushima damping. 
+
+# D Alternative Repair Steps 
+
+We swap the damped LM projector of Equation 8 for two standard single-step repair operators, an Sequential Quadratic Programming (SQP) step with elastic slacks (Nocedal & Wright, 2006; Gill et al., 2005) and an Interior-Point (IP) step (Nocedal & Wright, 2006; Wächter & Biegler, 2006). Each variant exposes one additional hyperparameter: the slack penalty for SQP (we use ρ = 10 3)and the barrier weight for the IP step (we use μ0 = 0 .01 ). Both are trained, just as with our LM repair step, with one detached repair step and iterate the same step at inference with a budget of 10 steps. The loss formulation and weight update rule remain unchanged from PAL. Beyond the above parameters ρ and μ, which were set to reasonable defaults but not tuned, we did not modify any other hyperparameters. Table 6 reports the objective at convergence for the three repair steps. Feasibility is 1.00 ± 0.00 for every method on every benchmark, with the single exception of the IP step on S3 (0.86 ± 0.05 ). We 14 Preprint Table 5: Full results for high-curvature experiment. κ from 0 to 10 6, 10 seeds, all methods trained and evaluated in float64 . ∥∇ θ Lc∥/∥∇ θ L∥ is the share of constraint training pressure. Bold marks the best feasibility at each κ across all methods. †: gradient ratio carried over from the source ALM training run. Plain ALM without Bolt-On is omitted because it is 0% feasible at every κ. DC3 uses a Newton completion with Yamashita-Fukushima damping, since the undamped completion diverges for every κ > 0.
+
+PAL ( τc=10 −4) PAL ( τc=10 −2)
+
+κ Feas. (%) Obj. ∥∇ Lc∥∥∇ L∥ (%) Feas. (%) Obj. ∥∇ Lc∥∥∇ L∥ (%) 
+
+κ=0 100 ±0 0.01 ±0.00 0.0 100 ±0 0.01 ±0.00 0.0 
+
+κ=1 100 ±0 0.01 ±0.00 23 100 ±0 0.01 ±0.00 0.0 
+
+κ=10 100 ±0 0.05 ±0.01 63 100 ±0 0.03 ±0.00 25 
+
+κ=10 2 100 ±0 0.66 ±0.13 72 99.9 ±0.1 0.48 ±0.05 62 
+
+κ=10 3 100 ±0 0.96 ±0.40 89 99.8 ±0.2 0.42 ±0.20 79 
+
+κ=10 4 100.0 ±0.1 2.69 ±1.10 91 99.2 ±0.5 1.23 ±0.52 83 
+
+κ=10 5 99.9 ±0.2 11.84 ±9.98 91 99.3 ±0.5 4.22 ±2.60 79 
+
+κ=10 6 98.3 ±2.1 13.16 ±4.98 89 99.4 ±1.5 10.50 ±6.20 77 PAL ( τc=1 ) ALM+Bolt-On 
+
+κ Feas. (%) Obj. ∥∇ Lc∥∥∇ L∥ (%) Feas. (%) Obj. ∥∇ Lc∥∥∇ L∥ (%) 
+
+κ=0 100 ±0 0.01 ±0.00 0.0 100 ±0 0.00 ±0.00 14 †
+
+κ=1 100 ±0 0.01 ±0.00 0.0 100 ±0 0.19 ±0.01 13 †
+
+κ=10 100 ±0 0.03 ±0.00 0.0 100 ±0 0.14 ±0.01 8.1 †
+
+κ=10 2 97.9 ±1.1 0.34 ±0.03 0.0 98.7 ±0.7 0.25 ±0.08 1.9 †
+
+κ=10 3 85.8 ±2.1 0.26 ±0.10 0.0 86.2 ±1.4 0.34 ±0.22 0.8 †
+
+κ=10 4 79.3 ±3.1 0.78 ±0.43 0.0 78.0 ±2.7 0.56 ±0.12 0.9 †
+
+κ=10 5 77.7 ±4.1 1.80 ±0.75 0.0 75.9 ±2.9 2.71 ±1.50 1.9 †
+
+κ=10 6 87.4 ±8.0 6.12 ±4.17 0.0 76.2 ±4.7 6.97 ±2.78 6.7 †
+
+DC3 ENFORCE 
+
+κ Feas. (%) Obj. ∥∇ Lc∥∥∇ L∥ (%) Feas. (%) Obj. ∥∇ Lc∥∥∇ L∥ (%) 
+
+κ=0 100 ±0 0.76 ±0.03 114 100 ±0 0.00 ±0.00 234 
+
+κ=1 76.4 ±1.8 0.86 ±0.03 143 100 ±0 0.05 ±0.00 341 
+
+κ=10 75.6 ±2.5 0.99 ±0.05 125 100 ±0 0.04 ±0.00 170 
+
+κ=10 2 89.7 ±2.0 1.26 ±0.06 88 100 ±0 0.32 ±0.02 65 
+
+κ=10 3 90.4 ±2.0 1.20 ±0.22 92 94.9 ±8.3 37.90 ±58.84 93 
+
+κ=10 4 87.5 ±3.4 1.47 ±0.70 94 93.7 ±19.9 233 ±610 53 
+
+κ=10 5 91.5 ±5.7 3.12 ±0.46 94 85.1 ±25.3 393 ±982 46 
+
+κ=10 6 92.2 ±8.4 5.33 ±0.74 93 92.2 ±24.3 10.95 ±7.14 61 FSNet SnareNet 
+
+κ Feas. (%) Obj. ∥∇ Lc∥∥∇ L∥ (%) Feas. (%) Obj. ∥∇ Lc∥∥∇ L∥ (%) 
+
+κ=0 100 ±0 0.00 ±0.00 0.0 100 ±0 0.03 ±0.00 0.4 
+
+κ=1 100 ±0 0.00 ±0.00 0.0 100 ±0 0.03 ±0.00 0.7 
+
+κ=10 96.7 ±9.3 72.83 ±52.42 0.0 100 ±0 0.07 ±0.00 1.7 
+
+κ=10 2 96.0 ±11.5 86.24 ±29.21 0.0 100 ±0 0.58 ±0.08 2.6 
+
+κ=10 3 69.6 ±47.8 88.06 ±20.81 0.0 99.6 ±0.2 0.60 ±0.10 13 
+
+κ=10 4 51.5 ±27.1 82.84 ±26.01 0.0 96.2 ±0.8 1.73 ±0.30 15 
+
+κ=10 5 39.4 ±38.1 104 ±28 0.0 93.8 ±1.7 7.22 ±2.99 18 
+
+κ=10 6 17.1 ±34.3 107 ±26 0.0 92.7 ±2.3 23.67 ±12.51 18 
+
+speculate that its barrier steps stall on the near-parallel, ill-conditioned rows of S3 and exhaust the ten-step inference repair budget. 15 Preprint Table 6: Objective at convergence ( f ⋆ = 0 ) for the three repair step mechanisms on the synthetic benchmarks S1 –S6 . Shown is mean ± standard deviation across 10 seeds. All methods use default hyperparameters and consistently reach 100% constraint satisfaction on S1 –S6 , except for IP on S3 
+
+(86 ± 5% ).                                                         
+
+> PAL-LM PAL-SQP PAL-IP
+> S1 0.02 ±0.02 0.01 ±0.01 0.01 ±0.01
+> S2 0.00 ±0.00 0.00 ±0.00 0.02 ±0.00
+> S3 0.00 ±0.00 0.00 ±0.00 0.00 ±0.00
+> S4 0.01 ±0.00 0.01 ±0.00 0.05 ±0.02
+> S5 0.00 ±0.00 0.00 ±0.00 0.00 ±0.00
+> S6 0.08 ±0.01 0.07 ±0.01 0.21 ±0.02
+
+The SQP variant matches or slightly improves on LM on five of the six benchmarks, tying on S2 ,
+
+S3 , and S5 and improving on S1 , S4 , and S6 , and never underperforms LM. This is consistent with SQP’s coupled handling of the inequalities. Overall, PAL accommodates all three repair operators without adaptation, which we interpret as PAL being agnostic to the specific repair step, provided the step is a linearized projection-type repair that is robust to ill-conditioned Jacobians. 
+
+# E Additional Details on f (˜ y) vs. f (ˆ y) for Training Loss 
+
+In this appendix, we hypothesize about the causes of stalled training when f (˜ y(1) ) is used in the PAL training loss. Intuitively, one would think that f (˜ y) is the logical choice, since it is the objective after projection. One would want to take the change in objective by the projection into account. This is also the motivation for using f (˜ y(N )) in the baseline SOTA methods we considered in § 3. However, we have found that using f (˜ y) directly in the loss can have disastrous consequences on training convergence of the objective when projection is enabled in early training. In short, this is because using f (˜ y) involves backpropagating its gradients through the projector. Here, we sketch out in rough terms that, because of how the projector is formulated for us (damped LM), the gradients    
+
+> ∂f (˜ y)
+> ∂ˆy
+
+get projected onto directions tangent to the constraint manifold M, which, in early training 2,can be disastrous because the direction toward the global constrained optimum is, in general, not tangent to M at the repaired ˜y(1) when (as is usual in early training) the unrepaired prediction ˆy is bad (very far from constraint optimum). We first derive how the projector formulation leads to this effect, demonstrate it on our simple example described in Appendix H, and then speculate why SOTA methods employing similar projectors do not report on this effect (as far as we are aware). 
+
+The Differential of One LM Step. We recall the definition of the constraint Jacobian J = ∂c/∂y 
+
+(size K × n, with K the number of active equality constraints and n the dimension of y), M =
+
+JJ ⊤ + λI K , and λ = δ ∥c(ˆ y)∥2. The single LM step is 
+
+˜y(1) (ˆ y) = ˆy − J⊤M −1c. (5) Applying the product rule gives 
+
+∂ ˜y(1) 
+
+∂ ˆy = I − J⊤M −1J − (∂J ⊤/∂ ˆy) M −1c
+
+| {z }
+
+> ∇1
+
+− J⊤ (∂M −1/∂ ˆy) c
+
+| {z }
+
+> ∇2
+
+. (6) where both remainders ∇1 and ∇2 vanish as ∥c∥ → 0, so that: 
+
+∂ ˜y(1) 
+
+∂ ˆy = Pλ + O(∥c∥), Pλ := I − J⊤(JJ ⊤ + λI )−1J. (7)     
+
+> 2On the other hand, later in training, this can be desirable, since one would want objective gradients to reach
+> Nθonly in directions tangent to Mat ˜y.
+
+16 Preprint By the chain rule, ∂f (˜ y(1) )/∂ ˆy ≈ ∇ f (˜ y(1) )⊤Pλ, so the structure of Pλ determines the gradient-signal flow to the neural backbone Nθ when using f (˜ y(1) ) in the training loss. Here, we just consider the case of using f (˜ y(1) ), i.e., a single projection step. 
+
+Graphical Intuition. Take the simplest non-trivial case: one active equality constraint ( K = 1 )with output dimension n = 2 . At ˜y(1) , let u be the unit tangent to the feasible manifold and v the unit normal (so ∇c ∥ v). In the (u, v ) basis, J = (0 , σ ) with σ = ∥∇ c∥, hence JJ ⊤ = σ2 and 
+
+Pλ =
+
+1 00 λσ2 + λ
+
+ .
+
+Writing ∇f (˜ y(1) ) = ( fu, f v )⊤ in the same basis, 
+
+P⊤ 
+
+> λ
+
+∇f (˜ y(1) ) = 
+
+ fu
+
+λσ2 + λ fv
+
+ .
+
+The tangent component fu is preserved. The normal component fv is attenuated by λ/ (σ2 + λ),which vanishes for small damping terms λ. (We use λ = δ∥c∥2 with δ = 10 −3, which results in 
+
+λ ≪ 1). Using an undamped projection ( λ = 0 ) step would entirely block fv .In contrast, when we use the pre-projection objective f (ˆ y), then ∂f (ˆ y)/∂ ˆy = ∇f (ˆ y)⊤ is unperturbed since it is not routed through Pλ. Objective and penalty can compete in the same subspace and the adaptive weight ¯wc arbitrates that competition. When the objective is placed at ˜y(1) , it is band-limited to the tangent subspace and no longer participates in the direction that controls feasibility pressure on the backbone. 
+
+> Tangent perturbation
+> M
+> ˆy
+> ˜y(1)
+> uvδu
+> Normal perturbation
+> M
+> ˆy
+> ˜y(1)
+> uvδv
+
+Figure 4: Geometric intuition. The projector eliminates gradient flow for f (˜ y(1) ) along direction v
+
+(orthogonal to local constraint manifold M) because, for an idealized projector, ∂ ˜y(1) /∂ ˆy · δv = 0 .This leaves only gradients of f (˜ y(1) ) which are tangent to the constraint manifold (direction u) to be backpropagated through the projection step into the neural backbone Nθ .
+
+Empirical Demonstration. In Fig. 5, we show three variants of PAL trained on the toy problem described in Appendix H: (i) loss at f (ˆ y) (PAL default), (ii) loss using f (˜ y(1) ), and (iii) loss using 
+
+f (ˆ y) for the first half of training, switched to f (˜ y(1) ) at half the epochs. Variant (i) converges normally. Variant (ii) is stuck near initialisation for the entire run: the gradient magnitude is roughly four orders of magnitude smaller than in (i). Variant (iii) shows that the failure mode is specific to early training: once the network has been pulled close to the feasible manifold under f (ˆ y), the projector’s normal-attenuation no longer harms training. 
+
+Why do prior methods not report this? We hypothesize that the same gradient-routing pathology affects every projection-based method that places the objective at the post-repair iterate ˜y(N ), but that each SOTA method in the literature implicitly mitigates this issue with warm-up procedures: Both SnareNet (Chu et al., 2026) and ENFORCE (Lastrucci & Schweidtmann, 2025) defer hard projection to late training. SnareNet uses adaptive constraint relaxation, and ENFORCE activates its 17 Preprint 10 6                      
+
+> 10 4
+> 10 2
+> 10 0
+> h(y)
+> PAL: f(y)PAL: f(y(1) )PAL: f(y)f(y(1) )at t= 2500
+> 10 6
+> 10 4
+> 10 2
+> 10 0
+> h(y(1) ) h1
+> h2
+> 10 0
+> f
+> f(y)
+> f(y(10) )
+> 02000 4000
+> Epoch
+> 10 3
+> 10 1
+> f f(y)
+> f(y(1) )
+> 02000 4000
+> Epoch
+> 02000 4000
+> Epoch
+
+Figure 5: PAL loss-placement comparison on the toy problem of Appendix H. Rows from top: pre-projection residuals h(ˆ y), post-projection residuals h(˜ y(1) ), objective values f , and objective gradient magnitudes (computed on a fixed evaluation batch). Columns: f (ˆ y) throughout (PAL default), f (˜ y(1) ) throughout, and a midway switch from f (ˆ y) to f (˜ y(1) ) at t = 2500 (dotted vertical line). When using f (˜ y(1) ) throughout, the objective never escapes the initialisation neighbourhood due to vanishing gradients normal to the manifold. The right column, having trained under f (ˆ y)
+
+first, retains its objective and feasibility quality after the switch, demonstrating that the pathology is specific to early training. 18 Preprint projection module only after a warm-up phase. We hypothesize that DC3 (Donti et al., 2021) and FSNet (Nguyen & Donti, 2025) are unaffected because they rely on gradient descent (FSNet wholly, DC3 for inequalities) where the differential of N small gradient-descent steps does not suffer from the issues described above. 
+
+Implications for PAL. In practice, to circumvent this issue with PAL, there are three approaches to deal with the effect described above: 1. Pre-projection objective . This is what we report on using throughout in this paper and, while not perfect in theory, is the most straightforward solution in practice. Since we enforce ∥∆y(1) ∥ < τ d using our adaptive loss (see weight update in Eq. 2), we assume 
+
+f (ˆ y) ≈ f (˜ y(1) ) for τd ≪ 1 and simply use this. 2. Warm-up . One could consider using f (ˆ y) in early training and switching to f (˜ y(1) ) in late stages of training to combine the advantages of both. However, as Fig. 5 shows, there is virtually no advantage over simply using f (ˆ y) throughout training when τd ≪ 1.3. Warm-up with Penalty Method . Alternatively, one could simply skip projection in early training like many SOTA methods do, and use either f (ˆ y) or f (˜ y(1) ) later in training. For our experiments and algorithm presentation we omit this since it would add more complexity to our method. However, we would like to note that there would be some benefits to doing so also in terms of efficiency, since the additional compute of the single projection step would be eliminated during the warm-up phase. This could be especially relevant for K ≫ 1,where assembly of the constraint Jacobian J is expensive. 
+
+# F Levenberg–Marquardt Projector 
+
+We write c ∈ RK for the constraint violation vector, with entries |hk(y)| for equalities and 
+
+max( gk(y), 0) for inequalities, and K the number of constraints. 
+
+Active Set. The active constraint vector cA collects all violated constraints c(y) > 0. JA(y) := 
+
+∂c A/∂y is the Jacobian of the active constraint vector. The local feasible manifold of the active constraints is MA := {y : cA(y) = 0 }.The LM step treats all active constraints as equalities and does not consider the inactive inequalities, i.e., they are deleted from the linear system. A mask is used for this using c(˜ y(i)) before every iterate. In effect, an inequality that a step overshoots enters the active set at the next iterate, and one that becomes satisfied leaves it. The active set can therefore switch between iterates at inference. In practice, we did not experience any issues with active-set switching. The convergence statement below assumes a fixed active set. The two alternative repair steps (SQP and Interior-Point) in Appendix D do not use this masking, since they both have native ways to account for non-violated inequalities (quadratic subproblem for SQP, barrier weight for IP). 
+
+LM Repair Step. Starting from ˜y(0) = ˆ y, the LM projection applies: 
+
+˜y(i+1) = ˜ y(i) − JA(˜ y(i))⊤
+
+JA(˜ y(i))JA(˜ y(i))⊤ + λiI
+
+−1
+
+cA(˜ y(i)), (8) with Yamashita–Fukushima (Yamashita & Fukushima, 2001) damping 
+
+λi = δ · ∥ cA(˜ y(i))∥2,
+
+where δ > 0 is a constant (we use 10 −3). The projection is computed independently per batch element. Each step of Eq. 8 equivalently solves 
+
+∆y(i) = arg min  
+
+> ∆y
+> 12
+
+cA(˜ y(i)) + JA(˜ y(i)) ∆ y 2 + λi 
+
+> 2
+
+∥∆y∥2. (9) The Tikhonov term λi 
+
+> 2
+
+∥∆y∥2 regularizes JAJ⊤A and bounds the step where the linearization is inaccurate. As cA → 0 this term vanishes, equation 9 reduces to the minimum-norm solution of 19 Preprint 
+
+JA ∆y = −cA, i.e., a first-order approximation to orthogonal projection onto MA. The LM projector is insensitive to the damping hyperparameter δ over multiple orders of magnitude but removing damping entirely ( δ = 0 and λmin = 0 ) degrades the objective on some seeds (see Appendix B). On ill-conditioned constraints the undamped step fails, as we observe for the undamped completion of DC3 in Table 1. Expanding cA around ˜y(i):
+
+cA(˜ y(i+1) ) = cA(˜ y(i)) + JA(˜ y(i)) ˜y(i+1) − ˜y(i) + O(∥∆y(i)∥2).
+
+With damping the LM step does not drive the linearized residual to zero, so Ri+1 = cA(˜ y(i+1) )
+
+collects two contributions: a damping residual and the higher-order Taylor remainder O(∥∆y(i)∥2)
+
+under cA ∈ C1 with locally Lipschitz Jacobian. For the idealized fixed-active-set smooth case (Assumption 1), Yamashita & Fukushima (2001) establish local quadratic convergence of Eq. 8 to the active feasible set MA from a sufficiently close initialization , which we use as motivation for our adaptive weight update rule. 
+
+## F.1 Convergence 
+
+We fix a neighborhood U ⊂ Rd on which the active set A is constant, and let cA : U → RKA denote the corresponding smooth active residual map, with Jacobian JA(y) := ∇cA(y). The local active feasible set is MA := {y ∈ U : cA(y) = 0 }.
+
+Assumption 1 (Local active-set regularity) . There exists a point y⋆ ∈ M A and a neighborhood U of 
+
+y⋆ such that: 1. the active set A is fixed on U .2. cA is continuously differentiable on U , and JA is Lipschitz continuous on U .3. cA satisfies a local error bound on U : there exists κ > 0 such that 
+
+dist( y, MA) ≤ κ∥cA(y)∥ ∀y ∈ U. 
+
+The error bound in (3) is strictly weaker than requiring JA to have full row rank on MA, and accommodates redundant or rank-deficient constraint systems. Under Assumption 1, Theorem 2.1 of Yamashita & Fukushima (2001) applies to the idealized fixed-active-set iteration: for all ˜y(0) sufficiently close to MA, the iterates of Eq. 8 converge quadratically to MA. In particular, there exist C, ρ > 0 such that whenever dist(˜ y(i), MA) ≤ ρ,
+
+dist(˜ y(i+1) , MA) ≤ C dist(˜ y(i), MA)2.
+
+Combining with the error bound and the local Lipschitz property of cA, this yields ri+1 ≤ M r 2 
+
+> i
+
+with 
+
+M := LCκ 2, where ri := ∥cA(˜ y(i))∥ (Yamashita & Fukushima, 2001). This applies to the smooth fixed-active-set map cA, not automatically to the deployed practical projector with active-mask updates and numerical damping floor λmin .
+
+Practical Proxy for the Local Basin. The radius ρ is problem-specific and not directly observable. Accordingly, we do not claim that R1,k < τ c is sufficient for the Yamashita–Fukushima basin condition for the idealized fixed-active-set iteration. Instead, we use R1,k only as a practical heuristic for local convergence. If a single linearized repair step from ˆy drives all constraint residuals below τc,then the local linear model is accurate at ˆy, and the projector is likely operating in a regime of reliable local convergence. This is the signal used by PAL’s weight rule (Eq. 2), which treats constraint 
+
+k as easy to repair when its single-step residual falls below τc. Empirically, for sufficiently small problem-dependent choices of τc (typically around 10 −4), this proxy has aligned well with stable projector behavior across our experiments up to extremely non-linear constraints (high curvature) as shown in § 5.3. 20 Preprint 
+
+# G Inference Precision 
+
+Here, we use checkpoints from the paper on the six synthetic benchmarks S1 –S6 which were trained with τc = τd = 10 −4. We show inference with iterates of the repair loop for N ∈ { 1, 2, 5, 10 , 100 }
+
+steps and record the maximum constraint violation over the test set of 64 queries per seed, averaged over 10 seeds. We report float64 and float32 implementation variants. Table 7 shows that for both float64 and float32 , every benchmark plateaus at the numerical precision floor from N ≈ 2 to 5 onward, except for float64 on benchmark S5 . We believe this is due to S5 ’s overdetermined active set. The violation decreases monotonically in N on every benchmark. Overall, this illustrates that the first-step residual target τc = 10 −4 and the actual precision that can be reached for N > 1 are not to be confused, and that PAL can consistently reach arbitrary precision. Table 7: Maximum constraint violation over the test set against the number of inference repair steps 
+
+N , over 10 seeds, for the trained PAL models from the paper on the synthetic benchmarks S1 –S6 .
+
+N =1 N =2 N =5 N =10 N =100 
+
+float64 S1 (sphere track) 8.48 · 10 −4 2.46 · 10 −7 7.55 · 10 −16 7.55 · 10 −16 7.55 · 10 −16 
+
+S2 (active-set switch) 1.36 · 10 −4 3.41 · 10 −6 2.22 · 10 −16 2.22 · 10 −16 2.22 · 10 −16 
+
+S3 (ill-cond. tube) 8.42 · 10 −6 1.03 · 10 −7 3.54 · 10 −15 2.22 · 10 −17 2.01 · 10 −17 
+
+S4 (qv coupling) 1.01 · 10 −2 1.26 · 10 −5 8.44 · 10 −16 9.10 · 10 −16 8.22 · 10 −16 
+
+S5 (overdetermined) 6.77 · 10 −3 4.98 · 10 −4 6.33 · 10 −8 8.81 · 10 −9 8.83 · 10 −11 
+
+S6 (redundant ineq.) 2.16 · 10 −3 1.45 · 10 −5 1.67 · 10 −16 1.39 · 10 −16 1.33 · 10 −16 
+
+float32 S1 (sphere track) 8.48 · 10 −4 5.81 · 10 −7 3.58 · 10 −7 3.58 · 10 −7 3.58 · 10 −7
+
+S2 (active-set switch) 1.36 · 10 −4 3.54 · 10 −6 1.43 · 10 −7 1.43 · 10 −7 1.43 · 10 −7
+
+S3 (ill-cond. tube) 8.49 · 10 −6 1.47 · 10 −7 3.13 · 10 −8 3.05 · 10 −8 2.76 · 10 −8
+
+S4 (qv coupling) 1.01 · 10 −2 1.37 · 10 −5 3.96 · 10 −7 4.49 · 10 −7 4.15 · 10 −7
+
+S5 (overdetermined) 6.74 · 10 −3 5.74 · 10 −4 2.80 · 10 −7 2.62 · 10 −7 2.38 · 10 −7
+
+S6 (redundant ineq.) 2.16 · 10 −3 1.50 · 10 −5 1.24 · 10 −7 1.19 · 10 −7 1.19 · 10 −7
+
+# H Residual Intuition on a Toy Problem 
+
+Fig. 2 compares three constraint-handling strategies on a single 2D problem with one stiff linear equality and one mildly nonlinear equality: 
+
+min  
+
+> y
+
+(y1 − 0.5) 2 + ( y2 − 0.5) 2 s.t. h1(y) = 10 y1 = 0 ,h2(y) = 0 .01 sin(5 y2) + 0 .1 y1 = 0 .
+
+The objective pulls the prediction toward (0 .5, 0.5) . h1 is stiff and linear (well-suited to a single LM step), while h2 is mildly nonlinear in y2 and weakly couples back to y1. The neural backbone is a 3-layer MLP of width 128 with ReLU activations, trained with Adam at learning rate 10 −4 for 5000 epochs and batch size 100. Conditions z are sampled from N (0 , I 2) and supplied as input but do not enter the problem. All three methods use the same LM projector with identical hyperparameters (damping δ = 10 −3,floor 10 −6) both during training (where invoked) and at evaluation. They differ only in (i) how often the projector is invoked during training, and (ii) the training loss: • ALM+Bolt-On. No projection during training. MDMM-style dual ascent (Platt & Barr, 1988) with fixed quadratic penalty: L = f + λ⊤h + ρ 
+
+> 2
+
+∥h∥2, λ ← λ + ηλ h, with ηλ = 10 −2
+
+and ρ = 1 . The projector is bolted on only at evaluation. (Basir & Senocak’s APU (Basir & Senocak, 2023) was unstable on this toy problem, so we substitute MDMM as a closely related fixed-penalty variant.) 21 Preprint • Soft Loss. Ten chained LM projection steps in training with live gradient through the displacement chain, trained with L = f + λd ∥ˆy − ˜y(10) ∥2 + λc ∥h(˜ y(10) )∥2 at λd = 0 .5,
+
+λc = 1 .0.• PAL. A single LM projection step in training, with the gated log-decade weight update of Eq. 2: γ = 10 −2, Dmax = 1 , τd = 10 −1.
+
+# I Synthetic Benchmark Details 
+
+We provide formal definitions for the conditional synthetic benchmarks. All follow the convention 
+
+h(y, z ) = 0 for equalities and g(y, z ) ≤ 0 for inequalities. Five of the six benchmarks ( S1 –S4 , S6 ) share a degenerate-objective construction: the design variable y is partitioned into a head block on which the objective depends and a tail block that does not appear in the objective but is coupled to the head through one or more constraints. Projecting an arbitrary ˆy onto the constraint set generally moves the head coordinates away from their optimum, so the backbone network Nθ must drive the constraint residual toward zero on its own, since projection alone is not enough. S5 is an overdetermined consistent equality system whose feasible set is finite per z, isolating the projection geometry from objective effects. 
+
+S1 (Sphere constraint). Design variable y ∈ R4, K = 1 , condition z ∈ [0 .5, 2] . One equality, no inequalities. 
+
+min 
+
+> y
+
+ 1 − (y1 − s1(z)) 2 + 100  (y2 − s2(z)) − (y1 − s1(z)) 22 s.t. P4 
+
+> i=1
+
+y2 
+
+> i
+
+= z2,
+
+where the shift s(z) is chosen so the global minimizer is y⋆(z) = ( z/ √2, z/ √2, 0, 0) . The objective depends only on (y1, y 2), and the sphere projection scales all four coordinates uniformly, so any tail offset displaces the head off-optimum after projection. 
+
+S2 (Probability simplex). Design variable y ∈ R10 , K = 11 , condition z ∈ [−1, 1] 2. One equality and ten non-negativity inequalities. 
+
+min 
+
+> y
+
+ s(z) − y1
+
+2 + 10 
+
+> 4
+
+X
+
+> i=1
+
+(yi+1 − y2 
+
+> i
+
+)2 s.t. P10  
+
+> i=1
+
+yi = 1 , yi ≥ 0,
+
+with s(z) = 0 .4 + 0 .05 z1 + 0 .02 z2. Only the head (y1, . . . , y 5) enters the chained-Rosenbrock objective, and P 
+
+> i≤5
+
+y⋆i ≈ 0.586 , so the simplex equality forces nontrivial mass onto the tail 
+
+(y6, . . . , y 10 ), which does not enter the objective. 
+
+S3 (Ill-conditioned head with mixing equality). Design variable y ∈ R20 , K = 6 , condition 
+
+z ∼ LogU(0 .1, 1) . One mixing equality, one nonlinear tube inequality, four near-parallel linear inequalities. 
+
+min 
+
+> y
+> 1210
+
+X
+
+> i=1
+
+z2( i−1) /9  yi − ti(z)2 s.t. a⊤ 
+
+> 0
+
+y = a⊤ 
+
+> 0
+
+t(z), ∥y11:20 ∥2 ≤ z4,a⊤ 
+
+> j
+
+y ≤ a⊤ 
+
+> j
+
+t(z) + 0 .2 (j = 1 , . . . , 4) ,
+
+with target ti(z) = z for i ≤ 10 and ti(z) = z2/√10 for i > 10 . The head Hessian is diagonal with condition number z−2, ranging up to 100 at z = 0 .1. The mixing equality couples the head y1:10 to the tail y11:20 (which does not enter the objective), so any tail movement to satisfy the equality feeds back into the head through the projection step. 
+
+S4 (Quadratic objective with sinusoidal coupling). Design variable y = ( u, v ) ∈ R15 × R15 ,
+
+K = 26 , condition z ∈ [0 .5, 1.5] 5. Twenty-five equalities and one inequality. 
+
+min 
+
+> y
+> 12
+
+ v − v⋆(z)⊤Wv
+
+ v − v⋆(z) s.t. A u = ˜A z, vj = sin( uj ) + ( Bz )j ,
+
+∥v∥2 ≤ ∥ v⋆(z)∥2 + 1 ,
+
+with A ∈ R10 ×15 rank 10 and Wv SPD with cond( Wv ) ≈ 5. The block u does not enter the objective, but the main equality is underdetermined in u, so projecting an arbitrary ˆu onto the constraint produces a point that generically differs from u⋆, and the sinusoidal coupling then forces v off its quadratic optimum. 22 Preprint 
+
+S5 (Overdetermined system). Design variable y ∈ R4, K = 5 , condition z ∈ [0 .5, 1.5] 5. Five equalities ( m > n ), no inequalities, mutually consistent at a y⋆(z) ∈ R4 parameterized by z.
+
+min 
+
+> y
+> 12
+
+ y − y⋆(z)⊤P  y − y⋆(z) s.t. 
+
+y21 + y22 = z21 , y23 + y24 = z22 ,y1y3 = α(z), y2y4 = β(z),y1y4 − y2y3 = δ(z),
+
+where α(z) = y⋆ 
+
+> 1
+
+y⋆ 
+
+> 3
+
+, β(z) = y⋆ 
+
+> 2
+
+y⋆ 
+
+> 4
+
+, and δ(z) = y⋆ 
+
+> 1
+
+y⋆ 
+
+> 4
+
+− y⋆ 
+
+> 2
+
+y⋆ 
+
+> 3
+
+are the corresponding bilinear forms of 
+
+y⋆(z). Because m > n , the implicit-function partition required by DC3 does not apply. The feasible set is {± y⋆(z)}, so any successful projection lands at one of these two points regardless of ˆy.
+
+S6 (Coupling equalities with redundant inequalities). Design variable y ∈ R50 , K = 90 ,condition z ∈ [0 .5, 1.5] 20 . Fifteen coupling equalities and 75 inequalities (25 distinct + 50 near-redundant copies). 
+
+min 
+
+> y
+> 1250
+
+X
+
+> i=16
+
+ yi − ti(z)2 s.t. yi − 12 yi+15 = z(i mod 20) − 12 z(( i+15) mod 20) , i = 1 , . . . , 15 ,a⊤ 
+
+> j
+
+y ≤ a⊤ 
+
+> j
+
+t(z) + 0 .2, j = 1 , . . . , 25 ,
+
+The objective depends only on the tail y16:50 , and the head y1:15 is pinned to the tail via the coupling equalities. The redundant inequality block stresses projector behavior (rank-deficient active sets). 
+
+# J Chip Placement Case Study 
+
+Here, we show one additional application where the constraint and objective evaluation is relatively cheap, so that methods with unrolled repair in training are memory-feasible. This application is a macro-placement problem inspired by Intel’s FloorSet (Mallappa et al., 2024). The task is to place 
+
+B = 30 rectangular blocks on a 200 ×200 canvas to minimise a wirelength proxy (a weighted sum of pairwise Manhattan distances between connected block centres and boundary pins) plus a soft bounding-box area penalty (LSE-smoothed). A single equality constraint requires the total overlap volume across all B(B−1) /2 block pairs to be zero. The design vector y ∈ R3B (3B = 90 variables) encodes block centres (xi, y i) and raw widths si. Widths decode as wi = softplus( si) + 0 .5, and heights follow from a fixed per-instance target area, keeping all boxes non-degenerate and area-preserving. We want to point out that this benchmark is a lightweight component placement task and a strongly simplified FloorSet derivative. The full FloorSet suite additionally considers grouping, multi-instantiation, and pre-placement constraints.                        
+
+> Obj. ×10 3↓Feas. (%) ↑Wall-Clock ↓n
+> PAL 1.16 ±0.04 100 ±01m18s ±6s 10 ALM+Bolt-On 1.19 ±0.05 80 ±42 40 s±2s10 FSNet 5.27 ±0.31 0±01h36m ±6m 5SnareNet 1.35 ±0.02 0±01h26m ±1m 5
+
+Figure 6: Candidate chip placement for E4 (left) and full results (right). PAL and ALM+Bolt-On run at 10 seeds, FSNet and SnareNet at 5 seeds. All methods use canonical default hyperparameters without per-method tuning .
+
+Results. PAL reaches 100% feasibility while FSNet and SnareNet reach 0% feasibility at substan-tially higher wall-clock time than PAL due to the compute required by the unrolled repair. We show ALM, PAL, and SnareNet with 2000 training epochs each, while FSNet is shown with only 100 training epochs in order to keep wall-clock times manageable. We use canonical default hyperparam-eters for each method, i.e., no per-method tuning. Despite the problem having only one inequality constraint, both SnareNet and FSNet reach 0% feasibility. We did not investigate in further detail why this is the case, but believe both FSNet and SnareNet could perform better on this task if their hyperparameters were tuned extensively. However, orthogonal to this, we want to point out that PAL 23 Preprint is significantly faster to train and achieves 100% feasibility despite not being tuned for the problem at hand. Computationally, this benchmark is very well suited to PAL since it only has a single constraint (K = 1 ), meaning that the constraint Jacobian J is cheap to build. ALM+Bolt-On reaches 100% feasibility on 8 of 10 seeds, but the remaining 2 seeds carry very high constraint violations, which is what drives the mean to 80% ±42% in Fig. 6. This experiment was run in parallel (across seeds and methods) on a 288-core ARM CPU node. Cross-method ratios for wall-clock time are reliable, but absolute wall-clock numbers are hardware- and contention-specific. 
+
+# K Engineering Benchmark Details 
+
+## K.1 Unmanned Aircraft 
+
+Figure 7: E1 unmanned aircraft benchmark, candidate design. Left: outer mould-line geometry from the analytical Bézier representation, with the decoded internal wingbox (skin, spars, ribs) overlaid in blue/green. Top right: surface pressure coefficient cp predicted by the FiLM-modulated BlendedNet surrogate Φθ 
+
+> cp
+
+(Sung et al., 2025) at iso-sliced surface points. Bottom right: structural tip deflection |w(y)| from beam integration of the pressure loads through the predicted section properties, warp-amplified 5× for visualisation. The tip-deflection constraint reads wtip at y = b/ 2.We now describe the benchmark E1 in detail. This application aims to maximize the range on an unmanned Blended-Wing-Body (BWB) aircraft under structural constraints. Here, we mostly describe the evaluator Φ, which is made up of multiple pre-trained generative models and neural surrogates, specialized for various aspects of aircraft design. Fig. 8 shows the arrangement of these submodels. Fig. 7 shows a candidate design (geometry, surface pressure, tip deflection). The data and trained models are available in the supplied code repository. 
+
+K.1.1 Geometry 
+
+The geometry for this application is based on BlendedNet (Sung et al., 2025). In order to achieve differentiability for our evaluator, we use geometry representations based on implicits (SDFs). We employ two different representations: a neural implicit SDF net, and an analytical implicit shape representation. 
+
+Neural Implicit BWB Geometry. First, we use a neural implicit representation for fast, dif-ferentiable signed-distance queries used inside the optimization loop during training (iso-slicing, 24 Preprint      
+
+> xskin , L, α cr
+> xbat
+> z,xwalls
+> Design  y
+> Aero-dynamics
+> Φθ
+> aero
+> Neural implicit SDF Iso-slicing Surface pressure
+> Φθ
+> cp
+> Structural properties
+> Φθ
+> sec
+> Beam integration & mass Range Lift balance Strain Tip deflection
+> fcdrs,nsqz, m, x cp
+> A, I, J σvm
+> wtip
+> mtot
+> CL
+> CL/C D
+
+Figure 8: E1 evaluator Φ, from the design vector y to the objective f and constraints c. Dashed: geometry processing. Plain: analytical. Grey: neural surrogate. Hatched: generative model. Double border: constraint or objective. surface sampling of the FiLM model, geometry-dependent constraints). We use a conditional MLP with GELU activations and Fourier positional encoding on the spatial input (Tancik et al., 2020; Mildenhall et al., 2020). This maps spatial points r ∈ R3 and the 9-D shape conditioner 
+
+xskin = ( B1, B 2, B 3, C 2, C 3, C 4, S 1, S 2, S 3), which describe body widths, chords, sweeps, as de-scribed by Sung et al. (2025). We use an additional parameter L for isotropic scaling of the geometry. For each query (in practice, this is highly parallelized), a signed distance d ∈ R1 (the distance to the surface) is returned. We use symmetry as a prior for added computational efficiency, such that 
+
+y → | y| is enforced inside the network. The neural implicit representation is trained on the geometry dataset (meshes) provided in BlendedNet (Sung et al., 2025). 
+
+Analytical Bézier SDF. Similarly, this maps r, xskin 7 → d and serves as a high-fidelity reference geometry used for visualization (rendered with PyVista (Sullivan & Kaszynski, 2019)). This represen-tation is much more computationally expensive because each query rebuilds Bézier patches and six CSG operations, and is therefore not used live in training. The 9 design parameters drive three span-wise wing panels, each a bicubic Bézier surface patch (4 ×4×3 control net) per upper/lower surface, anchored at four spanwise stations with fitted airfoil control points. For tangent handling between these patches at the trailing and leading edges (to match the planform described by Sung et al. (2025)), we use AdvLink-style in/out sweep tangents per station that replicate the OpenVSP (McDonald & Gloudemans, 2022) tangent conventions. We use per-panel surface SDF ∩ y-slab (smooth) ∩ swept TE half-space (sharp) to make a smooth union over panels, then mirror this across the xz plane to make a smooth union of the two halves into the full aircraft. To find the bicubic Bézier control points, we performed regression on the airfoil described by Sung et al. (2025). Since the splines only use 4 control points, we cannot model the airfoil exactly, resulting in a small RMSE of ≈ 2.7 mm/m (body) and ≈ 2.0 mm/m (tip). 
+
+Coordinate Frame. We denote x-direction as the direction of travel for the BWB, y-direction spanwise, and z-direction up/down (thickness-wise). 
+
+K.1.2 Aerodynamics 
+
+We use a simple MLP to model global aerodynamic parameters given a geometry ( xskin ) and flight state, i.e., no geometry processing is used for these predictions (instead, geometry is needed for aero-structural coupling, more on this below). We model lift, drag, and pitching-moment coefficients 
+
+(CL, C D , C M ) with a simple MLP Φθ 
+
+> aero
+
+that feeds a lift-balance constraint and a Breguet-range objective. Inputs are the 9-D shape conditioner xskin ∈ [−1, 1] 9 from Sung et al. (2025). This is the same geometry parametrization the implicit representation above consumes. Additionally, we use the 4-D flight state (Ma , h, α deg  
+
+> cr
+
+, log 10 L), where Ma is derived from (V, h ) via a standard-atmosphere helper, αcr is converted from radians, and the characteristic length L is log-transformed (length scales span roughly one decade across training). For training data, we use the cases provided by Sung et al. 25 Preprint (2025). Since this is a pure MLP with smooth activations, we can differentiate (CL, C D , C M ) w.r.t. 
+
+(Ma , h, α deg  
+
+> cr
+
+, L ).
+
+K.1.3 Surface Pressure 
+
+We use the model denoted as Φθ 
+
+> cp
+
+to determine surface pressure on the BWB (top-right panel of Fig. 7), which is then used to determine wing deformation and strain in conjunction with our structural model (see below). This model is an exact training replica of the FiLM-modulated MLP from BlendedNet (Sung et al., 2025). The model is queried by the iso-slice mechanism (described below) with surface points rs and surface normals ns and a condition vector containing αcr , the flow state, and shape parameters. The model returns the surface pressure coefficient cp together with chordwise and vertical shear coefficients (cf,x , c f,z ). These are combined into the per-point surface force density f = −cp n + ( cf,x , 0, c f,z ) before chordwise quadrature, so both pressure and skin friction enter the structural load path. Global drag is still taken from Φθ 
+
+> aero
+
+(see above), not integrated from the FiLM shear field. 
+
+K.1.4 Iso-slicing 
+
+In order to couple the surface pressure model (FiLM BlendedNet) and our structural model, we employ a deterministic geometry extraction algorithm that queries the neural SDF using a quadtree-based marching-squares level-set extraction to find a discrete set of surface query points rs with outward normals n and arc-length integration weights, suitable for chordwise quadrature of the FiLM predictions. At each spanwise station yi, the BWB geometry is sliced with this iso-contour prim-itive prog.isocontour(plane=’xz’, stations=y_unit, normal_mode=’3d’) ,which returns 2D polylines on the chordwise plane plus matching 3D outward surface normals and per-segment arc-length weights. Default quadtree settings use base resolution 8 with 5 levels of refinement, so the SDF is queried repeatedly per slice. After extraction, each chordwise polyline 
+
+(x, z ) is lifted to 3D by inserting the unit-frame spanwise station value as y. The station coordinate is detached from the gradient graph since it is a sampling location, not a design variable, such that the gradient graph only routes to xskin , L, α cr . At queried stations beyond the local span the iso-contour returns no polyline. The corresponding station’s load contributions are zeroed and stay differentiable. Downstream, the outputs of the iso-slicing procedure (rs, n, w ) are fed into the surface pressure model Φθ 
+
+> cp
+
+to determine cp, which is then integrated chordwise with the arc-length weights into per-station aerodynamic loads. These are shear load, moment, and center of pressure (qz , m, x cp ).
+
+K.1.5 Structural Model 
+
+The structural model of the BWB consists of a generative model, Φθ 
+
+> dec
+
+(Variational Autoencoder (VAE) (Kingma & Welling, 2014) decoder) to encode valid structural internals layouts conditional on the aircraft skin geometry xskin and a surrogate model Φθ 
+
+> sec
+
+(MLP) to predict structural properties directly from the latent of this encoder/decoder. Data to train the VAE was obtained through rejection sampling of valid/invalid internal layout designs. 
+
+Architecture. The VAE encoder (used in training only) maps (xstruct , xskin ) → z ∈ Rd. The decoder maps Φθ
+
+> dec
+
+: (z, xskin ) → xstruct ∈ R9, the reconstructed raw wingbox layout (skin, spar, rib geometry), shown overlaid in the left panel of Fig. 7. The decoder is used for training and visualization only. In the evaluator, the latent z is part of the design vector and feeds the structural properties predictor directly. As alluded to, the structural properties predictor maps Φθ
+
+> sec
+
+: (z, xskin , xwalls , y ) to structural properties, where xwalls is the design vector of (uniform) wall thickness of the BWB skin, front spar, and rear spar. For any given design at each training epoch, the structural model is used to evaluate structural properties per station. Additionally, we use a dedicated head to predict the overall volume of the inner ribs, which we assume do not contribute to the global stiffness constraints we evaluate, which is a conservative assumption. This dedicated head maps (z, xskin , t rib ) → Vribs , where the rib volume Vribs is a single scalar. This head is not used in the evaluator, and rib mass is not included in the mass aggregation below. All four components of the structural model architecture are plain GELU MLPs. We use latent dimension dim( z) = 16 . The model explicitly does not handle the thickness of the ribs and spars, since skin thickness does not affect the geometric validity of structural internals and would have made rejection sampling much more expensive (curse of dimensionality) without additional benefit. Instead, these are concatenated after the decoder. For efficiency, the predictor 26 Preprint is called once flattened over B · Ny stations: z and xskin are broadcast across Ny Sobol-sampled spanwise stations and the predictor handles these in a single batched forward. Training data is based on quadtree-based marching-squares material point assignment and computing geometric section properties on the resulting cross-sections. The surrogate’s ground truth is therefore based on SDF evaluation and beam-section integrals over the built-up wingbox, not FEA. The 11-D output covers cross-section area A (used to estimate structural mass via spanwise integration), centroid offsets 
+
+(ucg , v cg ), principal bending stiffnesses Iuu and Ivv , the per-axis first moments Qmax  
+
+> u
+
+, Q max  
+
+> v
+
+(used in the transverse-shear formula below, with Qmax = max( Qmax  
+
+> u
+
+, Q max  
+
+> v
+
+)), and torsional stiffness J. The shear centre is not surrogate-predicted. We assume xsc ≡ xcg under doubly-symmetric thin-walled idealisation. As mentioned, we assume that the ribs do not contribute to stiffness and only compute their volume for mass estimation. Thus, stiffness stems from the main spar, as well as the skin. The skin is extremely thin but its contributions to torsional and bending stiffness properties cannot be neglected, so in data generation we use very fine resolutions ( ∼ 5× skin thickness) when performing quadtree-based marching-squares in order to properly resolve the skin. 
+
+K.1.6 Helper Functions 
+
+We use deterministic differentiable helper functions for planform and atmospheric conditions. The planform evaluation ( Sref , b/ 2) is a closed-form trapezoid integral over the four-station BWB chord distribution. The atmosphere helper is used to determine ρ, q ∞, Ma , Re using the ISA troposphere model (lapse rate to 11 km), in torch-native and autograd-safe formulations so all four quantities differentiate through (h, V ) (altitude and velocity). 
+
+K.1.7 Beam Quadrature, Mass, and Constraints Spanwise Sampling. We use Sobol-quasi-random stations on [0 , b/ 2] per station query in each training epoch. Stations are sorted ascending and gradients flow through them via b/ 2 (the random draws themselves are detached). 
+
+Beam Integration. With the models described above, we obtain per-station distributed loads 
+
+qz , m, x cp from Φθ 
+
+> cp
+
+and section properties A, I uu , I vv , J, u cg , v cg from the structural prediction Φθ
+
+> sec
+
+.First, we integrate the loads: 
+
+V (y) = 
+
+Z ytip 
+
+> y
+
+qz dy ′
+
+M (y) = 
+
+Z ytip 
+
+> y
+
+V dy ′
+
+T (y) = 
+
+Z ytip 
+
+> y
+
+t(y′) dy ′
+
+with distributed torsion t = qz (xcp − ucg ) + m under the doubly-symmetric assumption xsc ≡ xcg .To determine stress components per station, we use bending: 
+
+σb = |M | zmax /I uu 
+
+with zmax = √3pIuu /A (rectangular-section equivalent fibre distance, used as a placeholder rather than a surrogate output), transverse shear τs = |V | Qmax /(Iuu tskin ), and Bredt torsion 
+
+τt = |T |/(2 Aenc tskin ) with Aenc = 20 A pinned as a coarse thin-walled wingbox placeholder. We use composite von Mises stress for the Carbon-Fibre-Reinforced Polymer (CFRP) material: σvm =pσ2 
+
+> b
+
++ 3( τs + τt)2, summing the two shear contributions at a common point as a conservative envelope. Tip deflection is evaluated by double forward cumulative trapezoid of M/ (E I uu ) from the cantilever root, returning the full w(y) profile. The benchmark reads wtip = w(ytip ) for the tip-deflection constraint. In terms of materials, we assume quasi-isotropic CFRP laminate with 
+
+E = 55 GPa, ρ = 1600 kg/m 3, allowable strain εallow = 4 ×10 −3. We are aware that these are gross simplifications, but we consider the above choices adequate for the application demo at hand. 27 Preprint 
+
+Structural Mass. We use trapezoid: mstruct = ρmat 
+
+R b/ 20 Aphys (y) dy . For the range computation, we use battery mass: mbat = ρbat Vbat with Vbat = ( w d h ) L3 from the 6-D battery design vector 
+
+xbat = ( cx, c y , c z , w, d, h ) (the first three slots are placement coordinates, the last three are the box dimensions in unit-scale ratios). We use ρbat = 2400 kg/m 3 for an advanced silicon-anode/NMC pack. For the sake of simplicity and because the battery tends to be small, we do not evaluate overlap constraints between the battery and internal structures. Overall mass is then evaluated as: 
+
+mtot = mstruct + mbat + mpayload 
+
+with payload pinned at 3 kg. 
+
+K.1.8 Constraints. 
+
+Overall, there are three constraints evaluated with the models described above. First, we use a lift balance equality constraint: 
+
+(W − Llift )/W = 0 
+
+with W = mtot g and Llift = CL q∞ Sref .This single constraint is what implicitly bounds battery mass: a heavier battery raises W and forces the geometry to produce more lift, producing more drag, reducing the benefit in range. The cruise angle of attack αcr is independently restricted to ±3◦ as a hard design-vector box bound (not an inequality constraint). Next, we evaluate a maximum material strain constraint, which is evaluated as per-station residuals 
+
+ci = σvm (yi)/(E ε allow ) − 1, and aggregated as 1
+
+> N
+
+P 
+
+> i
+
+ReLU( ci). The aggregate is exactly zero if every station satisfies its strain bound, and the K=1 formulation gives a smaller Jacobian than one constraint per station, which eases compute requirements drastically for projection-based methods as described in § 5. Lastly, we constrain tip deflection: |wtip |/(0 .10 · b/ 2) − 1 ≤ 0.
+
+K.1.9 Objective 
+
+For the objective, we use pure Breguet range: 
+
+R = ( ηprop /g ) E∗ 
+
+> bat
+
+(L/D ) ( mbat /m tot )
+
+with ηprop = 0 .8, specific energy E∗ 
+
+> bat
+
+= 300 Wh/kg, and L/D = CL/C D from Φθ
+
+> aero
+
+. The reported objective is −R/R ref with Rref = 10 7 m, sized so ∇obj stays O(1) . Rref is a normalization constant for gradient scaling, not a physical target. Achieved R during optimization is roughly an order of magnitude smaller. 
+
+## K.2 Urban Planning 
+
+Setup. Fig. 11 shows the arrangement of the evaluator. Place B = 10 rectangular buildings on a 750 × 750 m site to maximise total built volume under spacing, height, coverage, and pedes-trian wind comfort constraints. The design variable y is 50 D, with each building contributing 
+
+(cx, c y , w raw , d raw , h raw ) and a softplus decoding on w, d, h to keep dimensions positive. The objec-tive is − P 
+
+> i
+
+wi di hi/V ref with Vref = 10 6 m3, which keeps the loss in O(1) .
+
+Wind Surrogate. The pedestrian-comfort constraint is evaluated through WinDiNet (Perini et al., 2026), an LTX-Video 2B (HaCohen et al., 2024) diffusion backbone fine-tuned to roll out 2D pedestrian-level velocity fields over the full 1100 × 1100 m raster domain, conditioned on a building-footprint occupancy mask and a fixed inlet velocity. The surrogate is differentiable end-to-end, so gradients flow from each constraint back to the design vector as has been shown by Perini et al. (2026). We run 57 diffusion frames at 2 inference steps and score comfort on the tail-mean field over the last 10 frames, ¯s(p) = ∥(¯ u(p), ¯v(p)) ∥2.28 Preprint 
+
+Figure 9: E2 urban planning benchmark, three views of a candidate design. Left: top-down site plan with the 750 × 750 m buildable plot (green dashed) and the 10 building footprints. Clearance is evaluated pairwise and reported as the number of pairs with overlapping dmin -inflated AABBs. 
+
+Middle: tail-mean wind speed predicted by the WinDiNet surrogate over the full 1100 × 1100 mraster domain. Right: hard pedestrian-comfort zones derived from the tail-mean speed (calm < 1 m/s, acceptable 1–5, uncomfortable 5–15 , danger > 15 ). The danger constraint forbids any cell entering the red band. 
+
+Figure 10: E2 candidate design rendered in 3D with PyVista (Sullivan & Kaszynski, 2019), with the pedestrian-comfort field draped at ground level. Building heights are decoded from the design vector. The colour map shows tail-mean wind speed over the comfort range 0–15 m/s, with green/yellow indicating calm and acceptable zones and red indicating the danger band that the surrogate constraint forbids. 
+
+Constraints. All five constraints are inequalities with per-constraint tolerance 10 −4.• Site (footprint inside [175 , 925] m in y- and x-direction): softplus-smoothed squared-mean over the 4N box-edge primitives, 
+
+csite = 14N
+
+X
+
+> i,e
+
+softplus β (pi,e )2,
+
+with pi,e ∈ { L0 − x− 
+
+> i
+
+, x + 
+
+> i
+
+− L1, L 0 − y− 
+
+> i
+
+, y + 
+
+> i
+
+− L1}.• Height (cap at hmax = 250 m): cheight = 1
+
+> B
+
+P 
+
+> i
+
+relu( hi − hmax ).• Coverage (site-clipped footprint fraction ≤ 0.5): ccov = relu   1
+
+> Asite
+
+P 
+
+> i
+
+Aclip  
+
+> i
+
+− 0.5.• Danger (no fluid cell exceeds 15 m/s in the tail mean): a fluid-mask–weighted mean of 
+
+relu(¯ s − 15) over inner-plot fluid cells, multiplied by wd = 100 to bring the typical excess 29 Preprint      
+
+> cx, c y
+> wraw , d raw , h raw
+> Design  y
+> 10 buildings
+> Softplus decoding Occupancy mask WinDiNet Tail-mean field Danger Clearance Site, Height, Coverage Volume
+> cf
+> boxes
+> Mu, v ¯sM
+
+Figure 11: E2 evaluator Φ, from the design vector y to the objective f and constraints c. Dashed: geometry processing. Plain: analytical. Grey: neural surrogate. Hatched: generative model. Double border: constraint or objective. into the O(10 −2) band. In raw m/s the cell-averaged excess sits below the 10 −4 tolerance even when the integrated violation is non-trivial. • Clearance (no pair within dmin = 10 m): kept as  B
+
+> 2
+
+ = 45 per-pair constraints, 
+
+cij = relu   wi+wj 
+
+> 2
+
++ dmin  
+
+> 2
+
+− | c(i) 
+
+> x
+
+− c(j) 
+
+> x
+
+| · relu   di+dj 
+
+> 2
+
++ dmin  
+
+> 2
+
+− | c(i) 
+
+> y
+
+− c(j) 
+
+> y
+
+|,
+
+i.e., the m 2 overlap of the dmin -inflated AABBs of pair (i, j ).We now provide some more details on why the last of these constraints, Clearance , was evaluated pairwise instead of aggregated into a mean or max score like the other constraints in this example. 
+
+Details on Pairwise Clearance Constraints. Aggregating the 45 pairwise overlaps into a single mean-pooled scalar weakened training across methods, which we believe is due to gradient cancel-lation : a building wedged between violating neighbours on opposite sides receives near-opposite push vectors that partially cancel under mean aggregation, so the gradient with respect to its center 
+
+(cx, c y ) is small even though the design is grossly infeasible. The per-pair formulation gives each pair its own multiplier and its own Jacobian row, restoring directional information and per-pair pressure. However, this comes at a cost, especially for projection-based methods: With B buildings, the number of Clearance constraints is 12 B(B − 1) . Projection-based methods do need to build the constraint Jacobian J on each projection step, the cost of which scales with K (the overall number of constraints). However, in this case, this additional cost is attenuated by the fact that most constraints are such that only the graph relating to the Clearance constraint needs to be backpropagated back through, i.e., the expensive diffusion model for wind prediction is only backpropagated through once (for the Danger constraint), the cost of which dominates. 
+
+## K.3 Power Grid Benchmark 
+
+E3 is the AC Optimal Power Flow (ACOPF) benchmark, instantiated on the IEEE 57-bus system. Apart from the differences we list here, it is analogous to the application example in DC3 (Donti et al., 2021). ACOPF determines generator setpoints that meet bus-level demand at minimum generation cost while respecting the nonlinear physics of the AC power grid. The conditioning vector x = ( pd, q d) ∈ R2L specifies real and reactive power demand at each load bus, and the design vector y = ( pg , q g , v m, v a) ∈ R2G+2 B collects generator setpoints together with bus voltages in polar form (magnitude vm, angle va). For IEEE-57 ( B = 57 buses, G = 7 generators, 
+
+E = 80 branches), this gives dim( y) = 128 . The objective is the standard quadratic generation cost, 
+
+f (y) = 
+
+> G
+
+X
+
+> i=1
+
+ c0,i + c1,i pg,i + c2,i p2
+
+> g,i
+
+ , (10) normalised by ¯g 2, where ¯g is the mean generator base power. This applies DC3’s normalisation formula (the absolute scale differs slightly because pandapower’s per-generator MBASE for the slack bus deviates from PYPOWER’s). The equality constraints enforce real and reactive power balance 30 Preprint at every bus ( 2B = 114 residuals, nonlinear in (vm, v a)). The inequality constraints box-bound generator outputs ( pg , q g ), bus voltage magnitudes, branch apparent power flows ( |Sij | at both ends of each branch), and per-branch voltage angle differences. In total, we count 114 equalities and 462 inequalities, i.e., K = 576 constraints overall. 
+
+Differences from DC3 Implementation. Our variant of this benchmark is more difficult than the one in Donti et al. (2021), with a larger number of constraints. DC3’s released code only enforces generator and voltage box bounds, 4G + 2 B = 142 inequalities. We additionally retain MATPOWER’s (Zimmerman et al., 2011) thermal line limits and angle-difference bounds, 4E = 320 
+
+extra inequalities, bringing the total to 462 . On IEEE-57 these added slots are mostly inactive: the 160 angle-difference residuals are vacuous because the case data marks every branch as angle-unconstrained ( ±360 ◦) and our output box bounds each va ∈ [−π, π ], so |va,i − va,j | ≤ 2π
+
+holds by construction. The 160 thermal residuals are well-defined but slack ( Smax  
+
+> ij
+
+= 99 pu after 
+
+baseMVA normalisation), so they almost never bind on sampled OPF solutions. They do become active on extreme off-manifold predictions and therefore still contribute to the feasibility metric. For grid data we use pandapower (Thurner et al., 2018) and for constraint residuals we use 
+
+ML4OPF (AI4OPT, 2024), whereas DC3 calls PYPOWER (Lincoln, 2011) directly. The underlying MATPOWER (Zimmerman et al., 2011) cases and admittance physics are aligned to within ∼10 −5 pu, but pandapower’s per-generator MBASE and slack-bus bound conventions differ slightly from PYPOWER’s, requiring small loader-side adjustments. Our condition pool is regenerated under our loader: per-sample correlated uniform load perturbations around the nominal demand, retaining only samples for which an offline ACOPF solve with thermal limits relaxed converges. Every method evaluated here, including the DC3 baseline, draws its conditions from this same pool, so the head-to-head comparisons in this paper are internally fair in terms of conditioning. 
+
+Cost and Hardware. With K = 576 (114 equalities and 462 inequalities), this is the largest constraint count among our engineering benchmarks. Per training step, PAL’s cost is dominated by Jacobian assembly, one backward pass through Φ per constraint row, while DC3 assembles the Jacobian over the 114 equalities only but takes several inner correction steps per training step, which results in higher wall-clock times overall. ALM’s per-step cost carries no dependence on K (one forward and one backward through Φ), which is why it trains in about a minute. PAL finishes roughly 
+
+2.5 times faster than DC3. This benchmark was run on a 288-core ARM CPU node. Cross-method ratios are reliable, but absolute wall-clock numbers are hardware-specific. 
+
+# L Failure Modes of Baselines in Engineering Benchmarks 
+
+This appendix collects some of our hypotheses for the failure modes observed on E1 –E3 for the baselines. We do not study each failure in depth. 
+
+DC3 on E1 and E2 . DC3 is structurally inapplicable here. Its completion step solves the equality constraints for a dependent subset of the outputs and requires a known dependence on that subset. The single equality constraint of E1 and E2 is a neural surrogate of the full design vector, so no such subset exists, and DC3 would reduce to a non-adaptive penalty loss followed by gradient-correction steps. We therefore do not run it on E1 and E2 .
+
+IPOPT on E2 . No IPOPT restart converges on E2 . The best iterate of every restart is feasible, but only 31% of final iterates are, and all restarts terminate with a local-infeasibility status. The aggregated constraints of E2 apply ReLU transforms, so the Jacobian rows of inactive constraints vanish identically and the constraint qualification fails at most iterates ( 95 .6% of Jacobian rows are zero at the final iterates, and the remaining rows span roughly 35 orders of magnitude). We speculate that this is the pathology Yang et al. (2022) report for IPOPT on embedded ReLU networks, where dual infeasibility is never driven to zero and the solver terminates at spurious points. On E1 , IPOPT reaches feasible points in every restart but also never exits with a converged status. 
+
+SnareNet on E3 . On E3 , the number of constraints K = 576 is much larger than dim( y) = 128 .We believe that SnareNet was conceived around K ≤ dim( y), since its convergence proofs require a constraint Jacobian of full row rank (Chu et al., 2026). In Appendix G of the original SnareNet 31 Preprint paper, Chu et al. (2026) show experiments where SnareNet is trained under K > dim( y). They show that, on synthetic non-convex programs with K = 500 and dim( y) = 100 , SnareNet exhausts its projector budget of 100 steps without converging. However, we have no intuition for why this occurs, as Chu et al. (2026) do not elaborate on the suspected reasons for this failure beyond noting that SnareNet suits problems with K ≪ dim( y). On E3 , each repair step reduces the relaxed residual by roughly 2% , so we cap the repair budget at 5 steps, and all ten seeds diverge to non-finite losses within the first 300 epochs. 
+
+ENFORCE on E3 . ENFORCE provides an optional gate during training. This gate rejects any projection step in training if it does not lower the soft loss. We find that, without the gate, training diverges catastrophically on E3 , with all ten seeds producing a non-finite loss in the first epoch. The gate is therefore needed to stabilize training. With the gate enabled, however, we observe that all projection steps on E3 are rejected. Effectively, ENFORCE then trains without any projection awareness. At test time, the projection is applied regardless, and we then observe divergence, resulting in numerical errors on 2 to 13 of the 64 test queries per seed. 
+
+FSNet on E3 . FSNet seeks feasibility by minimizing the summed constraint violation with L-BFGS. We speculate that this is much weaker than projection on E3 because of the extremely high number of constraints. Amalgamating them into a single score discards the per-constraint information that a full Jacobian retains. Additionally, the single score assumes somewhat comparable scales across constraints, but ACOPF constraints (voltages, thermal limits, . . . ) have mixed units and potentially very different scales. The FSNet paper itself does not use L-BFGS on its ACOPF benchmark but switches to LM for the feasibility-seeking step (Nguyen & Donti, 2025, Appendix B), which requires the constraint Jacobian in every step. This variant is not part of the public code, so our port runs the generic L-BFGS solver on E3 . We read the authors’ switch as confirmation that first-order feasibility seeking is not viable on E3 .
+
+ENFORCE on E1 and E2 . We run variants with and without penalty-method warm-up. On E1 
+
+and E2 , and we used the IFT variant for better memory efficiency, but find it does not reduce peak memory usage. 39 of 40 seeds run OOM while assembling this Jacobian. On E1 , a single ENFORCE seed finishes training, but runs OOM in evaluation due to a longer repair unroll. 
+
+# M Hyperparameter Tuning 
+
+All baselines and PAL were tuned with Bayesian optimization on the synthetic suite S1 –S6 . Generally, the budget per method was set to 8 Sobol and 24 Bayesian-optimization trials, i.e., 32 trials per method, with 3 seeds per trial. Two exceptions are ALM+Bolt-On (8+12 due to the very low-dimensional search space) and FSNet (stopped early due to plateau and very long run times). No sweep improved on its best trial after trial 24. The top three trials per method were then re-run with 
+
+8 seeds, and the winner was selected lexicographically: highest feasibility, then lowest objective, then lowest constraint violation. The ten reported seeds in the results are disjoint from the tuning seeds and were never used in selection. A run counts as diverged if it crashes catastrophically or its post-repair objective exceeds 10 2. Table 8 shows the tuned hyperparameters per method. 32 Preprint Table 8: Selected hyperparameter values per method from the Bayesian optimization sweep. †:For ALM+Bolt-On, the optimized hyperparameters of frozen ALM models were reused, i.e., only hyperparameters of the projection were tuned for ALM+Bolt-On itself.                                                            
+
+> Method BO winner configuration
+> ALM lr 8.3·10 −5;γ8.8·10 −4;α0.995 ;eps 10 −4
+> ALM+Bolt-On proj_delta 10 −5;proj_max_iters 20 †
+> ENFORCE (v4) lr 2.5·10 −4;eps_chol 2.3·10 −5;max_it 100 ;
+> training_tolerance 0.01 ;weight_loss_displacement 5.0;
+> weighting_option 5;ada_np_auto_activation true (fixed: epoch_start_hard_constrained 0,eps 10 −8,
+> inference_tolerance 10 −6)DC3 lr 1.75 ·10 −5;soft_weight 10 ;corr_train_steps 10 ;
+> corr_lr 1.8·10 −6
+> FSNet lr 2.0·10 −4;dist_weight 5.0;weight_decay 3.0·10 −5
+> SnareNet lr 2.5·10 −4;λ2.6·10 −3;soft_weight 1.0;soft_epochs 1000 ;
+> decay_epochs 1000
+> PAL [Ours] lr 7.6·10 −5;rate 1.1·10 −3;max_decades 5.0
+
+# N Reproducibility 
+
+Here, we state the hardware used in our experiments and provide rough wall-clock times, and then show the hyperparameters used for PAL and ALM in the engineering benchmarks. Hyperparam-eters on the synthetic benchmarks come from the equal-budget Bayesian optimization sweep in Appendix M. On E1 –E4 we generally use paper defaults. FSNet, SnareNet, and ENFORCE hyperpa-rameters are not shown for the engineering benchmarks E1 and E2 . These were not tuned since these methods consistently fail immediately due to memory intractability anyway. On E3 , all learned methods follow the published DC3 schedule for ACOPF, i.e., a 200 ×2 backbone, 1000 training samples, 2000 epochs, batch size 200, and learning rate 10 −3. DC3 runs at its published hyperparameters, PAL at defaults with λmin = 10 −4. FSNet and ENFORCE otherwise run at their published defaults. SnareNet runs at its published defaults except for a repair budget of 5 steps, since its repair layer reduces the residual by roughly 2% per step and 100 steps would exceed 200 hours per seed. 
+
+## N.1 Hardware and Wall-Clock 
+
+Runs were generally executed on GH200 Grace-Hopper nodes. The engineering benchmarks E1 and 
+
+E2 used 4 × GH200 per seed via DDP. Synthetic benchmarks ( S1 –S6 ), E3 , E4 , and ablations were run CPU-only. Wall-clock times for E3 and E4 are reported separately in Appendices K.3 and J. Tables 9 and 10 report median end-to-end wall-clock per run over 10 seeds ( n=5 where noted in the corresponding results tables). These figures cover configuration, training, final evaluation, and artifact saving. Training dominates in every cell shown. 
+
+## N.2 Hyperparameters 
+
+For the neural backbone Nθ, all methods use Adam with a simple MLP 512 ×4 prediction head. ALM+Bolt-On shares ALM’s training runs for the engineering benchmarks E1 and E2 . At inference, it adds a single Levenberg–Marquardt projector pass that uses PAL’s projector defaults ( N =10 ,
+
+δ=10 −3). The benchmark sets the residual gap target τc used by PAL’s log-gap rule ( τc=10 −3
+
+on E1 and τc=10 −4 on E2 ). We treat τc as a property of the benchmark, not a method-specific hyperparameter. For decay, ✓ marks the bidirectional log-gap update (the default, where multipliers 
+
+¯wc,k and ¯wd can decay), and ✗ marks monotone-only growth, which we enable only on E1 since we observe moderate oscillations between ¯wc and c(˜ y(1) ) which we want to avoid. We are unsure what causes these. 33 Preprint Table 9: Wall-clock times on S1 –S6 . The total time reported includes initialization, training, evaluation, and artifact saving. The overall prediction time is for 64 samples (queries). We report the median over 10 seeds (counting non-diverged seeds only). “—” indicates fully diverged or structurally inapplicable cells. †For ALM+Bolt-On, training reuses ALM checkpoints and the reported total time is inference-time projection only. 
+
+Method Train (s) Total (s) Predict (s) /query (ms) 
+
+S1 
+
+PAL 106 247 0.0119 0.185 ALM 58 131 0.00734 0.115 ALM+Bolt-On 58 † 10 0.0507 0.792 ENFORCE v4 57 63 0.0152 0.237 FSNet 1720 1909 0.176 2.75 SnareNet 149 310 0.0506 0.791 DC3 — — — —
+
+S2 
+
+PAL 118 261 0.018 0.282 ALM 65 136 0.00917 0.143 ALM+Bolt-On 65 † 49 0.0627 0.98 ENFORCE v4 104 110 0.0422 0.659 FSNet 1881 2074 0.0395 0.617 SnareNet 152 292 0.175 2.73 DC3 261 417 0.0166 0.259 
+
+S3 
+
+PAL 126 276 0.0159 0.249 ALM 71 126 0.00775 0.121 ALM+Bolt-On 71 † 50 0.408 6.37 ENFORCE v4 72 80 0.0448 0.700 FSNet 1593 1791 0.0174 0.272 SnareNet 216 277 0.156 2.44 DC3 253 410 0.0213 0.333 
+
+S4 
+
+PAL 179 339 0.0485 0.758 ALM 91 196 0.00776 0.121 ALM+Bolt-On 91 † 52 0.367 5.74 ENFORCE v4 183 189 0.950 14.8 FSNet 8045 8268 0.0688 1.08 SnareNet 460 483 0.788 12.3 DC3 — — — —
+
+S5 
+
+PAL 135 303 0.023 0.36 ALM 116 260 0.00744 0.116 ALM+Bolt-On 116 † 34 0.094 1.47 ENFORCE v4 — — — —FSNet 15772 15968 0.238 3.73 SnareNet 142 167 0.14 2.19 DC3 — — — —
+
+S6 
+
+PAL 367 516 0.332 5.19 ALM 77 227 0.0137 0.214 ALM+Bolt-On 77 † 41 0.736 11.5 ENFORCE v4 1243 1248 0.432 6.75 FSNet 1794 2042 0.271 4.23 SnareNet 1493 1542 5.79 90.5 DC3 — — — —
+
+FSNet runs the authors’ implementation with its default truncated unrolled differentiation, unrolling up to 50 repair steps and backpropagating through the first 30 , which lies inside the recommended range ( 10 to 50 ) reported in the FSNet ablations (Nguyen & Donti, 2025). Like this default, all remaining FSNet settings are left at the authors’ values, apart from the tuned hyperparameters listed in Appendix M. 34 Preprint Table 10: End-to-end wall-clock time on engineering benchmarks. On E2 , PAL suffers from sequential Jacobian assembly (loop over K).            
+
+> Benchmark Method Median wall-clock
+> E1 BWB PAL ∼8 min ALM ∼70 s
+> E2 Urban Planning PAL ∼106 min ALM+Bolt-On ∼65 min ALM ∼32 s
+
+Table 11: Hyperparameters for PAL and ALM on E1 and E2 . Bold marks deviations from defaults. ALM defaults follow Basir & Senocak (2023). For both benchmarks, we performed minor hand-tuning of γALM and α but found defaults to work relatively well.                                             
+
+> Default E1 (Unmanned Aircraft) E2 (Urban Planning) Training epochs —200 500 Batch size —32 16 Learning rate ( Nθ)—10 −410 −3
+> PAL
+> γ10 −210 −110 −1
+> Dmax 1.05.05.0
+> τd10 −410 −410 −4
+> δ10 −310 −310 −3
+> λmin 10 −610 −610 −6
+> Decay ✓✗✓
+> ALM
+> γALM 10 −210 −310 −2
+> α0.99 0.99 0.99
+> μ01.01.01.0
+> λ01.01.01.0
+
+# O Compute Scaling 
+
+In this appendix, we provide some thoughts on how PAL performs on problems with a large number of constraints, and how complexity scales with problem dimensionality, the number of constraints, and constraint cost heterogeneity. Table 12 shows the full results table of the synthetic benchmarking results, including full N ϕb and N ϕf , which Table 1 showed only excerpts of. 
+
+Cost Model. Per training step, PAL costs 2Cf + ( K + 1) Cb evaluator passes, where Cf and Cb
+
+are the costs of one forward and one backward pass (VJP) through the evaluator Φ, respectively. This is because two forward passes are needed, one before the projection at ˆy and one after the projection at ˜y(1) . K VJP backward passes are needed to build the Jacobian J, and one backward pass is needed to backpropagate the training loss (weighted constraints and the objective). For the special case of K ≫ dim( y), J can be assembled from forward-mode JVPs instead of reverse-mode VJPs, meaning the assembly cost is min( K, dim( y)) passes. Additionally, PAL requires O(K2 dim( y) + K3) for the damped normal system of the LM projector. In the regime we target, the evaluator passes dominate and the latter is negligible. The recorded number of constraint evaluator calls in Table 1 fits this model exactly (e.g., 91 backward calls at K = 90 on S6 ). 
+
+Comparison with Full-Unroll Projection Methods. Every projection-based method (DC3, EN-FORCE, SnareNet) assembles the same K-row Jacobian, but unrolled methods do so at each of N
+
+repair iterates. This results in an overall cost of N (Cf + KC b) versus PAL’s single assembly. As disclosed in item (3) of the Limitations section, this cost is shared by all projection-based methods, and PAL is the cheapest member of that class. 35 Preprint Table 12: Full version of Table 1: synthetic stress-test experiments for five baselines and PAL, including evaluator passes per training step on all benchmarks. Means and standard deviations across 10 seeds. “—” indicates failure on 2 or more seeds.                                                                                                                                                                                                                                                                                                                                                                                                                                       
+
+> Bench. ALM+ Bolt-On ENFORCE DC3 FSNet SnareNet PAL
+> [Ours] Feas. (%)
+> S1 100 ±0100 ±0—100 ±0100 ±0100 ±0
+> S2 100 ±0100 ±097 ±7100 ±0100 ±0100 ±0
+> S3 100 ±0100 ±0100 ±0100 ±0100 ±0100 ±0
+> S4 100 ±1100 ±0—100 ±0100 ±0100 ±0
+> S5 100 ±0——51 ±31 100 ±0100 ±0
+> S6 100 ±0100 ±0—100 ±0100 ±0100 ±0
+> Mean 100 ——92 100 100
+> Obj.
+> S1 0.07 ±0.12 0.00 ±0.00 —0.00 ±0.00 0.78 ±0.10 0.03 ±0.04
+> S2 0.27 ±0.17 0.00 ±0.00 0.00 ±0.00 0.00 ±0.00 0.16 ±0.00 0.00 ±0.00
+> S3 0.00 ±0.00 0.00 ±0.00 0.00 ±0.00 0.00 ±0.00 0.01 ±0.00 0.00 ±0.00
+> S4 19 .47 ±5.25 0.01 ±0.01 —0.00 ±0.00 0.09 ±0.01 0.00 ±0.00
+> S5 0.00 ±0.00 ——4.41 ±2.16 0.00 ±0.00 0.00 ±0.00
+> S6 0.14 ±0.03 0.00 ±0.00 —0.00 ±0.00 0.60 ±0.06 0.03 ±0.01
+> Mean 3.32 ——0.73 0.27 0.01
+> N fΦ
+> S1 1.0±0.06.2±0.1—72 ±77 35 .0±5.02.0±0.0
+> S2 1.0±0.06.0±0.034 .5±0.018 .5±0.120 .5±1.02.0±0.0
+> S3 1.0±0.05.2±0.134 .5±0.010 .1±0.144 .1±5.92.0±0.0
+> S4 1.0±0.06.4±0.0—77 .7±0.661 .9±2.82.0±0.0
+> S5 1.0±0.0——595 ±50 50 .3±3.62.0±0.0
+> S6 1.0±0.07.1±0.1—15 .5±0.081 .1±2.92.0±0.0
+> Mean 1.0——131 48 .82.0
+> N bΦ
+> S1 1.0±0.04.1±0.1—11 .0±5.633 .6±5.02.0±0.0
+> S2 1.0±0.014 .1±0.022 .0±0.07.8±0.122 .7±1.312 .0±0.0
+> S3 1.0±0.07.4±0.222 .0±0.05.6±0.147 .7±6.77.0±0.0
+> S4 1.0±0.032 .5±0.2—39 .1±0.296 .9±5.327 .0±0.0
+> S5 1.0±0.0——87 .8±1.053 .4±4.16.0±0.0
+> S6 1.0±0.0128 ±2—7.2±0.0253 ±12 91 .0±0.0
+> Mean 1.0——26 .484 .624 .2
+
+Comparison with FSNet. FSNet sidesteps Jacobian assembly and requires only N (Cf + Cb), but unrolls many more repair steps (large N ). The break-even point between PAL and FSNet is roughly at K ≈ 2N . FSNet must still store the unrolled tape, which can be memory-intractable (see Table 2). 
+
+Heterogeneous Constraint Complexity. In some applications, one or more constraints might be extremely expensive to compute and dominate compute cost. For example, E2 ’s wind-speed danger constraint shown in Appendix K.2 is evaluated using diffusion model unrolls, while other constraints in this problem are trivial to compute (e.g., box-to-box overlaps, analytical closed-form constraints, etc.). In this situation, the Jacobian assembly count K virtually drops out of PAL’s cost while FSNet still pays the full unroll. Other than cost, we do not see any specific reasons PAL might struggle with large-K. Benchmark 
+
+E3 in Table 2 illustrates that PAL can be applied without any modifications to applications with a very high number of constraints ( K = 576 ) and trains faster than DC3 thanks to single-step training, despite building the full Jacobian (which DC3 does not, as it only projects equalities). 36

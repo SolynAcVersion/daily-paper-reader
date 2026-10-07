@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-10-06</span>
+      <span class="dpr-home-dashboard-kicker">2026-10-07</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 3 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 2 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
-    <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>2 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>2</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-10-06 23:45:40 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-10-07 23:26:07 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日精选3篇CAD生成论文，精读1篇、速读2篇，聚焦单视图重建与网格转CAD。最值得看的是精读8.0分的《CADForge》，用智能体做显式几何推理实现单视图CAD重建；速读的UniBRep和StepCAD则分别探索统一几何拓扑的B-Rep生成与LLM策略驱动的Mesh转CAD。建议普通读者先读CADForge，重点看它如何把几何推理拆成可解释步骤，再按需了解另两篇的生成路线。</p>
+<p>2026-10-07 日报：速读 2 篇、精读 0 篇，聚焦 CAD 与约束满足两个方向。值得看的是《Only Project Once》用投影自适应损失实现精确约束满足，以及《PrimitiveCAD》用图元感知分词和操作对齐做 LLM 点云到 CAD 重建，两篇均 6.0 分。普通读者可先扫这两篇的摘要与方法图，判断是否与你的约束优化或 CAD 生成需求相关。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -71,12 +71,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">1 篇</strong>
+    <strong class="dpr-home-dashboard-count">0 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="CADForge: Agentic Single-View CAD Reconstruction with Explicit Geometry Reasoning">CADForge: Agentic Single-View CAD Reconstruction with Explicit Geometry Reasoning</span></li></ul>
+<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">cad-spatial <strong>1</strong></span></div>
+
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -87,7 +87,7 @@
     <strong class="dpr-home-dashboard-count">2 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="UniBRep: Learning Unified Geometry and Topology for Image-conditioned B-Rep Generation">UniBRep: Learning Unified Geometry and Topology for Image-conditioned B-Rep Generation</span></li><li><span class="dpr-home-dashboard-paper-title" title="StepCAD: Mesh-to-CAD Code Generation via LLM Policy and Geometry-Guided Search">StepCAD: Mesh-to-CAD Code Generation via LLM Policy and Geometry-Guided Search</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Only Project Once: Projection-Adaptive Loss for Exact Constraint Satisfaction">Only Project Once: Projection-Adaptive Loss for Exact Constraint Satisfaction</span></li><li><span class="dpr-home-dashboard-paper-title" title="PrimitiveCAD: An LLM-Based Point-to-CAD Reconstruction with Primitive-Aware Tokenization and Operation Alignment">PrimitiveCAD: An LLM-Based Point-to-CAD Reconstruction with Primitive-Aware Tokenization and Operation Alignment</span></li></ul>
   </div>
   <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">cad-spatial <strong>2</strong></span></div>
 </section>
