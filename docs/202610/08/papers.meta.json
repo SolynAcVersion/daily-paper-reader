@@ -1,0 +1,69 @@
+{
+  "label": "2026-10-08",
+  "date": "2026-10-08",
+  "generated_at": "2026-10-08T23:58:47",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202610/08/2610.05417v1-render-to-reason-novel-view-semantic-prediction-improves-spatial-understanding-in-vlms",
+      "section": "quick",
+      "title_en": "Render to Reason: Novel-View Semantic Prediction Improves Spatial Understanding in VLMs",
+      "authors": "Yuqun Wu, Yao Xiao, Chuhang Zou, Shenlong Wang, Derek Hoiem",
+      "date": "2026-10-04",
+      "pdf": "https://arxiv.org/pdf/2610.05417v1",
+      "score": "6.0",
+      "evidence": "通过几何特征与新颖视图渲染提升VLM空间理解",
+      "tldr": "现有工作将预训练3D模型的几何特征融入视觉语言模型以增强空间推理，但仅靠标准空间问答训练时，几何通路梯度弱、与视觉特征融合不足，提升有限。为此，作者提出新视角语义渲染作为辅助训练任务，要求模型预测未观测视角的语义布局，从而迫使几何提供位姿相关可见性、视觉提供语义内容。该任务在VSI-Bench、ReVSI和3D-Point-QA上分别最高提升1.6、2.2和2.9，完整模型超过此前开源方法。这表明需要几何的辅助信号才能有效提升VLM空间理解。",
+      "tags": "query:cad-spatial",
+      "abstract_en": "Recent works augment Vision-Language Models with geometry features from pretrained 3D models, expecting that the geometric signal will boost spatial reasoning. However, we find that simply fusing geometry features and training on standard spatial QA yields only marginal improvements on high-level multi-hop tasks. We attribute this gap to a training-signal problem: standard spatial QA can be largely answered from visual features and language priors, so the geometry pathway receives weak gradients and fails to integrate with the visual features. To provide a training signal that requires geometry, we propose \\textbf{novel-view semantic rendering} as an auxiliary training task that requires the model to predict the semantic layout of an unobserved viewpoint, inspired by humans' ability to mentally simulate novel viewpoints during spatial reasoning. This task encourages joint use of both pathways: geometry provides pose-dependent visibility, while vision provides semantic content. Our auxiliary task yields consistent improvements over the geometry-augmented baseline across all three benchmarks (up to +1.6 on VSI-Bench, +2.2 on ReVSI, +2.9 on our 3D-Point-QA dataset) and our full model surpasses prior open-source methods on VSI-Bench and on ReVSI. Project page: https://yuqunw.github.io/Render2Reason/.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202610/08/2610.06135v1-anchorgen-anchored-optimization-for-customizable-generative-3d-design",
+      "section": "quick",
+      "title_en": "AnchorGen: Anchored Optimization for Customizable Generative 3D Design",
+      "authors": "Hantao Zhang, Oliver Heinimann, Jieke Wu, Yingxuan You, Emilien Seiler, Pascal Fua",
+      "date": "2026-10-05",
+      "pdf": "https://arxiv.org/pdf/2610.06135v1",
+      "score": "6.0",
+      "evidence": "以固定风格与比例的二维草图锚定三维形状优化",
+      "tldr": "工程设计常从2D草图出发，草图固定风格与比例，但后续3D优化依赖生成先验保持几何有效；这些先验对草图不敏感，易把漂移提案校正回训练高密度区，忽略指定设计。AnchorGen在配对形状-草图潜变量拼接上以rectified-flow无条件训练，学习联合流形，约束草图分量即可限定形状子流形。推理时梯度下降优化形状潜变量以最小化可微阻力代理，并用token级余弦惩罚令草图潜变量贴近目标。单一模型由此支持保设计优化、尺寸显式编辑与仅草图合成。",
+      "tags": "query:cad-spatial",
+      "abstract_en": "Engineering design often starts from a 2D sketch that fixes style and proportions, yet the subsequent 3D shape optimization relies on learned generative priors to keep the geometry valid. However, these priors are agnostic to the sketch: while they admit a valid design by correcting a drifted proposal back to its training distribution, they often correct it towards the high-density region, ignoring the specified design. We introduce \\emph{AnchorGen}, a rectified-flow framework trained unconditionally on the concatenated shape and sketch latents of paired data. The learned manifold represents the joint distribution of shape-sketch pairs, so constraining the sketch component restricts the iterate to the sub-manifold of shapes consistent with a target style. Since training employs no conditioning signal, the constraint is imposed at inference: gradient descent optimizes the shape latent to minimize a differentiable drag surrogate, while constraining the sketch latent to remain close to the target sketch via a token-wise cosine penalty. A single model thereby supports design-preserving optimization, dimensionally explicit design edits, and sketch-only synthesis.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202610/08/2610.09205v1-do-vision-models-learn-physical-constraints-or-rendering-shortcuts-a-counterfactual-benchmark-for-grounded-physical-consistency",
+      "section": "quick",
+      "title_en": "Do Vision Models Learn Physical Constraints or Rendering Shortcuts? A Counterfactual Benchmark for Grounded Physical Consistency",
+      "authors": "M. Moein Esfahani, Sepehr Salem, Mohammed Alser, Vince Calhoun",
+      "date": "2026-10-06",
+      "pdf": "https://arxiv.org/pdf/2610.09205v1",
+      "score": "6.0",
+      "evidence": "诊断生成图像中物理一致性违规的反事实基准",
+      "tldr": "图像编辑模型常能执行文本指令，却破坏场景物理，如无阴影、镜面不反射或物体悬浮。为此，论文提出反事实基准，用Mitsuba 3生成500个场景族、5500张图，覆盖阴影、反射、支撑、表面响应与遮挡等违规。模型需检测违规、分类、定位并给出语言解释。基线在标准集达64.0–67.8% macro-F1，但干预偏移下LLaVA-1.5-7B降至40.8%，揭示高分部分来自渲染捷径。",
+      "tags": "query:phys-video",
+      "abstract_en": "Modern image editing models can satisfy a text instruction while breaking the physics of the edited scene. A new object may cast no shadow, a mirror may fail to reflect visible geometry, or an object may float above a surface that should support it. We study physical plausibility diagnosis, detecting whether an edited image violates scene physics, naming the violation type, localizing the affected region, and explaining the failure in language. We introduce a counterfactual benchmark whose controlled synthetic component uses Mitsuba~3 to generate 5,500 images from 500 scene families. Each family contains one clean image and ten matched violations involving shadows, reflection, support, surface response, and occlusion. The renderer pipeline provides category labels, affected-region masks and boxes, scene metadata, and explanation targets. We use LLaVA-1.5-7B, Qwen2.5-VL-7B, and InternVL3.5-8B as diagnostic baselines rather than proposed methods. On a 1,650-image synthetic test set, the adapted baselines reach 64.0--67.8\\% category macro-F1 on standard held-out scenes. For LLaVA-1.5-7B, category macro-F1 falls from 64.0\\% on the standard split to 40.8\\% under intervention shift. This gap shows that high in-distribution accuracy partly reflects cues tied to rendering and counterfactual construction.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202610/08/2610.09383v1-ppcar-net-projection-refined-parametric-3d-coronary-artery-reconstruction-from-sparse-x-ray-angiographic-views",
+      "section": "quick",
+      "title_en": "PPCAR-Net: Projection-Refined Parametric 3D Coronary Artery Reconstruction from Sparse X-ray Angiographic Views",
+      "authors": "Yu Ren, Hwee Kuan Lee, Tat-Jen Cham, Jonathan Yap, Khung Keong Yeo",
+      "date": "2026-10-07",
+      "pdf": "https://arxiv.org/pdf/2610.09383v1",
+      "score": "6.0",
+      "evidence": "基于稀疏二维血管造影视图的投影精化三维重建",
+      "tldr": "稀疏X射线冠脉3D重建常依赖跨视角匹配与三角化，易受血管重叠和透视缩短影响；体积预测后提取血管图又难直接给出中心线与半径。PPCAR-Net以投影精修参数化网络直接预测分支结构的中心线-半径表示，免显式点匹配、三角化和中间体。它用冻结VGGT特征与分支查询做粗预测，再经投影引导几何/半径精修器残差校正。在CT冠脉模拟掩膜上，重建连通性更好，RCA中心线精度突出，体素重叠具竞争力，推理仅121毫秒。",
+      "tags": "query:cad-spatial",
+      "abstract_en": "Sparse-view 3D coronary reconstruction commonly relies on cross-view correspondence and triangulation, which are vulnerable to vessel overlap and foreshortening, or on volumetric prediction followed by vascular-graph extraction, which does not directly provide centrelines and radii. We introduce PPCAR-Net, a projection-refined parametric coronary artery reconstruction network that directly predicts a branch-structured centreline-and-radius representation without explicit point matching, triangulation, or an intermediate volume. Given a variable number of segmented views, a coarse predictor combines frozen VGGT features with learned branch queries to estimate branch presence, B-spline centreline trajectories, and dense radius profiles. Projection-guided geometry and radius refiners then sample local evidence from the input views and apply residual corrections learned with 3D supervision. We evaluate representation fidelity and sparse-view reconstruction quantitatively and qualitatively. On simulated angiographic masks generated from CT-derived coronary anatomy, PPCAR-Net produces better connected artery reconstructions and achieves strong centreline accuracy, particularly for RCA, while maintaining competitive volumetric overlap. Coarse-to-fine inference takes 121 ms, enabling real-time reconstruction.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

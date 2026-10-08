@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-07T23:24:23.365565+00:00",
-  "updated_date": "20261007",
+  "generated_at": "2026-10-08T23:56:36.961113+00:00",
+  "updated_date": "20261008",
   "carryover_days": 9,
   "tag_states": {
     "phys-video": {
@@ -29,7 +29,7 @@
       "items": []
     },
     "cad-spatial": {
-      "updated_date": "20261007",
+      "updated_date": "20261008",
       "carryover_days": 9,
       "items": []
     }

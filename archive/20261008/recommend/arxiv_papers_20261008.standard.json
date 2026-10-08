@@ -1,0 +1,174 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-10-08T23:56:36.959929+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2610.05417v1",
+      "source": "arxiv",
+      "title": "Render to Reason: Novel-View Semantic Prediction Improves Spatial Understanding in VLMs",
+      "abstract": "Recent works augment Vision-Language Models with geometry features from pretrained 3D models, expecting that the geometric signal will boost spatial reasoning. However, we find that simply fusing geometry features and training on standard spatial QA yields only marginal improvements on high-level multi-hop tasks. We attribute this gap to a training-signal problem: standard spatial QA can be largely answered from visual features and language priors, so the geometry pathway receives weak gradients and fails to integrate with the visual features. To provide a training signal that requires geometry, we propose \\textbf{novel-view semantic rendering} as an auxiliary training task that requires the model to predict the semantic layout of an unobserved viewpoint, inspired by humans' ability to mentally simulate novel viewpoints during spatial reasoning. This task encourages joint use of both pathways: geometry provides pose-dependent visibility, while vision provides semantic content. Our auxiliary task yields consistent improvements over the geometry-augmented baseline across all three benchmarks (up to +1.6 on VSI-Bench, +2.2 on ReVSI, +2.9 on our 3D-Point-QA dataset) and our full model surpasses prior open-source methods on VSI-Bench and on ReVSI. Project page: https://yuqunw.github.io/Render2Reason/.",
+      "authors": [
+        "Yuqun Wu",
+        "Yao Xiao",
+        "Chuhang Zou",
+        "Shenlong Wang",
+        "Derek Hoiem"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-04T17:58:19+00:00",
+      "link": "https://arxiv.org/pdf/2610.05417v1",
+      "tags": [
+        "keyword:cad-spatial",
+        "query:cad-spatial"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "improves spatial understanding in VLMs via geometry features and novel-view rendering",
+      "llm_evidence_cn": "通过几何特征与新颖视图渲染提升VLM空间理解",
+      "llm_evidence": "通过几何特征与新颖视图渲染提升VLM空间理解",
+      "canonical_evidence": "通过几何特征与新颖视图渲染提升VLM空间理解",
+      "llm_tldr_en": "The paper shows fusing geometry features into VLMs only marginally helps spatial QA due to weak training signals, and proposes novel-view semantic rendering as an auxiliary task to force geometric reasoning, improving multi-hop spatial understanding.",
+      "llm_tldr_cn": "该研究针对视觉语言模型空间推理能力不足的问题，发现简单融合三维几何特征在标准空间问答上收益甚微，原因是几何通路梯度太弱。作者提出新颖视图语义渲染作为辅助训练任务，迫使模型依赖几何信号进行预测。实验表明该方法显著提升了高阶多跳空间推理任务的表现，为将三维几何先验注入语言模型提供了有效的训练信号设计思路。",
+      "llm_tldr": "该研究针对视觉语言模型空间推理能力不足的问题，发现简单融合三维几何特征在标准空间问答上收益甚微，原因是几何通路梯度太弱。作者提出新颖视图语义渲染作为辅助训练任务，迫使模型依赖几何信号进行预测。实验表明该方法显著提升了高阶多跳空间推理任务的表现，为将三维几何先验注入语言模型提供了有效的训练信号设计思路。",
+      "llm_tags": [
+        "query:cad-spatial"
+      ],
+      "matched_query_tag": "query:cad-spatial",
+      "matched_query_text": "spatial reasoning from 2D views to 3D",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.06135v1",
+      "source": "arxiv",
+      "title": "AnchorGen: Anchored Optimization for Customizable Generative 3D Design",
+      "abstract": "Engineering design often starts from a 2D sketch that fixes style and proportions, yet the subsequent 3D shape optimization relies on learned generative priors to keep the geometry valid. However, these priors are agnostic to the sketch: while they admit a valid design by correcting a drifted proposal back to its training distribution, they often correct it towards the high-density region, ignoring the specified design. We introduce \\emph{AnchorGen}, a rectified-flow framework trained unconditionally on the concatenated shape and sketch latents of paired data. The learned manifold represents the joint distribution of shape-sketch pairs, so constraining the sketch component restricts the iterate to the sub-manifold of shapes consistent with a target style. Since training employs no conditioning signal, the constraint is imposed at inference: gradient descent optimizes the shape latent to minimize a differentiable drag surrogate, while constraining the sketch latent to remain close to the target sketch via a token-wise cosine penalty. A single model thereby supports design-preserving optimization, dimensionally explicit design edits, and sketch-only synthesis.",
+      "authors": [
+        "Hantao Zhang",
+        "Oliver Heinimann",
+        "Jieke Wu",
+        "Yingxuan You",
+        "Emilien Seiler",
+        "Pascal Fua"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-05T11:07:34+00:00",
+      "link": "https://arxiv.org/pdf/2610.06135v1",
+      "tags": [
+        "keyword:cad-spatial",
+        "query:cad-spatial"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "3D shape optimization anchored to a 2D sketch fixing style and proportions",
+      "llm_evidence_cn": "以固定风格与比例的二维草图锚定三维形状优化",
+      "llm_evidence": "以固定风格与比例的二维草图锚定三维形状优化",
+      "canonical_evidence": "以固定风格与比例的二维草图锚定三维形状优化",
+      "llm_tldr_en": "AnchorGen addresses generative 3D design where learned priors ignore the input sketch; it trains a rectified-flow model on joint shape-sketch latents so constraining the sketch component yields shapes consistent with the design intent.",
+      "llm_tldr_cn": "论文针对工程设计中从二维草图出发进行三维形状优化时，学习式生成先验往往忽略草图约束、只把结果拉回高密度区域的问题，提出AnchorGen框架。该方法在成对数据的形状与草图潜变量拼接表示上无条件训练一个整流流模型，使学习到的流形表达二者的联合分布；推理时只需约束草图分量，就能将迭代限制在与目标风格一致的形状子流形上。这一思路提升了草图可控的三维设计生成能力。",
+      "llm_tldr": "论文针对工程设计中从二维草图出发进行三维形状优化时，学习式生成先验往往忽略草图约束、只把结果拉回高密度区域的问题，提出AnchorGen框架。该方法在成对数据的形状与草图潜变量拼接表示上无条件训练一个整流流模型，使学习到的流形表达二者的联合分布；推理时只需约束草图分量，就能将迭代限制在与目标风格一致的形状子流形上。这一思路提升了草图可控的三维设计生成能力。",
+      "llm_tags": [
+        "query:cad-spatial"
+      ],
+      "matched_query_tag": "query:cad-spatial",
+      "matched_query_text": "reconstructing 3D CAD models from 2D drawings",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.09205v1",
+      "source": "arxiv",
+      "title": "Do Vision Models Learn Physical Constraints or Rendering Shortcuts? A Counterfactual Benchmark for Grounded Physical Consistency",
+      "abstract": "Modern image editing models can satisfy a text instruction while breaking the physics of the edited scene. A new object may cast no shadow, a mirror may fail to reflect visible geometry, or an object may float above a surface that should support it. We study physical plausibility diagnosis, detecting whether an edited image violates scene physics, naming the violation type, localizing the affected region, and explaining the failure in language. We introduce a counterfactual benchmark whose controlled synthetic component uses Mitsuba~3 to generate 5,500 images from 500 scene families. Each family contains one clean image and ten matched violations involving shadows, reflection, support, surface response, and occlusion. The renderer pipeline provides category labels, affected-region masks and boxes, scene metadata, and explanation targets. We use LLaVA-1.5-7B, Qwen2.5-VL-7B, and InternVL3.5-8B as diagnostic baselines rather than proposed methods. On a 1,650-image synthetic test set, the adapted baselines reach 64.0--67.8\\% category macro-F1 on standard held-out scenes. For LLaVA-1.5-7B, category macro-F1 falls from 64.0\\% on the standard split to 40.8\\% under intervention shift. This gap shows that high in-distribution accuracy partly reflects cues tied to rendering and counterfactual construction.",
+      "authors": [
+        "M. Moein Esfahani",
+        "Sepehr Salem",
+        "Mohammed Alser",
+        "Vince Calhoun"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-10-06T23:06:44+00:00",
+      "link": "https://arxiv.org/pdf/2610.09205v1",
+      "tags": [
+        "keyword:cad-spatial",
+        "query:cad-spatial"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "counterfactual benchmark for diagnosing physical consistency violations in generated imagery",
+      "llm_evidence_cn": "诊断生成图像中物理一致性违规的反事实基准",
+      "llm_evidence": "诊断生成图像中物理一致性违规的反事实基准",
+      "canonical_evidence": "诊断生成图像中物理一致性违规的反事实基准",
+      "llm_tldr_en": "This work introduces a counterfactual benchmark for physical plausibility diagnosis, detecting and localizing physics violations such as missing shadows or broken reflections in edited images.",
+      "llm_tldr_cn": "针对现代图像编辑模型在满足文本指令的同时破坏场景物理的问题，例如新物体不投影、镜面不反射、物体悬空等，本文研究物理合理性诊断任务：检测图像是否违反场景物理、命名违规类型、定位受影响区域并用语言解释失败原因。作者构建反事实基准，其受控合成部分用Mitsuba 3从500个场景族生成5500张图像，每族含一张干净图与十种匹配违规。该基准为衡量生成内容的物理正确性提供了细粒度评测手段，对物理合理性生成与评测具有借鉴意义。",
+      "llm_tldr": "针对现代图像编辑模型在满足文本指令的同时破坏场景物理的问题，例如新物体不投影、镜面不反射、物体悬空等，本文研究物理合理性诊断任务：检测图像是否违反场景物理、命名违规类型、定位受影响区域并用语言解释失败原因。作者构建反事实基准，其受控合成部分用Mitsuba 3从500个场景族生成5500张图像，每族含一张干净图与十种匹配违规。该基准为衡量生成内容的物理正确性提供了细粒度评测手段，对物理合理性生成与评测具有借鉴意义。",
+      "llm_tags": [
+        "query:phys-video:composite"
+      ],
+      "matched_query_tag": "query:phys-video:composite",
+      "matched_query_text": "Papers central to 物理合理性视频生成，涵盖物理一致性、物理可解释性、架构改进、SFT/RL微调、基准与数据集等。, especially work that connects or combines: v; generating videos that obey physical laws and constraints; ensuring physical properties remain coherent across video frames; videos depicting physically realistic behaviors and outcomes; evaluation benchmarks for measuring physical correctness in generated videos; datasets containing physical interactions and dynamics for training video models; how to ensure physical consistency in generated videos; improve physical plausibility of video generation using reinforcement learning; benchmark for evaluating physical correctness in video generation models; collect and annotate physical interaction datasets for video generation training.",
+      "matched_requirement_id": "req-composite-phys-video",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.09383v1",
+      "source": "arxiv",
+      "title": "PPCAR-Net: Projection-Refined Parametric 3D Coronary Artery Reconstruction from Sparse X-ray Angiographic Views",
+      "abstract": "Sparse-view 3D coronary reconstruction commonly relies on cross-view correspondence and triangulation, which are vulnerable to vessel overlap and foreshortening, or on volumetric prediction followed by vascular-graph extraction, which does not directly provide centrelines and radii. We introduce PPCAR-Net, a projection-refined parametric coronary artery reconstruction network that directly predicts a branch-structured centreline-and-radius representation without explicit point matching, triangulation, or an intermediate volume. Given a variable number of segmented views, a coarse predictor combines frozen VGGT features with learned branch queries to estimate branch presence, B-spline centreline trajectories, and dense radius profiles. Projection-guided geometry and radius refiners then sample local evidence from the input views and apply residual corrections learned with 3D supervision. We evaluate representation fidelity and sparse-view reconstruction quantitatively and qualitatively. On simulated angiographic masks generated from CT-derived coronary anatomy, PPCAR-Net produces better connected artery reconstructions and achieves strong centreline accuracy, particularly for RCA, while maintaining competitive volumetric overlap. Coarse-to-fine inference takes 121 ms, enabling real-time reconstruction.",
+      "authors": [
+        "Yu Ren",
+        "Hwee Kuan Lee",
+        "Tat-Jen Cham",
+        "Jonathan Yap",
+        "Khung Keong Yeo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-07T03:40:36+00:00",
+      "link": "https://arxiv.org/pdf/2610.09383v1",
+      "tags": [
+        "keyword:cad-spatial",
+        "query:cad-spatial"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "projection-refined 3D reconstruction from sparse 2D angiographic views",
+      "llm_evidence_cn": "基于稀疏二维血管造影视图的投影精化三维重建",
+      "llm_evidence": "基于稀疏二维血管造影视图的投影精化三维重建",
+      "canonical_evidence": "基于稀疏二维血管造影视图的投影精化三维重建",
+      "llm_tldr_en": "PPCAR-Net reconstructs 3D coronary arteries from sparse X-ray views by directly predicting a parametric centreline-and-radius representation, avoiding triangulation and using a projection-refinement step to enforce view consistency.",
+      "llm_tldr_cn": "论文针对稀疏视图下三维冠状动脉重建中跨视图对应与三角化易受血管重叠和前缩影响、体素预测又难以直接给出中心线与半径的问题，提出PPCAR-Net。该方法无需显式点匹配或三角化，直接预测分支结构的中心线与半径参数化表示；粗预测器结合冻结的VGGT特征与可学习分支查询，估计分支存在性、B样条中心线轨迹与半径，并通过投影精化提升视图一致性。这为稀疏二维视图的定量三维重建提供了新思路。",
+      "llm_tldr": "论文针对稀疏视图下三维冠状动脉重建中跨视图对应与三角化易受血管重叠和前缩影响、体素预测又难以直接给出中心线与半径的问题，提出PPCAR-Net。该方法无需显式点匹配或三角化，直接预测分支结构的中心线与半径参数化表示；粗预测器结合冻结的VGGT特征与可学习分支查询，估计分支存在性、B样条中心线轨迹与半径，并通过投影精化提升视图一致性。这为稀疏二维视图的定量三维重建提供了新思路。",
+      "llm_tags": [
+        "query:cad-spatial"
+      ],
+      "matched_query_tag": "query:cad-spatial",
+      "matched_query_text": "explicit projection constraints for scale consistency",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

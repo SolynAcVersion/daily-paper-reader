@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-10-07</span>
+      <span class="dpr-home-dashboard-kicker">2026-10-08</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 2 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 4 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>2</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>4</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-10-07 23:26:07 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-10-08 23:58:44 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>2026-10-07 日报：速读 2 篇、精读 0 篇，聚焦 CAD 与约束满足两个方向。值得看的是《Only Project Once》用投影自适应损失实现精确约束满足，以及《PrimitiveCAD》用图元感知分词和操作对齐做 LLM 点云到 CAD 重建，两篇均 6.0 分。普通读者可先扫这两篇的摘要与方法图，判断是否与你的约束优化或 CAD 生成需求相关。</p>
+<p>今日无精读、以速读为主，焦点落在视觉模型的空间理解、生成式3D设计与物理一致性验证。</p>
+<p>最值得看的是《Render to Reason》用新视角语义预测提升VLM空间理解，以及物理一致性反事实基准追问视觉模型学的是物理约束还是渲染捷径。</p>
+<p>普通读者可先读这两篇摘要，重点看实验是否用合成或反事实数据验证，再决定是否跟进AnchorGen的定制化3D生成。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -84,12 +86,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">2 篇</strong>
+    <strong class="dpr-home-dashboard-count">4 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Only Project Once: Projection-Adaptive Loss for Exact Constraint Satisfaction">Only Project Once: Projection-Adaptive Loss for Exact Constraint Satisfaction</span></li><li><span class="dpr-home-dashboard-paper-title" title="PrimitiveCAD: An LLM-Based Point-to-CAD Reconstruction with Primitive-Aware Tokenization and Operation Alignment">PrimitiveCAD: An LLM-Based Point-to-CAD Reconstruction with Primitive-Aware Tokenization and Operation Alignment</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Render to Reason: Novel-View Semantic Prediction Improves Spatial Understanding in VLMs">Render to Reason: Novel-View Semantic Prediction Improves Spatial Understanding in VLMs</span></li><li><span class="dpr-home-dashboard-paper-title" title="AnchorGen: Anchored Optimization for Customizable Generative 3D Design">AnchorGen: Anchored Optimization for Customizable Generative 3D Design</span></li><li><span class="dpr-home-dashboard-paper-title" title="Do Vision Models Learn Physical Constraints or Rendering Shortcuts? A Counterfactual Benchmark for Grounded Physical Consistency">Do Vision Models Learn Physical Constraints or Rendering Shortcuts? A Counterfactual Benchmark for Grounded Physical Consistency</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">cad-spatial <strong>2</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">cad-spatial <strong>3</strong></span><span class="dpr-home-dashboard-tag">phys-video <strong>1</strong></span></div>
 </section>
 </div>
 

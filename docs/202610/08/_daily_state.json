@@ -1,0 +1,73 @@
+{
+  "date": "20261008",
+  "date_label": "",
+  "generated_at": "2026-10-08 23:58:44 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2610.05417v1",
+      "route": "202610/08/2610.05417v1-render-to-reason-novel-view-semantic-prediction-improves-spatial-understanding-in-vlms",
+      "title": "Render to Reason: Novel-View Semantic Prediction Improves Spatial Understanding in VLMs",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "cad-spatial"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "通过几何特征与新颖视图渲染提升VLM空间理解",
+      "first_seen_at": "2026-10-08 23:58:44 UTC",
+      "updated_at": "2026-10-08 23:58:44 UTC"
+    },
+    {
+      "paper_id": "2610.06135v1",
+      "route": "202610/08/2610.06135v1-anchorgen-anchored-optimization-for-customizable-generative-3d-design",
+      "title": "AnchorGen: Anchored Optimization for Customizable Generative 3D Design",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "cad-spatial"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "以固定风格与比例的二维草图锚定三维形状优化",
+      "first_seen_at": "2026-10-08 23:58:44 UTC",
+      "updated_at": "2026-10-08 23:58:44 UTC"
+    },
+    {
+      "paper_id": "2610.09205v1",
+      "route": "202610/08/2610.09205v1-do-vision-models-learn-physical-constraints-or-rendering-shortcuts-a-counterfactual-benchmark-for-grounded-physical-consistency",
+      "title": "Do Vision Models Learn Physical Constraints or Rendering Shortcuts? A Counterfactual Benchmark for Grounded Physical Consistency",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "phys-video"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "诊断生成图像中物理一致性违规的反事实基准",
+      "first_seen_at": "2026-10-08 23:58:44 UTC",
+      "updated_at": "2026-10-08 23:58:44 UTC"
+    },
+    {
+      "paper_id": "2610.09383v1",
+      "route": "202610/08/2610.09383v1-ppcar-net-projection-refined-parametric-3d-coronary-artery-reconstruction-from-sparse-x-ray-angiographic-views",
+      "title": "PPCAR-Net: Projection-Refined Parametric 3D Coronary Artery Reconstruction from Sparse X-ray Angiographic Views",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "cad-spatial"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于稀疏二维血管造影视图的投影精化三维重建",
+      "first_seen_at": "2026-10-08 23:58:44 UTC",
+      "updated_at": "2026-10-08 23:58:44 UTC"
+    }
+  ]
+}
